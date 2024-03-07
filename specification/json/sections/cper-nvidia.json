@@ -1,0 +1,38 @@
+{
+    "$id": "cper-json-nvidia-section",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+        "signature",
+        "errorType",
+        "errorInstance",
+        "severity",
+        "socket",
+        "numRegs",
+        "instanceBase"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "signature": {
+            "type": "string"
+        },
+        "errorType": {
+            "type": "integer"
+        },
+        "errorInstance": {
+            "type": "integer"
+        },
+        "severity": {
+            "type": "integer"
+        },
+        "socket": {
+            "type": "integer"
+        },
+        "numberRegs": {
+            "type": "integer"
+        },
+        "instanceBase": {
+            "type": "uint64"
+        }
+    }
+}
