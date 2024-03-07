@@ -31,6 +31,7 @@ SectionSources = files(
     'sections/cper-section-pci-dev.c',
     'sections/cper-section-pcie.c',
     'sections/cper-section.c',
+    'sections/cper-section-nvidia.c',
 )
 
 EDKSources = files('edk/Cper.c')

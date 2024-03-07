@@ -42,6 +42,7 @@ CPER_GENERATOR_DEFINITION generator_definitions[] = {
 	  generate_section_cxl_component },
 	{ &gEfiCxlMldPortErrorSectionGuid, "cxlcomponent-mld",
 	  generate_section_cxl_component },
+	{ &gEfiNvidiaErrorSectionGuid, "nvidia", generate_section_nvidia },
 };
 const size_t generator_definitions_len =
 	sizeof(generator_definitions) / sizeof(CPER_GENERATOR_DEFINITION);
