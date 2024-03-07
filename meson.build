@@ -31,6 +31,7 @@ SectionSources = files(
     'sections/cper-section-pci-dev.c',
     'sections/cper-section-pcie.c',
     'sections/cper-section.c',
+    'sections/cper-section-nvidia.c',
 )
 
 EDKSources = files('edk/Cper.c')
@@ -45,6 +46,7 @@ GeneratorSectionSources = files(
     'generator/sections/gen-section-generic.c',
     'generator/sections/gen-section-ia32x64.c',
     'generator/sections/gen-section-memory.c',
+    'generator/sections/gen-section-nvidia.c',
     'generator/sections/gen-section-pci-bus.c',
     'generator/sections/gen-section-pci-dev.c',
     'generator/sections/gen-section-pcie.c',

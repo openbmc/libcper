@@ -20,6 +20,7 @@
 #include "cper-section-ccix-per.h"
 #include "cper-section-cxl-protocol.h"
 #include "cper-section-cxl-component.h"
+#include "cper-section-nvidia.h"
 
 //Definitions of all sections available to the CPER parser.
 CPER_SECTION_DEFINITION section_definitions[] = {
@@ -69,6 +70,8 @@ CPER_SECTION_DEFINITION section_definitions[] = {
 	  cper_section_cxl_component_to_ir, ir_section_cxl_component_to_cper },
 	{ &gEfiCxlMldPortErrorSectionGuid, "CXL MLD Port Component Error",
 	  cper_section_cxl_component_to_ir, ir_section_cxl_component_to_cper },
+	{ &gEfiNvidiaErrorSectionGuid, "NVIDIA", cper_section_nvidia_to_ir,
+	  ir_section_nvidia_to_cper },
 };
 const size_t section_definitions_len =
 	sizeof(section_definitions) / sizeof(CPER_SECTION_DEFINITION);

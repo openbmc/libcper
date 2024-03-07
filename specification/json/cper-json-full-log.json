@@ -33,6 +33,7 @@
                     { "$ref": "./sections/cper-ccix-per.json" },
                     { "$ref": "./sections/cper-cxl-protocol.json" },
                     { "$ref": "./sections/cper-cxl-component.json" },
+                    { "$ref": "./sections/cper-nvidia.json" },
                     { "$ref": "./sections/cper-unknown.json" }
                 ]
             }
