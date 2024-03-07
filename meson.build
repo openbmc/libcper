@@ -28,7 +28,8 @@ SectionSources = files(
   'sections/cper-section-memory.c',
   'sections/cper-section-pci-bus.c',
   'sections/cper-section-pci-dev.c',
-  'sections/cper-section-pcie.c'
+  'sections/cper-section-pcie.c',
+  'sections/cper-section-nvidia.c',
 )
 
 EDKSources = files(
@@ -48,7 +49,8 @@ GeneratorSectionSources = files(
   'generator/sections/gen-section-memory.c',
   'generator/sections/gen-section-pci-bus.c',
   'generator/sections/gen-section-pci-dev.c',
-  'generator/sections/gen-section-pcie.c'
+  'generator/sections/gen-section-pcie.c',
+  'generator/sections/gen-section-nvidia.c',
 )
 
 cmake = import('cmake')

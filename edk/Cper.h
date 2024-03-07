@@ -1384,4 +1384,20 @@ extern EFI_GUID gEfiIa32X64ErrorTypeMsCheckGuid;
 
 #endif
 
+///
+/// NVIDIA Error Record Section
+///
+typedef struct {
+	CHAR8 Signature[16];
+	UINT16 ErrorType;
+	UINT16 ErrorInstance;
+	UINT8 Severity;
+	UINT8 Socket;
+	UINT8 NumberRegs;
+	UINT8 Reserved;
+	UINT64 InstanceBase;
+} EFI_NVIDIA_ERROR_DATA;
+
+extern EFI_GUID gEfiNvidiaErrorSectionGuid;
+
 #endif
