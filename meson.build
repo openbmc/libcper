@@ -165,7 +165,7 @@ if get_option('utility').allowed()
   )
 endif
 
-run_command('cp', '-r', 'specification/json/', meson.current_build_dir())
+run_command('cp', '-r', 'specification/json/', meson.current_build_dir(), check: true)
 run_command('mv', meson.current_build_dir() / 'json', meson.current_build_dir() / 'specification')
 
 if get_option('tests').allowed()
