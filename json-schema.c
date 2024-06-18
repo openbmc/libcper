@@ -25,7 +25,7 @@ int validate_field(const char *name, json_object *schema, json_object *object,
 int validate_integer(const char *field_name, json_object *schema,
 		     json_object *object, char *error_message);
 int validate_string(const char *field_name, json_object *schema,
-		    json_object *object, char *error_message);
+		    json_object *object, const char *error_message);
 int validate_object(const char *field_name, json_object *schema,
 		    json_object *object, char *error_message);
 int validate_array(const char *field_name, json_object *schema,
@@ -284,7 +284,7 @@ int validate_integer(const char *field_name, json_object *schema,
 
 //Validates a single string value according to the given specification.
 int validate_string(const char *field_name, json_object *schema,
-		    json_object *object, char *error_message)
+		    json_object *object, const char *error_message)
 {
 	//todo: if there is a "pattern" field, verify the string with RegEx.
 	(void)field_name;

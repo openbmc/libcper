@@ -13,7 +13,7 @@
 #include "cper-generate.h"
 
 EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
-							  size_t *lengths,
+							  const size_t *lengths,
 							  int index,
 							  int num_sections);
 size_t generate_section(void **location, char *type);
@@ -117,7 +117,7 @@ void generate_single_section_record(char *type, FILE *out)
 
 //Generates a single section descriptor for a section with the given properties.
 EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
-							  size_t *lengths,
+							  const size_t *lengths,
 							  int index,
 							  int num_sections)
 {

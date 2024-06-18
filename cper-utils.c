@@ -131,7 +131,7 @@ void ir_to_uniform_struct(json_object *ir, UINT32 *start, int len,
 }
 
 //Converts a single integer value to an object containing a value, and a readable name if possible.
-json_object *integer_to_readable_pair(UINT64 value, int len, int keys[],
+json_object *integer_to_readable_pair(UINT64 value, int len, const int keys[],
 				      const char *values[],
 				      const char *default_value)
 {
@@ -151,7 +151,8 @@ json_object *integer_to_readable_pair(UINT64 value, int len, int keys[],
 }
 
 //Converts a single integer value to an object containing a value, readable name and description if possible.
-json_object *integer_to_readable_pair_with_desc(int value, int len, int keys[],
+json_object *integer_to_readable_pair_with_desc(int value, int len,
+						const int keys[],
 						const char *values[],
 						const char *descriptions[],
 						const char *default_value)

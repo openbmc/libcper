@@ -18,10 +18,11 @@ void ir_to_uniform_struct(json_object *ir, UINT32 *start, int len,
 			  const char *names[]);
 void ir_to_uniform_struct64(json_object *ir, UINT64 *start, int len,
 			    const char *names[]);
-json_object *integer_to_readable_pair(UINT64 value, int len, int keys[],
+json_object *integer_to_readable_pair(UINT64 value, int len, const int keys[],
 				      const char *values[],
 				      const char *default_value);
-json_object *integer_to_readable_pair_with_desc(int value, int len, int keys[],
+json_object *integer_to_readable_pair_with_desc(int value, int len,
+						const int keys[],
 						const char *values[],
 						const char *descriptions[],
 						const char *default_value);
