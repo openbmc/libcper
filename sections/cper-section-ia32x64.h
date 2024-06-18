@@ -44,9 +44,7 @@
 #define IA32X64_CHECK_INFO_OPERATION_TYPES_VALUES                              \
 	(const char *[])                                                       \
 	{                                                                      \
-		"Generic Error", "Generic Read",                               \
-			"Generic Write"                                        \
-			"Data Read",                                           \
+		"Generic Error", "Generic Read", "Generic Write", "Data Read", \
 			"Data Write", "Instruction Fetch", "Prefetch",         \
 			"Eviction", "Snoop"                                    \
 	}
