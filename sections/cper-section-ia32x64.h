@@ -45,7 +45,7 @@
 	(const char *[])                                                       \
 	{                                                                      \
 		"Generic Error", "Generic Read",                               \
-			"Generic Write"                                        \
+			"Generic Write",                                       \
 			"Data Read",                                           \
 			"Data Write", "Instruction Fetch", "Prefetch",         \
 			"Eviction", "Snoop"                                    \
