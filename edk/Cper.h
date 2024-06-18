@@ -14,7 +14,7 @@
 #ifndef __CPER_GUID_H__
 #define __CPER_GUID_H__
 
-#pragma pack(1)
+#pragma pack(push, 1)
 
 #define EFI_ERROR_RECORD_SIGNATURE_START SIGNATURE_32('C', 'P', 'E', 'R')
 #define EFI_ERROR_RECORD_SIGNATURE_END	 0xFFFFFFFF
@@ -1370,7 +1370,6 @@ extern EFI_GUID gEfiCxlMemoryModuleErrorSectionGuid;
 extern EFI_GUID gEfiCxlPhysicalSwitchErrorSectionGuid;
 extern EFI_GUID gEfiCxlVirtualSwitchErrorSectionGuid;
 extern EFI_GUID gEfiCxlMldPortErrorSectionGuid;
-#pragma pack()
 
 #if defined(MDE_CPU_IA32) || defined(MDE_CPU_X64)
 ///
@@ -1383,5 +1382,7 @@ extern EFI_GUID gEfiIa32X64ErrorTypeBusCheckGuid;
 extern EFI_GUID gEfiIa32X64ErrorTypeMsCheckGuid;
 
 #endif
+
+#pragma pack(pop)
 
 #endif
