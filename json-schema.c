@@ -14,7 +14,12 @@
 #include <json.h>
 #include "json-schema.h"
 #include "edk/BaseTypes.h"
+#include <limits.h>
+
+// Not all systems include PATH_MAX in limits. Pull in extra header only when needed.
+#if !defined(PATH_MAX)
 #include <linux/limits.h>
+#endif
 
 //Field definitions.
 int json_validator_debug = 0;
