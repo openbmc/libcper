@@ -36,6 +36,7 @@ owners:
 
 reviewers:
 - patrick@stwcx.xyz
+- aadriance@nvidia.com
 
 openbmc:
 - name: Ed Tanous
