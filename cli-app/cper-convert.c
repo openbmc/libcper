@@ -8,10 +8,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <libgen.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <json.h>
 #include "../cper-parse.h"
 #include "../json-schema.h"
+
+// Not all systems include PATH_MAX in limits. Pull in extra header only when needed.
+#if !defined(PATH_MAX)
+#include <linux/limits.h>
+#endif
 
 void cper_to_json(char *in_file, char *out_file, int is_single_section);
 void json_to_cper(char *in_file, char *out_file, char *specification_file,
