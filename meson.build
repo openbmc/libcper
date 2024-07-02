@@ -10,6 +10,8 @@ project(
     'warning_level=2',
   ])
 
+library_is_share = get_option('default_library') == 'shared'
+
 project_description = 'libcper library'
 
 SectionSources = files(
@@ -63,7 +65,7 @@ libb64 = cc.find_library('base64', has_headers: 'libbase64.h', required: false)
 if not libb64.found()
   opt_var = cmake.subproject_options()
   opt_var.add_cmake_defines({
-        'BUILD_SHARED_LIBS': true,
+        'BUILD_SHARED_LIBS': library_is_share,
         'BASE64_BUILD_CLI': false,
         'BASE64_WITH_AVX': false,
         'BASE64_WITH_AVX2': false,
@@ -171,4 +173,3 @@ run_command('mv', meson.current_build_dir() / 'json', meson.current_build_dir() 
 if get_option('tests').allowed()
   subdir('tests')
 endif
-
