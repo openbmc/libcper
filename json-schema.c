@@ -14,7 +14,6 @@
 #include <json.h>
 #include "json-schema.h"
 #include "edk/BaseTypes.h"
-#include <linux/limits.h>
 
 //Field definitions.
 int json_validator_debug = 0;

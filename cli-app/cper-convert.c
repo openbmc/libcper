@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <libgen.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <json.h>
 #include "../cper-parse.h"
 #include "../json-schema.h"
