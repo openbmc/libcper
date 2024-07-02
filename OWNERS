@@ -36,6 +36,7 @@ owners:
 
 reviewers:
 - patrick@stwcx.xyz
+- aadriance@nvidia.com
 
 openbmc:
 - name: Ed Tanous
@@ -44,3 +45,5 @@ openbmc:
 - name: Patrick Williams
   email: patrick@stwcx.xyz
   discord: stwcx
+- name: Andrew Adriance
+  email: aadriance@nvidia.com
