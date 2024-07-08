@@ -121,7 +121,7 @@ json_object *cper_section_arm_to_ir(void *section)
 		json_object *vendor_specific = json_object_new_object();
 		size_t input_size =
 			(uint8_t *)section + record->SectionLength - cur_pos;
-		char *encoded = malloc(2 * input_size);
+		char *encoded = malloc(2 * input_size + 3);
 		size_t encoded_len = 0;
 		if (!encoded) {
 			printf("Failed to allocate encode output buffer. \n");
@@ -441,7 +441,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 	default:
 		//Unknown register array type, add as base64 data instead.
 		register_array = json_object_new_object();
-		char *encoded = malloc(2 * header->RegisterArraySize);
+		char *encoded = malloc(2 * header->RegisterArraySize + 3);
 		size_t encoded_len = 0;
 		if (!encoded) {
 			printf("Failed to allocate encode output buffer. \n");

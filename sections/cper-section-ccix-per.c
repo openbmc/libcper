@@ -39,7 +39,7 @@ json_object *cper_section_ccix_per_to_ir(void *section)
 	int remaining_length =
 		ccix_error->Length - sizeof(EFI_CCIX_PER_LOG_DATA);
 	if (remaining_length > 0) {
-		char *encoded = malloc(2 * remaining_length);
+		char *encoded = malloc(2 * remaining_length + 3);
 		size_t encoded_len = 0;
 		if (!encoded) {
 			printf("Failed to allocate encode output buffer. \n");

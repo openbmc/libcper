@@ -131,7 +131,7 @@ json_object *cper_section_cxl_protocol_to_ir(void *section)
 	//For CXL 1.1 devices, this is the "CXL DVSEC For Flex Bus Device" structure as in CXL 1.1 spec.
 	//For CXL 1.1 host downstream ports, this is the "CXL DVSEC For Flex Bus Port" structure as in CXL 1.1 spec.
 	const char *cur_pos = (const char *)(cxl_protocol_error + 1);
-	char *encoded = malloc(2 * cxl_protocol_error->CxlDvsecLength);
+	char *encoded = malloc(2 * cxl_protocol_error->CxlDvsecLength + 3);
 	size_t encoded_len = 0;
 	if (!encoded) {
 		printf("Failed to allocate encode output buffer. \n");
@@ -148,7 +148,7 @@ json_object *cper_section_cxl_protocol_to_ir(void *section)
 
 	//CXL Error Log
 	//This is the "CXL RAS Capability Structure" as in CXL 1.1 spec.
-	encoded = malloc(2 * cxl_protocol_error->CxlErrorLogLength);
+	encoded = malloc(2 * cxl_protocol_error->CxlErrorLogLength + 3);
 	encoded_len = 0;
 	if (!encoded) {
 		printf("Failed to allocate encode output buffer. \n");

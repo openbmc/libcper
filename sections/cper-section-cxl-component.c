@@ -63,7 +63,7 @@ json_object *cper_section_cxl_component_to_ir(void *section)
 		cxl_error->Length - sizeof(EFI_CXL_COMPONENT_EVENT_HEADER);
 	if (remaining_len > 0) {
 		json_object *event_log = json_object_new_object();
-		char *encoded = malloc(2 * remaining_len);
+		char *encoded = malloc(2 * remaining_len + 3);
 		size_t encoded_len = 0;
 		if (!encoded) {
 			printf("Failed to allocate encode output buffer. \n");

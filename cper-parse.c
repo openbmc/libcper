@@ -335,7 +335,7 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 	if (!section_converted) {
 		//Output the data as formatted base64.
 		result = json_object_new_object();
-		char *encoded = malloc(2 * descriptor->SectionLength);
+		char *encoded = malloc(2 * descriptor->SectionLength + 3);
 		size_t encoded_len = 0;
 		if (!encoded) {
 			printf("Failed to allocate encode output buffer. \n");

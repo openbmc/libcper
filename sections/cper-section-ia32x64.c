@@ -390,7 +390,7 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 		//No parseable data, just dump as base64 and shift the head to the next item.
 		*cur_pos = (void *)(context_info + 1);
 
-		char *encoded = malloc(2 * context_info->ArraySize);
+		char *encoded = malloc(2 * context_info->ArraySize + 3);
 		size_t encoded_len = 0;
 		if (!encoded) {
 			printf("Failed to allocate encode output buffer. \n");
