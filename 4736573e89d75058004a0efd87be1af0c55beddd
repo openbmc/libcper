@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b831d53f_ace43a53",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-07-11T03:14:11Z",
+      "side": 1,
+      "message": "Do we know why this doesn\u0027t cause unit tests failures every time?  Is there randomization somewhere that we need to explicitly allow a seed for?",
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c7c6fe5_313d2407",
         "filename": "cper-parse.c",
         "patchSetId": 1
