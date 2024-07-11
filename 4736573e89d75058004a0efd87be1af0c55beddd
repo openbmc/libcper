@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "68ff1b91_96b629c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2024-07-11T15:10:29Z",
+      "side": 1,
+      "message": "Unfortunately the underlying library here is lacking in this regard.",
+      "parentUuid": "fff37096_c0587048",
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b831d53f_ace43a53",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -37,6 +55,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e253e95d_d44b247f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2024-07-11T15:10:29Z",
+      "side": 1,
+      "message": "The tests generate randomized CPERs as part of the process. I think in the long run we\u0027ll want a set of CPERs of known edge cases that should be handled gracefully.",
+      "parentUuid": "b831d53f_ace43a53",
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4734a055_93f236b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2024-07-11T15:10:29Z",
+      "side": 1,
+      "message": "respond to current comments",
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c7c6fe5_313d2407",
         "filename": "cper-parse.c",
         "patchSetId": 1
@@ -48,6 +101,30 @@
       "writtenOn": "2024-07-11T03:13:24Z",
       "side": 1,
       "message": "Take a look at the encoded_size() function here:\nhttps://www.boost.org/doc/libs/1_68_0/boost/beast/core/detail/base64.hpp\n\nWe need the equivalent here, and it doesn\u0027t look like the base64 library we have provides one, so we\u0027ll have to invent one, but it should be identical to the one I linked.",
+      "range": {
+        "startLine": 338,
+        "startChar": 25,
+        "endLine": 338,
+        "endChar": 58
+      },
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf5e6baf_7de764a9",
+        "filename": "cper-parse.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2024-07-11T15:10:29Z",
+      "side": 1,
+      "message": "ACK, do we think we should switch to a better implemented library given this issue all up or run with rolling our own endcoded_size() function?",
+      "parentUuid": "1c7c6fe5_313d2407",
       "range": {
         "startLine": 338,
         "startChar": 25,
