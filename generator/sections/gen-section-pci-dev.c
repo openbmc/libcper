@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CPER PCI component error sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

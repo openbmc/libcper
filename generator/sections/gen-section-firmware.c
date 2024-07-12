@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CPER firmware error sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

@@ -1,6 +1,6 @@
 /**
- * A user-space application for generating pseudo-random specification compliant CPER records. 
- * 
+ * A user-space application for generating pseudo-random specification compliant CPER records.
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

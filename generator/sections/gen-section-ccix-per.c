@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CCIX PER error sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

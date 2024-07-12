@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CXL protocol error sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

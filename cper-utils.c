@@ -1,6 +1,6 @@
 /**
- * Describes utility functions for parsing CPER into JSON IR. 
- * 
+ * Describes utility functions for parsing CPER into JSON IR.
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

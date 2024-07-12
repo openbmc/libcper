@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CPER generic processor sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

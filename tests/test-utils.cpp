@@ -1,6 +1,6 @@
 /**
  * Defines utility functions for testing CPER-JSON IR output from the cper-parse library.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

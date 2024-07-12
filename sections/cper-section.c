@@ -1,6 +1,6 @@
 /**
  * Describes available sections to the CPER parser.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 #include "../edk/Cper.h"

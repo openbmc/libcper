@@ -1,6 +1,6 @@
 /**
  * Defines tests for validating CPER-JSON IR output from the cper-parse library.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

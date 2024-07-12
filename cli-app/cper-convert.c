@@ -1,7 +1,7 @@
 /**
  * A user-space application linking to the CPER-JSON conversion library which allows for easy
- * conversion between CPER and CPER-JSON formats. 
- * 
+ * conversion between CPER and CPER-JSON formats.
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

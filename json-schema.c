@@ -1,7 +1,7 @@
 /**
  * A very basic, non-complete implementation of a validator for the JSON Schema specification,
  * for validating CPER-JSON.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

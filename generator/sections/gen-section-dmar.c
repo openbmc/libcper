@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CPER DMAr error sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

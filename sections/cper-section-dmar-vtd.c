@@ -1,7 +1,7 @@
 /**
  * Describes functions for converting VT-d specific DMAr CPER sections from binary and JSON format
  * into an intermediate format.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 #include <stdio.h>

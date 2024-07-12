@@ -1,6 +1,6 @@
 /**
  * Describes functions for parsing JSON IR CPER data into binary CPER format.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

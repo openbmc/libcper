@@ -1,7 +1,7 @@
 /**
- * Describes high level functions for converting an entire CPER log, and functions for parsing 
+ * Describes high level functions for converting an entire CPER log, and functions for parsing
  * CPER headers and section descriptions into an intermediate JSON format.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

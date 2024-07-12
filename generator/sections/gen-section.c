@@ -1,6 +1,6 @@
 /**
  * Describes available section generators to the CPER generator.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 #include "gen-section.h"

@@ -1,7 +1,7 @@
 /**
  * Describes common utility functions shared between CPER projects within this repository.
  * No functions here depend on json-c or b64.c.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

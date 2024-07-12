@@ -1,6 +1,6 @@
 /**
- * Describes functions for generating pseudo-random specification compliant CPER records. 
- * 
+ * Describes functions for generating pseudo-random specification compliant CPER records.
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

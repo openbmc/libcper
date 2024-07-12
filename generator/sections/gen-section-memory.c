@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CPER platform memory error sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 

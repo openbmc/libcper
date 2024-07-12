@@ -1,6 +1,6 @@
 /**
  * Functions for generating pseudo-random CPER IA32/x64 sections.
- * 
+ *
  * Author: Lawrence.Tang@arm.com
  **/
 
