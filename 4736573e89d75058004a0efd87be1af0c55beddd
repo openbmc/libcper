@@ -73,6 +73,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "4969d23a_2ed6431a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-07-12T16:51:44Z",
+      "side": 1,
+      "message": "ACK.  We should look at that randomization and just run all sizes in the future.  No real need to randomize for a library so small.\n\nOh well, problem for tomorrow.  Thanks for the info.",
+      "parentUuid": "e253e95d_d44b247f",
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "4734a055_93f236b4",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -125,6 +143,30 @@
       "side": 1,
       "message": "ACK, do we think we should switch to a better implemented library given this issue all up or run with rolling our own endcoded_size() function?",
       "parentUuid": "1c7c6fe5_313d2407",
+      "range": {
+        "startLine": 338,
+        "startChar": 25,
+        "endLine": 338,
+        "endChar": 58
+      },
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93d31d7b_ed8d7287",
+        "filename": "cper-parse.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-07-12T16:51:44Z",
+      "side": 1,
+      "message": "I think in the future we should just embed a simple base64 decoder instead of trying to take a dependency.  A quick look shows that base64 implementations in C are ~80 lines of code.  We have almost that much config in just managing the dependency.\n\nbut in the context of this commit, we need to put in an encoded_size method that returns the correct size to malloc for a given input.",
+      "parentUuid": "cf5e6baf_7de764a9",
       "range": {
         "startLine": 338,
         "startChar": 25,
