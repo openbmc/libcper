@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "../edk/Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-ia32x64.h"
@@ -390,15 +390,13 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 		//No parseable data, just dump as base64 and shift the head to the next item.
 		*cur_pos = (void *)(context_info + 1);
 
-		char *encoded = malloc(2 * context_info->ArraySize);
-		size_t encoded_len = 0;
-		if (!encoded) {
+		int32_t encoded_len = 0;
+		char *encoded = base64_encode((UINT8 *)*cur_pos,
+					      context_info->ArraySize,
+					      &encoded_len);
+		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
 		} else {
-			base64_encode((const char *)*cur_pos,
-				      context_info->ArraySize, encoded,
-				      &encoded_len, 0);
-
 			register_array = json_object_new_object();
 			json_object_object_add(register_array, "data",
 					       json_object_new_string_len(
@@ -819,14 +817,13 @@ void ir_ia32x64_context_info_to_cper(json_object *context_info, FILE *out)
 		//Unknown/structure is not defined.
 		json_object *encoded =
 			json_object_object_get(register_array, "data");
-		char *decoded = malloc(json_object_get_string_len(encoded));
-		size_t decoded_len = 0;
-		if (!decoded) {
+		int32_t decoded_len = 0;
+		const char *j_string = json_object_get_string(encoded);
+		int j_size = json_object_get_string_len(encoded);
+		UINT8 *decoded = base64_decode(j_string, j_size, &decoded_len);
+		if (decoded == NULL) {
 			printf("Failed to allocate decode output buffer. \n");
 		} else {
-			base64_decode(json_object_get_string(encoded),
-				      json_object_get_string_len(encoded),
-				      decoded, &decoded_len, 0);
 			fwrite(decoded, decoded_len, 1, out);
 			fflush(out);
 			free(decoded);
