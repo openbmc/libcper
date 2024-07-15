@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "edk/Cper.h"
 #include "cper-parse.h"
 #include "cper-utils.h"
@@ -335,20 +335,19 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 	if (!section_converted) {
 		//Output the data as formatted base64.
 		result = json_object_new_object();
-		char *encoded = malloc(2 * descriptor->SectionLength);
-		size_t encoded_len = 0;
-		if (!encoded) {
+
+		int32_t encoded_len = 0;
+		char *encoded = base64_encode(
+			section, descriptor->SectionLength, &encoded_len);
+		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
 		} else {
-			base64_encode(section, descriptor->SectionLength,
-				      encoded, &encoded_len, 0);
 			json_object_object_add(result, "data",
 					       json_object_new_string_len(
 						       encoded, encoded_len));
 			free(encoded);
 		}
 	}
-
 	//Free section memory, return result.
 	free(section);
 	return result;
