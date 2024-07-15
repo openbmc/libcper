@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "../edk/Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-dmar-vtd.h"
@@ -82,27 +82,22 @@ json_object *cper_section_dmar_vtd_to_ir(void *section)
 	json_object_object_add(section_ir, "faultRecord", fault_record_ir);
 
 	//Root entry.
-	char *encoded = malloc(2 * 16);
-	size_t encoded_len = 0;
-	if (!encoded) {
-		printf("Failed to allocate encode output buffer. \n");
-	} else {
-		base64_encode((const char *)vtd_error->RootEntry, 16, encoded,
-			      &encoded_len, 0);
-		json_object_object_add(section_ir, "rootEntry",
-				       json_object_new_string_len(encoded,
-								  encoded_len));
-		free(encoded);
-	}
+	int32_t encoded_len = 0;
+
+	char *encoded =
+		base64_encode((UINT8 *)vtd_error->RootEntry, 16, &encoded_len);
+	json_object_object_add(section_ir, "rootEntry",
+			       json_object_new_string_len(encoded,
+							  encoded_len));
+	free(encoded);
 
 	//Context entry.
-	encoded = malloc(2 * 16);
 	encoded_len = 0;
-	if (!encoded) {
+	encoded = base64_encode((UINT8 *)vtd_error->ContextEntry, 16,
+				&encoded_len);
+	if (encoded == NULL) {
 		printf("Failed to allocate encode output buffer. \n");
 	} else {
-		base64_encode((const char *)vtd_error->ContextEntry, 16,
-			      encoded, &encoded_len, 0);
 		json_object_object_add(section_ir, "contextEntry",
 				       json_object_new_string_len(encoded,
 								  encoded_len));
@@ -183,27 +178,29 @@ void ir_section_dmar_vtd_to_cper(json_object *section, FILE *out)
 
 	//Root entry.
 	json_object *encoded = json_object_object_get(section, "rootEntry");
-	char *decoded = malloc(json_object_get_string_len(encoded));
-	size_t decoded_len = 0;
-	if (!decoded) {
+	int32_t decoded_len = 0;
+
+	UINT8 *decoded = base64_decode(json_object_get_string(encoded),
+				       json_object_get_string_len(encoded),
+				       &decoded_len);
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		memcpy(section_cper->RootEntry, decoded, decoded_len);
 		free(decoded);
 	}
+
 	//Context entry.
 	encoded = json_object_object_get(section, "contextEntry");
-	decoded = malloc(json_object_get_string_len(encoded));
 	decoded_len = 0;
-	if (!decoded) {
+
+	decoded = base64_decode(json_object_get_string(encoded),
+				json_object_get_string_len(encoded),
+				&decoded_len);
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
+
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		memcpy(section_cper->ContextEntry, decoded, decoded_len);
 		free(decoded);
 	}

@@ -6,7 +6,7 @@
  **/
 #include <stdio.h>
 #include <string.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "../edk/Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-cxl-protocol.h"
@@ -92,6 +92,7 @@ json_object *cper_section_cxl_protocol_to_ir(void *section)
 			cxl_protocol_error->DeviceId.SlotNumber));
 	json_object_object_add(section_ir, "deviceID", device_id);
 
+	char *encoded;
 	//Device serial & capability structure (if CXL 1.1 device).
 	if (cxl_protocol_error->CxlAgentType ==
 	    CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
@@ -103,20 +104,20 @@ json_object *cper_section_cxl_protocol_to_ir(void *section)
 		//The PCIe capability structure provided here could either be PCIe 1.1 Capability Structure
 		//(36-byte, padded to 60 bytes) or PCIe 2.0 Capability Structure (60-byte). There does not seem
 		//to be a way to differentiate these, so this is left as a b64 dump.
-		char *encoded = malloc(2 * 60);
-		size_t encoded_len = 0;
-		if (!encoded) {
+
+		int32_t encoded_len = 0;
+
+		encoded = base64_encode(
+			(UINT8 *)cxl_protocol_error->CapabilityStructure.PcieCap,
+			60, &encoded_len);
+		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
-		} else {
-			base64_encode((const char *)cxl_protocol_error
-					      ->CapabilityStructure.PcieCap,
-				      60, encoded, &encoded_len, 0);
-			json_object_object_add(section_ir,
-					       "capabilityStructure",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
-			free(encoded);
+			return NULL;
 		}
+		json_object_object_add(section_ir, "capabilityStructure",
+				       json_object_new_string_len(encoded,
+								  encoded_len));
+		free(encoded);
 	}
 
 	//CXL DVSEC & error log length.
@@ -131,35 +132,39 @@ json_object *cper_section_cxl_protocol_to_ir(void *section)
 	//For CXL 1.1 devices, this is the "CXL DVSEC For Flex Bus Device" structure as in CXL 1.1 spec.
 	//For CXL 1.1 host downstream ports, this is the "CXL DVSEC For Flex Bus Port" structure as in CXL 1.1 spec.
 	const char *cur_pos = (const char *)(cxl_protocol_error + 1);
-	char *encoded = malloc(2 * cxl_protocol_error->CxlDvsecLength);
-	size_t encoded_len = 0;
-	if (!encoded) {
-		printf("Failed to allocate encode output buffer. \n");
-	} else {
-		base64_encode(cur_pos, cxl_protocol_error->CxlDvsecLength,
-			      encoded, &encoded_len, 0);
-		json_object_object_add(section_ir, "cxlDVSEC",
-				       json_object_new_string_len(encoded,
-								  encoded_len));
+	int32_t encoded_len = 0;
 
-		free(encoded);
+	encoded = base64_encode((UINT8 *)cur_pos,
+				cxl_protocol_error->CxlDvsecLength,
+				&encoded_len);
+	if (encoded == NULL) {
+		return NULL;
 	}
+	json_object_object_add(section_ir, "cxlDVSEC",
+			       json_object_new_string_len(encoded,
+							  encoded_len));
+
+	free(encoded);
+
 	cur_pos += cxl_protocol_error->CxlDvsecLength;
 
 	//CXL Error Log
 	//This is the "CXL RAS Capability Structure" as in CXL 1.1 spec.
-	encoded = malloc(2 * cxl_protocol_error->CxlErrorLogLength);
+
 	encoded_len = 0;
-	if (!encoded) {
+	encoded = base64_encode((UINT8 *)cur_pos,
+				cxl_protocol_error->CxlErrorLogLength,
+				&encoded_len);
+
+	if (encoded == NULL) {
 		printf("Failed to allocate encode output buffer. \n");
-	} else {
-		base64_encode(cur_pos, cxl_protocol_error->CxlErrorLogLength,
-			      encoded, &encoded_len, 0);
-		json_object_object_add(section_ir, "cxlErrorLog",
-				       json_object_new_string_len(encoded,
-								  encoded_len));
-		free(encoded);
+		return NULL;
 	}
+	json_object_object_add(section_ir, "cxlErrorLog",
+			       json_object_new_string_len(encoded,
+							  encoded_len));
+	free(encoded);
+
 	return section_ir;
 }
 
@@ -223,20 +228,23 @@ void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out)
 		json_object_object_get(device_id, "slotNumber"));
 
 	//If CXL 1.1 device, the serial number & PCI capability structure.
+	UINT8 *decoded;
 	if (section_cper->CxlAgentType == CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
 		section_cper->DeviceSerial = json_object_get_uint64(
 			json_object_object_get(section, "deviceSerial"));
 
 		json_object *encoded =
 			json_object_object_get(section, "capabilityStructure");
-		char *decoded = malloc(json_object_get_string_len(encoded));
-		size_t decoded_len = 0;
-		if (!decoded) {
+
+		int32_t decoded_len = 0;
+
+		decoded = base64_decode(json_object_get_string(encoded),
+					json_object_get_string_len(encoded),
+					&decoded_len);
+
+		if (decoded == NULL) {
 			printf("Failed to allocate decode output buffer. \n");
 		} else {
-			base64_decode(json_object_get_string(encoded),
-				      json_object_get_string_len(encoded),
-				      decoded, &decoded_len, 0);
 			memcpy(section_cper->CapabilityStructure.PcieCap,
 			       decoded, decoded_len);
 			free(decoded);
@@ -255,14 +263,15 @@ void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out)
 
 	//DVSEC out to stream.
 	json_object *encoded = json_object_object_get(section, "cxlDVSEC");
-	char *decoded = malloc(json_object_get_string_len(encoded));
-	size_t decoded_len = 0;
-	if (!decoded) {
+
+	int32_t decoded_len = 0;
+
+	decoded = base64_decode(json_object_get_string(encoded),
+				json_object_get_string_len(encoded),
+				&decoded_len);
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		fwrite(decoded, decoded_len, 1, out);
 		fflush(out);
 		free(decoded);
@@ -270,14 +279,14 @@ void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out)
 
 	//Error log out to stream.
 	encoded = json_object_object_get(section, "cxlErrorLog");
-	decoded = malloc(json_object_get_string_len(encoded));
 	decoded_len = 0;
-	if (!decoded) {
+
+	decoded = base64_decode(json_object_get_string(encoded),
+				json_object_get_string_len(encoded),
+				&decoded_len);
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		fwrite(decoded, decoded_len, 1, out);
 		fflush(out);
 		free(decoded);

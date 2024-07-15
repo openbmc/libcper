@@ -6,7 +6,7 @@
  **/
 #include <stdio.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "../edk/Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-cxl-component.h"
@@ -63,21 +63,22 @@ json_object *cper_section_cxl_component_to_ir(void *section)
 		cxl_error->Length - sizeof(EFI_CXL_COMPONENT_EVENT_HEADER);
 	if (remaining_len > 0) {
 		json_object *event_log = json_object_new_object();
-		char *encoded = malloc(2 * remaining_len);
-		size_t encoded_len = 0;
-		if (!encoded) {
-			printf("Failed to allocate encode output buffer. \n");
-		} else {
-			base64_encode((const char *)cur_pos, remaining_len,
-				      encoded, &encoded_len, 0);
-			json_object_object_add(event_log, "data",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
 
-			free(encoded);
-			json_object_object_add(
-				section_ir, "cxlComponentEventLog", event_log);
+		int32_t encoded_len = 0;
+
+		char *encoded = base64_encode((UINT8 *)cur_pos, remaining_len,
+					      &encoded_len);
+		if (encoded == NULL) {
+			printf("Failed to allocate encode output buffer. \n");
+			return NULL;
 		}
+		json_object_object_add(event_log, "data",
+				       json_object_new_string_len(encoded,
+								  encoded_len));
+
+		free(encoded);
+		json_object_object_add(section_ir, "cxlComponentEventLog",
+				       event_log);
 	}
 
 	return section_ir;
@@ -129,14 +130,16 @@ void ir_section_cxl_component_to_cper(json_object *section, FILE *out)
 	json_object *event_log =
 		json_object_object_get(section, "cxlComponentEventLog");
 	json_object *encoded = json_object_object_get(event_log, "data");
-	char *decoded = malloc(json_object_get_string_len(encoded));
-	size_t decoded_len = 0;
-	if (!decoded) {
+
+	int32_t decoded_len = 0;
+
+	UINT8 *decoded = base64_decode(json_object_get_string(encoded),
+				       json_object_get_string_len(encoded),
+				       &decoded_len);
+
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		fwrite(decoded, decoded_len, 1, out);
 		fflush(out);
 		free(decoded);

@@ -1,6 +1,0 @@
-[wrap-git]
-url = https://github.com/aklomp/base64
-revision = 8bdda2d47caf8b066999c5bd01069e55bcd0d396
-
-[provide]
-libb64 = libb64_dep
