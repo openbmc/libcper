@@ -58,27 +58,8 @@ cc = meson.get_compiler('c')
 
 json_c_dep = dependency('json-c', required: true, fallback: ['json-c', 'json_c_dep'])
 
-libb64 = cc.find_library('base64', has_headers: 'libbase64.h', required: false)
-if not libb64.found()
-    opt_var = cmake.subproject_options()
-    opt_var.add_cmake_defines(
-        {
-            'BUILD_SHARED_LIBS': library_is_share,
-            'BASE64_BUILD_CLI': false,
-            'BASE64_WITH_AVX': false,
-            'BASE64_WITH_AVX2': false,
-            'BASE64_WITH_AVX512': false,
-            'BASE64_WITH_SSSE3': false,
-            'BASE64_WITH_SSE41': false,
-            'BASE64_WITH_SSE42': false,
-        },
-    )
-
-    libb64_ex = cmake.subproject('libb64', options: opt_var)
-    libb64 = libb64_ex.dependency('base64')
-endif
-
 libcper_parse_sources = [
+    'base64.c',
     'cper-parse.c',
     'ir-parse.c',
     'cper-utils.c',
@@ -98,7 +79,6 @@ libcper_parse = library(
     c_args: '-Wno-address-of-packed-member',
     dependencies: [
         json_c_dep,
-        libb64,
     ],
     install: true,
     install_dir: get_option('libdir'),
@@ -119,7 +99,6 @@ libcper_generate = library(
     dependencies: [
         libcper_parse,
         json_c_dep,
-        libb64,
     ],
     install: true,
     install_dir: get_option('libdir'),
