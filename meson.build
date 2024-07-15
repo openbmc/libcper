@@ -16,7 +16,7 @@ library_is_share = get_option('default_library') == 'shared'
 
 project_description = 'libcper library'
 
-SectionSources = files(
+section_sources = files(
     'sections/cper-section-arm.c',
     'sections/cper-section-ccix-per.c',
     'sections/cper-section-cxl-component.c',
@@ -35,9 +35,9 @@ SectionSources = files(
     'sections/cper-section.c',
 )
 
-EDKSources = files('edk/Cper.c')
+edk_sources = files('edk/Cper.c')
 
-GeneratorSectionSources = files(
+generator_section_sources = files(
     'generator/sections/gen-section-arm.c',
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',
@@ -53,7 +53,6 @@ GeneratorSectionSources = files(
     'generator/sections/gen-section.c',
 )
 
-cmake = import('cmake')
 cc = meson.get_compiler('c')
 
 json_c_dep = dependency('json-c', required: true, fallback: ['json-c', 'json_c_dep'])
@@ -72,8 +71,8 @@ libcper_include = ['.']
 libcper_parse = library(
     'cper-parse',
     libcper_parse_sources,
-    SectionSources,
-    EDKSources,
+    section_sources,
+    edk_sources,
     version: meson.project_version(),
     include_directories: include_directories(libcper_include),
     c_args: '-Wno-address-of-packed-member',
@@ -93,7 +92,7 @@ libcper_generate_sources = ['generator/cper-generate.c', 'generator/gen-utils.c'
 libcper_generate = library(
     'cper-generate',
     libcper_generate_sources,
-    GeneratorSectionSources,
+    generator_section_sources,
     version: meson.project_version(),
     include_directories: include_directories(libcper_include),
     dependencies: [
@@ -131,7 +130,7 @@ if get_option('utility').allowed()
     executable(
         'cper-generate',
         'generator/cper-generate-cli.c',
-        EDKSources,
+        edk_sources,
         include_directories: include_directories(libcper_include),
         dependencies: [
             libcper_generate,

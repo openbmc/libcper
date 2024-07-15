@@ -34,16 +34,12 @@ run_command(
     meson.current_build_dir() / 'specification',
 )
 
-tests = ['cper-tests']
-
-test(
-    'test-cper-tests',
-    executable(
-        'cper-tests',
-        sources,
-        implicit_include_directories: false,
-        include_directories: include_directories(test_include_dirs),
-        cpp_args: '-fpermissive',
-        dependencies: [libcper_parse, libcper_generate, json_c_dep, gtest, gmock],
-    ),
+cper_tests = executable(
+    'cper-tests',
+    sources,
+    implicit_include_directories: false,
+    include_directories: include_directories(test_include_dirs),
+    cpp_args: '-fpermissive',
+    dependencies: [libcper_parse, libcper_generate, json_c_dep, gtest, gmock],
 )
+test('test-cper-tests', cper_tests)
