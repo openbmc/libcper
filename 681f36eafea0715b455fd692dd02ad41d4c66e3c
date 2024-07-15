@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23d4fbda_986c1948",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-07-15T22:13:11Z",
+      "side": 1,
+      "message": "I\u0027m not convinced I fully understand what\u0027s going on here, but it passes CI, so it seems unlikely it will be harmful.",
+      "revId": "681f36eafea0715b455fd692dd02ad41d4c66e3c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
