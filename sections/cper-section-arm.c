@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "../edk/Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-arm.h"
@@ -121,21 +121,19 @@ json_object *cper_section_arm_to_ir(void *section)
 		json_object *vendor_specific = json_object_new_object();
 		size_t input_size =
 			(uint8_t *)section + record->SectionLength - cur_pos;
-		char *encoded = malloc(2 * input_size);
-		size_t encoded_len = 0;
-		if (!encoded) {
-			printf("Failed to allocate encode output buffer. \n");
-		} else {
-			base64_encode((const char *)cur_pos, input_size,
-				      encoded, &encoded_len, 0);
-			json_object_object_add(vendor_specific, "data",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
-			free(encoded);
-
-			json_object_object_add(section_ir, "vendorSpecificInfo",
-					       vendor_specific);
+		int32_t encoded_len = 0;
+		char *encoded =
+			base64_encode(cur_pos, input_size, &encoded_len);
+		if (encoded == NULL) {
+			return NULL;
 		}
+		json_object_object_add(vendor_specific, "data",
+				       json_object_new_string_len(encoded,
+								  encoded_len));
+		free(encoded);
+
+		json_object_object_add(section_ir, "vendorSpecificInfo",
+				       vendor_specific);
 	}
 
 	return section_ir;
@@ -441,19 +439,19 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 	default:
 		//Unknown register array type, add as base64 data instead.
 		register_array = json_object_new_object();
-		char *encoded = malloc(2 * header->RegisterArraySize);
-		size_t encoded_len = 0;
-		if (!encoded) {
+		int32_t encoded_len = 0;
+		char *encoded = base64_encode((UINT8 *)cur_pos,
+					      header->RegisterArraySize,
+					      &encoded_len);
+		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
-		} else {
-			base64_encode((const char *)cur_pos,
-				      header->RegisterArraySize, encoded,
-				      &encoded_len, 0);
-			json_object_object_add(register_array, "data",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
-			free(encoded);
+			return NULL;
 		}
+		json_object_object_add(register_array, "data",
+				       json_object_new_string_len(encoded,
+								  encoded_len));
+		free(encoded);
+
 		break;
 	}
 	json_object_object_add(context_ir, "registerArray", register_array);
@@ -549,20 +547,17 @@ void ir_section_arm_to_cper(json_object *section, FILE *out)
 			json_object_object_get(vendor_specific_info, "data");
 		int vendor_specific_len =
 			json_object_get_string_len(vendor_info_string);
-		char *decoded = malloc(vendor_specific_len);
-		size_t decoded_len = 0;
-		if (!decoded) {
-			printf("Failed to allocate decode output buffer. \n");
-		} else {
-			base64_decode(
-				json_object_get_string(vendor_info_string),
-				vendor_specific_len, decoded, &decoded_len, 0);
 
-			//Write out to file.
-			fwrite(decoded, decoded_len, 1, out);
-			fflush(out);
-			free(decoded);
-		}
+		int32_t decoded_len = 0;
+
+		UINT8 *decoded = base64_decode(
+			json_object_get_string(vendor_info_string),
+			vendor_specific_len, &decoded_len);
+
+		//Write out to file.
+		fwrite(decoded, decoded_len, 1, out);
+		fflush(out);
+		free(decoded);
 	}
 
 	//Free remaining resources.
@@ -903,15 +898,16 @@ void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out)
 {
 	//Get base64 represented data.
 	json_object *encoded = json_object_object_get(registers, "data");
-	char *decoded = malloc(json_object_get_string_len(encoded));
-	size_t decoded_len = 0;
-	if (!decoded) {
+
+	int32_t decoded_len = 0;
+
+	UINT8 *decoded = base64_decode(json_object_get_string(encoded),
+				       json_object_get_string_len(encoded),
+				       &decoded_len);
+
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
-
 		//Flush out to stream.
 		fwrite(&decoded, decoded_len, 1, out);
 		fflush(out);

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "../edk/Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-pcie.h"
@@ -103,38 +103,39 @@ json_object *cper_section_pcie_to_ir(void *section)
 	//The PCIe capability structure provided here could either be PCIe 1.1 Capability Structure
 	//(36-byte, padded to 60 bytes) or PCIe 2.0 Capability Structure (60-byte). There does not seem
 	//to be a way to differentiate these, so this is left as a b64 dump.
-	char *encoded = malloc(2 * 60);
-	size_t encoded_len = 0;
-	if (!encoded) {
+	int32_t encoded_len = 0;
+
+	char *encoded = base64_encode((UINT8 *)pcie_error->Capability.PcieCap,
+				      60, &encoded_len);
+	if (encoded == NULL) {
 		printf("Failed to allocate encode output buffer. \n");
 	} else {
-		base64_encode((const char *)pcie_error->Capability.PcieCap, 60,
-			      encoded, &encoded_len, 0);
 		json_object *capability = json_object_new_object();
 		json_object_object_add(capability, "data",
 				       json_object_new_string_len(encoded,
 								  encoded_len));
 		free(encoded);
+
 		json_object_object_add(section_ir, "capabilityStructure",
 				       capability);
 	}
 
 	//AER information.
 	json_object *aer_capability_ir = json_object_new_object();
-	encoded = malloc(2 * 96);
 	encoded_len = 0;
-	if (!encoded) {
+
+	encoded = base64_encode((UINT8 *)pcie_error->AerInfo.PcieAer, 96,
+				&encoded_len);
+	if (encoded == NULL) {
 		printf("Failed to allocate encode output buffer. \n");
 	} else {
-		base64_encode((const char *)pcie_error->AerInfo.PcieAer, 96,
-			      encoded, &encoded_len, 0);
 		json_object_object_add(aer_capability_ir, "data",
 				       json_object_new_string_len(encoded,
 								  encoded_len));
 		free(encoded);
-		json_object_object_add(section_ir, "aerInfo",
-				       aer_capability_ir);
 	}
+	json_object_object_add(section_ir, "aerInfo", aer_capability_ir);
+
 	return section_ir;
 }
 
@@ -206,14 +207,15 @@ void ir_section_pcie_to_cper(json_object *section, FILE *out)
 	json_object *capability =
 		json_object_object_get(section, "capabilityStructure");
 	json_object *encoded = json_object_object_get(capability, "data");
-	char *decoded = malloc(json_object_get_string_len(encoded));
-	size_t decoded_len = 0;
-	if (!decoded) {
+
+	int32_t decoded_len = 0;
+
+	UINT8 *decoded = base64_decode(json_object_get_string(encoded),
+				       json_object_get_string_len(encoded),
+				       &decoded_len);
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		memcpy(section_cper->Capability.PcieCap, decoded, decoded_len);
 		free(decoded);
 	}
@@ -221,14 +223,15 @@ void ir_section_pcie_to_cper(json_object *section, FILE *out)
 	//AER capability structure.
 	json_object *aer_info = json_object_object_get(section, "aerInfo");
 	encoded = json_object_object_get(aer_info, "data");
-	decoded = malloc(json_object_get_string_len(encoded));
 	decoded_len = 0;
-	if (!decoded) {
+
+	decoded = base64_decode(json_object_get_string(encoded),
+				json_object_get_string_len(encoded),
+				&decoded_len);
+
+	if (decoded == NULL) {
 		printf("Failed to allocate decode output buffer. \n");
 	} else {
-		base64_decode(json_object_get_string(encoded),
-			      json_object_get_string_len(encoded), decoded,
-			      &decoded_len, 0);
 		memcpy(section_cper->AerInfo.PcieAer, decoded, decoded_len);
 		free(decoded);
 	}

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "libbase64.h"
+#include "base64.h"
 #include "edk/Cper.h"
 #include "cper-parse.h"
 #include "cper-utils.h"
@@ -171,14 +171,15 @@ void ir_section_to_cper(json_object *section,
 	//If unknown GUID, so read as a base64 unknown section.
 	if (!section_converted) {
 		json_object *encoded = json_object_object_get(section, "data");
-		char *decoded = malloc(json_object_get_string_len(encoded));
-		size_t decoded_len = 0;
-		if (!decoded) {
+
+		int32_t decoded_len = 0;
+
+		UINT8 *decoded = base64_decode(
+			json_object_get_string(encoded),
+			json_object_get_string_len(encoded), &decoded_len);
+		if (decoded == NULL) {
 			printf("Failed to allocate decode output buffer. \n");
 		} else {
-			base64_decode(json_object_get_string(encoded),
-				      json_object_get_string_len(encoded),
-				      decoded, &decoded_len, 0);
 			fwrite(decoded, decoded_len, 1, out);
 			fflush(out);
 			free(decoded);
