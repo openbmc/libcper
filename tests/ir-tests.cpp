@@ -41,8 +41,8 @@ void cper_log_section_ir_test(const char *section_name, int single_section)
 
 	//Validate against schema.
 	char error_message[JSON_ERROR_MSG_MAX_LEN] = { 0 };
-	int valid = validate_schema_from_file("./specification/cper-json.json",
-					      ir, error_message);
+	int valid =
+		validate_schema_from_file(LIBCPER_JSON_SPEC, ir, error_message);
 	json_object_put(ir);
 	ASSERT_TRUE(valid)
 		<< "IR validation test failed (single section mode = "
