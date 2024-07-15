@@ -46,6 +46,30 @@
       },
       "revId": "d98724fff5bb3d16ea9086cb5612ca7048cd5dd0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "104daa0c_cf9efda6",
+        "filename": "cli-app/cper-convert.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002126
+      },
+      "writtenOn": "2024-07-15T21:59:39Z",
+      "side": 1,
+      "message": "Review documentation, _POSIX_SOURCE is technically deprecated. _POSIX_C_SOURCE with a value of 200809L seems like the most correct approach.",
+      "parentUuid": "aafe5232_8ca88704",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 6
+      },
+      "revId": "d98724fff5bb3d16ea9086cb5612ca7048cd5dd0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
