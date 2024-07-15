@@ -27,13 +27,6 @@ sources = [
 
 test_include_dirs = ['.', '..']
 
-run_command('cp', '-r', '../specification/json/', meson.current_build_dir())
-run_command(
-    'mv',
-    meson.current_build_dir() / 'json',
-    meson.current_build_dir() / 'specification',
-)
-
 cper_tests = executable(
     'cper-tests',
     sources,

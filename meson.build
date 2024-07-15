@@ -12,6 +12,13 @@ project(
     ],
 )
 
+add_global_arguments(
+    '-DLIBCPER_JSON_SPEC="'
+    + meson.current_source_dir()
+    + '/specification/json/cper-json.json"',
+    language: ['c', 'cpp'],
+)
+
 library_is_share = get_option('default_library') == 'shared'
 
 project_description = 'libcper library'
@@ -139,13 +146,6 @@ if get_option('utility').allowed()
         install_dir: get_option('bindir'),
     )
 endif
-
-run_command('cp', '-r', 'specification/json/', meson.current_build_dir(), check: true)
-run_command(
-    'mv',
-    meson.current_build_dir() / 'json',
-    meson.current_build_dir() / 'specification',
-)
 
 if get_option('tests').allowed()
     subdir('tests')
