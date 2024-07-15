@@ -199,6 +199,30 @@
       },
       "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "599580ab_e365fb23",
+        "filename": "cper-parse.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-07-15T16:25:56Z",
+      "side": 1,
+      "message": "Thanks for the pointer.",
+      "parentUuid": "039a49db_0ba399a8",
+      "range": {
+        "startLine": 338,
+        "startChar": 25,
+        "endLine": 338,
+        "endChar": 58
+      },
+      "revId": "4736573e89d75058004a0efd87be1af0c55beddd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
