@@ -21,3 +21,6 @@ specification/document/*.fls
 specification/document/*.fdb_*
 specification/document/*.*gz
 specification/document/*aux
+
+subprojects/*
+-subprojects/*.wrap
