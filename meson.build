@@ -117,6 +117,7 @@ libcper_generate = declare_dependency(
     link_with: libcper_generate,
 )
 
+install_headers('base64.h', subdir: 'libcper')
 install_headers('cper-parse.h')
 install_headers('cper-utils.h')
 install_headers('common-utils.h')
