@@ -37,6 +37,7 @@ owners:
 reviewers:
 - patrick@stwcx.xyz
 - aadriance@nvidia.com
+- krajagopalan@nvidia.com
 
 openbmc:
 - name: Ed Tanous
@@ -47,3 +48,5 @@ openbmc:
   discord: stwcx
 - name: Andrew Adriance
   email: aadriance@nvidia.com
+- name: Karthik Rajagopalan
+  email: krajagopalan@nvidia.com
