@@ -52,6 +52,24 @@
       "parentUuid": "7af3a83b_b9fccb20",
       "revId": "28f9bff064012e53397c2bae153f8f6df3e43115",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54dcb4f8_5c15b9f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-07-26T21:38:26Z",
+      "side": 1,
+      "message": "I was trying to use the base64_encode from libcper, but I\u0027ve changed my code.",
+      "parentUuid": "0ccff16d_e7f4c8b3",
+      "revId": "28f9bff064012e53397c2bae153f8f6df3e43115",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ],
   "submitRequirementResults": []
