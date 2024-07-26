@@ -12,7 +12,7 @@ project(
     ],
 )
 
-add_global_arguments(
+add_project_arguments(
     '-DLIBCPER_JSON_SPEC="'
     + meson.current_source_dir()
     + '/specification/json/cper-json.json"',
@@ -20,7 +20,7 @@ add_global_arguments(
 )
 
 library_is_share = get_option('default_library') == 'shared'
-add_global_arguments('-D_POSIX_C_SOURCE=200809L', language : 'c')
+add_project_arguments('-D_POSIX_C_SOURCE=200809L', language : 'c')
 
 project_description = 'libcper library'
 
