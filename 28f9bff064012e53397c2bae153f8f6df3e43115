@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f88427e_25467b29",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:07:19Z",
+      "side": 1,
+      "message": "Do we really want to be exporting additional functionality from libcper that isn\u0027t related to cper?  If we do this, we probably need to start versioning the API.",
+      "revId": "28f9bff064012e53397c2bae153f8f6df3e43115",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
