@@ -34,6 +34,24 @@
       "parentUuid": "7f88427e_25467b29",
       "revId": "28f9bff064012e53397c2bae153f8f6df3e43115",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ccff16d_e7f4c8b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T15:58:05Z",
+      "side": 1,
+      "message": "\u003e I\u0027m not sure how adding a new API is related to API versioning, but we probably should understand this deeper before moving on.\n\nI guess the implication is that someone wants to use those base64 routines outside libcper (though I don\u0027t know why), which is why we probably want a library / API version, so we can indicate incompatibility.\n\n(Most of our code is only used inside the BMC, except for libpldm and now libcper, so nobody has cared about versioning.  This starts to be a problem now that we\u0027re expecting external users that we don\u0027t have control over.)",
+      "parentUuid": "7af3a83b_b9fccb20",
+      "revId": "28f9bff064012e53397c2bae153f8f6df3e43115",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
