@@ -16,6 +16,24 @@
       "message": "What kind of build error?\n\nThe commit is good but the commit message is severely lacking.",
       "revId": "cebba07a093a7ffb473b0508868001827c32e191",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01f27d7c_9f6dc6f4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-07-27T03:57:46Z",
+      "side": 1,
+      "message": "The error message (gist of it) was:    subprojects/libcper/meson.build:15:0: ERROR: Function \u0027add_global_arguments\u0027 cannot be used in subprojects because there is no way to make that reliable.\n\nI\u0027ve pushed an amended commit.",
+      "parentUuid": "ea6abedd_b5f4b957",
+      "revId": "cebba07a093a7ffb473b0508868001827c32e191",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
