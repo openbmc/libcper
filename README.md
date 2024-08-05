@@ -14,10 +14,8 @@ Before building this library and its associated tools, you must have meson
 
 This project uses Meson (>=1.1.1). To build for native architecture, simply run:
 
-```
-meson setup build
-ninji -C build
-```
+    1. meson setup build
+    2. ninji -C build
 
 ## Usage
 
@@ -26,18 +24,14 @@ CPER-JSON. The first of these is `cper-convert`, which is a command line tool
 that can be found in `build/`. With this, you can convert to and from CPER and
 CPER-JSON through the command line. An example usage scenario is below:
 
-```
-cper-convert to-cper samples/cper-json-test-arm.json --out cper.dump
-cper-convert to-json cper.generated.dump
-```
+    cper-convert to-cper samples/cper-json-test-arm.json --out cper.dump
+    cper-convert to-json cper.generated.dump
 
 Another tool bundled with this repository is `cper-generate`, found in `build/`.
 This allows you to generate pseudo-random valid CPER records with sections of
 specified types for testing purposes. An example use of the program is below:
 
-```
-cper-generate --out cper.generated.dump --sections generic ia32x64
-```
+    cper-generate --out cper.generated.dump --sections generic ia32x64
 
 Help for both of these tools can be accessed through using the `--help` flag in
 isolation.
@@ -46,10 +40,8 @@ Finally, a static library containing symbols for converting CPER and CPER-JSON
 between an intermediate JSON format can be found generated at
 `lib/libcper-parse.a`. This contains the following useful library symbols:
 
-```
-json_object* cper_to_ir(FILE* cper_file);
-void ir_to_cper(json_object* ir, FILE* out);
-```
+    json_object* cper_to_ir(FILE* cper_file);
+    void ir_to_cper(json_object* ir, FILE* out);
 
 ## Specification
 
