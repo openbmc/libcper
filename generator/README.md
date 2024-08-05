@@ -8,7 +8,7 @@ definitions present within UEFI Specification Appendix N.
 
 An example usage of `cper-generator` is shown below.
 
-```
+```sh
 cper-generator --out mycper.dump --sections generic dmarvtd ia32x64 arm
 ```
 
