@@ -12,7 +12,7 @@ then create a C file within `sections/` to house your generation code. For the
 sake of example, we will create a generator for a fake OEM section
 "myVendorSection".
 
-_sections/gen-section.h_
+_sections/gen-section.h_:
 
 ```c
 //Section generator function predefinitions.
@@ -22,7 +22,7 @@ size_t generate_section_cxl_component(void** location);
 size_t generate_section_myvendor(void** location);
 ```
 
-_sections/gen-myvendor.c_
+_sections/gen-myvendor.c_:
 
 ```c
 /**
