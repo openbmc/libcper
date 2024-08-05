@@ -8,9 +8,7 @@ definitions present within UEFI Specification Appendix N.
 
 An example usage of `cper-generator` is shown below.
 
-```
-cper-generator --out mycper.dump --sections generic dmarvtd ia32x64 arm
-```
+    cper-generator --out mycper.dump --sections generic dmarvtd ia32x64 arm
 
 This command would generate a CPER log with a processor generic section, VT-d
 DMAr section, IA32x64 section and an ARM section, outputting to the given
