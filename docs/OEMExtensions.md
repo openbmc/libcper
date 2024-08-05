@@ -12,7 +12,7 @@ section from CPER -> CPER-JSON and CPER-JSON -> CPER. For the purposes of
 example here, we will create a fake CPER section, "myVendorSection", in
 `cper-section-myvendor.h` and `cper-section-myvendor.c`.
 
-_sections/cper-section-myvendor.h_
+_sections/cper-section-myvendor.h_:
 
 ```c
 #ifndef CPER_SECTION_MYVENDOR
@@ -27,7 +27,7 @@ void ir_section_myvendor_to_cper(json_object* section, FILE* out);
 #endif
 ```
 
-_sections/cper-section-myvendor.c_
+_sections/cper-section-myvendor.c_:
 
 ```c
 /**
@@ -89,7 +89,7 @@ Finally, we need to add a section definition for our section, matching the GUID
 to the name and conversion methods. Open `sections/cper-section.c` and add your
 definition to the `section_definitions` array, like so:
 
-_sections/cper-section.c_
+_sections/cper-section.c_:
 
 ```c
 /**
