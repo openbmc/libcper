@@ -55,6 +55,10 @@ json_object *cper_to_ir(FILE *cper_file)
 			  cper_file) != 1) {
 			printf("Invalid number of section headers: Header states %d sections, could not read section %d.\n",
 			       header.SectionCount, i + 1);
+			// Free json objects
+			json_object_put(sections_ir);
+			json_object_put(section_descriptors_ir);
+			json_object_put(header_ir);
 			return NULL;
 		}
 		json_object_array_add(
