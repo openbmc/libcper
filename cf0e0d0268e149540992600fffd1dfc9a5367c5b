@@ -16,6 +16,47 @@
       "message": "Line 19 should say \u0027ninja\u0027. Better yet, use \u0027meson compile -C build\u0027",
       "revId": "cf0e0d0268e149540992600fffd1dfc9a5367c5b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "647ace52_c0d0388b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-06T21:36:49Z",
+      "side": 1,
+      "message": "That typo already exists.  We should fix it, but I\u0027m not going to hold this patch to do it, when it\u0027s already wrong on master.\n\nIf the author wants to fix it in this patch, feel free to add it.",
+      "parentUuid": "edebd964_64d24d5f",
+      "revId": "cf0e0d0268e149540992600fffd1dfc9a5367c5b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bee7bf8_89b19fca",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-06T21:36:49Z",
+      "side": 1,
+      "message": "Why did we add numbers here?",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 3
+      },
+      "revId": "cf0e0d0268e149540992600fffd1dfc9a5367c5b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
