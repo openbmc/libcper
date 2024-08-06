@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edebd964_64d24d5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-08-06T18:30:26Z",
+      "side": 1,
+      "message": "Line 19 should say \u0027ninja\u0027. Better yet, use \u0027meson compile -C build\u0027",
+      "revId": "cf0e0d0268e149540992600fffd1dfc9a5367c5b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
