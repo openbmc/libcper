@@ -92,7 +92,7 @@ libcper_parse = library(
     install: true,
     install_dir: get_option('libdir'),
 )
-libcper_parse = declare_dependency(
+libcper_parse_dep = declare_dependency(
     include_directories: include_directories(libcper_include),
     link_with: libcper_parse,
 )
@@ -106,15 +106,22 @@ libcper_generate = library(
     version: meson.project_version(),
     include_directories: include_directories(libcper_include),
     dependencies: [
-        libcper_parse,
+        libcper_parse_dep,
         json_c_dep,
     ],
     install: true,
     install_dir: get_option('libdir'),
 )
-libcper_generate = declare_dependency(
+libcper_generate_dep = declare_dependency(
     include_directories: include_directories(libcper_include),
     link_with: libcper_generate,
+)
+
+import('pkgconfig').generate(
+    libcper_parse,
+    name: meson.project_name(),
+    version: meson.project_version(),
+    description: 'C bindings for parsing CPER'
 )
 
 install_headers('cper-parse.h')
@@ -130,7 +137,7 @@ if get_option('utility').allowed()
         'cli-app/cper-convert.c',
         include_directories: include_directories(libcper_include),
         dependencies: [
-            libcper_parse,
+            libcper_parse_dep,
             json_c_dep,
         ],
         install: true,
@@ -143,7 +150,7 @@ if get_option('utility').allowed()
         edk_sources,
         include_directories: include_directories(libcper_include),
         dependencies: [
-            libcper_generate,
+            libcper_generate_dep,
         ],
         install: true,
         install_dir: get_option('bindir'),
