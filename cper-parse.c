@@ -6,10 +6,12 @@
  **/
 
 #include <stdio.h>
+#include <string.h>
 #include <json.h>
 #include "base64.h"
 #include "edk/Cper.h"
 #include "cper-parse.h"
+#include "cper-parse-str.h"
 #include "cper-utils.h"
 #include "sections/cper-section.h"
 
@@ -79,6 +81,15 @@ json_object *cper_to_ir(FILE *cper_file)
 	json_object_object_add(parent, "sections", sections_ir);
 
 	return parent;
+}
+
+char *cper_to_str_ir(FILE *cper_file)
+{
+    json_object *jobj = cper_to_ir(cper_file);
+    char *str = jobj ? strdup(json_object_to_json_string(jobj)) : NULL;
+
+    json_object_put(jobj);
+    return str;
 }
 
 //Converts a parsed CPER record header into intermediate JSON object format.
@@ -384,4 +395,13 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 	json_object_object_add(ir, "section", section_ir);
 
 	return ir;
+}
+
+char *cper_single_section_to_str_ir(FILE *cper_section_file)
+{
+    json_object *jobj = cper_single_section_to_ir(cper_section_file);
+    char *str = jobj ? strdup(json_object_to_json_string(jobj)) : NULL;
+
+    json_object_put(jobj);
+    return str;
 }
