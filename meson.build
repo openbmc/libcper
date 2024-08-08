@@ -118,6 +118,7 @@ libcper_generate = declare_dependency(
 )
 
 install_headers('cper-parse.h')
+install_headers('cper-parse-str.h')
 install_headers('cper-utils.h')
 install_headers('common-utils.h')
 install_headers('generator/cper-generate.h', subdir: 'generator')
