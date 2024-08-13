@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73f5a7ee_fba797fb",
+        "filename": "cper-parse-str.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-13T20:57:05Z",
+      "side": 1,
+      "message": "We shoudn\u0027t be passing file handles over a library boundary.  Read the file in in your calling code, then just pass a buffer of characters over.",
+      "range": {
+        "startLine": 8,
+        "startChar": 21,
+        "endLine": 8,
+        "endChar": 25
+      },
+      "revId": "0f4e14de48340ee7d59a4404bc0565dbe557058f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
