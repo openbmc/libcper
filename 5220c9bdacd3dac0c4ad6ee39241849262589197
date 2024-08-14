@@ -50,6 +50,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "caacd40f_1b02bd52",
+        "filename": "cper-parse.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-14T17:45:42Z",
+      "side": 1,
+      "message": "Ah, understood.",
+      "parentUuid": "1915a4da_b2b3a9b7",
+      "range": {
+        "startLine": 86,
+        "startChar": 21,
+        "endLine": 86,
+        "endChar": 25
+      },
+      "revId": "5220c9bdacd3dac0c4ad6ee39241849262589197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "63db67c4_953444bf",
         "filename": "cper-parse.c",
         "patchSetId": 7
