@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0105a8a3_bc90fba9",
+        "filename": "cper-parse.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-14T16:40:36Z",
+      "side": 1,
+      "message": "Looks like we\u0027re still passing FILE over an API boundary?\n\nremember, the intent of this is that it can be used on EDK2 and other embedded targets that will very likely not support posix files.",
+      "range": {
+        "startLine": 86,
+        "startChar": 21,
+        "endLine": 86,
+        "endChar": 25
+      },
+      "revId": "5220c9bdacd3dac0c4ad6ee39241849262589197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
