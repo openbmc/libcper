@@ -1,118 +1,136 @@
-# SPDX-License-Identifier: GPL-2.0
-#
-# Originally from Linux v5.6
 ---
-AccessModifierOffset: -4
+Language:        Cpp
+# BasedOnStyle:  LLVM
+AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
-AlignConsecutiveMacros: true
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-#AlignEscapedNewlines: Left # Unknown to clang-format-4.0
+AlignEscapedNewlines: Right
 AlignOperands:  Align
 AlignTrailingComments:
   Kind: Always
   OverEmptyLines: 1
-AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: true
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: false
+AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: true
 BinPackParameters: true
+BitFieldColonSpacing: None
 BraceWrapping:
-  AfterClass: false
-  AfterControlStatement: false
-  AfterEnum: false
-  AfterFunction: true
-  AfterNamespace: true
-  AfterObjCDeclaration: false
-  AfterStruct: false
-  AfterUnion: false
-  #AfterExternBlock: false # Unknown to clang-format-5.0
-  BeforeCatch: false
-  BeforeElse: false
-  IndentBraces: false
-  #SplitEmptyFunction: true # Unknown to clang-format-4.0
-  #SplitEmptyRecord: true # Unknown to clang-format-4.0
-  #SplitEmptyNamespace: true # Unknown to clang-format-4.0
+  AfterCaseLabel:  true
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterExternBlock: true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  BeforeCatch:     true
+  BeforeElse:      true
+  BeforeLambdaBody: false
+  BeforeWhile:     false
+  IndentBraces:    false
+  SplitEmptyFunction:   false
+  SplitEmptyRecord:     false
+  SplitEmptyNamespace:  false
 BreakAfterAttributes: Never
 BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Custom
-#BreakBeforeInheritanceComma: false # Unknown to clang-format-4.0
-BreakBeforeTernaryOperators: false
-BreakConstructorInitializersBeforeComma: false
-#BreakConstructorInitializers: BeforeComma # Unknown to clang-format-4.0
-BreakAfterJavaFieldAnnotations: false
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: AfterColon
+BreakInheritanceList: AfterColon
 BreakStringLiterals: false
-ColumnLimit: 80
-CommentPragmas: '^ IWYU pragma:'
-#CompactNamespaces: false # Unknown to clang-format-4.0
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 8
-ContinuationIndentWidth: 8
-Cpp11BracedListStyle: false
-DeriveLineEnding: false
+ColumnLimit:     80
+CommentPragmas:  '^ IWYU pragma:'
+CompactNamespaces: false
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
 DerivePointerAlignment: false
-DisableFormat: false
-ExperimentalAutoDetectBinPacking: false
-#FixNamespaceComments: false # Unknown to clang-format-4.0
-#IncludeBlocks: Preserve # Unknown to clang-format-5.0
+DisableFormat:   false
+FixNamespaceComments: true
+ForEachMacros:
+  - foreach
+  - Q_FOREACH
+  - BOOST_FOREACH
+IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: '.*'
-    Priority: 1
-IncludeIsMainRegex: '(Test)?$'
-IndentCaseLabels: false
+  - Regex:           '^[<"](gtest|gmock)'
+    Priority:        7
+  - Regex:           '^"config.h"'
+    Priority:        -1
+  - Regex:           '^".*\.h"'
+    Priority:        1
+  - Regex:           '^".*\.hpp"'
+    Priority:        2
+  - Regex:           '^<.*\.h>'
+    Priority:        3
+  - Regex:           '^<.*\.hpp>'
+    Priority:        4
+  - Regex:           '^<.*'
+    Priority:        5
+  - Regex:           '.*'
+    Priority:        6
+IndentCaseLabels: true
 IndentExternBlock: NoIndent
-#IndentPPDirectives: None # Unknown to clang-format-5.0
-IndentWidth: 8
-IndentWrappedFunctionNames: false
+IndentRequiresClause: true
+IndentWidth:     4
+IndentWrappedFunctionNames: true
 InsertNewlineAtEOF: true
-JavaScriptQuotes: Leave
-JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: false
+LambdaBodyIndentation: Signature
 LineEnding: LF
 MacroBlockBegin: ''
-MacroBlockEnd: ''
+MacroBlockEnd:   ''
 MaxEmptyLinesToKeep: 1
-NamespaceIndentation: Inner
-#ObjCBinPackProtocolList: Auto # Unknown to clang-format-5.0
-ObjCBlockIndentWidth: 8
-ObjCSpaceAfterProperty: true
+NamespaceIndentation: None
+ObjCBlockIndentWidth: 2
+ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
-
-# Taken from git's rules
-PenaltyBreakAssignment: 10
-PenaltyBreakBeforeFirstCallParameter: 30
-PenaltyBreakComment: 10
-PenaltyBreakFirstLessLess: 0
-PenaltyBreakString: 10
-PenaltyExcessCharacter: 100
+PackConstructorInitializers: BinPack
+PenaltyBreakAssignment: 25
+PenaltyBreakBeforeFirstCallParameter: 50
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
-
-PointerAlignment: Right
-ReflowComments: false
-SortIncludes: false
-#SortUsingDeclarations: false # Unknown to clang-format-4.0
+PenaltyIndentedWhitespace: 1
+PointerAlignment: Left
+QualifierAlignment: Left
+ReferenceAlignment: Left
+ReflowComments:  true
+RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: Keyword
+SortIncludes: CaseSensitive
+SortUsingDeclarations: true
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
-#SpaceBeforeCtorInitializerColon: true # Unknown to clang-format-5.0
-#SpaceBeforeInheritanceColon: true # Unknown to clang-format-5.0
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatements
-#SpaceBeforeRangeBasedForLoopColon: true # Unknown to clang-format-5.0
+SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
-SpacesInAngles: false
-SpacesInContainerLiterals: false
+SpacesInAngles: Never
+SpacesInContainerLiterals: true
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: Cpp03
-TabWidth: 8
-UseTab: Always
+Standard:        Latest
+TabWidth:        4
+UseTab:          Never
 ...
+
