@@ -23,7 +23,17 @@
             "type": "integer"
         },
         "severity": {
-            "type": "integer"
+            "type": "object",
+            "required": ["code", "name"],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         },
         "socket": {
             "type": "integer"
@@ -33,6 +43,21 @@
         },
         "instanceBase": {
             "type": "integer"
+        },
+        "registers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["address", "value"],
+                "properties": {
+                    "address": {
+                        "type": "integer"
+                    },
+                    "value": {
+                        "type": "integer"
+                    }
+                }
+            }
         }
     }
 }
