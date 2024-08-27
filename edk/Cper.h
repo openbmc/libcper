@@ -1395,6 +1395,10 @@ typedef struct {
 	UINT8 NumberRegs;
 	UINT8 Reserved;
 	UINT64 InstanceBase;
+	struct {
+		UINT64 Address;
+		UINT64 Value;
+	} Registers[1];
 } EFI_NVIDIA_ERROR_DATA;
 
 extern EFI_GUID gEfiNvidiaErrorSectionGuid;
