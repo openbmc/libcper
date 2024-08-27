@@ -16,18 +16,22 @@ json_object *cper_section_nvidia_to_ir(void *section)
 	EFI_NVIDIA_ERROR_DATA *nvidia_error = (EFI_NVIDIA_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();
 
-	//Signature.
 	json_object_object_add(section_ir, "signature",
 			       json_object_new_string(nvidia_error->Signature));
 
-	//Fields.
+	json_object *severity = json_object_new_object();
+	json_object_object_add(severity, "code",
+			       json_object_new_uint64(nvidia_error->Severity));
+	json_object_object_add(severity, "name",
+			       json_object_new_string(severity_to_string(
+				       nvidia_error->Severity)));
+	json_object_object_add(section_ir, "severity", severity);
+
 	json_object_object_add(section_ir, "errorType",
 			       json_object_new_int(nvidia_error->ErrorType));
 	json_object_object_add(
 		section_ir, "errorInstance",
 		json_object_new_int(nvidia_error->ErrorInstance));
-	json_object_object_add(section_ir, "severity",
-			       json_object_new_int(nvidia_error->Severity));
 	json_object_object_add(section_ir, "socket",
 			       json_object_new_int(nvidia_error->Socket));
 	json_object_object_add(section_ir, "numberRegs",
@@ -59,7 +63,7 @@ void ir_section_nvidia_to_cper(json_object *section, FILE *out)
 	int numRegs = json_object_array_length(regarr);
 
 	size_t section_sz =
-		sizeof(EFI_NVIDIA_ERROR_DATA) + (numRegs * 2 * sizeof(UINT64));
+		sizeof(EFI_NVIDIA_ERROR_DATA) + ((numRegs - 1) * 2 * sizeof(UINT64));
 	EFI_NVIDIA_ERROR_DATA *section_cper =
 		(EFI_NVIDIA_ERROR_DATA *)calloc(1, section_sz);
 
@@ -74,8 +78,9 @@ void ir_section_nvidia_to_cper(json_object *section, FILE *out)
 		json_object_object_get(section, "errorType"));
 	section_cper->ErrorInstance = json_object_get_int(
 		json_object_object_get(section, "errorInstance"));
-	section_cper->Severity = json_object_get_int(
-		json_object_object_get(section, "severity"));
+	json_object *severity = json_object_object_get(section, "severity");
+	section_cper->Severity = (UINT8)json_object_get_uint64(
+		json_object_object_get(severity, "code"));
 	section_cper->Socket =
 		json_object_get_int(json_object_object_get(section, "socket"));
 	section_cper->NumberRegs = json_object_get_int(
