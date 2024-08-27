@@ -295,6 +295,16 @@ TEST(CXLComponentTests, BinaryEqual)
 	cper_log_section_dual_binary_test("cxlcomponent-media");
 }
 
+//NVIDIA section tests.
+TEST(NVIDIASectionTests, IRValid)
+{
+	cper_log_section_dual_ir_test("nvidia");
+}
+TEST(NVIDIASectionTests, BinaryEqual)
+{
+	cper_log_section_dual_binary_test("nvidia");
+}
+
 //Unknown section tests.
 TEST(UnknownSectionTests, IRValid)
 {
