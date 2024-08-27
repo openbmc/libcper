@@ -1392,6 +1392,11 @@ extern EFI_GUID gEfiIa32X64ErrorTypeMsCheckGuid;
 /// NVIDIA Error Record Section
 ///
 typedef struct {
+	UINT64 Address;
+	UINT64 Value;
+} EFI_NVIDIA_REGISTER_DATA;
+
+typedef struct {
 	CHAR8 Signature[16];
 	UINT16 ErrorType;
 	UINT16 ErrorInstance;
@@ -1400,6 +1405,16 @@ typedef struct {
 	UINT8 NumberRegs;
 	UINT8 Reserved;
 	UINT64 InstanceBase;
+	// Keep this at the end of this struct
+	// and allocate based on NumberRegs
+#ifndef __cplusplus
+#if defined __has_attribute && __has_attribute(counted_by)
+	EFI_NVIDIA_REGISTER_DATA Register[]
+		__attribute__((counted_by(NumberRegs)));
+#else
+	EFI_NVIDIA_REGISTER_DATA Register[];
+#endif
+#endif
 } EFI_NVIDIA_ERROR_DATA;
 
 extern EFI_GUID gEfiNvidiaErrorSectionGuid;
