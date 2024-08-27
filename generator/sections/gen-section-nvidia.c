@@ -26,11 +26,15 @@ size_t generate_section_nvidia(void **location)
 	init_random();
 
 	//Create random bytes.
-	size_t size = sizeof(EFI_NVIDIA_ERROR_DATA);
+	int numRegs = rand() % 6;
+	size_t size =
+		sizeof(EFI_NVIDIA_ERROR_DATA) + (numRegs * 2 * sizeof(UINT64));
 	UINT8 *section = generate_random_bytes(size);
 
-	//Reserved byte.
+	//Reserved byte & number of registers
 	EFI_NVIDIA_ERROR_DATA *nvidia_error = (EFI_NVIDIA_ERROR_DATA *)section;
+	nvidia_error->NumberRegs = numRegs + 1;
+	nvidia_error->Severity = rand() % 4;
 	nvidia_error->Reserved = 0;
 
 	//Signature.
