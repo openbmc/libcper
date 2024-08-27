@@ -4,6 +4,7 @@
  **/
 
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 #include <stdio.h>
 #include "../../edk/BaseTypes.h"
@@ -26,11 +27,15 @@ size_t generate_section_nvidia(void **location)
 	init_random();
 
 	//Create random bytes.
-	size_t size = sizeof(EFI_NVIDIA_ERROR_DATA);
+	int numRegs = 6;
+	size_t size = offsetof(EFI_NVIDIA_ERROR_DATA, Register) +
+		      numRegs * sizeof(EFI_NVIDIA_REGISTER_DATA);
 	UINT8 *section = generate_random_bytes(size);
 
-	//Reserved byte.
+	//Reserved byte & number of registers
 	EFI_NVIDIA_ERROR_DATA *nvidia_error = (EFI_NVIDIA_ERROR_DATA *)section;
+	nvidia_error->NumberRegs = numRegs;
+	nvidia_error->Severity %= 4;
 	nvidia_error->Reserved = 0;
 
 	//Signature.
