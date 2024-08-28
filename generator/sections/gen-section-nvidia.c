@@ -36,7 +36,8 @@ size_t generate_section_nvidia(void **location)
 	//Signature.
 	int idx_random = rand() % (sizeof(signatures) / sizeof(signatures[0]));
 	strncpy(nvidia_error->Signature, signatures[idx_random],
-		sizeof(nvidia_error->Signature));
+		sizeof(nvidia_error->Signature) - 1);
+	nvidia_error->Signature[sizeof(nvidia_error->Signature) - 1] = '\0';
 
 	//Set return values, exit.
 	*location = section;

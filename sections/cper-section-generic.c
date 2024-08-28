@@ -143,7 +143,11 @@ void ir_section_generic_to_cper(json_object *section, FILE *out)
 	const char *brand_string = json_object_get_string(
 		json_object_object_get(section, "cpuBrandString"));
 	if (brand_string != NULL) {
-		strncpy(section_cper->BrandString, brand_string, 127);
+		strncpy(section_cper->BrandString, brand_string,
+			sizeof(section_cper->BrandString) - 1);
+		section_cper
+			->BrandString[sizeof(section_cper->BrandString) - 1] =
+			'\0';
 	}
 
 	//Write & flush out to file, free memory.

@@ -240,7 +240,8 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 		json_object_object_get(section_descriptor_ir, "fruText");
 	if (fru_text != NULL) {
 		strncpy(descriptor->FruString, json_object_get_string(fru_text),
-			20);
+			sizeof(descriptor->FruString) - 1);
+		descriptor->FruString[sizeof(decriptor->FruString) - 1] = '\0';
 	}
 }
 

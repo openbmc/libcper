@@ -67,7 +67,8 @@ void ir_section_nvidia_to_cper(json_object *section, FILE *out)
 	strncpy(section_cper->Signature,
 		json_object_get_string(
 			json_object_object_get(section, "signature")),
-		sizeof(section_cper->Signature));
+		sizeof(section_cper->Signature) - 1);
+	section_cper->Signature[sizeof(section_cper->Signature) - 1] = '\0';
 
 	//Fields.
 	section_cper->ErrorType = json_object_get_int(
