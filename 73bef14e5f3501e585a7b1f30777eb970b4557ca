@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f4ba3c0_cbb28dce",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-08-28T16:54:20Z",
+      "side": 1,
+      "message": "This is not part of unit-test.\n\nThis is actually a component of cper-generate (CLI) \u0026 it uses this rand() / generate_random_bytes() method everywhere (including header / section-descriptors) to produce sample CPERs.\n\nI\u0027m not quite sure what to use it for, and we don\u0027t really use this functionality, but I\u0027ve updated it to keep it functioning.",
+      "parentUuid": "de47d628_664adfdc",
+      "revId": "73bef14e5f3501e585a7b1f30777eb970b4557ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f179bbdb_96a91b2e",
@@ -41,6 +59,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5cc123b_4774a0fa",
+        "filename": "sections/cper-section-nvidia.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-08-28T16:54:20Z",
+      "side": 1,
+      "message": "There is already 2 * sizeof(UINT64) in sizeof(EFI_NVIDIA_ERROR_DATA) - enough for numRegs\u003d1",
+      "parentUuid": "f179bbdb_96a91b2e",
+      "range": {
+        "startLine": 66,
+        "startChar": 16,
+        "endLine": 66,
+        "endChar": 20
+      },
+      "revId": "73bef14e5f3501e585a7b1f30777eb970b4557ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8eea8628_514ef224",
@@ -54,6 +96,30 @@
       "writtenOn": "2024-08-28T15:40:20Z",
       "side": 1,
       "message": "Do we need descriptions of these?  \"code\" and \"name\" aren\u0027t terribly descriptive of what they are.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "73bef14e5f3501e585a7b1f30777eb970b4557ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b45063b_8f7ef977",
+        "filename": "specification/json/sections/cper-nvidia.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-08-28T16:54:20Z",
+      "side": 1,
+      "message": "This follows the conventions used elsewhere - in header, sectionDescriptor (since NVIDIA docs say this is just the UEFI-defined severity)",
+      "parentUuid": "8eea8628_514ef224",
       "range": {
         "startLine": 29,
         "startChar": 0,
