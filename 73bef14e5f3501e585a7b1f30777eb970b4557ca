@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de47d628_664adfdc",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-28T15:40:20Z",
+      "side": 1,
+      "message": "We can\u0027t be calling rand() in a unit test.  That defeats a lot of the purpose of a unit test if the results are random.\n\nFor now, lets just pick a number for the unit tests to use, and in the future, we can either create a fuzzer, or at least seed these with a value so test results are reproducible.",
+      "revId": "73bef14e5f3501e585a7b1f30777eb970b4557ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8eea8628_514ef224",
+        "filename": "specification/json/sections/cper-nvidia.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-28T15:40:20Z",
+      "side": 1,
+      "message": "Do we need descriptions of these?  \"code\" and \"name\" aren\u0027t terribly descriptive of what they are.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "73bef14e5f3501e585a7b1f30777eb970b4557ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
