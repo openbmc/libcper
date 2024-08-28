@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f179bbdb_96a91b2e",
+        "filename": "sections/cper-section-nvidia.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-08-28T15:41:02Z",
+      "side": 1,
+      "message": "Why - 1?",
+      "range": {
+        "startLine": 66,
+        "startChar": 16,
+        "endLine": 66,
+        "endChar": 20
+      },
+      "revId": "73bef14e5f3501e585a7b1f30777eb970b4557ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8eea8628_514ef224",
         "filename": "specification/json/sections/cper-nvidia.json",
         "patchSetId": 2
