@@ -1370,6 +1370,7 @@ extern EFI_GUID gEfiCxlMemoryModuleErrorSectionGuid;
 extern EFI_GUID gEfiCxlPhysicalSwitchErrorSectionGuid;
 extern EFI_GUID gEfiCxlVirtualSwitchErrorSectionGuid;
 extern EFI_GUID gEfiCxlMldPortErrorSectionGuid;
+extern EFI_GUID gEfiAmpereErrorSectionGuid;
 
 #if defined(MDE_CPU_IA32) || defined(MDE_CPU_X64)
 ///
