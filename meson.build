@@ -42,6 +42,7 @@ section_sources = files(
     'sections/cper-section-pci-dev.c',
     'sections/cper-section-pcie.c',
     'sections/cper-section.c',
+    'sections/cper-section-ampere.c',
 )
 
 edk_sources = files('edk/Cper.c')
@@ -61,6 +62,7 @@ generator_section_sources = files(
     'generator/sections/gen-section-pci-dev.c',
     'generator/sections/gen-section-pcie.c',
     'generator/sections/gen-section.c',
+    'generator/sections/gen-section-ampere.c',
 )
 
 cc = meson.get_compiler('c')

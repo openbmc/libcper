@@ -28,6 +28,7 @@
                 { "$ref": "./sections/cper-cxl-protocol.json" },
                 { "$ref": "./sections/cper-cxl-component.json" },
                 { "$ref": "./sections/cper-nvidia.json" },
+                { "$ref": "./sections/cper-ampere.json" },
                 { "$ref": "./sections/cper-unknown.json" }
             ]
         }
