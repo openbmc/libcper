@@ -298,6 +298,13 @@ typedef struct {
 			0xa7, 0x9e, 0x57, 0x5f, 0xdf, 0xaa, 0x84, 0xec         \
 		}                                                              \
 	}
+#define EFI_ERROR_SECTION_AMPERE_SPECIFIC_GUID                                 \
+	{                                                                      \
+		0x2826cc9f, 0x448c, 0x4c2b,                                    \
+		{                                                              \
+			0x86, 0xb6, 0xa9, 0x53, 0x94, 0xb7, 0xef, 0x33         \
+		}                                                              \
+	}
 ///@}
 
 ///
@@ -1403,6 +1410,18 @@ typedef struct {
 } EFI_NVIDIA_ERROR_DATA;
 
 extern EFI_GUID gEfiNvidiaErrorSectionGuid;
+
+///
+/// Ampere Error Record Section
+///
+typedef struct {
+	UINT16 TypeId;
+	UINT16 SubtypeId;
+	UINT32 InstanceId;
+} __attribute__((packed)) EFI_AMPERE_ERROR_DATA;
+
+extern EFI_GUID gEfiAmpereErrorSectionGuid;
+
 #pragma pack(pop)
 
 #ifdef __cplusplus
