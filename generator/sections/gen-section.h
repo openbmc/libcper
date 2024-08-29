@@ -25,6 +25,7 @@ size_t generate_section_ccix_per(void **location);
 size_t generate_section_cxl_protocol(void **location);
 size_t generate_section_cxl_component(void **location);
 size_t generate_section_nvidia(void **location);
+size_t generate_section_ampere(void **location);
 
 //Definition structure for a single CPER section generator.
 typedef struct {
