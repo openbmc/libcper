@@ -1,0 +1,22 @@
+{
+    "$id": "cper-json-ampere-section",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+        "typeId",
+        "subTypeId",
+        "instanceId"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "typeId": {
+            "type": "integer"
+        },
+        "subTypeId": {
+            "type": "integer"
+        },
+        "instanceId": {
+            "type": "integer"
+        }
+    }
+}
