@@ -42,6 +42,7 @@ section_sources = files(
     'sections/cper-section-pci-dev.c',
     'sections/cper-section-pcie.c',
     'sections/cper-section.c',
+    'sections/cper-section-ampere.c',
 )
 
 edk_sources = files('edk/Cper.c')
