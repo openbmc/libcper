@@ -22,6 +22,30 @@
       },
       "revId": "256dc37bf5a3b6ae2982eee6e5a0132ac1b38922",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6a79d13_bc4d39c8",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-09-04T20:09:33Z",
+      "side": 1,
+      "message": "This isn\u0027t that issue.\n\nI added 2 new UINT64 fields to the struct \u0026 accounted for it in the math (sections/cper-section-nvidia.c had the math with the old struct; generator/sections/gen-section-nvidia.c did not have it at all).",
+      "parentUuid": "eb0fc679_2495ce4c",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 42
+      },
+      "revId": "256dc37bf5a3b6ae2982eee6e5a0132ac1b38922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
