@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "31b631d7_33990bc9",
+        "filename": "edk/Cper.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-04T20:12:46Z",
+      "side": 1,
+      "message": "An array of size 1, but with the plural \"Registers\" doesn\u0027t look correct, and I can\u0027t tell what was intended.",
+      "range": {
+        "startLine": 1398,
+        "startChar": 0,
+        "endLine": 1401,
+        "endChar": 16
+      },
+      "revId": "256dc37bf5a3b6ae2982eee6e5a0132ac1b38922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "eb0fc679_2495ce4c",
         "filename": "generator/sections/gen-section-nvidia.c",
         "patchSetId": 4
@@ -61,6 +84,30 @@
       "writtenOn": "2024-09-04T20:10:39Z",
       "side": 1,
       "message": "This is part of the Update to NVIDIA section schema (adds \"registers\")",
+      "parentUuid": "b6a79d13_bc4d39c8",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 42
+      },
+      "revId": "256dc37bf5a3b6ae2982eee6e5a0132ac1b38922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1ba6e83_03adecba",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-04T20:12:46Z",
+      "side": 1,
+      "message": "2 new UINT64 fields would be 32 bytes, not 2, so I\u0027m not sure how that works?\n\nplease update this to use sizeof and variables where appropriate.",
       "parentUuid": "b6a79d13_bc4d39c8",
       "range": {
         "startLine": 31,
