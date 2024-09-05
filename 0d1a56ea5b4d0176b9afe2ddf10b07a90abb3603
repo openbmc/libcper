@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9b5f9cb_6b292979",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-05T00:55:28Z",
+      "side": 1,
+      "message": "why are we moding the field?  I don\u0027t think it was initted anywhere?",
+      "range": {
+        "startLine": 37,
+        "startChar": 24,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "0d1a56ea5b4d0176b9afe2ddf10b07a90abb3603",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
