@@ -46,6 +46,30 @@
       },
       "revId": "0d1a56ea5b4d0176b9afe2ddf10b07a90abb3603",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5cfbe6_4d1db58c",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-05T15:06:37Z",
+      "side": 1,
+      "message": "Maybe leave a comment that severity is only valid between 0 and 3 then?",
+      "parentUuid": "a87b29ae_a9ead610",
+      "range": {
+        "startLine": 37,
+        "startChar": 24,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "0d1a56ea5b4d0176b9afe2ddf10b07a90abb3603",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
