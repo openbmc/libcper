@@ -22,6 +22,70 @@
       },
       "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0485d9a_dcac07c6",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-05T15:18:19Z",
+      "side": 1,
+      "message": "nvm.  foudnn them.",
+      "parentUuid": "76488baa_533fb2e3",
+      "range": {
+        "startLine": 31,
+        "startChar": 15,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd6cda1a_ee922089",
+        "filename": "specification/json/sections/cper-nvidia.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-05T15:18:19Z",
+      "side": 1,
+      "message": "Any reason we need both name and code here?  Doesn\u0027t name map 1:1 with code?",
+      "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40396c65_1103703d",
+        "filename": "specification/json/sections/cper-nvidia.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-05T15:18:19Z",
+      "side": 1,
+      "message": "Should these decode to names rather than just integers?",
+      "range": {
+        "startLine": 54,
+        "startChar": 33,
+        "endLine": 54,
+        "endChar": 40
+      },
+      "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
