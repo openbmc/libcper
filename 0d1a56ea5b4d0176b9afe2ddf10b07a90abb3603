@@ -22,6 +22,30 @@
       },
       "revId": "0d1a56ea5b4d0176b9afe2ddf10b07a90abb3603",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a87b29ae_a9ead610",
+        "filename": "generator/sections/gen-section-nvidia.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-09-05T01:36:40Z",
+      "side": 1,
+      "message": "The memory is allocated \u0026 inited with random bytes. This changeset needs this value to be % 4",
+      "parentUuid": "d9b5f9cb_6b292979",
+      "range": {
+        "startLine": 37,
+        "startChar": 24,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "0d1a56ea5b4d0176b9afe2ddf10b07a90abb3603",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
