@@ -1,6 +1,10 @@
 #ifndef CPER_SECTION_MEMORY_H
 #define CPER_SECTION_MEMORY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <json.h>
 #include "../edk/Cper.h"
 
@@ -53,5 +57,9 @@ json_object *cper_section_platform_memory_to_ir(void *section);
 json_object *cper_section_platform_memory2_to_ir(void *section);
 void ir_section_memory_to_cper(json_object *section, FILE *out);
 void ir_section_memory2_to_cper(json_object *section, FILE *out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
