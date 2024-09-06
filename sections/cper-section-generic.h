@@ -1,6 +1,10 @@
 #ifndef CPER_SECTION_GENERIC_H
 #define CPER_SECTION_GENERIC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <json.h>
 #include "../edk/Cper.h"
 
@@ -64,5 +68,9 @@
 
 json_object *cper_section_generic_to_ir(void *section);
 void ir_section_generic_to_cper(json_object *section, FILE *out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
