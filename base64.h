@@ -1,3 +1,10 @@
+#ifndef BASE64_H
+#define BASE64_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "edk/BaseTypes.h"
 
 /**
@@ -11,3 +18,9 @@ UINT8 *base64_decode(const CHAR8 *src, INT32 len, INT32 *out_len);
  * Caller is responsible for freeing the returned buffer.
  */
 CHAR8 *base64_encode(const UINT8 *src, INT32 len, INT32 *out_len);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
