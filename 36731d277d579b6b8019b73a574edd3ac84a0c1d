@@ -88,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17a8c73b_8ddaf491",
+        "filename": "specification/json/sections/cper-nvidia.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-09-06T00:45:55Z",
+      "side": 1,
+      "message": "Having just one of them will require consumers of libcper to implement a \"name \u003d mappingOf(code)\" (or vice-versa) if they need the property that\u0027s not required.",
+      "parentUuid": "fd6cda1a_ee922089",
+      "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40396c65_1103703d",
