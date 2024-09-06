@@ -1,6 +1,10 @@
 #ifndef CPER_SECTION_CXL_COMPONENT_H
 #define CPER_SECTION_CXL_COMPONENT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <json.h>
 #include "../edk/Cper.h"
 
@@ -35,5 +39,9 @@ typedef struct {
 
 json_object *cper_section_cxl_component_to_ir(void *section);
 void ir_section_cxl_component_to_cper(json_object *section, FILE *out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

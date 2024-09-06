@@ -1,6 +1,10 @@
 #ifndef GEN_SECTIONS_H
 #define GEN_SECTIONS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include "../../edk/Cper.h"
 
@@ -31,5 +35,9 @@ typedef struct {
 
 extern CPER_GENERATOR_DEFINITION generator_definitions[];
 extern const size_t generator_definitions_len;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

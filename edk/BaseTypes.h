@@ -11,6 +11,10 @@
 #ifndef CPER_BASETYPES_H
 #define CPER_BASETYPES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ///
 /// 8-byte unsigned value
 ///
@@ -97,5 +101,9 @@ typedef struct {
 **/
 #define SIGNATURE_32(A, B, C, D)                                               \
 	(SIGNATURE_16(A, B) | (SIGNATURE_16(C, D) << 16))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef GEN_UTILS_H
 #define GEN_UTILS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include "../edk/BaseTypes.h"
 #include "../common-utils.h"
@@ -17,5 +21,9 @@ UINT8 *generate_random_bytes(size_t size);
 void init_random();
 void create_valid_error_section(UINT8 *start);
 UINT8 int_to_bcd(int value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
