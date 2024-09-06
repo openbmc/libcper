@@ -4,6 +4,10 @@
 #define GUID_STRING_LENGTH 48
 #define TIMESTAMP_LENGTH   24
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "common-utils.h"
 #include <json.h>
 
@@ -41,5 +45,9 @@ int guid_equal(EFI_GUID *a, EFI_GUID *b);
 
 //The available severity types for CPER.
 extern const char *CPER_SEVERITY_TYPES[4];
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

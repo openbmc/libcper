@@ -1,6 +1,10 @@
 #ifndef CPER_SECTION_IPF_H
 #define CPER_SECTION_IPF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <json.h>
 #include "../edk/Cper.h"
 
@@ -68,5 +72,9 @@ typedef struct {
 } EFI_IPF_PSI_STATIC;
 
 json_object *cper_section_ipf_to_ir(void *section);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

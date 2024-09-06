@@ -1,5 +1,10 @@
 #ifndef CPER_PARSE_H
 #define CPER_PARSE_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <json.h>
 
 #define CPER_HEADER_VALID_BITFIELD_NAMES                                       \
@@ -35,5 +40,9 @@ json_object *cper_to_ir(FILE *cper_file);
 json_object *cper_single_section_to_ir(FILE *cper_section_file);
 void ir_to_cper(json_object *ir, FILE *out);
 void ir_single_section_to_cper(json_object *ir, FILE *out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
