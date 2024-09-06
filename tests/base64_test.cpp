@@ -1,6 +1,4 @@
-extern "C" {
 #include "base64.h"
-}
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

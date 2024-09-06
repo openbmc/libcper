@@ -7,14 +7,12 @@
 #include <cctype>
 #include "gtest/gtest.h"
 #include "test-utils.hpp"
-extern "C" {
 #include <json.h>
 #include "../cper-parse.h"
 #include "../json-schema.h"
 #include "../generator/cper-generate.h"
 #include "../sections/cper-section.h"
 #include "../generator/sections/gen-section.h"
-}
 
 /*
 * Test templates.

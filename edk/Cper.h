@@ -9,10 +9,15 @@
   GUIDs defined in UEFI 2.7 Specification.
 
 **/
-#include "BaseTypes.h"
 
 #ifndef __CPER_GUID_H__
 #define __CPER_GUID_H__
+
+#include "BaseTypes.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #pragma pack(push, 1)
 
@@ -1399,5 +1404,9 @@ typedef struct {
 
 extern EFI_GUID gEfiNvidiaErrorSectionGuid;
 #pragma pack(pop)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

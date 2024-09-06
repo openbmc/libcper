@@ -1,6 +1,10 @@
 #ifndef CPER_SECTION_H
 #define CPER_SECTION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <json.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,5 +20,9 @@ typedef struct {
 
 extern CPER_SECTION_DEFINITION section_definitions[];
 extern const size_t section_definitions_len;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
