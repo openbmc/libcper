@@ -71,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c86a1761_5fd37370",
+        "filename": "sections/cper-section-nvidia.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-09-06T01:31:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5926cef_0439b2a3",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 36
+      },
+      "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd6cda1a_ee922089",
@@ -119,6 +143,30 @@
       "writtenOn": "2024-09-05T15:18:19Z",
       "side": 1,
       "message": "Should these decode to names rather than just integers?",
+      "range": {
+        "startLine": 54,
+        "startChar": 33,
+        "endLine": 54,
+        "endChar": 40
+      },
+      "revId": "36731d277d579b6b8019b73a574edd3ac84a0c1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a327fd64_f62a91b2",
+        "filename": "specification/json/sections/cper-nvidia.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-09-06T01:31:54Z",
+      "side": 1,
+      "message": "I\u0027ll 1st check whether that mapping proprietary, then take it up.",
+      "parentUuid": "40396c65_1103703d",
       "range": {
         "startLine": 54,
         "startChar": 33,
