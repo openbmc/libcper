@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30e8e0a3_96a0c65e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-09-07T05:32:06Z",
+      "side": 1,
+      "message": "Are you sure? What flags are you building the C++ with? For instance, the following godbolt example suggests that with `-std\u003dc++23 -Wall -Werror -pedantic` the problem is not resolved:\n\nhttps://godbolt.org/z/b4ean44o6\n\nSeparately, as a super nitpick and language lawyering aside, your example below involves a flexible-array-member, which is a different concept to a variable-length-array. Syntactically, the former has no defined size, while the the size of the latter is defined by a value that\u0027s not an integer constant expression. VLAs are created using [`alloca()`](https://man7.org/linux/man-pages/man3/alloca.3.html):\n\n\u003e The alloca() function allocates size bytes of space in the stack\n\u003e frame of the caller.  This temporary space is automatically freed\n\u003e when the function that called alloca() returns to its caller.\n\n... which Has Some Problems:\n\n\u003e The alloca() function returns a pointer to the beginning of the\n\u003e allocated space.  If the allocation causes stack overflow,\n\u003e program behavior is undefined.",
+      "revId": "6396eeb53a2bb10bc6afee436f658ae1a69da942",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
