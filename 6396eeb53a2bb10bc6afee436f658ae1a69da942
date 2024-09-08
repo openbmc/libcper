@@ -52,6 +52,24 @@
       "parentUuid": "ac932807_7c5f5f72",
       "revId": "6396eeb53a2bb10bc6afee436f658ae1a69da942",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "247b2995_b757cfd7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-09-08T01:58:56Z",
+      "side": 1,
+      "message": "Okay, however, in my godbolt experiment above, both struct declarations cause warnings with `-pedantic`, and neither cause them if you drop it. So I\u0027m trying to understand how you came to make your claim here. It doesn\u0027t seem like there\u0027s a transition from generating a warning without `extern \"C\"` to not generating a warning with it under `-pedantic`, and if you\u0027re not building with `-pedantic` then it shouldn\u0027t occur anyway?\n\nFurther, regarding the meson build options, OpenBMC CI enables `-Dwarning_level\u003d3`:\n\nhttps://github.com/openbmc/openbmc-build-scripts/blob/decca83981004f97e0ee8c1ffc0c3589bf9d0a09/scripts/unit-test.py#L923\n\nwhich is what turns on `-pedantic`:\n\nhttps://mesonbuild.com/Builtin-options.html#details-for-warning_level\n\nThe default build options specified in `meson.build` are overridden.\n\nFor what it\u0027s worth, in libpldm my philosophy is that headers should be written as strictly-conforming to the standards as possible. This way they don\u0027t constrain the build flags of dependent projects. I allow a bit more room for flexibility in the implementation",
+      "parentUuid": "ac932807_7c5f5f72",
+      "revId": "6396eeb53a2bb10bc6afee436f658ae1a69da942",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
