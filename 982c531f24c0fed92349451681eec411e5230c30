@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a06d6ff_b4e56479",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-09-09T01:14:56Z",
+      "side": 1,
+      "message": "The way I\u0027ve dealt with flexible array members in libpldm is as follows:\n\nIn the `.h`:\n\n```\nstruct foo {\n   size_t len;\n#ifndef __cplusplus\n   unsigned char data[] __attribute__((counted_by(len)));\n#endif\n};\n\nvoid *foo_data(struct foo *foo);\n```\n\nIn the `.c`:\n\n```\nvoid *foo_data(struct foo *foo)\n{\n    return foo-\u003edata;\n}\n```\n\nThis way the access to the flexible array member is constrained to C, but the member is accessible in C++ via the accessor function.\n\nWith respect to the struct definition, flexible array members have zero size, so `sizeof(struct foo)` is the same in both C and C++ despite the ifdef:\n\nhttps://godbolt.org/z/93jqTde8K",
+      "revId": "982c531f24c0fed92349451681eec411e5230c30",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
