@@ -106,6 +106,24 @@
       "parentUuid": "1bd449af_de390ba9",
       "revId": "6396eeb53a2bb10bc6afee436f658ae1a69da942",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90363d2c_e6889dc2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-09-10T22:26:34Z",
+      "side": 1,
+      "message": "Pls try this:\n```\n$ cat flex-array.h\n#ifndef FLEX_ARRAY_H\n#define FLEX_ARRAY_H\n\n#if defined __STDC_VERSION__ \u0026\u0026 __STDC_VERSION__ \u003e\u003d 199901L\n#define __flexarr []\n#else\n#define __flexarr [1]\n#endif\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\nstruct test_c_h {\n  int test;\n  unsigned char tchfam_h __flexarr;\n};\n\n#define SIZE_test_c_h offsetof(struct test_c_h, tchfam_h)\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n```\n```\n$ cat flex-array.cpp\n#include \"flex-array.h\"\n#include \u003cstddef.h\u003e\n#include \u003cstdio.h\u003e\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\nstruct test_c_x {\n  int test;\n  unsigned char tchfam_x __flexarr;\n};\n#ifdef __cplusplus\n}\n#endif\n#define SIZE_test_c_x offsetof(struct test_c_x, tchfam_x)\n\nint main() {\n#ifdef SIZE_test_c_h\n  printf(\"sizeof(test_c_h) \u003d %ld\\n\", SIZE_test_c_h);\n#endif\n#ifdef SIZE_test_c_x\n  printf(\"sizeof(test_c_x) \u003d %ld\\n\", SIZE_test_c_x);\n#endif\n  return 0;\n}\n```\n```\n$ diff flex-array.cpp flex-array.c\n(none)\n```\n```\n$ cat meson.build \nproject(\n    \u0027flex-array\u0027,\n    [\u0027c\u0027, \u0027cpp\u0027],\n    default_options: [\n        \u0027c_std\u003dc18\u0027,\n        \u0027cpp_std\u003dc++23\u0027,\n        \u0027werror\u003dtrue\u0027,\n        \u0027warning_level\u003d2\u0027,\n    ],\n)\n\nexecutable(\n    \u0027flex-array-cc\u0027,\n    \u0027flex-array.c\u0027,\n    c_args: [\n        \u0027-Wall\u0027,\n        \u0027-Wextra\u0027,\n        \u0027-Wpedantic\u0027,\n        \u0027-Werror\u0027,\n    ],\n)\n\nexecutable(\n    \u0027flex-array-cxx\u0027,\n    \u0027flex-array.cpp\u0027,\n    cpp_args: [\n        \u0027-Wall\u0027,\n        \u0027-Wextra\u0027,\n        \u0027-Wpedantic\u0027,\n        \u0027-Werror\u0027,\n    ],\n)\n```\nflex-array-cxx will not build with --Wpedantic over tchfam_x in test_c_x",
+      "parentUuid": "8bcf161f_4a1045af",
+      "revId": "6396eeb53a2bb10bc6afee436f658ae1a69da942",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
