@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae20ea20_4e117bac",
+        "filename": "edk/Cper.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 1414,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-09-11T06:43:32Z",
+      "side": 1,
+      "message": "I think the problem with this is the size of the structure varies across compilers. The other suggestion I made on this patch doesn\u0027t have that problem.",
+      "revId": "5939c8b7eebb93f40a7f0c9e5583db1092f60178",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
