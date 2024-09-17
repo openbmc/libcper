@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02df7c1f_7a5bdc98",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-17T19:54:08Z",
+      "side": 1,
+      "message": "Need just a little more here:\nFix a field name mismatch on registerNum\n\nChange the type of instanceBase to integer.   uint64 is not a correct json schema type.",
+      "revId": "d1f044c888a6d813e01b36b0f2ca12ab6411aa40",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
