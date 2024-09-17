@@ -8,7 +8,7 @@
         "errorInstance",
         "severity",
         "socket",
-        "numRegs",
+        "registerNum",
         "instanceBase"
     ],
     "additionalProperties": false,
@@ -28,11 +28,11 @@
         "socket": {
             "type": "integer"
         },
-        "numberRegs": {
+        "registerNum": {
             "type": "integer"
         },
         "instanceBase": {
-            "type": "uint64"
+            "type": "integer"
         }
     }
 }
