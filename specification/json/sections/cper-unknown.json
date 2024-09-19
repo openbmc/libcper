@@ -1,5 +1,4 @@
 {
-    "$id": "cper-json-unknown-section",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": ["data"],

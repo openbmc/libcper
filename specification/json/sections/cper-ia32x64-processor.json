@@ -1,5 +1,4 @@
 {
-    "$id": "cper-json-ia32x54-processor-section",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": [
@@ -116,6 +115,7 @@
                         "type": "object",
                         "oneOf": [
                             {
+                                "$id": "cper-json-checkinfo0",
                                 "type": "object",
                                 "required": [
                                     "validationBits",
@@ -199,6 +199,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-checkinfo1",
                                 "type": "object",
                                 "required": [
                                     "validationBits",
@@ -308,6 +309,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-checkinfo2",
                                 "type": "object",
                                 "required": [],
                                 "additionalProperties": false,
@@ -410,6 +412,7 @@
                         "type": "object",
                         "oneOf": [
                             {
+                                "$id": "cper-json-registerarray0",
                                 "type": "object",
                                 "required": [
                                     "eax",
@@ -468,6 +471,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray1",
                                 "type": "object",
                                 "required": [
                                     "rax",
@@ -547,6 +551,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray2",
                                 "type": "object",
                                 "required": ["data"],
                                 "additionalProperties": false,
