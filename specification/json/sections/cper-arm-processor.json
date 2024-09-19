@@ -166,6 +166,7 @@
                         "type": "object",
                         "oneOf": [
                             {
+                                "$id": "cper-json-armprocessor-errorinformation0",
                                 "type": "object",
                                 "required": [
                                     "validationBits",
@@ -240,6 +241,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-errorinformation1",
                                 "type": "object",
                                 "required": [
                                     "validationBits",
@@ -357,6 +359,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-errorinformation2",
                                 "type": "object",
                                 "required": ["data"],
                                 "additionalProperties": false,
@@ -404,6 +407,7 @@
                         "type": "object",
                         "oneOf": [
                             {
+                                "$id": "cper-json-armprocessor-registerarray0",
                                 "type": "object",
                                 "required": [
                                     "r1",
@@ -442,6 +446,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray1",
                                 "type": "object",
                                 "required": [
                                     "dfar",
@@ -497,6 +502,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray2",
                                 "type": "object",
                                 "required": [
                                     "elr_hyp",
@@ -536,6 +542,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray3",
                                 "type": "object",
                                 "required": ["sctlr_s", "spsr_mon"],
                                 "properties": {
@@ -544,6 +551,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray4",
                                 "type": "object",
                                 "required": [
                                     "x0",
@@ -615,6 +623,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray5",
                                 "type": "object",
                                 "required": [
                                     "elr_el1",
@@ -656,6 +665,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray6",
                                 "type": "object",
                                 "required": [
                                     "elr_el2",
@@ -693,6 +703,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray7",
                                 "type": "object",
                                 "required": [
                                     "elr_el3",
@@ -720,6 +731,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray8",
                                 "type": "object",
                                 "required": ["mrsEncoding", "value"],
                                 "additionalProperties": false,
@@ -747,6 +759,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-armprocessor-registerarray9",
                                 "type": "object",
                                 "required": ["data"],
                                 "properties": {

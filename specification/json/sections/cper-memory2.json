@@ -130,6 +130,7 @@
             "type": "object",
             "oneOf": [
                 {
+                    "$id": "cper-json-memory2-bank0",
                     "type": "object",
                     "required": ["value"],
                     "properties": {
@@ -139,6 +140,7 @@
                     }
                 },
                 {
+                    "$id": "cper-json-memory2-bank1",
                     "type": "object",
                     "required": ["address", "group"],
                     "properties": {
