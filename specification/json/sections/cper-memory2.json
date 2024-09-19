@@ -1,5 +1,4 @@
 {
-    "$id": "cper-json-memory2-section",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": [
@@ -130,6 +129,7 @@
             "type": "object",
             "oneOf": [
                 {
+                    "$id": "cper-json-bank0",
                     "type": "object",
                     "required": ["value"],
                     "properties": {
@@ -139,6 +139,7 @@
                     }
                 },
                 {
+                    "$id": "cper-json-bank1",
                     "type": "object",
                     "required": ["address", "group"],
                     "properties": {
