@@ -400,6 +400,7 @@
                         "type": "object",
                         "oneOf": [
                             {
+                                "$id": "cper-json-registerarray0",
                                 "type": "object",
                                 "required": [
                                     "r1",
@@ -438,6 +439,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray1",
                                 "type": "object",
                                 "required": [
                                     "dfar",
@@ -493,6 +495,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray2",
                                 "type": "object",
                                 "required": [
                                     "elr_hyp",
@@ -532,6 +535,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray3",
                                 "type": "object",
                                 "required": ["sctlr_s", "spsr_mon"],
                                 "properties": {
@@ -540,6 +544,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray4",
                                 "type": "object",
                                 "required": [
                                     "x0",
@@ -611,6 +616,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray5",
                                 "type": "object",
                                 "required": [
                                     "elr_el1",
@@ -652,6 +658,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray6",
                                 "type": "object",
                                 "required": [
                                     "elr_el2",
@@ -689,6 +696,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray7",
                                 "type": "object",
                                 "required": [
                                     "elr_el3",
@@ -716,6 +724,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray8",
                                 "type": "object",
                                 "required": ["mrsEncoding", "value"],
                                 "additionalProperties": false,
@@ -743,6 +752,7 @@
                                 }
                             },
                             {
+                                "$id": "cper-json-registerarray9",
                                 "type": "object",
                                 "required": ["data"],
                                 "properties": {

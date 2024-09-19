@@ -57,6 +57,7 @@
             "type": "object",
             "oneOf": [
                 {
+                    "$id": "cper-json-cxlagentaddress0",
                     "type": "object",
                     "required": [
                         "functionNumber",
@@ -80,6 +81,7 @@
                     }
                 },
                 {
+                    "$id": "cper-json-cxlagentaddress1",
                     "type": "object",
                     "required": ["value"],
                     "properties": {
