@@ -276,10 +276,10 @@ void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp)
 //Helper function to convert an EDK EFI GUID into a string for intermediate use.
 void guid_to_string(char *out, EFI_GUID *guid)
 {
-	sprintf(out, "%08x-%04x-%04x-%02x%02x%02x%02x%02x%02x%02x%02x",
-		guid->Data1, guid->Data2, guid->Data3, guid->Data4[0],
-		guid->Data4[1], guid->Data4[2], guid->Data4[3], guid->Data4[4],
-		guid->Data4[5], guid->Data4[6], guid->Data4[7]);
+	sprintf(out, "%08x-%04x-%04x-%04x-%02x%02x%02x%02x%02x%02x",
+		guid->Data1, guid->Data2, guid->Data3, guid->Data4,
+		guid->Data5[0], guid->Data5[1], guid->Data5[2], guid->Data5[3],
+		guid->Data5[4], guid->Data5[5]);
 }
 
 //Helper function to convert a string into an EDK EFI GUID.
@@ -291,24 +291,24 @@ void string_to_guid(EFI_GUID *out, const char *guid)
 	}
 
 	sscanf(guid,
-	       "%08x-%04hx-%04hx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
-	       &out->Data1, &out->Data2, &out->Data3, out->Data4,
-	       out->Data4 + 1, out->Data4 + 2, out->Data4 + 3, out->Data4 + 4,
-	       out->Data4 + 5, out->Data4 + 6, out->Data4 + 7);
+	       "%08x-%04hx-%04hx-%04hx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
+	       &out->Data1, &out->Data2, &out->Data3, &out->Data4, out->Data5,
+	       out->Data5 + 1, out->Data5 + 2, out->Data5 + 3, out->Data5 + 4,
+	       out->Data5 + 5);
 }
 
 //Returns one if two EFI GUIDs are equal, zero otherwise.
 int guid_equal(EFI_GUID *a, EFI_GUID *b)
 {
-	//Check top base 3 components.
+	//Check top base 4 components.
 	if (a->Data1 != b->Data1 || a->Data2 != b->Data2 ||
-	    a->Data3 != b->Data3) {
+	    a->Data3 != b->Data3 || a->Data4 != b->Data4) {
 		return 0;
 	}
 
-	//Check Data4 array for equality.
-	for (int i = 0; i < 8; i++) {
-		if (a->Data4[i] != b->Data4[i]) {
+	//Check Data5 array for equality.
+	for (int i = 0; i < 6; i++) {
+		if (a->Data5[i] != b->Data5[i]) {
 			return 0;
 		}
 	}
