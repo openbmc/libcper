@@ -156,13 +156,17 @@ void ir_header_to_cper(json_object *header_ir,
 void ir_section_to_cper(json_object *section,
 			EFI_ERROR_SECTION_DESCRIPTOR *descriptor, FILE *out)
 {
+	json_object *ir = NULL;
+
 	//Find the correct section type, and parse.
 	int section_converted = 0;
 	for (size_t i = 0; i < section_definitions_len; i++) {
 		if (guid_equal(section_definitions[i].Guid,
 			       &descriptor->SectionType) &&
 		    section_definitions[i].ToCPER != NULL) {
-			section_definitions[i].ToCPER(section, out);
+			ir = json_object_object_get(
+				section, section_definitions[i].ShortName);
+			section_definitions[i].ToCPER(ir, out);
 			section_converted = 1;
 			break;
 		}
@@ -170,7 +174,8 @@ void ir_section_to_cper(json_object *section,
 
 	//If unknown GUID, so read as a base64 unknown section.
 	if (!section_converted) {
-		json_object *encoded = json_object_object_get(section, "data");
+		ir = json_object_object_get(section, "Unknown");
+		json_object *encoded = json_object_object_get(ir, "data");
 
 		int32_t decoded_len = 0;
 
