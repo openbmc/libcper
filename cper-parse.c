@@ -342,12 +342,20 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 
 	//Parse section to IR based on GUID.
 	json_object *result = NULL;
+
+	json_object *section_ir = NULL;
 	int section_converted = 0;
 	for (size_t i = 0; i < section_definitions_len; i++) {
 		if (guid_equal(section_definitions[i].Guid,
 			       &descriptor->SectionType) &&
 		    section_definitions[i].ToIR != NULL) {
-			result = section_definitions[i].ToIR(section);
+			section_ir = section_definitions[i].ToIR(section);
+
+			result = json_object_new_object();
+			json_object_object_add(result,
+					       section_definitions[i].ShortName,
+					       section_ir);
+
 			section_converted = 1;
 			break;
 		}
@@ -356,20 +364,23 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 	//Was it an unknown GUID/failed read?
 	if (!section_converted) {
 		//Output the data as formatted base64.
-		result = json_object_new_object();
-
 		int32_t encoded_len = 0;
 		char *encoded = base64_encode(
 			section, descriptor->SectionLength, &encoded_len);
 		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
 		} else {
-			json_object_object_add(result, "data",
+			section_ir = json_object_new_object();
+			json_object_object_add(section_ir, "data",
 					       json_object_new_string_len(
 						       encoded, encoded_len));
 			free(encoded);
+
+			result = json_object_new_object();
+			json_object_object_add(result, "Unknown", section_ir);
 		}
 	}
+
 	//Free section memory, return result.
 	free(section);
 	return result;
