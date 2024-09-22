@@ -14,6 +14,7 @@ extern "C" {
 typedef struct {
 	EFI_GUID *Guid;
 	const char *ReadableName;
+	const char *ShortName;
 	json_object *(*ToIR)(void *);
 	void (*ToCPER)(json_object *, FILE *);
 } CPER_SECTION_DEFINITION;
