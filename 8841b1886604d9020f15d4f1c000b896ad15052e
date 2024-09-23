@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "002ccb71_45345011",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-23T16:52:15Z",
+      "side": 1,
+      "message": "Suggest keeping file identifiers here to avoid collisions.",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a51b4627_ae1e425a",
+        "filename": "specification/json/sections/cper-arm-processor.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-23T16:52:15Z",
+      "side": 1,
+      "message": "It\u0027s not clear to me why \"armprocessor\" is removed from the bulk of these.  The registers here are clearly ARM and not x86.  Should we be removing \"armprocessor\" in this file?  Why?",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2fdf00d_2f47cc34",
+        "filename": "specification/json/sections/cper-ia32x64-processor.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-23T16:52:15Z",
+      "side": 1,
+      "message": "Again, why are we removing all of these?",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ff00779_39429e6d",
+        "filename": "specification/json/sections/cper-memory.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-23T16:52:15Z",
+      "side": 1,
+      "message": "I\u0027m worried about potential collisions here.  In fact, you now have a collision in the next file.",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
