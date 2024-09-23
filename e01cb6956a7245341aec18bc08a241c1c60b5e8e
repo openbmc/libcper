@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bea93f9f_3e4e5adb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-09-23T16:34:38Z",
+      "side": 1,
+      "message": "Typo, fixed.",
+      "parentUuid": "861c436d_87bb7295",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "e01cb6956a7245341aec18bc08a241c1c60b5e8e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a96e2c6_0c178829",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2024-09-19T20:50:14Z",
       "side": 1,
       "message": "Can you give more information here?  I can\u0027t understand what any of this means.  Is json-schema giving you errors or something?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 44
+      },
+      "revId": "e01cb6956a7245341aec18bc08a241c1c60b5e8e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b86f7670_e42e21eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-09-23T16:34:38Z",
+      "side": 1,
+      "message": "Every resource type having an ID is useful for debug purposes when reading through generated logs. Added more explanation in the commit message.",
+      "parentUuid": "3a96e2c6_0c178829",
       "range": {
         "startLine": 9,
         "startChar": 0,
