@@ -52,6 +52,41 @@
       "parentUuid": "15f41352_4f15cf8b",
       "revId": "20d6db3cb52d9ba7fde322d2e616c7b055db58a3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c52b2f18_0760d0bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-23T15:14:48Z",
+      "side": 1,
+      "message": "Any progress here?",
+      "parentUuid": "3a2cb553_f8ce89f8",
+      "revId": "20d6db3cb52d9ba7fde322d2e616c7b055db58a3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1653796_ba60cf7c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-09-23T15:14:48Z",
+      "side": 1,
+      "message": "Is this patch still being worked?",
+      "revId": "20d6db3cb52d9ba7fde322d2e616c7b055db58a3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
