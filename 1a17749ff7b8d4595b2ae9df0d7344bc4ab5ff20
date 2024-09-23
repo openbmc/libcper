@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82a6a685_80a20915",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-23T19:13:23Z",
+      "side": 1,
+      "message": "It\u0027s clear you\u0027re doing _something_ but nobody in the community knows *what*.  It\u0027d be nice if there was some visibility into where  this is going and what is trying to be accomplished.",
+      "range": {
+        "startLine": 26,
+        "startChar": 20,
+        "endLine": 26,
+        "endChar": 32
+      },
+      "revId": "1a17749ff7b8d4595b2ae9df0d7344bc4ab5ff20",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
