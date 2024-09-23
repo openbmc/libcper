@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6b727c6_68901b00",
+        "filename": "specification/json/sections/cper-arm-processor.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-23T18:21:03Z",
+      "side": 1,
+      "message": "Oh, I was reviewing the diff between PS1 and PS4 since that\u0027s where I last gave comments.",
+      "parentUuid": "e2dd1eab_c52a57d6",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a2fdf00d_2f47cc34",
         "filename": "specification/json/sections/cper-ia32x64-processor.json",
         "patchSetId": 4
