@@ -85,6 +85,24 @@
       "message": "I\u0027m worried about potential collisions here.  In fact, you now have a collision in the next file.",
       "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5282d7b_93d40aeb",
+        "filename": "specification/json/sections/cper-memory.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-09-23T17:27:40Z",
+      "side": 1,
+      "message": "Can you elaborate on \"collisions\"? Not following",
+      "parentUuid": "8ff00779_39429e6d",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
