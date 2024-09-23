@@ -125,6 +125,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a44bb887_358fc95b",
+        "filename": "specification/json/sections/cper-ia32x64-processor.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-09-23T19:22:08Z",
+      "side": 1,
+      "message": "Between patchset 1-4, ia32x54 is already covered by the base $id on line 2.",
+      "parentUuid": "a2fdf00d_2f47cc34",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8ff00779_39429e6d",
         "filename": "specification/json/sections/cper-memory.json",
         "patchSetId": 4
