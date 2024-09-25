@@ -46,6 +46,30 @@
       },
       "revId": "1a17749ff7b8d4595b2ae9df0d7344bc4ab5ff20",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d13f5e3_5648689c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-25T16:57:39Z",
+      "side": 1,
+      "message": "Now we\u0027ve lost all of the \"why\".  Why should a maintainer take this change?",
+      "parentUuid": "7ac6eaf1_1a95fd6e",
+      "range": {
+        "startLine": 26,
+        "startChar": 20,
+        "endLine": 26,
+        "endChar": 32
+      },
+      "revId": "1a17749ff7b8d4595b2ae9df0d7344bc4ab5ff20",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
