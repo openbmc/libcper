@@ -99,6 +99,11 @@ int validate_schema(json_object *schema, char *schema_directory,
 
 	//Parse the top level structure appropriately.
 	int result = validate_field("parent", schema, object, error_message);
+	if (result < 0) {
+		log_validator_error(error_message,
+				    "Failed validating schema for parent.");
+		result = 0;
+	}
 
 	//Change back to original CWD.
 	if (chdir(original_cwd)) {
@@ -120,29 +125,37 @@ int validate_schema(json_object *schema, char *schema_directory,
 int validate_field(const char *field_name, json_object *schema,
 		   json_object *object, char *error_message)
 {
+	int ret = -1;
+
 	log_validator_debug("Validating field '%s'...", field_name);
 
 	//If there is a "$ref" field, attempt to load the referenced schema.
-	json_object *ref_schema = json_object_object_get(schema, "$ref");
-	if (ref_schema != NULL &&
-	    json_object_get_type(ref_schema) == json_type_string) {
+	json_object *ref_field = json_object_object_get(schema, "$ref");
+	if (ref_field != NULL &&
+	    json_object_get_type(ref_field) == json_type_string) {
 		log_validator_debug("$ref schema detected for field '%s'.",
 				    field_name);
 
 		//Attempt to load. If loading fails, report error.
-		const char *ref_path = json_object_get_string(ref_schema);
-		json_object *tmp = json_object_from_file(ref_path);
-		if (tmp == NULL) {
+		const char *ref_path = json_object_get_string(ref_field);
+		json_object *ref_schema = json_object_from_file(ref_path);
+		if (ref_schema == NULL) {
 			log_validator_error(
 				error_message,
 				"Failed to open referenced schema file '%s'.",
 				ref_path);
 			return -1;
 		}
-		json_object_put(tmp);
 
 		log_validator_debug("loaded schema path '%s' for field '%s'.",
 				    ref_path, field_name);
+
+		//Validate field with schema.
+		ret = validate_field(field_name, ref_schema, object,
+				     error_message);
+		json_object_put(ref_schema);
+
+		return ret;
 	}
 
 	//Get the schema field type.
@@ -154,7 +167,7 @@ int validate_field(const char *field_name, json_object *schema,
 			error_message,
 			"Desired field type not provided within schema/is not a string for field '%s' (schema violation).",
 			field_name);
-		return -1;
+		return 0;
 	}
 
 	//Check the field types are actually equal.
