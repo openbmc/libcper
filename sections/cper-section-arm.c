@@ -196,12 +196,7 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 		break;
 
 	default:
-		//Unknown/microarch, so can't be made readable. Simply dump as a uint64 data object.
-		error_subinfo = json_object_new_object();
-		json_object_object_add(
-			error_subinfo, "data",
-			json_object_new_uint64(
-				error_info->ErrorInformation.Value));
+		//Unknown/microarch, will not support.
 		break;
 	}
 	json_object_object_add(error_info_ir, "errorInformation",
@@ -224,6 +219,8 @@ cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 			       EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 {
 	json_object *cache_tlb_error_ir = json_object_new_object();
+	json_object *cache_tlb_prop = json_object_new_object();
+	char *cache_tlb_propname;
 
 	//Validation bitfield.
 	json_object *validation =
@@ -249,12 +246,14 @@ cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 			ARM_CACHE_BUS_OPERATION_TYPES_KEYS,
 			ARM_CACHE_BUS_OPERATION_TYPES_VALUES,
 			"Unknown (Reserved)");
+		cache_tlb_propname = "cacheError";
 	} else {
 		//TLB operation.
 		operation = integer_to_readable_pair(
 			cache_tlb_error->Operation, 9,
 			ARM_TLB_OPERATION_TYPES_KEYS,
 			ARM_TLB_OPERATION_TYPES_VALUES, "Unknown (Reserved)");
+		cache_tlb_propname = "tlbError";
 	}
 	json_object_object_add(cache_tlb_error_ir, "operation", operation);
 
@@ -274,7 +273,10 @@ cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 	json_object_object_add(
 		cache_tlb_error_ir, "restartablePC",
 		json_object_new_boolean(cache_tlb_error->RestartablePC));
-	return cache_tlb_error_ir;
+
+	json_object_object_add(cache_tlb_prop, cache_tlb_propname,
+			       cache_tlb_error_ir);
+	return cache_tlb_prop;
 }
 
 //Converts a single ARM bus error information structure into JSON IR format.
@@ -594,11 +596,21 @@ void ir_arm_error_info_to_cper(json_object *error_info, FILE *out)
 	//Error information.
 	json_object *error_info_information =
 		json_object_object_get(error_info, "errorInformation");
+	json_object *error_info_prop = NULL;
+
 	switch (error_info_cper.Type) {
 	case ARM_ERROR_INFORMATION_TYPE_CACHE:
-	case ARM_ERROR_INFORMATION_TYPE_TLB:
+		error_info_prop = json_object_object_get(error_info_information,
+							 "cacheError");
 		ir_arm_error_cache_tlb_info_to_cper(
-			error_info_information,
+			error_info_prop,
+			&error_info_cper.ErrorInformation.CacheError);
+		break;
+	case ARM_ERROR_INFORMATION_TYPE_TLB:
+		error_info_prop = json_object_object_get(error_info_information,
+							 "tlbError");
+		ir_arm_error_cache_tlb_info_to_cper(
+			error_info_prop,
 			&error_info_cper.ErrorInformation.CacheError);
 		break;
 
@@ -610,8 +622,6 @@ void ir_arm_error_info_to_cper(json_object *error_info, FILE *out)
 
 	default:
 		//Unknown error information type.
-		error_info_cper.ErrorInformation.Value = json_object_get_uint64(
-			json_object_object_get(error_info_information, "data"));
 		break;
 	}
 
