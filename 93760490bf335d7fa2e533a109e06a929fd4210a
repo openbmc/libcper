@@ -85,6 +85,57 @@
       "parentUuid": "b1bfd8f8_ad16fab1",
       "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa6bfabb_a86d6ed0",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1001322
+      },
+      "writtenOn": "2024-09-30T17:03:29Z",
+      "side": 1,
+      "message": "Do we really need this print? if not, its good to avoid.",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9cdc1eb_4285ed48",
+        "filename": "specification/json/sections/cper-arm-processor.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1001322
+      },
+      "writtenOn": "2024-09-30T17:03:29Z",
+      "side": 1,
+      "message": "Nit: run clang formatting",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "252abf3e_44f401f5",
+        "filename": "specification/json/sections/cper-arm-processor.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1001322
+      },
+      "writtenOn": "2024-09-30T17:03:29Z",
+      "side": 1,
+      "message": "{\n                                \"type\": \"object\",\n                                \"required\": [\"data\"],\n                                \"additionalProperties\": false,\n                                \"properties\": {\n                                    \"data\": {\n                                        \"type\": \"integer\"\n                                    }\n\nremoving this part is intentional? any specific reason?",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
