@@ -67,6 +67,24 @@
       "message": "why are we printing to output? is this going to abort the conversion to json? otherwise it will mess up the output json (if idea is to silently suppress this field)\n\nthat said, why is this change even needed? a similar thing is done for the section as a whole (if we don’t know the GUID, an unknown section with data is added to the json)",
       "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8fd9501_808d1d32",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-30T14:23:48Z",
+      "side": 1,
+      "message": "If you\u0027re going to print, it needs to be to stderr.  There are existing printfs but we shouldn\u0027t add new ones.",
+      "parentUuid": "b1bfd8f8_ad16fab1",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
