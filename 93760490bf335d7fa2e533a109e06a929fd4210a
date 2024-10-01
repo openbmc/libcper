@@ -106,6 +106,42 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "456a6da6_8a374b91",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-10-01T01:47:45Z",
+      "side": 1,
+      "message": "An empty errorInformation field should be invalid and logged",
+      "parentUuid": "fa6bfabb_a86d6ed0",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8959e2d_6f478db5",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-10-01T01:47:45Z",
+      "side": 1,
+      "message": "changed to stderr\n@karthik how would this change the output json? error_info_ir is what we care about, right?",
+      "parentUuid": "b8fd9501_808d1d32",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a9cdc1eb_4285ed48",
         "filename": "specification/json/sections/cper-arm-processor.json",
         "patchSetId": 2
