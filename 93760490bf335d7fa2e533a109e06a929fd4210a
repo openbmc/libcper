@@ -160,6 +160,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f432c052_17f85e07",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-01T02:31:31Z",
+      "side": 1,
+      "message": "I don\u0027t know what this code is doing w.r.t. the resulting JSON; I don\u0027t really care about that in this case, except hopefully your `break` here returns some kind of error code. \n\nThe problem, as I see it, is that you\u0027re polluting the callers stdout from within a library.  If someone did something like:\n\n```\nint main()\n{\n   ...\n   std::cout \u003c\u003c libcper_json().to_string() \u003c\u003c std::endl;\n   ...\n}\n```\n\nYou\u0027ve now completely messed up their program output in a way that it isn\u0027t valid JSON anymore.  (I know this API isn\u0027t right, but is just an illustration).\n\nLibraries should never print to `stdout`.",
+      "parentUuid": "1b5c9d9a_cb0519f6",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a9cdc1eb_4285ed48",
         "filename": "specification/json/sections/cper-arm-processor.json",
         "patchSetId": 2
