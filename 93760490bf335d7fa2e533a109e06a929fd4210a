@@ -142,6 +142,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1b5c9d9a_cb0519f6",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002160
+      },
+      "writtenOn": "2024-10-01T02:23:49Z",
+      "side": 1,
+      "message": "In this path, \"errorInformation\" property would be missing altogether \u0026 since it is a required property for \"errorInfo\" (array), the schema-validation would fail.\n\nThere could be a compromise output instead of failing validation:\n\"errorInformation\": { \"unknownErr\": { \"data\": \u003cvalue\u003e }}}",
+      "parentUuid": "f8959e2d_6f478db5",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a9cdc1eb_4285ed48",
         "filename": "specification/json/sections/cper-arm-processor.json",
         "patchSetId": 2
