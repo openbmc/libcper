@@ -67,7 +67,11 @@ generator_section_sources = files(
 
 cc = meson.get_compiler('c')
 
-json_c_dep = dependency('json-c', required: true, fallback: ['json-c', 'json_c_dep'])
+json_c_dep = dependency('json-c', required: false)
+if not json_c_dep.found()
+    json_c = subproject('json-c', required: true, default_options: ['warning_level=0'])
+    json_c_dep = json_c.get_variable('json_c_dep')
+endif
 
 libcper_parse_sources = [
     'base64.c',
