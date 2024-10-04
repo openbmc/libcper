@@ -7,8 +7,8 @@ project(
         'c_std=c18',
         'cpp_std=c++23',
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
-        'werror=true',
         'warning_level=2',
+        'werror=true',
     ],
 )
 
@@ -76,14 +76,14 @@ if not json_c_dep.found()
     json_c_dep = json_c.get_variable('json_c_dep')
 endif
 
-libcper_parse_sources = [
+libcper_parse_sources = files(
     'base64.c',
-    'cper-parse.c',
-    'ir-parse.c',
-    'cper-utils.c',
     'common-utils.c',
+    'cper-parse.c',
+    'cper-utils.c',
+    'ir-parse.c',
     'json-schema.c',
-]
+)
 
 libcper_include = ['.']
 
@@ -105,9 +105,9 @@ libcper_parse_dep = declare_dependency(
 )
 
 libcper_generate_sources = [
+    'common-utils.c',
     'generator/cper-generate.c',
     'generator/gen-utils.c',
-    'common-utils.c',
 ]
 
 libcper_generate = library(
@@ -132,13 +132,15 @@ import('pkgconfig').generate(
     description: 'C bindings for parsing CPER',
 )
 
-install_headers('cper-parse.h')
-install_headers('cper-parse-str.h')
-install_headers('cper-utils.h')
-install_headers('common-utils.h')
+install_headers(
+    'cper-parse.h',
+    'cper-parse-str.h',
+    'cper-utils.h',
+    'common-utils.h',
+)
 install_headers('generator/cper-generate.h', subdir: 'generator')
-install_headers('edk/Cper.h', subdir: 'edk')
-install_headers('edk/BaseTypes.h', subdir: 'edk')
+install_headers('edk/Cper.h', 'edk/BaseTypes.h', subdir: 'edk')
+
 
 if get_option('utility').allowed()
     executable(
