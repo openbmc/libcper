@@ -316,6 +316,24 @@
       "parentUuid": "252abf3e_44f401f5",
       "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d454afa8_b97a12c2",
+        "filename": "specification/json/sections/cper-arm-processor.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-04T15:46:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "157623b0_3055f1ec",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
