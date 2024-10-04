@@ -14,17 +14,17 @@ project(
 
 add_project_arguments(
     '-DLIBCPER_JSON_SPEC="'
-    + meson.current_source_dir()
-    + '/specification/json/cper-json.json"',
+    + meson.current_source_dir() + '/specification/json/cper-json.json"',
     language: ['c', 'cpp'],
 )
 
 library_is_share = get_option('default_library') == 'shared'
-add_project_arguments('-D_POSIX_C_SOURCE=200809L', language : 'c')
+add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
 
 project_description = 'libcper library'
 
 section_sources = files(
+    'sections/cper-section-ampere.c',
     'sections/cper-section-arm.c',
     'sections/cper-section-ccix-per.c',
     'sections/cper-section-cxl-component.c',
@@ -42,12 +42,12 @@ section_sources = files(
     'sections/cper-section-pci-dev.c',
     'sections/cper-section-pcie.c',
     'sections/cper-section.c',
-    'sections/cper-section-ampere.c',
 )
 
 edk_sources = files('edk/Cper.c')
 
 generator_section_sources = files(
+    'generator/sections/gen-section-ampere.c',
     'generator/sections/gen-section-arm.c',
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',
@@ -62,14 +62,17 @@ generator_section_sources = files(
     'generator/sections/gen-section-pci-dev.c',
     'generator/sections/gen-section-pcie.c',
     'generator/sections/gen-section.c',
-    'generator/sections/gen-section-ampere.c',
 )
 
 cc = meson.get_compiler('c')
 
 json_c_dep = dependency('json-c', required: false)
 if not json_c_dep.found()
-    json_c = subproject('json-c', required: true, default_options: ['warning_level=0'])
+    json_c = subproject(
+        'json-c',
+        required: true,
+        default_options: ['warning_level=0'],
+    )
     json_c_dep = json_c.get_variable('json_c_dep')
 endif
 
@@ -92,9 +95,7 @@ libcper_parse = library(
     version: meson.project_version(),
     include_directories: include_directories(libcper_include),
     c_args: '-Wno-address-of-packed-member',
-    dependencies: [
-        json_c_dep,
-    ],
+    dependencies: [json_c_dep],
     install: true,
     install_dir: get_option('libdir'),
 )
@@ -103,7 +104,11 @@ libcper_parse_dep = declare_dependency(
     link_with: libcper_parse,
 )
 
-libcper_generate_sources = ['generator/cper-generate.c', 'generator/gen-utils.c', 'common-utils.c']
+libcper_generate_sources = [
+    'generator/cper-generate.c',
+    'generator/gen-utils.c',
+    'common-utils.c',
+]
 
 libcper_generate = library(
     'cper-generate',
@@ -111,10 +116,7 @@ libcper_generate = library(
     generator_section_sources,
     version: meson.project_version(),
     include_directories: include_directories(libcper_include),
-    dependencies: [
-        libcper_parse_dep,
-        json_c_dep,
-    ],
+    dependencies: [libcper_parse_dep, json_c_dep],
     install: true,
     install_dir: get_option('libdir'),
 )
@@ -127,7 +129,7 @@ import('pkgconfig').generate(
     libcper_parse,
     name: meson.project_name(),
     version: meson.project_version(),
-    description: 'C bindings for parsing CPER'
+    description: 'C bindings for parsing CPER',
 )
 
 install_headers('cper-parse.h')
@@ -143,10 +145,7 @@ if get_option('utility').allowed()
         'cper-convert',
         'cli-app/cper-convert.c',
         include_directories: include_directories(libcper_include),
-        dependencies: [
-            libcper_parse_dep,
-            json_c_dep,
-        ],
+        dependencies: [libcper_parse_dep, json_c_dep],
         install: true,
         install_dir: get_option('bindir'),
     )
@@ -156,9 +155,7 @@ if get_option('utility').allowed()
         'generator/cper-generate-cli.c',
         edk_sources,
         include_directories: include_directories(libcper_include),
-        dependencies: [
-            libcper_generate_dep,
-        ],
+        dependencies: [libcper_generate_dep],
         install: true,
         install_dir: get_option('bindir'),
     )

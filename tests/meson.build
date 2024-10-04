@@ -19,11 +19,7 @@ if not gtest.found() or not gmock.found()
     endif
 endif
 
-sources = [
-    'ir-tests.cpp',
-    'test-utils.cpp',
-    'base64_test.cpp',
-]
+sources = ['ir-tests.cpp', 'test-utils.cpp', 'base64_test.cpp']
 
 test_include_dirs = ['.', '..']
 
@@ -33,6 +29,12 @@ cper_tests = executable(
     implicit_include_directories: false,
     include_directories: include_directories(test_include_dirs),
     cpp_args: '-fpermissive',
-    dependencies: [libcper_parse_dep, libcper_generate_dep, json_c_dep, gtest, gmock],
+    dependencies: [
+        libcper_parse_dep,
+        libcper_generate_dep,
+        json_c_dep,
+        gtest,
+        gmock,
+    ],
 )
 test('test-cper-tests', cper_tests)
