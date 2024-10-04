@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "243e8a9f_521b7cfe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-04T15:45:56Z",
+      "side": 1,
+      "message": "We have unit tests on this repo that are run automatically with pretty good coverage, and not a lot of functional tests that can be run at this point.",
+      "parentUuid": "451754d5_d683d224",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "4acf3ea3_31951f6f",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -190,6 +208,42 @@
       "side": 1,
       "message": "\u003e\"errorInformation\" property would be missing altogether\nor possibly \"errrorInformation\": null (error_subinfo would be NULL when it gets added to error_info_ir - please make sure this won\u0027t cause a crash!)",
       "parentUuid": "1b5c9d9a_cb0519f6",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11dccc15_603fce1d",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-04T15:45:56Z",
+      "side": 1,
+      "message": "printing appears to have been removed in the latest patch.",
+      "parentUuid": "23c51d18_6bfabea1",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80016472_456e76c5",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-04T15:45:56Z",
+      "side": 1,
+      "message": "Printing appears removed.",
+      "parentUuid": "456a6da6_8a374b91",
       "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
