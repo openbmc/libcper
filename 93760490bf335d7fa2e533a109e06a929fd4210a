@@ -250,6 +250,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ac069a71_9918fd40",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-10-04T16:04:40Z",
+      "side": 1,
+      "message": "Presently, section-json code population is structured in a way that we return nested json objects at multiple levels. There is no good way to propagate error codes and I think this, along with getting rid of other stdout prints can be addressed in a separate change.",
+      "parentUuid": "23c51d18_6bfabea1",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a9cdc1eb_4285ed48",
         "filename": "specification/json/sections/cper-arm-processor.json",
         "patchSetId": 2
