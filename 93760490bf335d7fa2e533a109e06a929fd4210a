@@ -266,6 +266,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0033dbe6_81cccc6e",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-04T23:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac069a71_9918fd40",
+      "revId": "93760490bf335d7fa2e533a109e06a929fd4210a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a9cdc1eb_4285ed48",
