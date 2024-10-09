@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "088230ef_0dd9e44b",
+        "filename": ".DS_Store",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-10-09T16:59:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc1ca018_74021a2c",
+      "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66a89a6c_7a59a55d",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-10-09T15:16:06Z",
       "side": 1,
       "message": "I marked my comment earlier about collisions as \"resolved\" but this text is what makes me not even certain what a \"good\" `$id` is.  If we need to be able to \"uniquely identif[y] a nested child property\" don\u0027t the IDs have to be unique?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 65
+      },
+      "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd8b3a09_6e422bc8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-10-09T16:59:20Z",
+      "side": 1,
+      "message": "If you\u0027re referring to cper-json-bank0/1 in cper-memory and cper-memory2, they\u0027re the same object. Their parent $id can be used to identify them.\n\nThe point of this is to resolve collisions arising due to oneOf[] properties, where there may be duplicate properties under each oneOf[] object. In the nested scheme of things, there\u0027s no way to uniquely identify each \"child\" property. For example, validationBits in this case:\n\n```\noneOf[\n   {\n    validationBits: {},\n    abc: {}\n   },\n   {\n    validationBits: {},\n    xyz: {}\n   }\n]\n```",
+      "parentUuid": "66a89a6c_7a59a55d",
       "range": {
         "startLine": 9,
         "startChar": 0,
