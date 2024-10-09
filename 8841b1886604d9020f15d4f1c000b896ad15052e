@@ -210,6 +210,24 @@
       "parentUuid": "c5282d7b_93d40aeb",
       "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f11d691a_9ee5c702",
+        "filename": "specification/json/sections/cper-memory.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-09T15:14:01Z",
+      "side": 1,
+      "message": "It wasn\u0027t clear that these entries only need to be object-unique (file-unique).  I thought these were IDs for the record itself.  I assumed we would want them globally unique.  I\u0027ll mark this as resolved.\n\n(I was also partially confused because one iteration of this patch had \"memory-cper-json-bank0\", etc. names on each IDs so they _were_ globally unique and then it was removed.)\n\nTBH, I don\u0027t even understand why \"cper-json-\" is here on them.  Why isn\u0027t it just \"bank0\" and \"bank1\"?",
+      "parentUuid": "75828030_7301003e",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
