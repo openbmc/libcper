@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc1ca018_74021a2c",
+        "filename": ".DS_Store",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-09T15:00:23Z",
+      "side": 1,
+      "message": "Remove.",
+      "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

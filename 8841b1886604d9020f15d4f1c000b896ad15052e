@@ -141,6 +141,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1be3a700_37225f25",
+        "filename": "specification/json/sections/cper-ia32x64-processor.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-09T15:00:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a44bb887_358fc95b",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ff00779_39429e6d",
@@ -172,6 +190,24 @@
       "side": 1,
       "message": "Can you elaborate on \"collisions\"? Not following",
       "parentUuid": "8ff00779_39429e6d",
+      "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75828030_7301003e",
+        "filename": "specification/json/sections/cper-memory.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-09T15:00:23Z",
+      "side": 1,
+      "message": "@Patrick?",
+      "parentUuid": "c5282d7b_93d40aeb",
       "revId": "8841b1886604d9020f15d4f1c000b896ad15052e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
