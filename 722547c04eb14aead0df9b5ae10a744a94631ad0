@@ -81,6 +81,30 @@
       },
       "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4141588b_14967759",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-10T10:48:42Z",
+      "side": 1,
+      "message": "\u003e If you\u0027re referring to cper-json-bank0/1 in cper-memory and cper-memory2, they\u0027re the same object. \n\nIf they are the same object why are we defining them twice?  Shouldn\u0027t there be a common definition?\n\n\u003e Their parent $id can be used to identify them.\n\nI don\u0027t know what you mean by this.  There is no other $id above those in the hierarchy.",
+      "parentUuid": "bd8b3a09_6e422bc8",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 65
+      },
+      "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
