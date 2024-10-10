@@ -105,6 +105,30 @@
       },
       "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "165c4138_18e5f8f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-10-10T16:03:40Z",
+      "side": 1,
+      "message": "\u003e If they are the same object why are we defining them twice? Shouldn\u0027t there be a common definition?\n\nYou\u0027re right, imo it\u0027s easier to have them inline than maintain 2 separate schema files for a \"value\" or \"object\" property. Open to thoughts. \n\n\u003e I don\u0027t know what you mean by this. There is no other $id above those in the hierarchy.\n\nSince these are sections, they\u0027re only referenced in the \"sections\" property. The top level object in \"sections\" is where the parent $id needs to live for uniqueness. https://gerrit.openbmc.org/plugins/gitiles/openbmc/libcper/+/refs/changes/51/74751/13/specification/json/cper-json-section-log.json#46",
+      "parentUuid": "4141588b_14967759",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 65
+      },
+      "revId": "722547c04eb14aead0df9b5ae10a744a94631ad0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
