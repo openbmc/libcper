@@ -14,7 +14,7 @@
 #define __CPER_GUID_H__
 
 #include "BaseTypes.h"
-#include "common-utils.h"
+#include "../common-utils.h"
 
 #ifdef __cplusplus
 extern "C" {
