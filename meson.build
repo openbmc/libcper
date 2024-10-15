@@ -137,10 +137,29 @@ install_headers(
     'cper-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
+    subdir: 'libcper'
 )
-install_headers('generator/cper-generate.h', subdir: 'generator')
-install_headers('edk/Cper.h', 'edk/BaseTypes.h', subdir: 'edk')
-
+install_headers('generator/cper-generate.h', subdir: 'libcper/generator')
+install_headers('edk/Cper.h', 'edk/BaseTypes.h', subdir: 'libcper/edk')
+install_headers(
+    'sections/cper-section-dmar-vtd.h',
+    'sections/cper-section-ipf.h',
+    'sections/cper-section-firmware.h',
+    'sections/cper-section-pcie.h',
+    'sections/cper-section-arm.h',
+    'sections/cper-section-pci-bus.h',
+    'sections/cper-section-ccix-per.h',
+    'sections/cper-section-ampere.h',
+    'sections/cper-section-dmar-iommu.h',
+    'sections/cper-section-memory.h',
+    'sections/cper-section-dmar-generic.h',
+    'sections/cper-section-cxl-protocol.h',
+    'sections/cper-section-pci-dev.h',
+    'sections/cper-section-ia32x64.h',
+    'sections/cper-section.h',
+    'sections/cper-section-nvidia.h',
+    'sections/cper-section-generic.h',
+    'sections/cper-section-cxl-component.h', subdir: 'libcper/sections')
 
 if get_option('utility').allowed()
     executable(
