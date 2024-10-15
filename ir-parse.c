@@ -7,11 +7,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "base64.h"
-#include "Cper.h"
-#include "cper-parse.h"
-#include "cper-utils.h"
-#include "sections/cper-section.h"
+#include <libcper/base64.h>
+#include <libcper/Cper.h>
+#include <libcper/cper-parse.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section.h>
 
 //Private pre-declarations.
 void ir_header_to_cper(json_object *header_ir,

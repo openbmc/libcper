@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "base64.h"
-#include "Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-dmar-vtd.h"
+#include <libcper/base64.h>
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-dmar-vtd.h>
 
 //Converts a single VT-d specific DMAr CPER section into JSON IR.
 json_object *cper_section_dmar_vtd_to_ir(void *section)

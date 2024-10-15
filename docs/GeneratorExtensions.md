@@ -79,7 +79,7 @@ asserted via. GTest).
  *
  * Author: Lawrence.Tang@arm.com
  **/
-#include "gen-section.h"
+#include <libcper/generator/sections/gen-section.h>
 
 CPER_GENERATOR_DEFINITION generator_definitions[] = {
     ...
