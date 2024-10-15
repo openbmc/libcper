@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
-#include "../edk/Cper.h"
+#include <libcper/edk/Cper.h>
 
 #define VTD_FAULT_RECORD_TYPES_KEYS                                            \
 	(int[])                                                                \

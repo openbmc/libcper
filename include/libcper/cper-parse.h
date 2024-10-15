@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
+#include <stdio.h>
 
 #define CPER_HEADER_VALID_BITFIELD_NAMES                                       \
 	(const char *[])                                                       \

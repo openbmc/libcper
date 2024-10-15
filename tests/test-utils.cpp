@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include "test-utils.hpp"
 
-#include "../edk/BaseTypes.h"
-#include "../generator/cper-generate.h"
+#include <libcper/edk/BaseTypes.h>
+#include <libcper/generator/cper-generate.h>
 
 //Returns a ready-for-use memory stream containing a CPER record with the given sections inside.
 FILE *generate_record_memstream(const char **types, UINT16 num_types,
