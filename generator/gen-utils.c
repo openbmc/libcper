@@ -5,8 +5,8 @@
  **/
 #include <stdlib.h>
 #include <time.h>
-#include "BaseTypes.h"
-#include "gen-utils.h"
+#include <libcper/BaseTypes.h>
+#include <libcper/generator/gen-utils.h>
 
 //Generates a random section of the given byte size, saving the result to the given location.
 //Returns the length of the section as passed in.

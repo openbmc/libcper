@@ -13,8 +13,8 @@
 #ifndef __CPER_GUID_H__
 #define __CPER_GUID_H__
 
-#include "BaseTypes.h"
-#include "common-utils.h"
+#include <libcper/BaseTypes.h>
+#include <libcper/common-utils.h>
 
 #ifdef __cplusplus
 extern "C" {

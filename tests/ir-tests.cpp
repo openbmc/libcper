@@ -8,11 +8,11 @@
 #include "gtest/gtest.h"
 #include "test-utils.hpp"
 #include <json.h>
-#include "../cper-parse.h"
-#include "../json-schema.h"
-#include "../generator/cper-generate.h"
-#include "../sections/cper-section.h"
-#include "../generator/sections/gen-section.h"
+#include <libcper/cper-parse.h>
+#include <libcper/json-schema.h>
+#include <libcper/generator/cper-generate.h>
+#include <libcper/sections/cper-section.h>
+#include <libcper/generator/sections/gen-section.h>
 
 /*
 * Test templates.

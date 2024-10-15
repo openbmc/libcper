@@ -5,9 +5,9 @@
  **/
 
 #include <stdlib.h>
-#include "../../BaseTypes.h"
-#include "../gen-utils.h"
-#include "gen-section.h"
+#include <libcper/BaseTypes.h>
+#include <libcper/generator/gen-utils.h>
+#include <libcper/generator/sections/gen-section.h>
 
 //Generates a single pseudo-random platform memory error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.

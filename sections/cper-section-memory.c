@@ -6,9 +6,9 @@
  **/
 #include <stdio.h>
 #include <json.h>
-#include "Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-memory.h"
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-memory.h>
 
 //Converts a single memory error CPER section into JSON IR.
 json_object *cper_section_platform_memory_to_ir(void *section)
