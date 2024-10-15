@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "../edk/Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-generic.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-generic.h>
 
 //Converts the given processor-generic CPER section into JSON IR.
 json_object *cper_section_generic_to_ir(void *section)

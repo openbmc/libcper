@@ -6,9 +6,9 @@
  **/
 #include <stdio.h>
 #include <json.h>
-#include "../edk/Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-firmware.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-firmware.h>
 
 //Converts a single firmware CPER section into JSON IR.
 json_object *cper_section_firmware_to_ir(void *section)

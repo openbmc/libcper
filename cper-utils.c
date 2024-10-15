@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 #include <json.h>
-#include "edk/Cper.h"
-#include "cper-utils.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
 
 //The available severity types for CPER.
 const char *CPER_SEVERITY_TYPES[4] = { "Recoverable", "Fatal", "Corrected",

@@ -7,10 +7,10 @@
 
 #include <stdio.h>
 #include <json.h>
-#include "base64.h"
-#include "../edk/Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-arm.h"
+#include <libcper/base64.h>
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-arm.h>
 
 //Private pre-definitions.
 json_object *

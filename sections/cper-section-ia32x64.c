@@ -7,10 +7,10 @@
 
 #include <stdio.h>
 #include <json.h>
-#include "base64.h"
-#include "../edk/Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-ia32x64.h"
+#include <libcper/base64.h>
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-ia32x64.h>
 
 //Private pre-definitions.
 json_object *cper_ia32x64_processor_error_info_to_ir(

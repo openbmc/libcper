@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
-#include "../../edk/Cper.h"
+#include <libcper/edk/Cper.h>
 
 //Section generator function predefinitions.
 size_t generate_section_generic(void **location);
