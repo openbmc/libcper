@@ -137,10 +137,12 @@ install_headers(
     'cper-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
+    subdir: 'libcper',
+    preserve_path : true
 )
-install_headers('generator/cper-generate.h', subdir: 'generator')
-install_headers('edk/Cper.h', 'edk/BaseTypes.h', subdir: 'edk')
 
+install_headers('generator/cper-generate.h', subdir: 'libcper/generator')
+install_headers('edk/Cper.h', 'edk/BaseTypes.h', subdir: 'libcper/edk')
 
 if get_option('utility').allowed()
     executable(
