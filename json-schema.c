@@ -12,8 +12,8 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <json.h>
-#include "json-schema.h"
-#include "BaseTypes.h"
+#include <libcper/json-schema.h>
+#include <libcper/BaseTypes.h>
 
 //Field definitions.
 int json_validator_debug = 0;

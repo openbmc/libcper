@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Cper.h"
-#include "gen-utils.h"
-#include "sections/gen-section.h"
-#include "cper-generate.h"
+#include <libcper/Cper.h>
+#include <libcper/generator/gen-utils.h>
+#include <libcper/generator/sections/gen-section.h>
+#include <libcper/generator/cper-generate.h>
 
 EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 							  const size_t *lengths,

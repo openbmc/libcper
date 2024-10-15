@@ -6,10 +6,10 @@
  **/
 #include <stdio.h>
 #include <json.h>
-#include "base64.h"
-#include "Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-cxl-component.h"
+#include <libcper/base64.h>
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-cxl-component.h>
 
 //Converts a single CXL component error CPER section into JSON IR.
 json_object *cper_section_cxl_component_to_ir(void *section)

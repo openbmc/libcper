@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "base64.h"
-#include "Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-ccix-per.h"
+#include <libcper/base64.h>
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-ccix-per.h>
 
 //Converts a single CCIX PER log CPER section into JSON IR.
 json_object *cper_section_ccix_per_to_ir(void *section)

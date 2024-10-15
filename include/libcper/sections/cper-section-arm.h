@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
-#include "Cper.h"
+#include <libcper/Cper.h>
 
 #define ARM_ERROR_VALID_BITFIELD_NAMES                                         \
 	(const char *[])                                                       \

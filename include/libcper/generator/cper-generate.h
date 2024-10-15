@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-#include "BaseTypes.h"
+#include <libcper/BaseTypes.h>
 
 void generate_cper_record(char **types, UINT16 num_sections, FILE *out);
 void generate_single_section_record(char *type, FILE *out);

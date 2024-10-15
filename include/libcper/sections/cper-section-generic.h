@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
-#include "Cper.h"
+#include <libcper/Cper.h>
 
 #define GENERIC_PROC_TYPES_KEYS                                                \
 	(int[])                                                                \

@@ -6,8 +6,8 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
-#include "BaseTypes.h"
-#include "../common-utils.h"
+#include <libcper/BaseTypes.h>
+#include <libcper/common-utils.h>
 
 #define CPER_ERROR_TYPES_KEYS                                                  \
 	(int[])                                                                \

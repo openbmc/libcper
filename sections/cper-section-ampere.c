@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <json.h>
-#include "Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-ampere.h"
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-ampere.h>
 
 //Converts the given processor-generic CPER section into JSON IR.
 json_object *cper_section_ampere_to_ir(void *section)

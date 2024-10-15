@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "base64.h"
-#include "Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-dmar-iommu.h"
+#include <libcper/base64.h>
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-dmar-iommu.h>
 
 //Converts a single IOMMU specific DMAr CPER section into JSON IR.
 json_object *cper_section_dmar_iommu_to_ir(void *section)

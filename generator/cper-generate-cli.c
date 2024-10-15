@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Cper.h"
-#include "cper-generate.h"
-#include "sections/gen-section.h"
+#include <libcper/Cper.h>
+#include <libcper/generator/cper-generate.h>
+#include <libcper/generator/sections/gen-section.h>
 
 void print_help();
 
