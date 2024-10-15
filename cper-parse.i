@@ -1,6 +1,6 @@
 % module cperparse %
 	{
-#include "cper-parse.h"
+#include <libcper/cper-parse.h>
 #include <json.h>
 #include <stdio.h>
 		%

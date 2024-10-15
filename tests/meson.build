@@ -21,7 +21,7 @@ endif
 
 sources = ['ir-tests.cpp', 'test-utils.cpp', 'base64_test.cpp']
 
-test_include_dirs = ['.', '..']
+test_include_dirs = ['.', '../include']
 
 cper_tests = executable(
     'cper-tests',
