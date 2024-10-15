@@ -6,9 +6,9 @@
  **/
 #include <stdio.h>
 #include <json.h>
-#include "../edk/Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-pci-dev.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-pci-dev.h>
 
 //Converts a single PCI/PCI-X device CPER section into JSON IR.
 json_object *cper_section_pci_dev_to_ir(void *section)

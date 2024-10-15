@@ -20,6 +20,7 @@ add_project_arguments(
 
 library_is_share = get_option('default_library') == 'shared'
 add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
+add_project_arguments('-include', language: 'c')
 
 project_description = 'libcper library'
 
@@ -85,7 +86,7 @@ libcper_parse_sources = files(
     'json-schema.c',
 )
 
-libcper_include = ['.']
+libcper_include_dir = include_directories('include', is_system: true)
 
 libcper_parse = library(
     'cper-parse',
@@ -93,15 +94,11 @@ libcper_parse = library(
     section_sources,
     edk_sources,
     version: meson.project_version(),
-    include_directories: include_directories(libcper_include),
+    include_directories: libcper_include_dir,
     c_args: '-Wno-address-of-packed-member',
-    dependencies: [json_c_dep],
+    dependencies: [libcper_include_dir, json_c_dep],
     install: true,
     install_dir: get_option('libdir'),
-)
-libcper_parse_dep = declare_dependency(
-    include_directories: include_directories(libcper_include),
-    link_with: libcper_parse,
 )
 
 libcper_generate_sources = [
@@ -115,14 +112,10 @@ libcper_generate = library(
     libcper_generate_sources,
     generator_section_sources,
     version: meson.project_version(),
-    include_directories: include_directories(libcper_include),
-    dependencies: [libcper_parse_dep, json_c_dep],
+    include_directories: libcper_include_dir,
+    dependencies: [libcper_include_dir, json_c_dep],
     install: true,
     install_dir: get_option('libdir'),
-)
-libcper_generate_dep = declare_dependency(
-    include_directories: include_directories(libcper_include),
-    link_with: libcper_generate,
 )
 
 import('pkgconfig').generate(
@@ -133,10 +126,12 @@ import('pkgconfig').generate(
 )
 
 install_headers(
+    'base64.h',
     'cper-parse.h',
     'cper-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
+    'json-schema.h',
     'edk/BaseTypes.h',
     'edk/Cper.h',
     'sections/cper-section-dmar-vtd.h',
@@ -158,6 +153,8 @@ install_headers(
     'sections/cper-section-generic.h',
     'sections/cper-section-cxl-component.h',
     'generator/cper-generate.h',
+    'generator/sections/gen-section.h',
+    'generator/gen-utils.h',
     subdir: 'libcper',
     preserve_path : true
 )
@@ -166,8 +163,8 @@ if get_option('utility').allowed()
     executable(
         'cper-convert',
         'cli-app/cper-convert.c',
-        include_directories: include_directories(libcper_include),
-        dependencies: [libcper_parse_dep, json_c_dep],
+        include_directories: libcper_include_dir,
+        dependencies: [libcper_include_dir, json_c_dep],
         install: true,
         install_dir: get_option('bindir'),
     )
@@ -176,8 +173,8 @@ if get_option('utility').allowed()
         'cper-generate',
         'generator/cper-generate-cli.c',
         edk_sources,
-        include_directories: include_directories(libcper_include),
-        dependencies: [libcper_generate_dep],
+        include_directories: libcper_include_dir,
+        dependencies: [libcper_include_dir],
         install: true,
         install_dir: get_option('bindir'),
     )

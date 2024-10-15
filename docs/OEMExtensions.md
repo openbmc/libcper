@@ -19,7 +19,7 @@ _sections/cper-section-myvendor.h_:
 #define CPER_SECTION_MYVENDOR
 
 #include <json.h>
-#include "../edk/Cper.h"
+#include <libcper/edk/Cper.h>
 
 json_object* cper_section_myvendor_to_ir(void* section, EFI_ERROR_SECTION_DESCRIPTOR* descriptor);
 void ir_section_myvendor_to_cper(json_object* section, FILE* out);
@@ -38,8 +38,8 @@ _sections/cper-section-myvendor.c_:
  **/
 #include <stdio.h>
 #include <json.h>
-#include "../edk/Cper.h"
-#include "cper-section-ccix-per.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-section-ccix-per.h>
 
 json_object* cper_section_myvendor_to_ir(void* section, EFI_ERROR_SECTION_DESCRIPTOR* descriptor)
 {
@@ -97,8 +97,8 @@ _sections/cper-section.c_:
  *
  * Author: Lawrence.Tang@arm.com
  **/
-#include "../edk/Cper.h"
-#include "cper-section.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/sections/cper-section.h>
 ...
 #include "cper-section-myvendor.h"
 

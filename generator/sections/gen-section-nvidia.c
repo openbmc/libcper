@@ -7,9 +7,9 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
-#include "../../edk/BaseTypes.h"
-#include "../gen-utils.h"
-#include "gen-section.h"
+#include <libcper/edk/BaseTypes.h>
+#include <libcper/generator/gen-utils.h>
+#include <libcper/generator/sections/gen-section.h>
 
 //Generates a single pseudo-random NVIDIA error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.

@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
-#include "../edk/Cper.h"
+#include <libcper/edk/Cper.h>
 
 json_object *cper_section_nvidia_to_ir(void *section);
 void ir_section_nvidia_to_cper(json_object *section, FILE *out);
