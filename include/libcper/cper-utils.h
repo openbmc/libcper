@@ -8,7 +8,8 @@
 extern "C" {
 #endif
 
-#include "common-utils.h"
+#include <libcper/common-utils.h>
+#include <libcper/edk/Cper.h>
 #include <json.h>
 
 json_object *

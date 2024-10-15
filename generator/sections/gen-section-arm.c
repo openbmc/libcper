@@ -6,9 +6,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "../../edk/BaseTypes.h"
-#include "../gen-utils.h"
-#include "gen-section.h"
+#include <libcper/edk/BaseTypes.h>
+#include <libcper/generator/gen-utils.h>
+#include <libcper/generator/sections/gen-section.h>
 #define ARM_ERROR_INFO_SIZE 32
 
 void *generate_arm_error_info();

@@ -10,8 +10,8 @@
 #include <libgen.h>
 #include <limits.h>
 #include <json.h>
-#include "../cper-parse.h"
-#include "../json-schema.h"
+#include <libcper/cper-parse.h>
+#include <libcper/json-schema.h>
 
 void cper_to_json(char *in_file, char *out_file, int is_single_section);
 void json_to_cper(char *in_file, char *out_file, char *specification_file,

@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "edk/BaseTypes.h"
+#include <libcper/edk/BaseTypes.h>
 
 /**
  * base64_decode

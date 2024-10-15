@@ -3,25 +3,25 @@
  *
  * Author: Lawrence.Tang@arm.com
  **/
-#include "../edk/Cper.h"
-#include "cper-section.h"
-#include "cper-section-arm.h"
-#include "cper-section-generic.h"
-#include "cper-section-ia32x64.h"
-#include "cper-section-ipf.h"
-#include "cper-section-memory.h"
-#include "cper-section-pcie.h"
-#include "cper-section-firmware.h"
-#include "cper-section-pci-bus.h"
-#include "cper-section-pci-dev.h"
-#include "cper-section-dmar-generic.h"
-#include "cper-section-dmar-vtd.h"
-#include "cper-section-dmar-iommu.h"
-#include "cper-section-ccix-per.h"
-#include "cper-section-cxl-protocol.h"
-#include "cper-section-cxl-component.h"
-#include "cper-section-nvidia.h"
-#include "cper-section-ampere.h"
+#include <libcper/edk/Cper.h>
+#include <libcper/sections/cper-section.h>
+#include <libcper/sections/cper-section-arm.h>
+#include <libcper/sections/cper-section-generic.h>
+#include <libcper/sections/cper-section-ia32x64.h>
+#include <libcper/sections/cper-section-ipf.h>
+#include <libcper/sections/cper-section-memory.h>
+#include <libcper/sections/cper-section-pcie.h>
+#include <libcper/sections/cper-section-firmware.h>
+#include <libcper/sections/cper-section-pci-bus.h>
+#include <libcper/sections/cper-section-pci-dev.h>
+#include <libcper/sections/cper-section-dmar-generic.h>
+#include <libcper/sections/cper-section-dmar-vtd.h>
+#include <libcper/sections/cper-section-dmar-iommu.h>
+#include <libcper/sections/cper-section-ccix-per.h>
+#include <libcper/sections/cper-section-cxl-protocol.h>
+#include <libcper/sections/cper-section-cxl-component.h>
+#include <libcper/sections/cper-section-nvidia.h>
+#include <libcper/sections/cper-section-ampere.h>
 
 //Definitions of all sections available to the CPER parser.
 CPER_SECTION_DEFINITION section_definitions[] = {
