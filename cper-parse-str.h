@@ -1,6 +1,8 @@
 #ifndef CPER_PARSE_STR_H
 #define CPER_PARSE_STR_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

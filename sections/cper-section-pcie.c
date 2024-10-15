@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "base64.h"
-#include "../edk/Cper.h"
-#include "../cper-utils.h"
-#include "cper-section-pcie.h"
+#include <libcper/base64.h>
+#include <libcper/edk/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-pcie.h>
 
 //Converts a single PCIe CPER section into JSON IR.
 json_object *cper_section_pcie_to_ir(void *section)

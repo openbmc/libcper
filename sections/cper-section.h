@@ -8,7 +8,7 @@ extern "C" {
 #include <json.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../edk/Cper.h"
+#include <libcper/edk/Cper.h>
 
 //Definition structure for a single CPER section type.
 typedef struct {

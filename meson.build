@@ -133,10 +133,12 @@ import('pkgconfig').generate(
 )
 
 install_headers(
+    'base64.h',
     'cper-parse.h',
     'cper-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
+    'json-schema.h',
     'edk/BaseTypes.h',
     'edk/Cper.h',
     'sections/cper-section-dmar-vtd.h',
@@ -158,6 +160,8 @@ install_headers(
     'sections/cper-section-generic.h',
     'sections/cper-section-cxl-component.h',
     'generator/cper-generate.h',
+    'generator/sections/gen-section.h',
+    'generator/gen-utils.h',
     subdir: 'libcper',
     preserve_path : true
 )

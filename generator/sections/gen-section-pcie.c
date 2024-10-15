@@ -5,9 +5,9 @@
  **/
 
 #include <stdlib.h>
-#include "../../edk/BaseTypes.h"
-#include "../gen-utils.h"
-#include "gen-section.h"
+#include <libcper/edk/BaseTypes.h>
+#include <libcper/generator/gen-utils.h>
+#include <libcper/generator/sections/gen-section.h>
 
 #define PCIE_PORT_TYPES                                                        \
 	(int[])                                                                \

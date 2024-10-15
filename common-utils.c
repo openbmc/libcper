@@ -5,8 +5,8 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
-#include "edk/BaseTypes.h"
-#include "common-utils.h"
+#include <libcper/edk/BaseTypes.h>
+#include <libcper/common-utils.h>
 
 //Converts the given BCD byte to a standard integer.
 int bcd_to_int(UINT8 bcd)
