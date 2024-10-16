@@ -34,6 +34,24 @@
       "parentUuid": "5f6b0181_84fce1dd",
       "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbc53947_0591b958",
+        "filename": "meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-10-16T23:42:19Z",
+      "side": 1,
+      "message": "The headers will need to be reachable from both paths for a deprecation period. Install the header files at the new paths and have the old paths symlink to the new paths. At that point you deprecate use of the old paths as part of the API. Then you need to fix all the applications depending on libcper to use the new paths. Then once you\u0027re confident that\u0027s done, you can remove the symlink installation from the install target.",
+      "parentUuid": "1d18415d_17a34db9",
+      "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
