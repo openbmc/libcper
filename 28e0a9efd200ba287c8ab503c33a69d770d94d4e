@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f6b0181_84fce1dd",
+        "filename": "meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-10-16T22:01:08Z",
+      "side": 1,
+      "message": "I\u0027m not a libcper maintainer, but you can\u0027t just move things this way (which I suspect is why Ed hasn\u0027t got around to fixing it). If this is merged you break every app whose build depends on libcper.",
+      "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
