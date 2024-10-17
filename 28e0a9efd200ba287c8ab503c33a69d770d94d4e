@@ -70,6 +70,47 @@
       "parentUuid": "fbc53947_0591b958",
       "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e610ca9e_2b3b6aec",
+        "filename": "meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-17T17:36:24Z",
+      "side": 1,
+      "message": "There are no upstream applications using libcper at this time though.\n\n```\n$ rg libcper\nmeta-phosphor/recipes-phosphor/libcper/libcper_git.bb\n13:SRC_URI \u003d \"git://github.com/openbmc/libcper.git;protocol\u003dhttps;branch\u003dmain\"\n```",
+      "parentUuid": "f5a853eb_711c3b2b",
+      "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6cdf846_9c78c85e",
+        "filename": "meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-17T17:36:24Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be easier to combine these with the first `install_headers` and set `preserve_path\u003dTrue`?  That\u0027s what we do in libpldm also.  \n\nhttps://mesonbuild.com/Reference-manual_functions.html#install_headers_preserve_path",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 72
+      },
+      "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
