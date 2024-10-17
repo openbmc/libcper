@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e38fd889_c135b2bb",
+        "filename": "meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-10-17T23:03:47Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s worth having a migration period.  Nothing except for the built-in cli app is using this code yet, and it\u0027s so new, I can\u0027t imagine anyone is truly looking at it to the point where they wouldn\u0027t be able to handle a minor header move.  FWIW, the install code was added when we ported this to meson a few months ago.  It hasn\u0027t existed long enough that I suspect a lot of folks are relying on it.\n\nLets just move it to the right place and be done with it.",
+      "parentUuid": "e610ca9e_2b3b6aec",
+      "revId": "28e0a9efd200ba287c8ab503c33a69d770d94d4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e6cdf846_9c78c85e",
         "filename": "meson.build",
         "patchSetId": 2
