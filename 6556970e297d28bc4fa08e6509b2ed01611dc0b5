@@ -22,6 +22,30 @@
       },
       "revId": "6556970e297d28bc4fa08e6509b2ed01611dc0b5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05b57cfb_57b477d5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-10-18T07:28:43Z",
+      "side": 1,
+      "message": "I updated commit message.",
+      "parentUuid": "1b66d33d_e35e1a45",
+      "range": {
+        "startLine": 11,
+        "startChar": 13,
+        "endLine": 11,
+        "endChar": 21
+      },
+      "revId": "6556970e297d28bc4fa08e6509b2ed01611dc0b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
