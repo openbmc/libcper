@@ -47,6 +47,7 @@ section_sources = files(
 edk_sources = files('edk/Cper.c')
 
 generator_section_sources = files(
+    'generator/sections/gen-section-amd.c',
     'generator/sections/gen-section-ampere.c',
     'generator/sections/gen-section-arm.c',
     'generator/sections/gen-section-ccix-per.c',

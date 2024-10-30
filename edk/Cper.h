@@ -1433,6 +1433,46 @@ typedef struct {
 
 extern EFI_GUID gEfiAmpereErrorSectionGuid;
 
+///
+/// AMD Fatal Error Record Section
+///
+#define CCM_COUNT    8
+#define DEBUG_LOG_DUMP_REGION    12124
+#define MCA_BANK_MAX_OFFSET    128
+#define MCA_BANKS    32
+#define LAST_TRANS_ADDR_OFFSET    4
+
+typedef struct
+{
+	UINT32 McaData[MCA_BANK_MAX_OFFSET];
+} CRASHDUMP_T;
+
+typedef struct
+{
+	UINT32 WdtData[LAST_TRANS_ADDR_OFFSET];
+} LAST_TRANS_ADDR;
+
+typedef struct
+{
+	LAST_TRANS_ADDR LastTransAddr[CCM_COUNT];
+} DF_DUMP;
+
+typedef struct {
+	EFI_IA32_X64_PROCESSOR_ERROR_RECORD ProcError;
+	UINT32 SignatureID[8];
+	UINT32 Reserved[8];
+	UINT16 RegisterContextType;
+	UINT16 RegisterArraySize;
+	UINT32 MicrocodeVersion;
+	UINT64 Ppin;
+	CRASHDUMP_T CrashDumpData[MCA_BANKS];
+	DF_DUMP DfDumpData;
+	UINT32 Reserved1[96];
+	UINT32 DebugLogIdData[DEBUG_LOG_DUMP_REGION];
+} __attribute__((packed)) EFI_AMD_FATAL_ERROR_DATA;
+
+extern EFI_GUID gEfiAmdFatalErrorSectionGuid;
+
 #pragma pack(pop)
 
 #ifdef __cplusplus
