@@ -242,7 +242,7 @@ const char *severity_to_string(UINT32 severity)
 //Output must be at least TIMESTAMP_LENGTH bytes long.
 void timestamp_to_string(char *out, EFI_ERROR_TIME_STAMP *timestamp)
 {
-	sprintf(out, "%02hhu%02hhu-%02hhu-%02hhuT%02hhu:%02hhu:%02hhu.000",
+	sprintf(out, "%02hhu%02hhu-%02hhu-%02hhuT%02hhu:%02hhu:%02hhu+00:00",
 		bcd_to_int(timestamp->Century) %
 			100,			   //Cannot go to three digits.
 		bcd_to_int(timestamp->Year) % 100, //Cannot go to three digits.
@@ -259,7 +259,7 @@ void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp)
 		return;
 	}
 
-	sscanf(timestamp, "%2hhu%2hhu-%hhu-%hhuT%hhu:%hhu:%hhu.000",
+	sscanf(timestamp, "%2hhu%2hhu-%hhu-%hhuT%hhu:%hhu:%hhu+00:00",
 	       &out->Century, &out->Year, &out->Month, &out->Day, &out->Hours,
 	       &out->Minutes, &out->Seconds);
 
