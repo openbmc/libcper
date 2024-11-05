@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../edk/Cper.h"
+#include "Cper.h"
 #include "cper-generate.h"
 #include "sections/gen-section.h"
 

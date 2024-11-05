@@ -5,7 +5,7 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
-#include "edk/BaseTypes.h"
+#include "BaseTypes.h"
 #include "common-utils.h"
 
 //Converts the given BCD byte to a standard integer.

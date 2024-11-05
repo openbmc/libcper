@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include "test-utils.hpp"
 
-#include "../edk/BaseTypes.h"
+#include "BaseTypes.h"
 #include "../generator/cper-generate.h"
 
 //Returns a ready-for-use memory stream containing a CPER record with the given sections inside.

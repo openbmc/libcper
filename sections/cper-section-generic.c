@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
-#include "../edk/Cper.h"
+#include "Cper.h"
 #include "../cper-utils.h"
 #include "cper-section-generic.h"
 

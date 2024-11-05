@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "../../edk/Cper.h"
+#include "../../Cper.h"
 #include "../gen-utils.h"
 #include "gen-section.h"
 #define IA32X64_ERROR_STRUCTURE_SIZE 64

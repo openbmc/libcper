@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "../../edk/BaseTypes.h"
+#include "../../BaseTypes.h"
 #include "../gen-utils.h"
 #include "gen-section.h"
 #define ARM_ERROR_INFO_SIZE 32

@@ -3,7 +3,7 @@
  *
  * Author: Lawrence.Tang@arm.com
  **/
-#include "../edk/Cper.h"
+#include "Cper.h"
 #include "cper-section.h"
 #include "cper-section-arm.h"
 #include "cper-section-generic.h"

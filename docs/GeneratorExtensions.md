@@ -42,11 +42,11 @@ size_t generate_section_myvendor(void** location)
 ## Adding a Section GUID
 
 To identify our section for parsing, we must define a section GUID within
-`edk/Cper.h` and `edk/Cper.c` respectively. This is the same step taken when
+`Cper.h` and `Cper.c` respectively. This is the same step taken when
 adding an OEM extension to `cper-parse`, so if you've already done this, you do
 not need to repeat it again.
 
-_edk/Cper.h_:
+_Cper.h_:
 
 ```c
 ...
@@ -55,7 +55,7 @@ extern EFI_GUID   gEfiCxlMldPortErrorSectionGuid;
 extern EFI_GUID   gMyVendorSectionGuid;
 ```
 
-_edk/Cper.c_:
+Cper.c_:
 
 ```c
 ...

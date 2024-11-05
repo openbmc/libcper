@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
-#include "../edk/Cper.h"
+#include "Cper.h"
 
 #define IPF_MOD_ERROR_VALID_BITFIELD_NAMES                                     \
 	(const char *[])                                                       \

@@ -5,7 +5,7 @@
  **/
 
 #include <stdlib.h>
-#include "../../edk/BaseTypes.h"
+#include "../../BaseTypes.h"
 #include "../gen-utils.h"
 #include "gen-section.h"
 

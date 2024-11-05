@@ -383,7 +383,7 @@ edx & uint64 & Value of the EDX register resulting from a call to CPUID with EAX
 \label{subsection:ia32x64processorerrorinfostructure}
 This structure describes a single IA32/x64 Processor Error Info sub-section, which is part of the larger IA32/x64 record (\ref{section:ia32x64errorsection}).
 \jsontable{table:ia32x64processorerrorinfostructure}
-type.guid & string & A GUID indicating the type of processor error defined in this structure. See \texttt{edk/Cper.h} in the library repository for the defined GUID values.\\
+type.guid & string & A GUID indicating the type of processor error defined in this structure. See \texttt{Cper.h} in the library repository for the defined GUID values.\\
 type.name & string & The human readable name, if available, of the type of processor error defined in this structure.\\
 \hline
 validationBits & object & An IA32/x64 Processor Error Info Validation structure, as defined in Subsection \ref{subsection:ia32x64processorerrorinfovalidationstructure}.\\
@@ -420,7 +420,7 @@ instructionPointerValid & boolean & Whether the "instructionPointer" field in th
 \subsection{IA32/x64 Processor Error Check Info (Cache/TLB Error) Structure}
 \label{subsection:ia32x64processorerrorcheckinfocachetlbstructure}
 This structure describes check info for an IA32/x64 Processor Error Info structure (\ref{subsection:ia32x64processorerrorinfostructure}) stemming from a cache or TLB error.
-The GUIDs for cache and TLB error check info structures can be found in the library repository's \texttt{edk/Cper.h}.
+The GUIDs for cache and TLB error check info structures can be found in the library repository's \texttt{Cper.h}.
 \jsontable{table:ia32x64processorerrorcheckinfocachetlbstructure}
 validationBits & object & An IA32/x64 Processor Error Check Info (Cache/TLB/Bus) Validation structure, as defined in Subsection \ref{subsection:ia32x64processorerrorcheckinfovalidationstructure}.\\
 \hline
@@ -447,7 +447,7 @@ overflow & boolean & Whether an error overflow occurred (multiple errors within 
 \subsection{IA32/x64 Processor Error Check Info (Bus Error) Structure}
 \label{subsection:ia32x64processorerrorcheckinfobusstructure}
 This structure describes check info for an IA32/x64 Processor Error Info structure (\ref{subsection:ia32x64processorerrorinfostructure}) stemming from a bus error.
-The GUID for bus error check info structures can be found in the library repository's \texttt{edk/Cper.h}.
+The GUID for bus error check info structures can be found in the library repository's \texttt{Cper.h}.
 \jsontable{table:ia32x64processorerrorcheckinfobusstructure}
 validationBits & object & An IA32/x64 Processor Error Check Info (Cache/TLB/Bus) Validation structure, as defined in Subsection \ref{subsection:ia32x64processorerrorcheckinfovalidationstructure}.\\
 \hline
@@ -482,7 +482,7 @@ addressSpace.name  & string & The human readable name, if available, of the addr
 \subsection{IA32/x64 Processor Error Check Info (MS Check Error) Structure}
 \label{subsection:ia32x64processorerrorcheckinfomscheckstructure}
 This structure describes check info for an IA32/x64 Processor Error Info structure (\ref{subsection:ia32x64processorerrorinfostructure}) stemming from an MS check error.
-The GUID for MS check check info structures can be found in the library repository's \texttt{edk/Cper.h}.
+The GUID for MS check check info structures can be found in the library repository's \texttt{Cper.h}.
 \jsontable{table:ia32x64processorerrorcheckinfomscheckstructure}
 validationBits & object & An IA32/x64 Processor Error Check Info (MS Check) Validation structure, as defined in Subsection \ref{subsection:ia32x64processorerrorcheckinfomscheckvalidationstructure}.\\
 \hline

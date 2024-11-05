@@ -5,7 +5,7 @@
  **/
 #include <stdlib.h>
 #include <time.h>
-#include "../edk/BaseTypes.h"
+#include "BaseTypes.h"
 #include "gen-utils.h"
 
 //Generates a random section of the given byte size, saving the result to the given location.
