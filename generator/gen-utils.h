@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
-#include "../edk/BaseTypes.h"
+#include "BaseTypes.h"
 #include "../common-utils.h"
 
 #define CPER_ERROR_TYPES_KEYS                                                  \

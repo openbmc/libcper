@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <json.h>
-#include "../edk/Cper.h"
+#include "Cper.h"
 
 #define FIRMWARE_ERROR_RECORD_TYPES_KEYS                                       \
 	(int[])                                                                \

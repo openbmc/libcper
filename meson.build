@@ -44,7 +44,7 @@ section_sources = files(
     'sections/cper-section.c',
 )
 
-edk_sources = files('edk/Cper.c')
+edk_sources = files('Cper.c')
 
 generator_section_sources = files(
     'generator/sections/gen-section-ampere.c',
@@ -137,12 +137,14 @@ install_headers(
     'cper-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
+    'Cper.h',
+    'Cper.c',
+    'BaseTypes.h',
     subdir: 'libcper',
     preserve_path : true
 )
 
 install_headers('generator/cper-generate.h', subdir: 'libcper/generator')
-install_headers('edk/Cper.h', 'edk/BaseTypes.h', subdir: 'libcper/edk')
 
 if get_option('utility').allowed()
     executable(
