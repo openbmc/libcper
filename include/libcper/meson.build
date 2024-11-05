@@ -5,6 +5,8 @@ install_headers(
     'cper-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
+    'sections/cper-section-ampere.h',
+    'sections/cper-section-arm.h',
     subdir: 'libcper',
     preserve_path : true
 )
