@@ -46,6 +46,30 @@
       },
       "revId": "4070461b6fdc0a66068d8128cc1af7cf456c7fbb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e48621ed_85974e19",
+        "filename": "edk/Cper.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-11-05T01:17:14Z",
+      "side": 1,
+      "message": "In latest patch set https://gerrit.openbmc.org/c/openbmc/libcper/+/75309/9/include/libcper/edk/Cper.h#17",
+      "parentUuid": "7fb5c906_1bf18048",
+      "range": {
+        "startLine": 17,
+        "startChar": 10,
+        "endLine": 17,
+        "endChar": 13
+      },
+      "revId": "4070461b6fdc0a66068d8128cc1af7cf456c7fbb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
