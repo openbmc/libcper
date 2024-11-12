@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfff9e70_9a8f2415",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-12T17:56:49Z",
+      "side": 1,
+      "message": "nit, \"users\"",
+      "range": {
+        "startLine": 10,
+        "startChar": 14,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b285a347_d7ec911a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-12T17:56:49Z",
+      "side": 1,
+      "message": "what is \"none-json\"?",
+      "range": {
+        "startLine": 11,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 33
+      },
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8840685_763aeaf9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-12T17:56:49Z",
+      "side": 1,
+      "message": "These files aren\u0027t really intended to be part of the user-facing API.  Can you get some more details on what you\u0027re trying to accomplish here, and we can see about adding the appropriate headers for it?\n\nI also worry about only installing some of the headers, without a clear indication as to why these were singled out.  We likely should be doing all or none.",
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
