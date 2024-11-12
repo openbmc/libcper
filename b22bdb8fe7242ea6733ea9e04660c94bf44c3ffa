@@ -22,6 +22,30 @@
       },
       "revId": "b22bdb8fe7242ea6733ea9e04660c94bf44c3ffa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fefb3d6f_c49f3512",
+        "filename": "cper-utils.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-12T17:58:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8622b440_dcb2a9c2",
+      "range": {
+        "startLine": 255,
+        "startChar": 5,
+        "endLine": 255,
+        "endChar": 24
+      },
+      "revId": "b22bdb8fe7242ea6733ea9e04660c94bf44c3ffa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
