@@ -1433,6 +1433,275 @@ typedef struct {
 
 extern EFI_GUID gEfiAmpereErrorSectionGuid;
 
+///
+/// Arm Error Record Section
+///
+typedef struct {
+	UINT32 ValidFields;
+	UINT16 ErrInfoNum;
+	UINT16 ContextInfoNum;
+	UINT32 SectionLength;
+	UINT32 ErrorAffinityLevel;
+	UINT64 MPIDR_EL1;
+	UINT64 MIDR_EL1;
+	UINT32 RunningState;
+	UINT32 PsciState;
+} __attribute__((packed, aligned(1))) EFI_ARM_ERROR_RECORD;
+
+///
+/// ARM Processor Error Information Structure
+///
+#define ARM_ERROR_INFORMATION_TYPE_CACHE     0
+#define ARM_ERROR_INFORMATION_TYPE_TLB	     1
+#define ARM_ERROR_INFORMATION_TYPE_BUS	     2
+#define ARM_ERROR_INFORMATION_TYPE_MICROARCH 3
+
+typedef struct {
+	UINT64 ValidationBits : 16;
+	UINT64 TransactionType : 2;
+	UINT64 Operation : 4;
+	UINT64 Level : 3;
+	UINT64 ProcessorContextCorrupt : 1;
+	UINT64 Corrected : 1;
+	UINT64 PrecisePC : 1;
+	UINT64 RestartablePC : 1;
+	UINT64 Reserved : 34;
+} EFI_ARM_CACHE_ERROR_STRUCTURE;
+
+typedef struct {
+	UINT64 ValidationBits : 16;
+	UINT64 TransactionType : 2;
+	UINT64 Operation : 4;
+	UINT64 Level : 3;
+	UINT64 ProcessorContextCorrupt : 1;
+	UINT64 Corrected : 1;
+	UINT64 PrecisePC : 1;
+	UINT64 RestartablePC : 1;
+	UINT64 Reserved : 34;
+} EFI_ARM_TLB_ERROR_STRUCTURE;
+
+typedef struct {
+	UINT64 ValidationBits : 16;
+	UINT64 TransactionType : 2;
+	UINT64 Operation : 4;
+	UINT64 Level : 3;
+	UINT64 ProcessorContextCorrupt : 1;
+	UINT64 Corrected : 1;
+	UINT64 PrecisePC : 1;
+	UINT64 RestartablePC : 1;
+	UINT64 ParticipationType : 2;
+	UINT64 TimeOut : 1;
+	UINT64 AddressSpace : 2;
+	UINT64 MemoryAddressAttributes : 8;
+	UINT64 AccessMode : 1;
+	UINT64 Reserved : 19;
+} EFI_ARM_BUS_ERROR_STRUCTURE;
+
+typedef union {
+	UINT64 Value;
+	EFI_ARM_CACHE_ERROR_STRUCTURE CacheError;
+	EFI_ARM_TLB_ERROR_STRUCTURE TlbError;
+	EFI_ARM_BUS_ERROR_STRUCTURE BusError;
+} EFI_ARM_ERROR_INFORMATION_STRUCTURE;
+
+typedef struct {
+	UINT8 Version;
+	UINT8 Length;
+	UINT16 ValidationBits;
+	UINT8 Type;
+	UINT16 MultipleError;
+	UINT8 Flags;
+	EFI_ARM_ERROR_INFORMATION_STRUCTURE ErrorInformation;
+	UINT64 VirtualFaultAddress;
+	UINT64 PhysicalFaultAddress;
+} __attribute__((packed, aligned(1))) EFI_ARM_ERROR_INFORMATION_ENTRY;
+
+///
+/// ARM Processor Context Information Structure
+///
+typedef struct {
+	UINT16 Version;
+	UINT16 RegisterContextType;
+	UINT32 RegisterArraySize;
+} __attribute__((packed, aligned(1))) EFI_ARM_CONTEXT_INFORMATION_HEADER;
+
+///
+/// ARM Processor Context Register Types
+///
+#define EFI_ARM_CONTEXT_TYPE_AARCH32_GPR    0
+#define EFI_ARM_CONTEXT_TYPE_AARCH32_EL1    1
+#define EFI_ARM_CONTEXT_TYPE_AARCH32_EL2    2
+#define EFI_ARM_CONTEXT_TYPE_AARCH32_SECURE 3
+#define EFI_ARM_CONTEXT_TYPE_AARCH64_GPR    4
+#define EFI_ARM_CONTEXT_TYPE_AARCH64_EL1    5
+#define EFI_ARM_CONTEXT_TYPE_AARCH64_EL2    6
+#define EFI_ARM_CONTEXT_TYPE_AARCH64_EL3    7
+#define EFI_ARM_CONTEXT_TYPE_MISC	    8
+
+typedef struct {
+	UINT32 R0;
+	UINT32 R1;
+	UINT32 R2;
+	UINT32 R3;
+	UINT32 R4;
+	UINT32 R5;
+	UINT32 R6;
+	UINT32 R7;
+	UINT32 R8;
+	UINT32 R9;
+	UINT32 R10;
+	UINT32 R11;
+	UINT32 R12;
+	UINT32 R13_sp;
+	UINT32 R14_lr;
+	UINT32 R15_pc;
+} EFI_ARM_V8_AARCH32_GPR;
+
+typedef struct {
+	UINT32 Dfar;
+	UINT32 Dfsr;
+	UINT32 Ifar;
+	UINT32 Isr;
+	UINT32 Mair0;
+	UINT32 Mair1;
+	UINT32 Midr;
+	UINT32 Mpidr;
+	UINT32 Nmrr;
+	UINT32 Prrr;
+	UINT32 Sctlr_Ns;
+	UINT32 Spsr;
+	UINT32 Spsr_Abt;
+	UINT32 Spsr_Fiq;
+	UINT32 Spsr_Irq;
+	UINT32 Spsr_Svc;
+	UINT32 Spsr_Und;
+	UINT32 Tpidrprw;
+	UINT32 Tpidruro;
+	UINT32 Tpidrurw;
+	UINT32 Ttbcr;
+	UINT32 Ttbr0;
+	UINT32 Ttbr1;
+	UINT32 Dacr;
+} EFI_ARM_AARCH32_EL1_CONTEXT_REGISTERS;
+
+typedef struct {
+	UINT32 Elr_Hyp;
+	UINT32 Hamair0;
+	UINT32 Hamair1;
+	UINT32 Hcr;
+	UINT32 Hcr2;
+	UINT32 Hdfar;
+	UINT32 Hifar;
+	UINT32 Hpfar;
+	UINT32 Hsr;
+	UINT32 Htcr;
+	UINT32 Htpidr;
+	UINT32 Httbr;
+	UINT32 Spsr_Hyp;
+	UINT32 Vtcr;
+	UINT32 Vttbr;
+	UINT32 Dacr32_El2;
+} EFI_ARM_AARCH32_EL2_CONTEXT_REGISTERS;
+
+typedef struct {
+	UINT32 Sctlr_S;
+	UINT32 Spsr_Mon;
+} EFI_ARM_AARCH32_SECURE_CONTEXT_REGISTERS;
+
+typedef struct {
+	UINT64 X0;
+	UINT64 X1;
+	UINT64 X2;
+	UINT64 X3;
+	UINT64 X4;
+	UINT64 X5;
+	UINT64 X6;
+	UINT64 X7;
+	UINT64 X8;
+	UINT64 X9;
+	UINT64 X10;
+	UINT64 X11;
+	UINT64 X12;
+	UINT64 X13;
+	UINT64 X14;
+	UINT64 X15;
+	UINT64 X16;
+	UINT64 X17;
+	UINT64 X18;
+	UINT64 X19;
+	UINT64 X20;
+	UINT64 X21;
+	UINT64 X22;
+	UINT64 X23;
+	UINT64 X24;
+	UINT64 X25;
+	UINT64 X26;
+	UINT64 X27;
+	UINT64 X28;
+	UINT64 X29;
+	UINT64 X30;
+	UINT64 Sp;
+} EFI_ARM_V8_AARCH64_GPR;
+
+typedef struct {
+	UINT64 Elr_El1;
+	UINT64 Esr_El1;
+	UINT64 Far_El1;
+	UINT64 Isr_El1;
+	UINT64 Mair_El1;
+	UINT64 Midr_El1;
+	UINT64 Mpidr_El1;
+	UINT64 Sctlr_El1;
+	UINT64 Sp_El0;
+	UINT64 Sp_El1;
+	UINT64 Spsr_El1;
+	UINT64 Tcr_El1;
+	UINT64 Tpidr_El0;
+	UINT64 Tpidr_El1;
+	UINT64 Tpidrro_El0;
+	UINT64 Ttbr0_El1;
+	UINT64 Ttbr1_El1;
+} EFI_ARM_AARCH64_EL1_CONTEXT_REGISTERS;
+
+typedef struct {
+	UINT64 Elr_El2;
+	UINT64 Esr_El2;
+	UINT64 Far_El2;
+	UINT64 Hacr_El2;
+	UINT64 Hcr_El2;
+	UINT64 Hpfar_El2;
+	UINT64 Mair_El2;
+	UINT64 Sctlr_El2;
+	UINT64 Sp_El2;
+	UINT64 Spsr_El2;
+	UINT64 Tcr_El2;
+	UINT64 Tpidr_El2;
+	UINT64 Ttbr0_El2;
+	UINT64 Vtcr_El2;
+	UINT64 Vttbr_El2;
+} EFI_ARM_AARCH64_EL2_CONTEXT_REGISTERS;
+
+typedef struct {
+	UINT64 Elr_El3;
+	UINT64 Esr_El3;
+	UINT64 Far_El3;
+	UINT64 Mair_El3;
+	UINT64 Sctlr_El3;
+	UINT64 Sp_El3;
+	UINT64 Spsr_El3;
+	UINT64 Tcr_El3;
+	UINT64 Tpidr_El3;
+	UINT64 Ttbr0_El3;
+} EFI_ARM_AARCH64_EL3_CONTEXT_REGISTERS;
+
+typedef struct {
+	UINT64 MrsOp2 : 3;
+	UINT64 MrsCrm : 4;
+	UINT64 MrsCrn : 4;
+	UINT64 MrsOp1 : 3;
+	UINT64 MrsO0 : 1;
+	UINT64 Value : 64;
+} EFI_ARM_MISC_CONTEXT_REGISTER;
 #pragma pack(pop)
 
 #ifdef __cplusplus
