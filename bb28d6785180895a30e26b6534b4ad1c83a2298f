@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de67baa5_57849b15",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-11-13T00:21:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfff9e70_9a8f2415",
+      "range": {
+        "startLine": 10,
+        "startChar": 14,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b285a347_d7ec911a",
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "093f518e_ceac9772",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-11-13T00:21:52Z",
+      "side": 1,
+      "message": "Example:\nThe third application or pldmd can implement the its CPER\ndecoder to extract the CPER `typeID`, `subtype` and others `context info` to log those info to Ipmitool SEL Log. In this case, the application needs specific data fields in CPER data to log to Ipmi SEL log but not all of CPER in Json format.\n\nEven, if the `pldmd` call the cper-parser to decode the CPER data to\njson format, it still needs the definition in the `cper-section*` header\nto find the `typeID`, `subtype` fields in the json format depends on the\nCPER type.",
+      "parentUuid": "b285a347_d7ec911a",
+      "range": {
+        "startLine": 11,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 33
+      },
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f8840685_763aeaf9",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -60,6 +108,24 @@
       "writtenOn": "2024-11-12T17:56:49Z",
       "side": 1,
       "message": "These files aren\u0027t really intended to be part of the user-facing API.  Can you get some more details on what you\u0027re trying to accomplish here, and we can see about adding the appropriate headers for it?\n\nI also worry about only installing some of the headers, without a clear indication as to why these were singled out.  We likely should be doing all or none.",
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b43fff6c_a6f3d3f2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-11-13T00:21:52Z",
+      "side": 1,
+      "message": "As my understanding, currently, `libcper` is intended to public the `cper-parser` and `cper-generator` user APIs to allow others application call those API to format the CPER data to JSON format or from Json format to CPER data.\nI wonder in the case, Ampere wants to log the IPMI SEL log event to identify the typeID, SubType, and some other CPER data to IPMI OEM SEL log how can we achieve that?\n[1] https://gerrit.openbmc.org/c/openbmc/pldm/+/73237/11/oem/ampere/event/cper.cpp#57\n[2] https://gerrit.openbmc.org/c/openbmc/pldm/+/73237/11/oem/ampere/event/cper.cpp#164\nCan you take a look on those codes if I can\u0027t explain my idea clearly?\n\nOR\n\nMaybe, Some definitions in `cper_section*` need to be moved to Cper.h to achieve that.",
+      "parentUuid": "f8840685_763aeaf9",
       "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
