@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "847571ce_05a2fcf2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-11-13T02:05:24Z",
+      "side": 1,
+      "message": "\u003e \u003e Example:\n\u003e \u003e The third application or pldmd can implement the its CPER\n\u003e \u003e decoder to extract the CPER `typeID`, `subtype` and others `context info` to log those info to Ipmitool SEL Log. In this case, the application needs specific data fields in CPER data to log to Ipmi SEL log but not all of CPER in Json format.\n\u003e \u003e \n\u003e \u003e Even, if the `pldmd` call the cper-parser to decode the CPER data to\n\u003e \u003e json format, it still needs the definition in the `cper-section*` header\n\u003e \u003e to find the `typeID`, `subtype` fields in the json format depends on the\n\u003e \u003e CPER type.\n\u003e \n\u003e I\u0027m not following why, if it used json, it would need those header files.  between the json schema and json, it should be able to parse out what\u0027s needed into its own structs.\n\nBecause I think we still need to do some condition checking about the CPER type or CPER field to find the corrected info. Or maybe not.\n\n\u003e \n\u003e With that said, being able to parse to a struct does seem useful, I would just prefer it not be the structs that exist in the headers.  Things like pragma packed and other things aren\u0027t portable between binaries, so if we want to publish a header-interface into libcper, lets make it specific to libcper.",
+      "parentUuid": "89e51a56_2c8fc579",
+      "range": {
+        "startLine": 11,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 33
+      },
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f8840685_763aeaf9",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -168,6 +192,24 @@
       "side": 1,
       "message": "I suspect if we want to publish a header interface, we need to reorganize how our headers are done.  The headers you\u0027re trying to publish are the wire format, and are used internally.  Maybe we should just publish the c_json object itself instead of the serialized string?  Then users can look up whatever field they like?",
       "parentUuid": "b43fff6c_a6f3d3f2",
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35460915_ff618dd6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000945
+      },
+      "writtenOn": "2024-11-13T02:05:24Z",
+      "side": 1,
+      "message": "\u003e I suspect if we want to publish a header interface, we need to reorganize how our headers are done.  The headers you\u0027re trying to publish are the wire format, and are used internally. \n\nIf the `cper_section*` is intended to be private. Then I agree that we need `reorganize how our headers are done`.\n\nAs https://github.com/openbmc/libcper/blob/main/docs/OEMExtensions.md#creating-a-section-parser\nthe `sections/cper-section-myvendor.h` will include the `cper_section_myvendor_to_ir` and `ir_section_myvendor_to_cper` APIs.\nThe other definition are adding in `Cper.h`.\n\nBelow `cper-section*` are following that.\nhttps://github.com/openbmc/libcper/blob/main/sections/cper-section-firmware.h\nhttps://github.com/openbmc/libcper/blob/main/sections/cper-section-memory.h\nhttps://github.com/openbmc/libcper/blob/main/sections/cper-section-nvidia.h\nhttps://github.com/openbmc/libcper/blob/main/sections/cper-section-pcie.h\nhttps://github.com/openbmc/libcper/blob/main/sections/cper-section-ampere.h\n\nBut the Arm CPER structs are defined in https://github.com/openbmc/libcper/blob/main/sections/cper-section-arm.h\n So I think we have to move Arm definitions to `Cper.h`. What do you think about that?\n\n\u003e Maybe we should just publish the c_json object itself instead of the serialized string?  Then users can look up whatever field they like?\n\nYes, It is one option too.",
+      "parentUuid": "7d60d6fc_f220a7c1",
       "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
