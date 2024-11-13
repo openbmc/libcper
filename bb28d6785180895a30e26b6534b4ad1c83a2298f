@@ -212,6 +212,24 @@
       "parentUuid": "7d60d6fc_f220a7c1",
       "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c26ea0e0_7d2c717e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-13T14:16:23Z",
+      "side": 1,
+      "message": "\u003e \u003e I suspect if we want to publish a header interface, we need to reorganize how our headers are done.  The headers you\u0027re trying to publish are the wire format, and are used internally. \n\u003e \n\u003e If the `cper_section*` is intended to be private. Then I agree that we need `reorganize how our headers are done`.\n\u003e \n\u003e As https://github.com/openbmc/libcper/blob/main/docs/OEMExtensions.md#creating-a-section-parser\n\u003e the `sections/cper-section-myvendor.h` will include the `cper_section_myvendor_to_ir` and `ir_section_myvendor_to_cper` APIs.\n\u003e The other definition are adding in `Cper.h`.\n\u003e \n\u003e Below `cper-section*` are following that.\n\u003e https://github.com/openbmc/libcper/blob/main/sections/cper-section-firmware.h\n\u003e https://github.com/openbmc/libcper/blob/main/sections/cper-section-memory.h\n\u003e https://github.com/openbmc/libcper/blob/main/sections/cper-section-nvidia.h\n\u003e https://github.com/openbmc/libcper/blob/main/sections/cper-section-pcie.h\n\u003e https://github.com/openbmc/libcper/blob/main/sections/cper-section-ampere.h\n\u003e \n\u003e But the Arm CPER structs are defined in https://github.com/openbmc/libcper/blob/main/sections/cper-section-arm.h\n\u003e  So I think we have to move Arm definitions to `Cper.h`. What do you think about that?\n\nYes, that seems to be the issue here.\n\n\u003e \n\u003e \u003e Maybe we should just publish the c_json object itself instead of the serialized string?  Then users can look up whatever field they like?\n\u003e \n\u003e Yes, It is one option too.",
+      "parentUuid": "35460915_ff618dd6",
+      "revId": "bb28d6785180895a30e26b6534b4ad1c83a2298f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
