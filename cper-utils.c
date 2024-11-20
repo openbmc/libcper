@@ -240,15 +240,22 @@ const char *severity_to_string(UINT32 severity)
 
 //Converts a single EFI timestamp to string, at the given output.
 //Output must be at least TIMESTAMP_LENGTH bytes long.
-void timestamp_to_string(char *out, EFI_ERROR_TIME_STAMP *timestamp)
+void timestamp_to_string(char *out, int out_len,
+			 EFI_ERROR_TIME_STAMP *timestamp)
 {
-	sprintf(out, "%02hhu%02hhu-%02hhu-%02hhuT%02hhu:%02hhu:%02hhu+00:00",
+	int written = snprintf(
+		out, out_len,
+		"%02hhu%02hhu-%02hhu-%02hhuT%02hhu:%02hhu:%02hhu+00:00",
 		bcd_to_int(timestamp->Century) %
 			100,			   //Cannot go to three digits.
 		bcd_to_int(timestamp->Year) % 100, //Cannot go to three digits.
 		bcd_to_int(timestamp->Month), bcd_to_int(timestamp->Day),
 		bcd_to_int(timestamp->Hours), bcd_to_int(timestamp->Minutes),
 		bcd_to_int(timestamp->Seconds));
+
+	if (written < 0 || written >= out_len) {
+		printf("Timestamp buffer of insufficient size\n");
+	}
 }
 
 //Converts a single timestamp string to an EFI timestamp.

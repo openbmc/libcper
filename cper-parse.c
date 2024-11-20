@@ -133,7 +133,8 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	//If a timestamp exists according to validation bits, then add it.
 	if (header->ValidationBits & 0x2) {
 		char timestamp_string[TIMESTAMP_LENGTH];
-		timestamp_to_string(timestamp_string, &header->TimeStamp);
+		timestamp_to_string(timestamp_string, TIMESTAMP_LENGTH,
+				    &header->TimeStamp);
 
 		json_object_object_add(
 			header_ir, "timestamp",
