@@ -154,6 +154,33 @@
             "properties": {
                 "data": {
                     "type": "string"
+                },
+                "capability_header": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_status": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_mask": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_severity": {
+                    "type": "integer"
+                },
+                "correctable_error_status": {
+                    "type": "integer"
+                },
+                "correctable_error_mask": {
+                    "type": "integer"
+                },
+                "capabilites_control": {
+                    "type": "integer"
+                },
+                "tlp_header_log": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         }
