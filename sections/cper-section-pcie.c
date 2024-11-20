@@ -12,6 +12,17 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-pcie.h>
 
+struct aer_info_registers {
+	UINT32 pcie_capability_header;
+	UINT32 uncorrectable_error_status;
+	UINT32 uncorrectable_error_mask;
+	UINT32 uncorrectable_error_severity;
+	UINT32 correctable_error_status;
+	UINT32 correctable_error_mask;
+	UINT32 aer_capabilites_control;
+	UINT32 tlp_header_log[4];
+};
+
 //Converts a single PCIe CPER section into JSON IR.
 json_object *cper_section_pcie_to_ir(void *section)
 {
@@ -134,6 +145,37 @@ json_object *cper_section_pcie_to_ir(void *section)
 								  encoded_len));
 		free(encoded);
 	}
+
+	struct aer_info_registers *aer_decode;
+	aer_decode = (struct aer_info_registers *)&pcie_error->AerInfo.PcieAer;
+	json_object_object_add(
+		aer_capability_ir, "capability_header",
+		json_object_new_uint64(aer_decode->pcie_capability_header));
+	json_object_object_add(
+		aer_capability_ir, "uncorrectable_error_status",
+		json_object_new_uint64(aer_decode->uncorrectable_error_status));
+	json_object_object_add(
+		aer_capability_ir, "uncorrectable_error_mask",
+		json_object_new_uint64(aer_decode->uncorrectable_error_mask));
+	json_object_object_add(
+		aer_capability_ir, "uncorrectable_error_severity",
+		json_object_new_uint64(
+			aer_decode->uncorrectable_error_severity));
+	json_object_object_add(
+		aer_capability_ir, "correctable_error_status",
+		json_object_new_uint64(aer_decode->correctable_error_status));
+	json_object_object_add(
+		aer_capability_ir, "correctable_error_mask",
+		json_object_new_uint64(aer_decode->correctable_error_mask));
+	json_object_object_add(
+		aer_capability_ir, "capabilites_control",
+		json_object_new_uint64(aer_decode->aer_capabilites_control));
+	json_object *json_tlp_hedear_log = json_object_new_array();
+	json_object_array_add(json_tlp_hedear_log,json_object_new_uint64(aer_decode->tlp_header_log[0]));
+	json_object_array_add(json_tlp_hedear_log,json_object_new_uint64(aer_decode->tlp_header_log[1]));
+	json_object_array_add(json_tlp_hedear_log,json_object_new_uint64(aer_decode->tlp_header_log[2]));
+	json_object_array_add(json_tlp_hedear_log, json_object_new_uint64(aer_decode->tlp_header_log[3]));
+	json_object_object_add(aer_capability_ir, "tlp_header_log", json_tlp_hedear_log);
 	json_object_object_add(section_ir, "aerInfo", aer_capability_ir);
 
 	return section_ir;
