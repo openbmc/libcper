@@ -2,7 +2,7 @@
 #define CPER_UTILS_H
 
 #define GUID_STRING_LENGTH 48
-#define TIMESTAMP_LENGTH   24
+#define TIMESTAMP_LENGTH   26
 
 #ifdef __cplusplus
 extern "C" {
