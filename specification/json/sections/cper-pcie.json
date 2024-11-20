@@ -154,6 +154,39 @@
             "properties": {
                 "data": {
                     "type": "string"
+                },
+                "capability_header": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_status": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_mask": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_severity": {
+                    "type": "integer"
+                },
+                "correctable_error_status": {
+                    "type": "integer"
+                },
+                "correctable_error_mask": {
+                    "type": "integer"
+                },
+                "capabilites_control": {
+                    "type": "integer"
+                },
+                "tlp_header_0": {
+                    "type": "integer"
+                },
+                "tlp_header_1": {
+                    "type": "integer"
+                },
+                "tlp_header_2": {
+                    "type": "integer"
+                },
+                "tlp_header_3": {
+                    "type": "integer"
                 }
             }
         }
