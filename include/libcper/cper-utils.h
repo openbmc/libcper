@@ -2,7 +2,7 @@
 #define CPER_UTILS_H
 
 #define GUID_STRING_LENGTH 48
-#define TIMESTAMP_LENGTH   24
+#define TIMESTAMP_LENGTH   26
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,7 +38,7 @@ UINT64 ir_to_bitfield(json_object *ir, int num_fields, const char *names[]);
 json_object *uint64_array_to_ir_array(UINT64 *array, int len);
 json_object *revision_to_ir(UINT16 revision);
 const char *severity_to_string(UINT32 severity);
-void timestamp_to_string(char *out, EFI_ERROR_TIME_STAMP *timestamp);
+void timestamp_to_string(char *out, int out_len, EFI_ERROR_TIME_STAMP *timestamp);
 void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp);
 void guid_to_string(char *out, EFI_GUID *guid);
 void string_to_guid(EFI_GUID *out, const char *guid);
