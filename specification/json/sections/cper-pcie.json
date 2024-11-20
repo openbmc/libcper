@@ -154,6 +154,27 @@
             "properties": {
                 "data": {
                     "type": "string"
+                },
+                "pcie_capability_header": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_status": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_mask": {
+                    "type": "integer"
+                },
+                "uncorrectable_error_severity": {
+                    "type": "integer"
+                },
+                "correctable_error_status": {
+                    "type": "integer"
+                },
+                "correctable_error_mask": {
+                    "type": "integer"
+                },
+                "aer_capabilites_control": {
+                    "type": "integer"
                 }
             }
         }
