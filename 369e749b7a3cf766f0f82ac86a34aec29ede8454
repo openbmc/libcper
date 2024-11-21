@@ -16,6 +16,24 @@
       "message": "We need to fix the bug here.  We\u0027re ignoring the return code of snprintf.  At minimum we should check against the fixed length but ideally we should return the length.",
       "revId": "369e749b7a3cf766f0f82ac86a34aec29ede8454",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5a9177b_3844e4d6",
+        "filename": "include/libcper/cper-utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-21T04:54:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a87b1be7_e7c9bbc0",
+      "revId": "369e749b7a3cf766f0f82ac86a34aec29ede8454",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
