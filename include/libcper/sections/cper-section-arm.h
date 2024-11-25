@@ -8,6 +8,8 @@ extern "C" {
 #include <json.h>
 #include <libcper/Cper.h>
 
+#define ARM_SOCK_MASK 0xFF00000000
+
 #define ARM_ERROR_VALID_BITFIELD_NAMES                                         \
 	(const char *[])                                                       \
 	{                                                                      \
