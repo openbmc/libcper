@@ -8,6 +8,7 @@
         "sectionLength",
         "errorAffinity",
         "mpidrEl1",
+        "affinity3",
         "midrEl1",
         "running",
         "errorInfo",
@@ -60,6 +61,9 @@
             }
         },
         "mpidrEl1": {
+            "type": "integer"
+        },
+        "affinity3": {
             "type": "integer"
         },
         "midrEl1": {

@@ -73,8 +73,15 @@ json_object *cper_section_arm_to_ir(void *section)
 	json_object_object_add(section_ir, "errorAffinity", error_affinity);
 
 	//Processor ID (MPIDR_EL1) and chip ID (MIDR_EL1).
+	uint64_t sock;
+	uint64_t mpidr_eli1 = record->MPIDR_EL1;
 	json_object_object_add(section_ir, "mpidrEl1",
-			       json_object_new_uint64(record->MPIDR_EL1));
+			       json_object_new_uint64(mpidr_eli1));
+	//Arm Processor socket info
+	sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
+	json_object_object_add(section_ir, "affinity3",
+			       json_object_new_uint64(sock));
+
 	json_object_object_add(section_ir, "midrEl1",
 			       json_object_new_uint64(record->MIDR_EL1));
 
