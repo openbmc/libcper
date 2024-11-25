@@ -16,6 +16,24 @@
       "message": "Can we spell this out as \"affinity\"?",
       "revId": "6dbb1c8249da3b418f9840acf04badf37e3865f8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd01f196_d1f57be0",
+        "filename": "specification/json/sections/cper-arm-processor.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-11-25T22:57:24Z",
+      "side": 1,
+      "message": "Sure, updated",
+      "parentUuid": "ccdf70a3_af4acca7",
+      "revId": "6dbb1c8249da3b418f9840acf04badf37e3865f8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
