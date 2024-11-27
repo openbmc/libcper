@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bf2b65f_3dcc6a98",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-27T13:26:45Z",
+      "side": 1,
+      "message": "Looks like this didn\u0027t get exposed?",
+      "revId": "ce308fa6399b9b75ab1c0be7e003c78fb1ce2919",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1eb8a835_0d52ca76",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-27T13:26:45Z",
+      "side": 1,
+      "message": "Does the PCI spec call it this with the pcie prefix?  All of these are in the pcie object, so prefixing this with pcie is a little odd.  If it matches a spec, that\u0027s fine.",
+      "range": {
+        "startLine": 152,
+        "startChar": 22,
+        "endLine": 152,
+        "endChar": 44
+      },
+      "revId": "ce308fa6399b9b75ab1c0be7e003c78fb1ce2919",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfef12f3_0c255b84",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-27T13:26:45Z",
+      "side": 1,
+      "message": "same here, we\u0027re in the aer namespace",
+      "range": {
+        "startLine": 171,
+        "startChar": 21,
+        "endLine": 171,
+        "endChar": 25
+      },
+      "revId": "ce308fa6399b9b75ab1c0be7e003c78fb1ce2919",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
