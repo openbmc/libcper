@@ -13,16 +13,20 @@
     "additionalProperties": false,
     "properties": {
         "signature": {
-            "type": "string"
+            "type": "string",
+            "description": "IP Signature Name."
         },
         "errorType": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Error type within the IP block."
         },
         "errorInstance": {
-            "type": "integer"
+            "type": "integer",
+            "description": ""
         },
         "severity": {
             "type": "object",
+            "description": "Internal severity for firmware tracking. Use CPER section severity.",
             "required": ["code", "name"],
             "properties": {
                 "code": {
@@ -35,16 +39,20 @@
             }
         },
         "socket": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Socket the error report originated from."
         },
         "registerCount": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of registers present in registers array."
         },
         "instanceBase": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The location the error data was read from."
         },
         "registers": {
             "type": "array",
+            "description": "Address, value pairs for registers dumped during the error detection.",
             "items": {
                 "type": "object",
                 "required": ["address", "value"],

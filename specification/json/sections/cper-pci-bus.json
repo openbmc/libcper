@@ -17,6 +17,7 @@
     "properties": {
         "validationBits": {
             "type": "object",
+            "description": "Inidicates which fields are valid in the section.",
             "required": [
                 "errorStatusValid",
                 "errorTypeValid",
@@ -60,10 +61,12 @@
         },
         "errorStatus": {
             "type": "object",
+            "description": "PCI Bus Error Status.",
             "$ref": "./common/cper-json-error-status.json"
         },
         "errorType": {
             "type": "object",
+            "description": "PCI Bus error Type",
             "$ref": "./common/cper-json-nvp.json"
         },
         "busID": {
@@ -71,30 +74,38 @@
             "required": ["busNumber", "segmentNumber"],
             "properties": {
                 "busNumber": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Bus Number"
                 },
                 "segmentNumber": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Segment Number"
                 }
             }
         },
         "busAddress": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Memory or I/O address on the bus at the time of the error."
         },
         "busData": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Data on the PCI bus at the time of the error."
         },
         "busCommandType": {
-            "type": "string"
+            "type": "string",
+            "description": "Bus command or operation at the time of the error."
         },
         "busRequestorID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PCI Bus Requestor Id."
         },
         "busCompleterID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PCI Bus Responder Id."
         },
         "targetID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PCI Bus intended target identifier."
         }
     }
 }

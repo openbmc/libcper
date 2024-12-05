@@ -13,6 +13,7 @@
     "properties": {
         "validationBits": {
             "type": "object",
+            "description": "Indicates which other fields are valid in the section.",
             "required": [
                 "errorStatusValid",
                 "idInfoValid",
@@ -40,10 +41,12 @@
         },
         "errorStatus": {
             "type": "object",
+            "description": "PCI Component Error Status.",
             "$ref": "./common/cper-json-error-status.json"
         },
         "idInfo": {
             "type": "object",
+            "description": "Identification Information",
             "required": [
                 "vendorID",
                 "deviceID",
@@ -78,13 +81,16 @@
             }
         },
         "memoryNumber": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of PCI Component Memory Mapped register address/data pair values present in this structure."
         },
         "ioNumber": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of PCI Component Programmed IO register address/data pair values present in this structure."
         },
         "registerDataPairs": {
             "type": "array",
+            "description": "An array of address/data pair values.",
             "items": {
                 "type": "object",
                 "required": ["firstHalf", "secondHalf"],

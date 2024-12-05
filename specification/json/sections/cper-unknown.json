@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "Unkown CPER section type. Work with vendor to determine decoding.",
     "required": ["data"],
     "additionalProperties": false,
     "properties": {
