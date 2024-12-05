@@ -2,6 +2,7 @@
     "$id": "cper-json-full-log",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "A Common Platform Error Record as defined in UEFI Specification Appendix N represented as JSON.",
     "required": ["header", "sectionDescriptors", "sections"],
     "additionalProperties": false,
     "properties": {

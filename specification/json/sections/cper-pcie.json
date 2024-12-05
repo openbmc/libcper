@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "PCI Express Error Section",
     "required": [
         "validationBits",
         "portType",
@@ -16,6 +17,7 @@
     "properties": {
         "validationBits": {
             "type": "object",
+            "description": "Indicates validity of other fields in this section.",
             "required": [
                 "portTypeValid",
                 "versionValid",
@@ -55,10 +57,12 @@
         },
         "portType": {
             "type": "object",
+            "description": "PCIe Device/Port Type as defined in the PCI Express capabilities register.",
             "$ref": "./common/cper-json-nvp.json"
         },
         "version": {
             "type": "object",
+            "description": "PCIe Spec. version supported by the platform",
             "required": ["major", "minor"],
             "properties": {
                 "major": {
@@ -74,15 +78,18 @@
             "required": ["commandRegister", "statusRegister"],
             "properties": {
                 "commandRegister": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "PCI Command Register"
                 },
                 "statusRegister": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "PCI Status Register"
                 }
             }
         },
         "deviceID": {
             "type": "object",
+            "description": "PCIe Root Port PCI/bridge PCI compatible device number and bus number information to uniquely identify the root port or bridge.",
             "required": [
                 "vendorID",
                 "deviceID",
@@ -125,22 +132,26 @@
             }
         },
         "deviceSerialNumber": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PCIe Device Serial Number",
         },
         "bridgeControlStatus": {
             "type": "object",
             "required": ["secondaryStatusRegister", "controlRegister"],
             "properties": {
                 "secondaryStatusRegister": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Bridge Secondary Status Register"
                 },
                 "controlRegister": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Bridge Control Register"
                 }
             }
         },
         "capabilityStructure": {
             "type": "object",
+            "description": "This feild reports either the PCIe 2.0 Capability structure",
             "required": ["data"],
             "properties": {
                 "data": {
@@ -150,6 +161,7 @@
         },
         "aerInfo": {
             "type": "object",
+            "description": "PCIe Advanced Error Reporting Extended Capability Structure.",
             "required": ["data"],
             "properties": {
                 "data": {

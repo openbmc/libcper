@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "DMAr Generic Error Section",
     "required": [
         "requesterID",
         "segmentNumber",
@@ -13,10 +14,12 @@
     "additionalProperties": false,
     "properties": {
         "requesterID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Device ID associated with a fault condition"
         },
         "segmentNumber": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PCI segment associated with a device"
         },
         "faultReason": {
             "type": "object",
@@ -35,18 +38,22 @@
         },
         "accessType": {
             "type": "object",
+            "description": "Either read or write.",
             "$ref": "./common/cper-json-nvp.json"
         },
         "addressType": {
             "type": "object",
+            "description": "Either Translated or untranslated address",
             "$ref": "./common/cper-json-nvp.json"
         },
         "architectureType": {
             "type": "object",
+            "description": "Either VT-d or IOMMU",
             "$ref": "./common/cper-json-nvp.json"
         },
         "deviceAddress": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The 64-bit device virtual address in the faulted DMA request"
         }
     }
 }

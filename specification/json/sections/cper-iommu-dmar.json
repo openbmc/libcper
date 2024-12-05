@@ -17,37 +17,48 @@
     "additionalProperties": false,
     "properties": {
         "revision": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Specifies the IOMMU specification revision"
         },
         "controlRegister": {
-            "type": "integer"
+            "type": "integer",
+            "description": "IOMMU control register"
         },
         "statusRegister": {
-            "type": "integer"
+            "type": "integer",
+            "description": "IOMMU status register"
         },
         "eventLogEntry": {
-            "type": "string"
+            "type": "string",
+            "description": "IOMMU fault related event log entry as defined in the IOMMU specification"
         },
         "deviceTableEntry": {
-            "type": "string"
+            "type": "string",
+            "description": "Value from the device table for a given Requester ID"
         },
         "pageTableEntry_Level6": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PTE entry for device virtual address in page level 6."
         },
         "pageTableEntry_Level5": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PTE entry for device virtual address in page level 5."
         },
         "pageTableEntry_Level4": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PTE entry for device virtual address in page level 4."
         },
         "pageTableEntry_Level3": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PTE entry for device virtual address in page level 3."
         },
         "pageTableEntry_Level2": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PTE entry for device virtual address in page level 2."
         },
         "pageTableEntry_Level1": {
-            "type": "integer"
+            "type": "integer",
+            "description": "PTE entry for device virtual address in page level 1."
         }
     }
 }

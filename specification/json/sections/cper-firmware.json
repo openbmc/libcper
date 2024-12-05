@@ -1,21 +1,26 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "Firmware Error Record Reference",
     "required": ["errorRecordType", "revision", "recordID", "recordIDGUID"],
     "additionalProperties": false,
     "properties": {
         "errorRecordType": {
             "type": "object",
+            "description": "Identifies the type of firmware error record that is referenced by this section",
             "$ref": "./common/cper-json-nvp.json"
         },
         "revision": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Indicates the Header Revision"
         },
         "recordID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This value uniquely identifies the firmware error record referenced by this section."
         },
         "recordIDGUID": {
-            "type": "string"
+            "type": "string",
+            "description": "This value uniquely identifies the firmware error record referenced by this section."
         }
     }
 }

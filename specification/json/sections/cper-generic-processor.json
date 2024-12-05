@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "Generic Processor Error Section",
     "required": [
         "validationBits",
         "processorType",
@@ -21,6 +22,7 @@
     "properties": {
         "validationBits": {
             "type": "object",
+            "description": "Indiciates what fields in the section are valid",
             "required": [
                 "processorTypeValid",
                 "processorISAValid",
@@ -80,61 +82,78 @@
         },
         "processorType": {
             "type": "object",
+            "description": "Identifies the type of the processor architecture.",
             "$ref": "./common/cper-json-nvp.json"
         },
         "processorISA": {
             "type": "object",
+            "description": "Identifies the type of the instruction set executing when the error occurred",
             "$ref": "./common/cper-json-nvp.json"
         },
         "errorType": {
             "type": "object",
+            "description": "Indicates the type of error that occurred",
             "$ref": "./common/cper-json-nvp.json"
         },
         "operation": {
             "type": "object",
+            "description": "Indicates the type of operation",
             "$ref": "./common/cper-json-nvp.json"
         },
         "flags": {
             "type": "object",
+            "description": "Indicates additional information about the error",
             "required": ["restartable", "preciseIP", "overflow", "corrected"],
             "properties": {
                 "restartable": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "program execution can be restarted reliably after the error"
                 },
                 "preciseIP": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "the instruction IP captured is directly associated with the error"
                 },
                 "overflow": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "a machine check overflow occurred (a second error occurred while the results of a previous error were still in the error reporting resources)"
                 },
                 "corrected": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "the error was corrected by hardware and/or firmware"
                 }
             }
         },
         "level": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Level of the structure where the error occurred, with 0 being the lowest level of cache."
         },
         "cpuVersionInfo": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This field represents the CPU Version Information and returns Family, Model, and stepping information"
         },
         "cpuBrandString": {
-            "type": "string"
+            "type": "string",
+            "description": "This field represents the null-terminated ASCII Processor Brand String"
         },
         "processorID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This value uniquely identifies the logical processor"
         },
         "targetAddress": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Identifies the target address associated with the error"
         },
         "requestorID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Identifies the requestor associated with the error"
         },
         "responderID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Identifies the responder associated with the error"
         },
         "instructionIP": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Identifies the instruction pointer when the error occurred"
         }
     }
 }
