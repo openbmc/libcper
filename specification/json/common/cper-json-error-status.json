@@ -16,6 +16,7 @@
     "properties": {
         "errorType": {
             "type": "object",
+            "description": "Encoded value for the Error_Type",
             "required": ["name", "value", "description"],
             "properties": {
                 "name": {
@@ -30,25 +31,32 @@
             }
         },
         "addressSignal": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Address: Error was detected on the address signals or on the address portion of the transaction."
         },
         "controlSignal": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Control: Error was detected on the control signals or in the control portion of the transaction."
         },
         "dataSignal": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Data: Error was detected on the data signals or in the data portion of the transaction."
         },
         "detectedByResponder": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Responder: Error was detected by the responder of the transaction."
         },
         "detectedByRequester": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Requester: Error was detected by the requester of the transaction."
         },
         "firstError": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "First Error: If multiple errors are logged for a section type, this is the first error in the chronological sequence. Setting of this bit is optional."
         },
         "overflowDroppedLogs": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Overflow: Additional errors occurred and were not logged due to lack of logging resources."
         }
     }
 }

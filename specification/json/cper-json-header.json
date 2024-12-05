@@ -1,6 +1,7 @@
 {
     "$id": "cper-json-header",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Common Platform Record Header as defined in UEFI Appendix N section 2.1",
     "type": "object",
     "required": [
         "revision",
@@ -18,6 +19,7 @@
     "properties": {
         "revision": {
             "type": "object",
+            "description": "This is a 2-byte field representing a major and minor version number for the error record definition in BCD format. ",
             "required": ["major", "minor"],
             "properties": {
                 "major": {
@@ -32,10 +34,12 @@
         },
         "sectionCount": {
             "type": "integer",
+            "description": "his field indicates the number of valid sections associated with the record, corresponding to each of the following section descriptors.",
             "minimum": 0
         },
         "severity": {
             "type": "object",
+            "description": "Indicates the severity of the error condition. The severity of the error record corresponds to the most severe error section.",
             "required": ["name", "code"],
             "properties": {
                 "name": {
@@ -49,6 +53,7 @@
         },
         "validationBits": {
             "type": "object",
+            "description": "This field indicates the validity of other header feilds.",
             "required": [
                 "platformIDValid",
                 "timestampValid",
@@ -68,25 +73,32 @@
         },
         "recordLength": {
             "type": "integer",
+            "description": "Indicates the size of the actual error record, including the size of the record header, all section descriptors, and section bodies.",
             "minimum": 0
         },
         "timestamp": {
-            "type": "string"
+            "type": "string",
+            "description": "The timestamp correlates to the time when the error information was collected by the system software and may not necessarily represent the time of the error event."
         },
         "timestampIsPrecise": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Timestamp is precise if this bit is set and correlates to the time of the error event."
         },
         "platformID": {
-            "type": "string"
+            "type": "string",
+            "description": "This field uniquely identifies the platform with a GUID. The platform’s SMBIOS UUID should be used to populate this field."
         },
         "partitionID": {
-            "type": "string"
+            "type": "string",
+            "description": "If the platform has multiple software partitions, system software may associate a GUID with the partition on which the error occurred."
         },
         "creatorID": {
-            "type": "string"
+            "type": "string",
+            "description": "This field contains a GUID indicating the creator of the error record. This value may be overwritten by subsequent owners of the record."
         },
         "notificationType": {
             "type": "object",
+            "description": "This field holds a pre-assigned GUID value indicating the record association with an error event notification type.",
             "required": ["guid", "type"],
             "properties": {
                 "guid": {
@@ -99,14 +111,17 @@
             }
         },
         "recordID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This value, when combined with the Creator ID, uniquely identifies the error record across other error records on a given system."
         },
         "flags": {
             "type": "object",
+            "description": "Flags field contains information that describes the error record.",
             "$ref": "./common/cper-json-nvp.json"
         },
         "persistenceInfo": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This field is produced and consumed by the creator of the error record identified in the Creator ID field. The format of this field is defined by the creator"
         }
     }
 }

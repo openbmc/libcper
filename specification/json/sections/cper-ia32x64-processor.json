@@ -12,6 +12,7 @@
     "properties": {
         "validationBits": {
             "type": "object",
+            "description": "Indicates which fields are valid in the section.",
             "required": [
                 "localAPICIDValid",
                 "cpuIDInfoValid",
@@ -36,10 +37,12 @@
             }
         },
         "localAPICID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This is the processor APIC ID programmed into the APIC ID registers."
         },
         "cpuidInfo": {
             "type": "object",
+            "description": "This field represents the CPU ID structure of 48 bytes and returns Model, Family, and stepping information as provided by the CPUID instruction with EAX=1 input and output values from EAX, EBX, ECX, and EDX null extended to 64-bits.",
             "required": ["eax", "ebx", "ecx", "edx"],
             "properties": {
                 "eax": {
@@ -58,6 +61,7 @@
         },
         "processorErrorInfo": {
             "type": "array",
+            "description": "Array of processor error information structure.",
             "items": {
                 "type": "object",
                 "required": [
@@ -385,6 +389,7 @@
         },
         "processorContextInfo": {
             "type": "array",
+            "description": "This is a variable size field providing the information for the processor context state such as MC Bank MSRs and general registers.",
             "items": {
                 "type": "object",
                 "required": [

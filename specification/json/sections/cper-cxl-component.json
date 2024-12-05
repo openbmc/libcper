@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "CXL Component Events Section",
     "required": ["length", "validationBits", "deviceID", "deviceSerial"],
     "additionalProperties": false,
     "properties": {
@@ -9,6 +10,7 @@
         },
         "validationBits": {
             "type": "object",
+            "description": "Indiciates what fields in the section are valid",
             "required": [
                 "deviceIDValid",
                 "deviceSerialValid",
@@ -28,6 +30,7 @@
         },
         "deviceID": {
             "type": "object",
+            "description": "Provides devices specific identifies.",
             "required": [
                 "vendorID",
                 "deviceID",

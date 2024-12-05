@@ -28,6 +28,7 @@
     "properties": {
         "validationBits": {
             "type": "object",
+            "description": "Indicates which fields in this section are valid.",
             "required": [
                 "errorStatusValid",
                 "physicalAddressValid",
@@ -123,10 +124,12 @@
         },
         "errorStatus": {
             "type": "object",
+            "description": "Memory error status information.",
             "$ref": "./common/cper-json-error-status.json"
         },
         "bank": {
             "type": "object",
+            "description": "The bank number of the memory associated with the error.",
             "oneOf": [
                 {
                     "$id": "cper-json-bank0",
@@ -155,10 +158,12 @@
         },
         "memoryErrorType": {
             "type": "object",
+            "description": "Identifies the type of error that occurred",
             "$ref": "./common/cper-json-nvp.json"
         },
         "status": {
             "type": "object",
+            "description": "Memory error status information.",
             "required": ["value", "state"],
             "properties": {
                 "value": {
@@ -170,52 +175,68 @@
             }
         },
         "physicalAddress": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The physical address at which the memory error occurred."
         },
         "physicalAddressMask": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Defines the valid address bits in the Physical Address field. The mask specifies the granularity of the physical address which is dependent on the hardware implementation factors such as interleaving."
         },
         "node": {
-            "type": "integer"
+            "type": "integer",
+            "description": "In a multi-node system, this value identifies the node containing the memory in error."
         },
         "card": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The card number of the memory error location."
         },
         "module": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The module number of the memory error location."
         },
         "device": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The device number of the memory associated with the error."
         },
         "row": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The row number of the memory error location."
         },
         "column": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The column number of the memory error location."
         },
         "bitPosition": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The bit position at which the memory error occurred."
         },
         "rank": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The rank number of the memory error location."
         },
         "chipID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "The Chip Identification. This is an encoded field used to address the die in 3DS packages."
         },
         "requestorID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Hardware address of the device that initiated the transaction that took the error."
         },
         "responderID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Hardware address of the device that responded to the transaction."
         },
         "targetID": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Hardware address of the intended target of the transaction."
         },
         "cardSmbiosHandle": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This field contains the SMBIOS handle for the Type 16 Memory Array Structure that represents the memory card."
         },
         "moduleSmbiosHandle": {
-            "type": "integer"
+            "type": "integer",
+            "description": "This field contains the SMBIOS handle for the Type 17 Memory Device Structure that represents the Memory Module."
         }
     }
 }
