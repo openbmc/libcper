@@ -52,6 +52,12 @@ extern "C" {
 #define EFI_ERROR_TIME_STAMP_PRECISE BIT0
 
 ///
+/// Hexadecimal string representation of a 64bit integer
+/// 16 bits + 1 null termination
+///
+#define EFI_UINT64_HEX_STRING_LEN 17
+
+///
 /// The timestamp correlates to the time when the error information was collected
 /// by the system software and may not necessarily represent the time of the error
 /// event. The timestamp contains the local time in BCD format.
