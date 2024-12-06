@@ -10,7 +10,9 @@
         "busData",
         "busCommandType",
         "busRequestorID",
+        "busRequestorIDHex",
         "busCompleterID",
+        "busCompleterIDHex",
         "targetID"
     ],
     "additionalProperties": false,
@@ -90,8 +92,14 @@
         "busRequestorID": {
             "type": "integer"
         },
+        "busRequestorIDHex": {
+            "type": "string"
+        },
         "busCompleterID": {
             "type": "integer"
+        },
+        "busCompleterIDHex": {
+            "type": "string"
         },
         "targetID": {
             "type": "integer"
