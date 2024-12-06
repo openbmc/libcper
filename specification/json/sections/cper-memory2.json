@@ -8,6 +8,7 @@
         "memoryErrorType",
         "status",
         "physicalAddress",
+        "physicalAddressHex",
         "physicalAddressMask",
         "node",
         "card",
@@ -171,6 +172,9 @@
         },
         "physicalAddress": {
             "type": "integer"
+        },
+        "physicalAddressHex": {
+            "type": "string"
         },
         "physicalAddressMask": {
             "type": "integer"

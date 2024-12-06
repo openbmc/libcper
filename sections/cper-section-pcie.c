@@ -71,6 +71,13 @@ json_object *cper_section_pcie_to_ir(void *section)
 	json_object_object_add(
 		device_id, "deviceID",
 		json_object_new_uint64(pcie_error->DevBridge.DeviceId));
+
+	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%0X",
+		 pcie_error->DevBridge.DeviceId);
+	json_object_object_add(device_id, "deviceIDHex",
+			       json_object_new_string(hexstring_buf));
+
 	json_object_object_add(device_id, "classCode",
 			       json_object_new_uint64(class_id));
 	json_object_object_add(
@@ -154,6 +161,13 @@ json_object *cper_section_pcie_to_ir(void *section)
 	json_object_object_add(
 		aer_capability_ir, "uncorrectable_error_status",
 		json_object_new_uint64(aer_decode->uncorrectable_error_status));
+
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%08" PRIX32,
+		 aer_decode->uncorrectable_error_status);
+	json_object_object_add(aer_capability_ir,
+			       "uncorrectable_error_status_hex",
+			       json_object_new_string(hexstring_buf));
+
 	json_object_object_add(
 		aer_capability_ir, "uncorrectable_error_mask",
 		json_object_new_uint64(aer_decode->uncorrectable_error_mask));
@@ -164,6 +178,13 @@ json_object *cper_section_pcie_to_ir(void *section)
 	json_object_object_add(
 		aer_capability_ir, "correctable_error_status",
 		json_object_new_uint64(aer_decode->correctable_error_status));
+
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%08" PRIX32,
+		 aer_decode->correctable_error_status);
+	json_object_object_add(aer_capability_ir,
+			       "correctable_error_status_hex",
+			       json_object_new_string(hexstring_buf));
+
 	json_object_object_add(
 		aer_capability_ir, "correctable_error_mask",
 		json_object_new_uint64(aer_decode->correctable_error_mask));
