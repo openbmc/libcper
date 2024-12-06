@@ -10,7 +10,9 @@
         "busData",
         "busCommandType",
         "busRequestorID",
+        "busRequestorIDHex",
         "busCompleterID",
+        "busCompleterIDHex",
         "targetID"
     ],
     "additionalProperties": false,
@@ -99,9 +101,15 @@
             "type": "integer",
             "description": "PCI Bus Requestor Id."
         },
+        "busRequestorIDHex": {
+            "type": "string"
+        },
         "busCompleterID": {
             "type": "integer",
             "description": "PCI Bus Responder Id."
+        },
+        "busCompleterIDHex": {
+            "type": "string"
         },
         "targetID": {
             "type": "integer",

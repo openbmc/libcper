@@ -93,6 +93,7 @@
             "required": [
                 "vendorID",
                 "deviceID",
+                "deviceIDHex",
                 "classCode",
                 "functionNumber",
                 "deviceNumber",
@@ -107,6 +108,9 @@
                 },
                 "deviceID": {
                     "type": "integer"
+                },
+                "deviceIDHex": {
+                    "type": "string"
                 },
                 "classCode": {
                     "type": "integer"
@@ -173,6 +177,9 @@
                 "uncorrectable_error_status": {
                     "type": "integer"
                 },
+                "uncorrectable_error_status_hex": {
+                    "type": "string"
+                },
                 "uncorrectable_error_mask": {
                     "type": "integer"
                 },
@@ -181,6 +188,9 @@
                 },
                 "correctable_error_status": {
                     "type": "integer"
+                },
+                "correctable_error_status_hex": {
+                    "type": "string"
                 },
                 "correctable_error_mask": {
                     "type": "integer"

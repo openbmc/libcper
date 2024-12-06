@@ -8,6 +8,7 @@
         "memoryErrorType",
         "extended",
         "physicalAddress",
+        "physicalAddressHex",
         "physicalAddressMask",
         "node",
         "card",
@@ -178,6 +179,9 @@
         "physicalAddress": {
             "type": "integer",
             "description": "The physical address at which the memory error occurred."
+        },
+        "physicalAddressHex": {
+            "type": "string"
         },
         "physicalAddressMask": {
             "type": "integer",
