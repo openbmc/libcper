@@ -166,7 +166,22 @@
         "aerInfo": {
             "type": "object",
             "description": "PCIe Advanced Error Reporting Extended Capability Structure.",
-            "required": ["data"],
+            "required": [
+                "data",
+                "capability_header",
+                "uncorrectable_error_status",
+                "uncorrectable_error_status_hex",
+                "uncorrectable_error_mask",
+                "uncorrectable_error_severity",
+                "correctable_error_status",
+                "correctable_error_status_hex",
+                "correctable_error_mask",
+                "capabilites_control",
+                "tlp_header_0",
+                "tlp_header_1",
+                "tlp_header_2",
+                "tlp_header_3"
+            ],
             "properties": {
                 "data": {
                     "type": "string"
