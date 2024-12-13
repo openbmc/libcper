@@ -46,6 +46,30 @@
       },
       "revId": "4b3c55377128956dc9bdafabd035b5ebd85c38f1",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73b0400c_42936299",
+        "filename": "sections/cper-section-memory.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2024-12-13T05:06:12Z",
+      "side": 1,
+      "message": "`PRIX64` fails because we typedef `long long` as `UINT64`. This works OK on my local 32b yocto build, but the compiler on jenkins interprets PRIX64 as %lx while the data is UINT64 \nhttps://github.com/openbmc/libcper/blob/d9835a173ed9611090acc6d51493128a5e387385/include/libcper/BaseTypes.h#L21\n\nSet up a test here for the error: https://jenkins.openbmc.org/job/ci-repository/96566/console",
+      "parentUuid": "9da0af30_182bce99",
+      "range": {
+        "startLine": 75,
+        "startChar": 59,
+        "endLine": 75,
+        "endChar": 62
+      },
+      "revId": "4b3c55377128956dc9bdafabd035b5ebd85c38f1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
