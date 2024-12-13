@@ -57,14 +57,14 @@ json_object *cper_section_pci_bus_to_ir(void *section)
 			       json_object_new_uint64(bus_error->RequestorId));
 
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016" PRIX64,
 		 bus_error->RequestorId);
 	json_object_object_add(section_ir, "busRequestorIDHex",
 			       json_object_new_string(hexstring_buf));
 
 	json_object_object_add(section_ir, "busCompleterID",
 			       json_object_new_uint64(bus_error->ResponderId));
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016" PRIX64,
 		 bus_error->ResponderId);
 	json_object_object_add(section_ir, "busCompleterIDHex",
 			       json_object_new_string(hexstring_buf));

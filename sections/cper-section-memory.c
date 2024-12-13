@@ -9,6 +9,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-memory.h>
+#include <inttypes.h>
 
 //Converts a single memory error CPER section into JSON IR.
 json_object *cper_section_platform_memory_to_ir(void *section)
@@ -72,7 +73,7 @@ json_object *cper_section_platform_memory_to_ir(void *section)
 		json_object_new_uint64(memory_error->PhysicalAddress));
 
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016" PRIX64,
 		 memory_error->PhysicalAddress);
 	json_object_object_add(section_ir, "physicalAddressHex",
 			       json_object_new_string(hexstring_buf));
@@ -176,7 +177,7 @@ json_object *cper_section_platform_memory2_to_ir(void *section)
 		json_object_new_uint64(memory_error->PhysicalAddress));
 
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016" PRIX64,
 		 memory_error->PhysicalAddress);
 	json_object_object_add(section_ir, "physicalAddressHex",
 			       json_object_new_string(hexstring_buf));
