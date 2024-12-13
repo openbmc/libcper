@@ -118,6 +118,30 @@
       },
       "revId": "4b3c55377128956dc9bdafabd035b5ebd85c38f1",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fab7597c_aa549419",
+        "filename": "sections/cper-section-memory.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-12-13T16:55:25Z",
+      "side": 1,
+      "message": "Yep.  I\u0027m ok if we close this out for now.",
+      "parentUuid": "05612cc3_a1f75dba",
+      "range": {
+        "startLine": 75,
+        "startChar": 59,
+        "endLine": 75,
+        "endChar": 62
+      },
+      "revId": "4b3c55377128956dc9bdafabd035b5ebd85c38f1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
