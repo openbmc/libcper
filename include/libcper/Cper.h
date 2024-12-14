@@ -53,7 +53,7 @@ extern "C" {
 
 ///
 /// Hexadecimal string representation of a 64bit integer
-/// 16 bits + 2 char + 1 null termination
+/// 16 digits + 2 char + 1 null termination
 ///
 #define EFI_UINT64_HEX_STRING_LEN 19
 
