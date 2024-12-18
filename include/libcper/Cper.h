@@ -77,82 +77,60 @@ typedef struct {
 /// GUID value indicating the record association with an error event notification type.
 ///@{
 #define EFI_EVENT_NOTIFICATION_TYEP_CMC_GUID                                   \
-	{                                                                      \
-		0x2DCE8BB1, 0xBDD7, 0x450e,                                    \
-		{                                                              \
-			0xB9, 0xAD, 0x9C, 0xF4, 0xEB, 0xD4, 0xF8, 0x90         \
-		}                                                              \
-	}
+	{ 0x2DCE8BB1,                                                          \
+	  0xBDD7,                                                              \
+	  0x450e,                                                              \
+	  { 0xB9, 0xAD, 0x9C, 0xF4, 0xEB, 0xD4, 0xF8, 0x90 } }
 #define EFI_EVENT_NOTIFICATION_TYEP_CPE_GUID                                   \
-	{                                                                      \
-		0x4E292F96, 0xD843, 0x4a55,                                    \
-		{                                                              \
-			0xA8, 0xC2, 0xD4, 0x81, 0xF2, 0x7E, 0xBE, 0xEE         \
-		}                                                              \
-	}
+	{ 0x4E292F96,                                                          \
+	  0xD843,                                                              \
+	  0x4a55,                                                              \
+	  { 0xA8, 0xC2, 0xD4, 0x81, 0xF2, 0x7E, 0xBE, 0xEE } }
 #define EFI_EVENT_NOTIFICATION_TYEP_MCE_GUID                                   \
-	{                                                                      \
-		0xE8F56FFE, 0x919C, 0x4cc5,                                    \
-		{                                                              \
-			0xBA, 0x88, 0x65, 0xAB, 0xE1, 0x49, 0x13, 0xBB         \
-		}                                                              \
-	}
+	{ 0xE8F56FFE,                                                          \
+	  0x919C,                                                              \
+	  0x4cc5,                                                              \
+	  { 0xBA, 0x88, 0x65, 0xAB, 0xE1, 0x49, 0x13, 0xBB } }
 #define EFI_EVENT_NOTIFICATION_TYEP_PCIE_GUID                                  \
-	{                                                                      \
-		0xCF93C01F, 0x1A16, 0x4dfc,                                    \
-		{                                                              \
-			0xB8, 0xBC, 0x9C, 0x4D, 0xAF, 0x67, 0xC1, 0x04         \
-		}                                                              \
-	}
+	{ 0xCF93C01F,                                                          \
+	  0x1A16,                                                              \
+	  0x4dfc,                                                              \
+	  { 0xB8, 0xBC, 0x9C, 0x4D, 0xAF, 0x67, 0xC1, 0x04 } }
 #define EFI_EVENT_NOTIFICATION_TYEP_INIT_GUID                                  \
-	{                                                                      \
-		0xCC5263E8, 0x9308, 0x454a,                                    \
-		{                                                              \
-			0x89, 0xD0, 0x34, 0x0B, 0xD3, 0x9B, 0xC9, 0x8E         \
-		}                                                              \
-	}
+	{ 0xCC5263E8,                                                          \
+	  0x9308,                                                              \
+	  0x454a,                                                              \
+	  { 0x89, 0xD0, 0x34, 0x0B, 0xD3, 0x9B, 0xC9, 0x8E } }
 #define EFI_EVENT_NOTIFICATION_TYEP_NMI_GUID                                   \
-	{                                                                      \
-		0x5BAD89FF, 0xB7E6, 0x42c9,                                    \
-		{                                                              \
-			0x81, 0x4A, 0xCF, 0x24, 0x85, 0xD6, 0xE9, 0x8A         \
-		}                                                              \
-	}
+	{ 0x5BAD89FF,                                                          \
+	  0xB7E6,                                                              \
+	  0x42c9,                                                              \
+	  { 0x81, 0x4A, 0xCF, 0x24, 0x85, 0xD6, 0xE9, 0x8A } }
 #define EFI_EVENT_NOTIFICATION_TYEP_BOOT_GUID                                  \
-	{                                                                      \
-		0x3D61A466, 0xAB40, 0x409a,                                    \
-		{                                                              \
-			0xA6, 0x98, 0xF3, 0x62, 0xD4, 0x64, 0xB3, 0x8F         \
-		}                                                              \
-	}
+	{ 0x3D61A466,                                                          \
+	  0xAB40,                                                              \
+	  0x409a,                                                              \
+	  { 0xA6, 0x98, 0xF3, 0x62, 0xD4, 0x64, 0xB3, 0x8F } }
 #define EFI_EVENT_NOTIFICATION_TYEP_DMAR_GUID                                  \
-	{                                                                      \
-		0x667DD791, 0xC6B3, 0x4c27,                                    \
-		{                                                              \
-			0x8A, 0x6B, 0x0F, 0x8E, 0x72, 0x2D, 0xEB, 0x41         \
-		}                                                              \
-	}
+	{ 0x667DD791,                                                          \
+	  0xC6B3,                                                              \
+	  0x4c27,                                                              \
+	  { 0x8A, 0x6B, 0x0F, 0x8E, 0x72, 0x2D, 0xEB, 0x41 } }
 #define EFI_EVENT_NOTIFICATION_TYPE_DMAR_SEA                                   \
-	{                                                                      \
-		0x9A78788A, 0xBBE8, 0x11E4,                                    \
-		{                                                              \
-			0x80, 0x9E, 0x67, 0x61, 0x1E, 0x5D, 0x46, 0xB0         \
-		}                                                              \
-	}
+	{ 0x9A78788A,                                                          \
+	  0xBBE8,                                                              \
+	  0x11E4,                                                              \
+	  { 0x80, 0x9E, 0x67, 0x61, 0x1E, 0x5D, 0x46, 0xB0 } }
 #define EFI_EVENT_NOTIFICATION_TYPE_DMAR_SEI                                   \
-	{                                                                      \
-		0x5C284C81, 0xB0AE, 0x4E87,                                    \
-		{                                                              \
-			0xA3, 0x22, 0xB0, 0x4C, 0x85, 0x62, 0x43, 0x23         \
-		}                                                              \
-	}
+	{ 0x5C284C81,                                                          \
+	  0xB0AE,                                                              \
+	  0x4E87,                                                              \
+	  { 0xA3, 0x22, 0xB0, 0x4C, 0x85, 0x62, 0x43, 0x23 } }
 #define EFI_EVENT_NOTIFICATION_TYPE_DMAR_PEI                                   \
-	{                                                                      \
-		0x09A9D5AC, 0x5204, 0x4214,                                    \
-		{                                                              \
-			0x96, 0xE5, 0x94, 0x99, 0x2E, 0x75, 0x2B, 0xCD         \
-		}                                                              \
-	}
+	{ 0x09A9D5AC,                                                          \
+	  0x5204,                                                              \
+	  0x4214,                                                              \
+	  { 0x96, 0xE5, 0x94, 0x99, 0x2E, 0x75, 0x2B, 0xCD } }
 ///@}
 
 ///
@@ -215,103 +193,75 @@ typedef struct {
 /// Error Sectition Type GUIDs in Error Section Descriptor
 ///@{
 #define EFI_ERROR_SECTION_PROCESSOR_GENERIC_GUID                               \
-	{                                                                      \
-		0x9876ccad, 0x47b4, 0x4bdb,                                    \
-		{                                                              \
-			0xb6, 0x5e, 0x16, 0xf1, 0x93, 0xc4, 0xf3, 0xdb         \
-		}                                                              \
-	}
+	{ 0x9876ccad,                                                          \
+	  0x47b4,                                                              \
+	  0x4bdb,                                                              \
+	  { 0xb6, 0x5e, 0x16, 0xf1, 0x93, 0xc4, 0xf3, 0xdb } }
 #define EFI_ERROR_SECTION_PROCESSOR_SPECIFIC_GUID                              \
-	{                                                                      \
-		0xdc3ea0b0, 0xa144, 0x4797,                                    \
-		{                                                              \
-			0xb9, 0x5b, 0x53, 0xfa, 0x24, 0x2b, 0x6e, 0x1d         \
-		}                                                              \
-	}
+	{ 0xdc3ea0b0,                                                          \
+	  0xa144,                                                              \
+	  0x4797,                                                              \
+	  { 0xb9, 0x5b, 0x53, 0xfa, 0x24, 0x2b, 0x6e, 0x1d } }
 #define EFI_ERROR_SECTION_PROCESSOR_SPECIFIC_IA32X64_GUID                      \
-	{                                                                      \
-		0xdc3ea0b0, 0xa144, 0x4797,                                    \
-		{                                                              \
-			0xb9, 0x5b, 0x53, 0xfa, 0x24, 0x2b, 0x6e, 0x1d         \
-		}                                                              \
-	}
+	{ 0xdc3ea0b0,                                                          \
+	  0xa144,                                                              \
+	  0x4797,                                                              \
+	  { 0xb9, 0x5b, 0x53, 0xfa, 0x24, 0x2b, 0x6e, 0x1d } }
 #define EFI_ERROR_SECTION_PROCESSOR_SPECIFIC_ARM_GUID                          \
-	{                                                                      \
-		0xe19e3d16, 0xbc11, 0x11e4,                                    \
-		{                                                              \
-			0x9c, 0xaa, 0xc2, 0x05, 0x1d, 0x5d, 0x46, 0xb0         \
-		}                                                              \
-	}
+	{ 0xe19e3d16,                                                          \
+	  0xbc11,                                                              \
+	  0x11e4,                                                              \
+	  { 0x9c, 0xaa, 0xc2, 0x05, 0x1d, 0x5d, 0x46, 0xb0 } }
 #define EFI_ERROR_SECTION_PLATFORM_MEMORY_GUID                                 \
-	{                                                                      \
-		0xa5bc1114, 0x6f64, 0x4ede,                                    \
-		{                                                              \
-			0xb8, 0x63, 0x3e, 0x83, 0xed, 0x7c, 0x83, 0xb1         \
-		}                                                              \
-	}
+	{ 0xa5bc1114,                                                          \
+	  0x6f64,                                                              \
+	  0x4ede,                                                              \
+	  { 0xb8, 0x63, 0x3e, 0x83, 0xed, 0x7c, 0x83, 0xb1 } }
 #define EFI_ERROR_SECTION_PLATFORM_MEMORY2_GUID                                \
-	{                                                                      \
-		0x61EC04FC, 0x48E6, 0xD813,                                    \
-		{                                                              \
-			0x25, 0xC9, 0x8D, 0xAA, 0x44, 0x75, 0x0B, 0x12         \
-		}                                                              \
-	}
+	{ 0x61EC04FC,                                                          \
+	  0x48E6,                                                              \
+	  0xD813,                                                              \
+	  { 0x25, 0xC9, 0x8D, 0xAA, 0x44, 0x75, 0x0B, 0x12 } }
 #define EFI_ERROR_SECTION_PCIE_GUID                                            \
-	{                                                                      \
-		0xd995e954, 0xbbc1, 0x430f,                                    \
-		{                                                              \
-			0xad, 0x91, 0xb4, 0x4d, 0xcb, 0x3c, 0x6f, 0x35         \
-		}                                                              \
-	}
+	{ 0xd995e954,                                                          \
+	  0xbbc1,                                                              \
+	  0x430f,                                                              \
+	  { 0xad, 0x91, 0xb4, 0x4d, 0xcb, 0x3c, 0x6f, 0x35 } }
 #define EFI_ERROR_SECTION_FW_ERROR_RECORD_GUID                                 \
-	{                                                                      \
-		0x81212a96, 0x09ed, 0x4996,                                    \
-		{                                                              \
-			0x94, 0x71, 0x8d, 0x72, 0x9c, 0x8e, 0x69, 0xed         \
-		}                                                              \
-	}
+	{ 0x81212a96,                                                          \
+	  0x09ed,                                                              \
+	  0x4996,                                                              \
+	  { 0x94, 0x71, 0x8d, 0x72, 0x9c, 0x8e, 0x69, 0xed } }
 #define EFI_ERROR_SECTION_PCI_PCIX_BUS_GUID                                    \
-	{                                                                      \
-		0xc5753963, 0x3b84, 0x4095,                                    \
-		{                                                              \
-			0xbf, 0x78, 0xed, 0xda, 0xd3, 0xf9, 0xc9, 0xdd         \
-		}                                                              \
-	}
+	{ 0xc5753963,                                                          \
+	  0x3b84,                                                              \
+	  0x4095,                                                              \
+	  { 0xbf, 0x78, 0xed, 0xda, 0xd3, 0xf9, 0xc9, 0xdd } }
 #define EFI_ERROR_SECTION_PCI_DEVICE_GUID                                      \
-	{                                                                      \
-		0xeb5e4685, 0xca66, 0x4769,                                    \
-		{                                                              \
-			0xb6, 0xa2, 0x26, 0x06, 0x8b, 0x00, 0x13, 0x26         \
-		}                                                              \
-	}
+	{ 0xeb5e4685,                                                          \
+	  0xca66,                                                              \
+	  0x4769,                                                              \
+	  { 0xb6, 0xa2, 0x26, 0x06, 0x8b, 0x00, 0x13, 0x26 } }
 #define EFI_ERROR_SECTION_DMAR_GENERIC_GUID                                    \
-	{                                                                      \
-		0x5b51fef7, 0xc79d, 0x4434,                                    \
-		{                                                              \
-			0x8f, 0x1b, 0xaa, 0x62, 0xde, 0x3e, 0x2c, 0x64         \
-		}                                                              \
-	}
+	{ 0x5b51fef7,                                                          \
+	  0xc79d,                                                              \
+	  0x4434,                                                              \
+	  { 0x8f, 0x1b, 0xaa, 0x62, 0xde, 0x3e, 0x2c, 0x64 } }
 #define EFI_ERROR_SECTION_DIRECTED_IO_DMAR_GUID                                \
-	{                                                                      \
-		0x71761d37, 0x32b2, 0x45cd,                                    \
-		{                                                              \
-			0xa7, 0xd0, 0xb0, 0xfe, 0xdd, 0x93, 0xe8, 0xcf         \
-		}                                                              \
-	}
+	{ 0x71761d37,                                                          \
+	  0x32b2,                                                              \
+	  0x45cd,                                                              \
+	  { 0xa7, 0xd0, 0xb0, 0xfe, 0xdd, 0x93, 0xe8, 0xcf } }
 #define EFI_ERROR_SECTION_IOMMU_DMAR_GUID                                      \
-	{                                                                      \
-		0x036f84e1, 0x7f37, 0x428c,                                    \
-		{                                                              \
-			0xa7, 0x9e, 0x57, 0x5f, 0xdf, 0xaa, 0x84, 0xec         \
-		}                                                              \
-	}
+	{ 0x036f84e1,                                                          \
+	  0x7f37,                                                              \
+	  0x428c,                                                              \
+	  { 0xa7, 0x9e, 0x57, 0x5f, 0xdf, 0xaa, 0x84, 0xec } }
 #define EFI_ERROR_SECTION_AMPERE_SPECIFIC_GUID                                 \
-	{                                                                      \
-		0x2826cc9f, 0x448c, 0x4c2b,                                    \
-		{                                                              \
-			0x86, 0xb6, 0xa9, 0x53, 0x94, 0xb7, 0xef, 0x33         \
-		}                                                              \
-	}
+	{ 0x2826cc9f,                                                          \
+	  0x448c,                                                              \
+	  0x4c2b,                                                              \
+	  { 0x86, 0xb6, 0xa9, 0x53, 0x94, 0xb7, 0xef, 0x33 } }
 ///@}
 
 ///
@@ -428,33 +378,25 @@ typedef struct {
 /// in IA32/X64 Processor Error Information Structure.
 ///@{
 #define EFI_IA32_X64_ERROR_TYPE_CACHE_CHECK_GUID                               \
-	{                                                                      \
-		0xA55701F5, 0xE3EF, 0x43de,                                    \
-		{                                                              \
-			0xAC, 0x72, 0x24, 0x9B, 0x57, 0x3F, 0xAD, 0x2C         \
-		}                                                              \
-	}
+	{ 0xA55701F5,                                                          \
+	  0xE3EF,                                                              \
+	  0x43de,                                                              \
+	  { 0xAC, 0x72, 0x24, 0x9B, 0x57, 0x3F, 0xAD, 0x2C } }
 #define EFI_IA32_X64_ERROR_TYPE_TLB_CHECK_GUID                                 \
-	{                                                                      \
-		0xFC06B535, 0x5E1F, 0x4562,                                    \
-		{                                                              \
-			0x9F, 0x25, 0x0A, 0x3B, 0x9A, 0xDB, 0x63, 0xC3         \
-		}                                                              \
-	}
+	{ 0xFC06B535,                                                          \
+	  0x5E1F,                                                              \
+	  0x4562,                                                              \
+	  { 0x9F, 0x25, 0x0A, 0x3B, 0x9A, 0xDB, 0x63, 0xC3 } }
 #define EFI_IA32_X64_ERROR_TYPE_BUS_CHECK_GUID                                 \
-	{                                                                      \
-		0x1CF3F8B3, 0xC5B1, 0x49a2,                                    \
-		{                                                              \
-			0xAA, 0x59, 0x5E, 0xEF, 0x92, 0xFF, 0xA6, 0x3C         \
-		}                                                              \
-	}
+	{ 0x1CF3F8B3,                                                          \
+	  0xC5B1,                                                              \
+	  0x49a2,                                                              \
+	  { 0xAA, 0x59, 0x5E, 0xEF, 0x92, 0xFF, 0xA6, 0x3C } }
 #define EFI_IA32_X64_ERROR_TYPE_MS_CHECK_GUID                                  \
-	{                                                                      \
-		0x48AB7F57, 0xDC34, 0x4f6c,                                    \
-		{                                                              \
-			0xA7, 0xD3, 0xB0, 0xB5, 0xB0, 0xA7, 0x43, 0x14         \
-		}                                                              \
-	}
+	{ 0x48AB7F57,                                                          \
+	  0xDC34,                                                              \
+	  0x4f6c,                                                              \
+	  { 0xA7, 0xD3, 0xB0, 0xB5, 0xB0, 0xA7, 0x43, 0x14 } }
 extern EFI_GUID gEfiIa32x64ErrorTypeCacheCheckGuid;
 extern EFI_GUID gEfiIa32x64ErrorTypeTlbCheckGuid;
 extern EFI_GUID gEfiIa32x64ErrorTypeBusCheckGuid;
@@ -863,40 +805,36 @@ typedef struct {
 /// CPER Generic Error Codes
 ///
 #define CPER_GENERIC_ERROR_TYPES_KEYS                                          \
-	(int[])                                                                \
-	{                                                                      \
-		1, 16, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25,   \
-			26                                                     \
-	}
+	(                                                                      \
+		int[]){ 1,  16, 4,  5,	6,  7,	8,  9,	17,                    \
+			18, 19, 20, 21, 22, 23, 24, 25, 26 }
 #define CPER_GENERIC_ERROR_TYPES_VALUES                                        \
-	(const char *[])                                                       \
-	{                                                                      \
-		"ERR_INTERNAL", "ERR_BUS", "ERR_MEM", "ERR_TLB", "ERR_CACHE",  \
-			"ERR_FUNCTION", "ERR_SELFTEST", "ERR_FLOW", "ERR_MAP", \
-			"ERR_IMPROPER", "ERR_UNIMPL", "ERR_LOL",               \
-			"ERR_RESPONSE", "ERR_PARITY", "ERR_PROTOCOL",          \
-			"ERR_ERROR", "ERR_TIMEOUT", "ERR_POISONED"             \
-	}
-#define CPER_GENERIC_ERROR_TYPES_DESCRIPTIONS                                               \
-	(const char *[])                                                                    \
-	{                                                                                   \
-		"Error detected internal to the component.",                                \
-			"Error detected in the bus.",                                       \
-			"Storage error in memory (DRAM).",                                  \
-			"Storage error in TLB.", "Storage error in cache.",                 \
-			"Error in one or more functional units.",                           \
-			"Component failed self test.",                                      \
-			"Overflow or underflow of internal queue.",                         \
-			"Virtual address not found on IO-TLB or IO-PDIR.",                  \
-			"Improper access error.",                                           \
-			"Access to a memory address which is not mapped to any component.", \
-			"Loss of Lockstep error.",                                          \
-			"Response not associated with a request.",                          \
-			"Bus parity error (must also set the A, C, or D bits).",            \
-			"Detection of a protocol error.",                                   \
-			"Detection of a PATH_ERROR.",                                       \
-			"Bus operation timeout.",                                           \
-			"A read was issued to data that has been poisoned."                 \
+	(const char *[]){ "ERR_INTERNAL", "ERR_BUS",	 "ERR_MEM",            \
+			  "ERR_TLB",	  "ERR_CACHE",	 "ERR_FUNCTION",       \
+			  "ERR_SELFTEST", "ERR_FLOW",	 "ERR_MAP",            \
+			  "ERR_IMPROPER", "ERR_UNIMPL",	 "ERR_LOL",            \
+			  "ERR_RESPONSE", "ERR_PARITY",	 "ERR_PROTOCOL",       \
+			  "ERR_ERROR",	  "ERR_TIMEOUT", "ERR_POISONED" }
+#define CPER_GENERIC_ERROR_TYPES_DESCRIPTIONS                                       \
+	(const char *[]){                                                           \
+		"Error detected internal to the component.",                        \
+		"Error detected in the bus.",                                       \
+		"Storage error in memory (DRAM).",                                  \
+		"Storage error in TLB.",                                            \
+		"Storage error in cache.",                                          \
+		"Error in one or more functional units.",                           \
+		"Component failed self test.",                                      \
+		"Overflow or underflow of internal queue.",                         \
+		"Virtual address not found on IO-TLB or IO-PDIR.",                  \
+		"Improper access error.",                                           \
+		"Access to a memory address which is not mapped to any component.", \
+		"Loss of Lockstep error.",                                          \
+		"Response not associated with a request.",                          \
+		"Bus parity error (must also set the A, C, or D bits).",            \
+		"Detection of a protocol error.",                                   \
+		"Detection of a PATH_ERROR.",                                       \
+		"Bus operation timeout.",                                           \
+		"A read was issued to data that has been poisoned."                 \
 	}
 
 ///
