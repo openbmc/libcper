@@ -9,11 +9,8 @@ extern "C" {
 #include <libcper/Cper.h>
 
 #define CXL_COMPONENT_ERROR_VALID_BITFIELD_NAMES                               \
-	(const char *[])                                                       \
-	{                                                                      \
-		"deviceIDValid", "deviceSerialValid",                          \
-			"cxlComponentEventLogValid"                            \
-	}
+	(const char *[]){ "deviceIDValid", "deviceSerialValid",                \
+			  "cxlComponentEventLogValid" }
 
 ///
 /// CXL Generic Component Error Section
