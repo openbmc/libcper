@@ -11,7 +11,8 @@
 
 //Generates a single pseudo-random CCIX PER error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_ccix_per(void **location)
+size_t generate_section_ccix_per(void **location,
+				 GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create a random length for the CCIX PER log.
 	//The log attached here does not necessarily conform to the CCIX specification, and is simply random.
@@ -25,6 +26,11 @@ size_t generate_section_ccix_per(void **location)
 	UINT32 *validation = (UINT32 *)(bytes + 4);
 	*validation &= 0x7;    //Validation bits 3-63.
 	*(validation + 1) = 0; //Validation bits 3-63.
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x7;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x5;
+	}
 	*(bytes + 13) &= 0x1F; //CCIX port ID bits 5-7.
 	UINT16 *reserved = (UINT16 *)(bytes + 14);
 	*reserved = 0;	       //Reserved bytes 14-15.

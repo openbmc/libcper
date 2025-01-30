@@ -2,7 +2,6 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": [
-        "validationBits",
         "errorStatus",
         "bank",
         "memoryErrorType",
@@ -26,102 +25,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indicates which fields in the section are valid.",
-            "required": [
-                "errorStatusValid",
-                "physicalAddressValid",
-                "physicalAddressMaskValid",
-                "nodeValid",
-                "cardValid",
-                "moduleValid",
-                "bankValid",
-                "deviceValid",
-                "rowValid",
-                "columnValid",
-                "bitPositionValid",
-                "platformRequestorIDValid",
-                "platformResponderIDValid",
-                "memoryPlatformTargetValid",
-                "memoryErrorTypeValid",
-                "rankNumberValid",
-                "cardHandleValid",
-                "moduleHandleValid",
-                "extendedRowBitsValid",
-                "bankGroupValid",
-                "bankAddressValid",
-                "chipIdentificationValid"
-            ],
-            "properties": {
-                "errorStatusValid": {
-                    "type": "boolean"
-                },
-                "physicalAddressValid": {
-                    "type": "boolean"
-                },
-                "physicalAddressMaskValid": {
-                    "type": "boolean"
-                },
-                "nodeValid": {
-                    "type": "boolean"
-                },
-                "cardValid": {
-                    "type": "boolean"
-                },
-                "moduleValid": {
-                    "type": "boolean"
-                },
-                "bankValid": {
-                    "type": "boolean"
-                },
-                "deviceValid": {
-                    "type": "boolean"
-                },
-                "rowValid": {
-                    "type": "boolean"
-                },
-                "columnValid": {
-                    "type": "boolean"
-                },
-                "bitPositionValid": {
-                    "type": "boolean"
-                },
-                "platformRequestorIDValid": {
-                    "type": "boolean"
-                },
-                "platformResponderIDValid": {
-                    "type": "boolean"
-                },
-                "memoryPlatformTargetValid": {
-                    "type": "boolean"
-                },
-                "memoryErrorTypeValid": {
-                    "type": "boolean"
-                },
-                "rankNumberValid": {
-                    "type": "boolean"
-                },
-                "cardHandleValid": {
-                    "type": "boolean"
-                },
-                "moduleHandleValid": {
-                    "type": "boolean"
-                },
-                "extendedRowBitsValid": {
-                    "type": "boolean"
-                },
-                "bankGroupValid": {
-                    "type": "boolean"
-                },
-                "bankAddressValid": {
-                    "type": "boolean"
-                },
-                "chipIdentificationValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "errorStatus": {
             "type": "object",
             "description": "Memory error status information.",

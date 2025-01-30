@@ -17,20 +17,19 @@ json_object *cper_section_platform_memory_to_ir(void *section)
 		(EFI_PLATFORM_MEMORY_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();
 
-	//Validation bitfield.
-	json_object *validation =
-		bitfield_to_ir(memory_error->ValidFields, 22,
-			       MEMORY_ERROR_VALID_BITFIELD_NAMES);
-	json_object_object_add(section_ir, "validationBits", validation);
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = memory_error->ValidFields };
 
 	//Error status.
-	json_object *error_status =
-		cper_generic_error_status_to_ir(&memory_error->ErrorStatus);
-	json_object_object_add(section_ir, "errorStatus", error_status);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *error_status = cper_generic_error_status_to_ir(
+			&memory_error->ErrorStatus);
+		json_object_object_add(section_ir, "errorStatus", error_status);
+	}
 
-	//Bank.
+	//Bank
 	json_object *bank = json_object_new_object();
-	if ((memory_error->ValidFields >> 5) & 0x1) {
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
 		//Entire bank address mode.
 		json_object_object_add(
 			bank, "value",
@@ -47,71 +46,121 @@ json_object *cper_section_platform_memory_to_ir(void *section)
 	json_object_object_add(section_ir, "bank", bank);
 
 	//Memory error type.
-	json_object *memory_error_type = integer_to_readable_pair(
-		memory_error->ErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
-		MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
-	json_object_object_add(section_ir, "memoryErrorType",
-			       memory_error_type);
+	if (isvalid_prop_to_ir(&ui64Type, 14)) {
+		json_object *memory_error_type = integer_to_readable_pair(
+			memory_error->ErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
+			MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
+		json_object_object_add(section_ir, "memoryErrorType",
+				       memory_error_type);
+	}
 
 	//"Extended" row/column indication field + misc.
-	json_object *extended = json_object_new_object();
-	json_object_object_add(extended, "rowBit16",
-			       json_object_new_boolean(memory_error->Extended &
-						       0x1));
-	json_object_object_add(
-		extended, "rowBit17",
-		json_object_new_boolean((memory_error->Extended >> 1) & 0x1));
-	json_object_object_add(extended, "chipIdentification",
-			       json_object_new_int(memory_error->Extended >>
-						   5));
-	json_object_object_add(section_ir, "extended", extended);
+	// Review this
+	if (isvalid_prop_to_ir(&ui64Type, 18)) {
+		json_object *extended = json_object_new_object();
+		json_object_object_add(
+			extended, "rowBit16",
+			json_object_new_boolean(memory_error->Extended & 0x1));
+		json_object_object_add(
+			extended, "rowBit17",
+			json_object_new_boolean((memory_error->Extended >> 1) &
+						0x1));
+		if (isvalid_prop_to_ir(&ui64Type, 21)) {
+			json_object_object_add(
+				extended, "chipIdentification",
+				json_object_new_int(memory_error->Extended >>
+						    5));
+		}
+		json_object_object_add(section_ir, "extended", extended);
+
+		//bit 16 and 17 are valid only if extended is valid
+		if (isvalid_prop_to_ir(&ui64Type, 16)) {
+			json_object_object_add(
+				section_ir, "cardSmbiosHandle",
+				json_object_new_uint64(
+					memory_error->CardHandle));
+		}
+		if (isvalid_prop_to_ir(&ui64Type, 17)) {
+			json_object_object_add(
+				section_ir, "moduleSmbiosHandle",
+				json_object_new_uint64(
+					memory_error->ModuleHandle));
+		}
+	}
 
 	//Miscellaneous numeric fields.
-	json_object_object_add(
-		section_ir, "physicalAddress",
-		json_object_new_uint64(memory_error->PhysicalAddress));
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object_object_add(
+			section_ir, "physicalAddress",
+			json_object_new_uint64(memory_error->PhysicalAddress));
 
-	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
-		 memory_error->PhysicalAddress);
-	json_object_object_add(section_ir, "physicalAddressHex",
-			       json_object_new_string(hexstring_buf));
-
-	json_object_object_add(
-		section_ir, "physicalAddressMask",
-		json_object_new_uint64(memory_error->PhysicalAddressMask));
-	json_object_object_add(section_ir, "node",
-			       json_object_new_uint64(memory_error->Node));
-	json_object_object_add(section_ir, "card",
-			       json_object_new_uint64(memory_error->Card));
-	json_object_object_add(
-		section_ir, "moduleRank",
-		json_object_new_uint64(memory_error->ModuleRank));
-	json_object_object_add(section_ir, "device",
-			       json_object_new_uint64(memory_error->Device));
-	json_object_object_add(section_ir, "row",
-			       json_object_new_uint64(memory_error->Row));
-	json_object_object_add(section_ir, "column",
-			       json_object_new_uint64(memory_error->Column));
-	json_object_object_add(
-		section_ir, "bitPosition",
-		json_object_new_uint64(memory_error->BitPosition));
-	json_object_object_add(
-		section_ir, "requestorID",
-		json_object_new_uint64(memory_error->RequestorId));
-	json_object_object_add(
-		section_ir, "responderID",
-		json_object_new_uint64(memory_error->ResponderId));
-	json_object_object_add(section_ir, "targetID",
-			       json_object_new_uint64(memory_error->TargetId));
-	json_object_object_add(section_ir, "rankNumber",
-			       json_object_new_uint64(memory_error->RankNum));
-	json_object_object_add(
-		section_ir, "cardSmbiosHandle",
-		json_object_new_uint64(memory_error->CardHandle));
-	json_object_object_add(
-		section_ir, "moduleSmbiosHandle",
-		json_object_new_uint64(memory_error->ModuleHandle));
+		char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
+		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+			 memory_error->PhysicalAddress);
+		json_object_object_add(section_ir, "physicalAddressHex",
+				       json_object_new_string(hexstring_buf));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			section_ir, "physicalAddressMask",
+			json_object_new_uint64(
+				memory_error->PhysicalAddressMask));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			section_ir, "node",
+			json_object_new_uint64(memory_error->Node));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			section_ir, "card",
+			json_object_new_uint64(memory_error->Card));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			section_ir, "moduleRank",
+			json_object_new_uint64(memory_error->ModuleRank));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 7)) {
+		json_object_object_add(
+			section_ir, "device",
+			json_object_new_uint64(memory_error->Device));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 8)) {
+		json_object_object_add(
+			section_ir, "row",
+			json_object_new_uint64(memory_error->Row));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 9)) {
+		json_object_object_add(
+			section_ir, "column",
+			json_object_new_uint64(memory_error->Column));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 10)) {
+		json_object_object_add(
+			section_ir, "bitPosition",
+			json_object_new_uint64(memory_error->BitPosition));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 11)) {
+		json_object_object_add(
+			section_ir, "requestorID",
+			json_object_new_uint64(memory_error->RequestorId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 12)) {
+		json_object_object_add(
+			section_ir, "responderID",
+			json_object_new_uint64(memory_error->ResponderId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 13)) {
+		json_object_object_add(
+			section_ir, "targetID",
+			json_object_new_uint64(memory_error->TargetId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 15)) {
+		json_object_object_add(
+			section_ir, "rankNumber",
+			json_object_new_uint64(memory_error->RankNum));
+	}
 
 	return section_ir;
 }
@@ -123,20 +172,19 @@ json_object *cper_section_platform_memory2_to_ir(void *section)
 		(EFI_PLATFORM_MEMORY2_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();
 
-	//Validation bits.
-	json_object *validation =
-		bitfield_to_ir(memory_error->ValidFields, 22,
-			       MEMORY_ERROR_2_VALID_BITFIELD_NAMES);
-	json_object_object_add(section_ir, "validationBits", validation);
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = memory_error->ValidFields };
 
 	//Error status.
-	json_object *error_status =
-		cper_generic_error_status_to_ir(&memory_error->ErrorStatus);
-	json_object_object_add(section_ir, "errorStatus", error_status);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *error_status = cper_generic_error_status_to_ir(
+			&memory_error->ErrorStatus);
+		json_object_object_add(section_ir, "errorStatus", error_status);
+	}
 
 	//Bank.
 	json_object *bank = json_object_new_object();
-	if ((memory_error->ValidFields >> 5) & 0x1) {
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
 		//Entire bank address mode.
 		json_object_object_add(
 			bank, "value",
@@ -153,27 +201,35 @@ json_object *cper_section_platform_memory2_to_ir(void *section)
 	json_object_object_add(section_ir, "bank", bank);
 
 	//Memory error type.
-	json_object *memory_error_type = integer_to_readable_pair(
-		memory_error->MemErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
-		MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
-	json_object_object_add(section_ir, "memoryErrorType",
-			       memory_error_type);
+	if (isvalid_prop_to_ir(&ui64Type, 13)) {
+		json_object *memory_error_type = integer_to_readable_pair(
+			memory_error->MemErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
+			MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
+		json_object_object_add(section_ir, "memoryErrorType",
+				       memory_error_type);
+	}
 
 	//Status.
-	json_object *status = json_object_new_object();
-	json_object_object_add(status, "value",
-			       json_object_new_int(memory_error->Status));
-	json_object_object_add(
-		status, "state",
-		json_object_new_string((memory_error->Status & 0x1) == 0 ?
-					       "Corrected" :
-					       "Uncorrected"));
-	json_object_object_add(section_ir, "status", status);
+	if (isvalid_prop_to_ir(&ui64Type, 14)) {
+		json_object *status = json_object_new_object();
+		json_object_object_add(
+			status, "value",
+			json_object_new_int(memory_error->Status));
+		json_object_object_add(
+			status, "state",
+			json_object_new_string((memory_error->Status & 0x1) ==
+							       0 ?
+						       "Corrected" :
+						       "Uncorrected"));
+		json_object_object_add(section_ir, "status", status);
+	}
 
 	//Miscellaneous numeric fields.
-	json_object_object_add(
-		section_ir, "physicalAddress",
-		json_object_new_uint64(memory_error->PhysicalAddress));
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object_object_add(
+			section_ir, "physicalAddress",
+			json_object_new_uint64(memory_error->PhysicalAddress));
+	}
 
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
 	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
@@ -181,42 +237,82 @@ json_object *cper_section_platform_memory2_to_ir(void *section)
 	json_object_object_add(section_ir, "physicalAddressHex",
 			       json_object_new_string(hexstring_buf));
 
-	json_object_object_add(
-		section_ir, "physicalAddressMask",
-		json_object_new_uint64(memory_error->PhysicalAddressMask));
-	json_object_object_add(section_ir, "node",
-			       json_object_new_uint64(memory_error->Node));
-	json_object_object_add(section_ir, "card",
-			       json_object_new_uint64(memory_error->Card));
-	json_object_object_add(section_ir, "module",
-			       json_object_new_uint64(memory_error->Module));
-	json_object_object_add(section_ir, "device",
-			       json_object_new_uint64(memory_error->Device));
-	json_object_object_add(section_ir, "row",
-			       json_object_new_uint64(memory_error->Row));
-	json_object_object_add(section_ir, "column",
-			       json_object_new_uint64(memory_error->Column));
-	json_object_object_add(section_ir, "rank",
-			       json_object_new_uint64(memory_error->Rank));
-	json_object_object_add(
-		section_ir, "bitPosition",
-		json_object_new_uint64(memory_error->BitPosition));
-	json_object_object_add(section_ir, "chipID",
-			       json_object_new_uint64(memory_error->ChipId));
-	json_object_object_add(
-		section_ir, "requestorID",
-		json_object_new_uint64(memory_error->RequestorId));
-	json_object_object_add(
-		section_ir, "responderID",
-		json_object_new_uint64(memory_error->ResponderId));
-	json_object_object_add(section_ir, "targetID",
-			       json_object_new_uint64(memory_error->TargetId));
-	json_object_object_add(
-		section_ir, "cardSmbiosHandle",
-		json_object_new_uint64(memory_error->CardHandle));
-	json_object_object_add(
-		section_ir, "moduleSmbiosHandle",
-		json_object_new_uint64(memory_error->ModuleHandle));
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			section_ir, "physicalAddressMask",
+			json_object_new_uint64(
+				memory_error->PhysicalAddressMask));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			section_ir, "node",
+			json_object_new_uint64(memory_error->Node));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			section_ir, "card",
+			json_object_new_uint64(memory_error->Card));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			section_ir, "module",
+			json_object_new_uint64(memory_error->Module));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 7)) {
+		json_object_object_add(
+			section_ir, "device",
+			json_object_new_uint64(memory_error->Device));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 8)) {
+		json_object_object_add(
+			section_ir, "row",
+			json_object_new_uint64(memory_error->Row));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 9)) {
+		json_object_object_add(
+			section_ir, "column",
+			json_object_new_uint64(memory_error->Column));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 10)) {
+		json_object_object_add(
+			section_ir, "rank",
+			json_object_new_uint64(memory_error->Rank));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 11)) {
+		json_object_object_add(
+			section_ir, "bitPosition",
+			json_object_new_uint64(memory_error->BitPosition));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 12)) {
+		json_object_object_add(
+			section_ir, "chipID",
+			json_object_new_uint64(memory_error->ChipId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 15)) {
+		json_object_object_add(
+			section_ir, "requestorID",
+			json_object_new_uint64(memory_error->RequestorId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 16)) {
+		json_object_object_add(
+			section_ir, "responderID",
+			json_object_new_uint64(memory_error->ResponderId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 17)) {
+		json_object_object_add(
+			section_ir, "targetID",
+			json_object_new_uint64(memory_error->TargetId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 18)) {
+		json_object_object_add(
+			section_ir, "cardSmbiosHandle",
+			json_object_new_uint64(memory_error->CardHandle));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 19)) {
+		json_object_object_add(
+			section_ir, "moduleSmbiosHandle",
+			json_object_new_uint64(memory_error->ModuleHandle));
+	}
 
 	return section_ir;
 }
@@ -228,77 +324,122 @@ void ir_section_memory_to_cper(json_object *section, FILE *out)
 		(EFI_PLATFORM_MEMORY_ERROR_DATA *)calloc(
 			1, sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA));
 
-	//Validation bits.
-	section_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(section, "validationBits"), 22,
-		MEMORY_ERROR_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Error status.
-	ir_generic_error_status_to_cper(json_object_object_get(section,
-							       "errorStatus"),
-					&section_cper->ErrorStatus);
+	if (json_object_object_get_ex(section, "errorStatus", &obj)) {
+		ir_generic_error_status_to_cper(obj,
+						&section_cper->ErrorStatus);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
 
 	//Bank.
-	json_object *bank = json_object_object_get(section, "bank");
-	if ((section_cper->ValidFields >> 5) & 0x1) {
-		//Bank just uses simple address.
-		section_cper->Bank = (UINT16)json_object_get_uint64(
-			json_object_object_get(bank, "value"));
-	} else {
-		//Bank uses address/group style address.
-		UINT16 address = (UINT8)json_object_get_uint64(
-			json_object_object_get(bank, "address"));
-		UINT16 group = (UINT8)json_object_get_uint64(
-			json_object_object_get(bank, "group"));
-		section_cper->Bank = address + (group << 8);
+	if (json_object_object_get_ex(section, "bank", &obj)) {
+		json_object *bank = obj;
+		if (json_object_object_get_ex(bank, "value", &obj)) {
+			//Bank just uses simple address.
+			section_cper->Bank =
+				(UINT16)json_object_get_uint64(obj);
+			add_to_valid_bitfield(&ui64Type, 6);
+		} else {
+			//Bank uses address/group style address.
+			UINT16 address = (UINT8)json_object_get_uint64(
+				json_object_object_get(bank, "address"));
+			UINT16 group = (UINT8)json_object_get_uint64(
+				json_object_object_get(bank, "group"));
+			section_cper->Bank = address + (group << 8);
+			add_to_valid_bitfield(&ui64Type, 19);
+			add_to_valid_bitfield(&ui64Type, 20);
+		}
 	}
 
 	//"Extended" field.
-	json_object *extended = json_object_object_get(section, "extended");
-	section_cper->Extended = 0;
-	section_cper->Extended |= json_object_get_boolean(
-		json_object_object_get(extended, "rowBit16"));
-	section_cper->Extended |=
-		json_object_get_boolean(
-			json_object_object_get(extended, "rowBit17"))
-		<< 1;
-	section_cper->Extended |= json_object_get_int(json_object_object_get(
-					  extended, "chipIdentification"))
-				  << 5;
+	if (json_object_object_get_ex(section, "extended", &obj)) {
+		json_object *extended = obj;
+		section_cper->Extended = 0;
+		section_cper->Extended |= json_object_get_boolean(
+			json_object_object_get(extended, "rowBit16"));
+		section_cper->Extended |=
+			json_object_get_boolean(
+				json_object_object_get(extended, "rowBit17"))
+			<< 1;
+		if (json_object_object_get_ex(extended, "chipIdentification",
+					      &obj)) {
+			section_cper->Extended |= json_object_get_int(obj) << 5;
+			add_to_valid_bitfield(&ui64Type, 21);
+		}
+		add_to_valid_bitfield(&ui64Type, 18);
+	}
 
 	//Miscellaneous value fields.
-	section_cper->ErrorType = (UINT8)readable_pair_to_integer(
-		json_object_object_get(section, "memoryErrorType"));
-	section_cper->PhysicalAddress = json_object_get_uint64(
-		json_object_object_get(section, "physicalAddress"));
-	section_cper->PhysicalAddressMask = json_object_get_uint64(
-		json_object_object_get(section, "physicalAddressMask"));
-	section_cper->Node = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "node"));
-	section_cper->Card = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "card"));
-	section_cper->ModuleRank = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "moduleRank"));
-	section_cper->Device = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "device"));
-	section_cper->Row = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "row"));
-	section_cper->Column = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "column"));
-	section_cper->BitPosition = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "bitPosition"));
-	section_cper->RequestorId = json_object_get_uint64(
-		json_object_object_get(section, "requestorID"));
-	section_cper->ResponderId = json_object_get_uint64(
-		json_object_object_get(section, "responderID"));
-	section_cper->TargetId = json_object_get_uint64(
-		json_object_object_get(section, "targetID"));
-	section_cper->RankNum = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "rankNumber"));
-	section_cper->CardHandle = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "cardSmbiosHandle"));
-	section_cper->ModuleHandle = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "moduleSmbiosHandle"));
+	if (json_object_object_get_ex(section, "memoryErrorType", &obj)) {
+		section_cper->ErrorType = (UINT8)readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 14);
+	}
+	if (json_object_object_get_ex(section, "physicalAddress", &obj)) {
+		section_cper->PhysicalAddress = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(section, "physicalAddressMask", &obj)) {
+		section_cper->PhysicalAddressMask = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(section, "node", &obj)) {
+		section_cper->Node = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(section, "card", &obj)) {
+		section_cper->Card = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(section, "moduleRank", &obj)) {
+		section_cper->ModuleRank = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(section, "device", &obj)) {
+		section_cper->Device = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 7);
+	}
+	if (json_object_object_get_ex(section, "row", &obj)) {
+		section_cper->Row = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 8);
+	}
+	if (json_object_object_get_ex(section, "column", &obj)) {
+		section_cper->Column = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 9);
+	}
+	if (json_object_object_get_ex(section, "bitPosition", &obj)) {
+		section_cper->BitPosition = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 10);
+	}
+	if (json_object_object_get_ex(section, "requestorID", &obj)) {
+		section_cper->RequestorId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 11);
+	}
+	if (json_object_object_get_ex(section, "responderID", &obj)) {
+		section_cper->ResponderId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 12);
+	}
+	if (json_object_object_get_ex(section, "targetID", &obj)) {
+		section_cper->TargetId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 13);
+	}
+	if (json_object_object_get_ex(section, "rankNumber", &obj)) {
+		section_cper->RankNum = (UINT16)json_object_get_uint64(
+			json_object_object_get(section, "rankNumber"));
+		add_to_valid_bitfield(&ui64Type, 15);
+	}
+	if (json_object_object_get_ex(section, "cardSmbiosHandle", &obj)) {
+		section_cper->CardHandle = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 16);
+	}
+	if (json_object_object_get_ex(section, "moduleSmbiosHandle", &obj)) {
+		section_cper->ModuleHandle =
+			(UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 17);
+	}
+	section_cper->ValidFields = ui64Type.value.ui64;
 
 	//Write to stream, free up resources.
 	fwrite(section_cper, sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA), 1, out);
@@ -314,21 +455,22 @@ void ir_section_memory2_to_cper(json_object *section, FILE *out)
 			1, sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA));
 
 	//Validation bits.
-	section_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(section, "validationBits"), 22,
-		MEMORY_ERROR_2_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Error status.
-	ir_generic_error_status_to_cper(json_object_object_get(section,
-							       "errorStatus"),
-					&section_cper->ErrorStatus);
+	if (json_object_object_get_ex(section, "errorStatus", &obj)) {
+		ir_generic_error_status_to_cper(obj,
+						&section_cper->ErrorStatus);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
 
 	//Bank.
 	json_object *bank = json_object_object_get(section, "bank");
-	if ((section_cper->ValidFields >> 5) & 0x1) {
+	if (json_object_object_get_ex(bank, "value", &obj)) {
 		//Bank just uses simple address.
-		section_cper->Bank = (UINT16)json_object_get_uint64(
-			json_object_object_get(bank, "value"));
+		section_cper->Bank = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 6);
 	} else {
 		//Bank uses address/group style address.
 		UINT16 address = (UINT8)json_object_get_uint64(
@@ -336,45 +478,86 @@ void ir_section_memory2_to_cper(json_object *section, FILE *out)
 		UINT16 group = (UINT8)json_object_get_uint64(
 			json_object_object_get(bank, "group"));
 		section_cper->Bank = address + (group << 8);
+		add_to_valid_bitfield(&ui64Type, 20);
+		add_to_valid_bitfield(&ui64Type, 21);
 	}
 
 	//Miscellaneous value fields.
-	section_cper->MemErrorType = readable_pair_to_integer(
-		json_object_object_get(section, "memoryErrorType"));
-	section_cper->Status = (UINT8)readable_pair_to_integer(
-		json_object_object_get(section, "status"));
-	section_cper->PhysicalAddress = json_object_get_uint64(
-		json_object_object_get(section, "physicalAddress"));
-	section_cper->PhysicalAddressMask = json_object_get_uint64(
-		json_object_object_get(section, "physicalAddressMask"));
-	section_cper->Node = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "node"));
-	section_cper->Card = (UINT16)json_object_get_uint64(
-		json_object_object_get(section, "card"));
-	section_cper->Module = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "module"));
-	section_cper->Device = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "device"));
-	section_cper->Row = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "row"));
-	section_cper->Column = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "column"));
-	section_cper->Rank = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "rank"));
-	section_cper->BitPosition = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "bitPosition"));
-	section_cper->ChipId = (UINT8)json_object_get_uint64(
-		json_object_object_get(section, "chipID"));
-	section_cper->RequestorId = json_object_get_uint64(
-		json_object_object_get(section, "requestorID"));
-	section_cper->ResponderId = json_object_get_uint64(
-		json_object_object_get(section, "responderID"));
-	section_cper->TargetId = json_object_get_uint64(
-		json_object_object_get(section, "targetID"));
-	section_cper->CardHandle = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "cardSmbiosHandle"));
-	section_cper->ModuleHandle = (UINT32)json_object_get_uint64(
-		json_object_object_get(section, "moduleSmbiosHandle"));
+	if (json_object_object_get_ex(section, "memoryErrorType", &obj)) {
+		section_cper->MemErrorType = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 13);
+	}
+	if (json_object_object_get_ex(section, "status", &obj)) {
+		section_cper->Status = (UINT8)readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 14);
+	}
+	if (json_object_object_get_ex(section, "physicalAddress", &obj)) {
+		section_cper->PhysicalAddress = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(section, "physicalAddressMask", &obj)) {
+		section_cper->PhysicalAddressMask = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(section, "node", &obj)) {
+		section_cper->Node = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(section, "card", &obj)) {
+		section_cper->Card = (UINT16)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(section, "module", &obj)) {
+		section_cper->Module = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(section, "device", &obj)) {
+		section_cper->Device = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 7);
+	}
+	if (json_object_object_get_ex(section, "row", &obj)) {
+		section_cper->Row = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 8);
+	}
+	if (json_object_object_get_ex(section, "column", &obj)) {
+		section_cper->Column = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 9);
+	}
+	if (json_object_object_get_ex(section, "rank", &obj)) {
+		section_cper->Rank = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 10);
+	}
+	if (json_object_object_get_ex(section, "bitPosition", &obj)) {
+		section_cper->BitPosition = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 11);
+	}
+	if (json_object_object_get_ex(section, "chipID", &obj)) {
+		section_cper->ChipId = (UINT8)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 12);
+	}
+	if (json_object_object_get_ex(section, "requestorID", &obj)) {
+		section_cper->RequestorId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 15);
+	}
+	if (json_object_object_get_ex(section, "responderID", &obj)) {
+		section_cper->ResponderId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 16);
+	}
+	if (json_object_object_get_ex(section, "targetID", &obj)) {
+		section_cper->TargetId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 17);
+	}
+	if (json_object_object_get_ex(section, "cardSmbiosHandle", &obj)) {
+		section_cper->CardHandle = (UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 18);
+	}
+	if (json_object_object_get_ex(section, "moduleSmbiosHandle", &obj)) {
+		section_cper->ModuleHandle =
+			(UINT32)json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 19);
+	}
+
+	section_cper->ValidFields = ui64Type.value.ui64;
 
 	//Write to stream, free up resources.
 	fwrite(section_cper, sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA), 1, out);
