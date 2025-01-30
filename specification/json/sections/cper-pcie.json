@@ -3,7 +3,6 @@
     "type": "object",
     "description": "PCI Express Error Section",
     "required": [
-        "validationBits",
         "portType",
         "version",
         "commandStatus",
@@ -15,46 +14,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indicates validity of other fields in this section.",
-            "required": [
-                "portTypeValid",
-                "versionValid",
-                "commandStatusValid",
-                "deviceIDValid",
-                "deviceSerialNumberValid",
-                "bridgeControlStatusValid",
-                "capabilityStructureStatusValid",
-                "aerInfoValid"
-            ],
-            "properties": {
-                "portTypeValid": {
-                    "type": "boolean"
-                },
-                "versionValid": {
-                    "type": "boolean"
-                },
-                "commandStatusValid": {
-                    "type": "boolean"
-                },
-                "deviceIDValid": {
-                    "type": "boolean"
-                },
-                "deviceSerialNumberValid": {
-                    "type": "boolean"
-                },
-                "bridgeControlStatusValid": {
-                    "type": "boolean"
-                },
-                "capabilityStructureStatusValid": {
-                    "type": "boolean"
-                },
-                "aerInfoValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "portType": {
             "type": "object",
             "description": "PCIe Device/Port Type as defined in the PCI Express capabilities register.",

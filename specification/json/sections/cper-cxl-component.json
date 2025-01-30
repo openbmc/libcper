@@ -2,31 +2,11 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "description": "CXL Component Events Section",
-    "required": ["length", "validationBits", "deviceID", "deviceSerial"],
+    "required": ["length", "deviceID", "deviceSerial"],
     "additionalProperties": false,
     "properties": {
         "length": {
             "type": "integer"
-        },
-        "validationBits": {
-            "type": "object",
-            "description": "Indiciates what fields in the section are valid",
-            "required": [
-                "deviceIDValid",
-                "deviceSerialValid",
-                "cxlComponentEventLogValid"
-            ],
-            "properties": {
-                "deviceIDValid": {
-                    "type": "boolean"
-                },
-                "deviceSerialValid": {
-                    "type": "boolean"
-                },
-                "cxlComponentEventLogValid": {
-                    "type": "boolean"
-                }
-            }
         },
         "deviceID": {
             "type": "object",
