@@ -11,6 +11,19 @@ extern "C" {
 #include <libcper/common-utils.h>
 #include <libcper/Cper.h>
 #include <json.h>
+#include <stdbool.h>
+
+typedef enum { UINT_8T, UINT_16T, UINT_32T, UINT_64T } IntType;
+
+typedef struct {
+	IntType size;
+	union {
+		UINT8 ui8;
+		UINT16 ui16;
+		UINT32 ui32;
+		UINT64 ui64;
+	} value;
+} ValidationTypes;
 
 json_object *
 cper_generic_error_status_to_ir(EFI_GENERIC_ERROR_STATUS *error_status);
@@ -35,6 +48,10 @@ UINT64 readable_pair_to_integer(json_object *pair);
 json_object *bitfield_to_ir(UINT64 bitfield, int num_fields,
 			    const char *names[]);
 UINT64 ir_to_bitfield(json_object *ir, int num_fields, const char *names[]);
+bool isvalid_prop_to_ir(ValidationTypes *val, int vbit_idx);
+void add_to_valid_bitfield(ValidationTypes *val, int vbit_idx);
+//Remove
+void print_val(ValidationTypes *val);
 json_object *uint64_array_to_ir_array(UINT64 *array, int len);
 json_object *revision_to_ir(UINT16 revision);
 const char *severity_to_string(UINT32 severity);

@@ -2,39 +2,18 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": [
-        "validationBits",
-        "localAPICID",
-        "cpuidInfo",
-        "processorErrorInfo",
-        "processorContextInfo"
+        "processorErrorInfoNum",
+        "processorContextInfoNum"
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indicates which fields are valid in the section.",
-            "required": [
-                "localAPICIDValid",
-                "cpuIDInfoValid",
-                "processorErrorInfoNum",
-                "processorContextInfoNum"
-            ],
-            "properties": {
-                "localAPICIDValid": {
-                    "type": "boolean"
-                },
-                "cpuIDInfoValid": {
-                    "type": "boolean"
-                },
-                "processorErrorInfoNum": {
-                    "type": "integer",
-                    "minimum": 0
-                },
-                "processorContextInfoNum": {
-                    "type": "integer",
-                    "minimum": 0
-                }
-            }
+        "processorErrorInfoNum": {
+            "type": "integer",
+            "description": "This is the number of Error Information structures."
+        },
+        "processorContextInfoNum": {
+            "type": "integer",
+            "description": "This is the number of Context Information structures."
         },
         "localAPICID": {
             "type": "integer",
@@ -65,13 +44,7 @@
             "items": {
                 "type": "object",
                 "required": [
-                    "type",
-                    "validationBits",
-                    "checkInfo",
-                    "targetAddressID",
-                    "requestorID",
-                    "responderID",
-                    "instructionPointer"
+                    "type"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -87,34 +60,6 @@
                             }
                         }
                     },
-                    "validationBits": {
-                        "type": "object",
-                        "required": [
-                            "checkInfoValid",
-                            "targetAddressIDValid",
-                            "requestorIDValid",
-                            "responderIDValid",
-                            "instructionPointerValid"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                            "checkInfoValid": {
-                                "type": "boolean"
-                            },
-                            "targetAddressIDValid": {
-                                "type": "boolean"
-                            },
-                            "requestorIDValid": {
-                                "type": "boolean"
-                            },
-                            "responderIDValid": {
-                                "type": "boolean"
-                            },
-                            "instructionPointerValid": {
-                                "type": "boolean"
-                            }
-                        }
-                    },
                     "checkInfo": {
                         "type": "object",
                         "oneOf": [
@@ -122,57 +67,9 @@
                                 "$id": "cper-json-checkinfo0",
                                 "type": "object",
                                 "required": [
-                                    "validationBits",
-                                    "transactionType",
-                                    "operation",
-                                    "level",
-                                    "processorContextCorrupt",
-                                    "uncorrected",
-                                    "preciseIP",
-                                    "restartableIP",
-                                    "overflow"
                                 ],
                                 "additionalProperties": false,
                                 "properties": {
-                                    "validationBits": {
-                                        "type": "object",
-                                        "required": [
-                                            "transactionTypeValid",
-                                            "operationValid",
-                                            "levelValid",
-                                            "processorContextCorruptValid",
-                                            "uncorrectedValid",
-                                            "preciseIPValid",
-                                            "restartableIPValid",
-                                            "overflowValid"
-                                        ],
-                                        "properties": {
-                                            "transactionTypeValid": {
-                                                "type": "boolean"
-                                            },
-                                            "operationValid": {
-                                                "type": "boolean"
-                                            },
-                                            "levelValid": {
-                                                "type": "boolean"
-                                            },
-                                            "processorContextCorruptValid": {
-                                                "type": "boolean"
-                                            },
-                                            "uncorrectedValid": {
-                                                "type": "boolean"
-                                            },
-                                            "preciseIPValid": {
-                                                "type": "boolean"
-                                            },
-                                            "restartableIPValid": {
-                                                "type": "boolean"
-                                            },
-                                            "overflowValid": {
-                                                "type": "boolean"
-                                            }
-                                        }
-                                    },
                                     "transactionType": {
                                         "type": "object",
                                         "$ref": "./common/cper-json-nvp.json"
@@ -206,72 +103,9 @@
                                 "$id": "cper-json-checkinfo1",
                                 "type": "object",
                                 "required": [
-                                    "validationBits",
-                                    "transactionType",
-                                    "operation",
-                                    "level",
-                                    "processorContextCorrupt",
-                                    "uncorrected",
-                                    "preciseIP",
-                                    "restartableIP",
-                                    "overflow",
-                                    "participationType",
-                                    "timedOut",
-                                    "addressSpace"
                                 ],
                                 "additionalProperties": false,
                                 "properties": {
-                                    "validationBits": {
-                                        "type": "object",
-                                        "required": [
-                                            "transactionTypeValid",
-                                            "operationValid",
-                                            "levelValid",
-                                            "processorContextCorruptValid",
-                                            "uncorrectedValid",
-                                            "preciseIPValid",
-                                            "restartableIPValid",
-                                            "overflowValid",
-                                            "participationTypeValid",
-                                            "timedOutValid",
-                                            "addressSpaceValid"
-                                        ],
-                                        "properties": {
-                                            "transactionTypeValid": {
-                                                "type": "boolean"
-                                            },
-                                            "operationValid": {
-                                                "type": "boolean"
-                                            },
-                                            "levelValid": {
-                                                "type": "boolean"
-                                            },
-                                            "processorContextCorruptValid": {
-                                                "type": "boolean"
-                                            },
-                                            "uncorrectedValid": {
-                                                "type": "boolean"
-                                            },
-                                            "preciseIPValid": {
-                                                "type": "boolean"
-                                            },
-                                            "restartableIPValid": {
-                                                "type": "boolean"
-                                            },
-                                            "overflowValid": {
-                                                "type": "boolean"
-                                            },
-                                            "participationTypeValid": {
-                                                "type": "boolean"
-                                            },
-                                            "timedOutValid": {
-                                                "type": "boolean"
-                                            },
-                                            "addressSpaceValid": {
-                                                "type": "boolean"
-                                            }
-                                        }
-                                    },
                                     "transactionType": {
                                         "type": "object",
                                         "$ref": "./common/cper-json-nvp.json"
@@ -318,37 +152,6 @@
                                 "required": [],
                                 "additionalProperties": false,
                                 "properties": {
-                                    "validationBits": {
-                                        "type": "object",
-                                        "required": [
-                                            "errorTypeValid",
-                                            "processorContextCorruptValid",
-                                            "uncorrectedValid",
-                                            "preciseIPValid",
-                                            "restartableIPValid",
-                                            "overflowValid"
-                                        ],
-                                        "properties": {
-                                            "errorTypeValid": {
-                                                "type": "boolean"
-                                            },
-                                            "processorContextCorruptValid": {
-                                                "type": "boolean"
-                                            },
-                                            "uncorrectedValid": {
-                                                "type": "boolean"
-                                            },
-                                            "preciseIPValid": {
-                                                "type": "boolean"
-                                            },
-                                            "restartableIPValid": {
-                                                "type": "boolean"
-                                            },
-                                            "overflowValid": {
-                                                "type": "boolean"
-                                            }
-                                        }
-                                    },
                                     "errorType": {
                                         "type": "object",
                                         "$ref": "./common/cper-json-nvp.json"
