@@ -16,10 +16,12 @@ EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 							  const size_t *lengths,
 							  int index,
 							  int num_sections);
-size_t generate_section(void **location, char *type);
+size_t generate_section(void **location, char *type,
+			GEN_VALID_BITS_TEST_TYPE validBitsType);
 
 //Generates a CPER record with the given section types, outputting to the given stream.
-void generate_cper_record(char **types, UINT16 num_sections, FILE *out)
+void generate_cper_record(char **types, UINT16 num_sections, FILE *out,
+			  GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Initialise randomiser.
 	init_random();
@@ -28,7 +30,8 @@ void generate_cper_record(char **types, UINT16 num_sections, FILE *out)
 	void *sections[num_sections];
 	size_t section_lengths[num_sections];
 	for (int i = 0; i < num_sections; i++) {
-		section_lengths[i] = generate_section(sections + i, types[i]);
+		section_lengths[i] =
+			generate_section(sections + i, types[i], validBitsType);
 		if (section_lengths[i] == 0) {
 			//Error encountered, exit.
 			printf("Error encountered generating section %d of type '%s', length returned zero.\n",
@@ -92,11 +95,12 @@ void generate_cper_record(char **types, UINT16 num_sections, FILE *out)
 }
 
 //Generates a single section record for the given section, and outputs to file.
-void generate_single_section_record(char *type, FILE *out)
+void generate_single_section_record(char *type, FILE *out,
+				    GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate a section.
 	void *section = NULL;
-	size_t section_len = generate_section(&section, type);
+	size_t section_len = generate_section(&section, type, validBitsType);
 
 	//Generate a descriptor, correct the offset.
 	EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor =
@@ -185,7 +189,8 @@ EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 }
 
 //Generates a single CPER section given the string type.
-size_t generate_section(void **location, char *type)
+size_t generate_section(void **location, char *type,
+			GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//The length of the section.
 	size_t length = 0;
@@ -201,7 +206,7 @@ size_t generate_section(void **location, char *type)
 			if (strcmp(type, generator_definitions[i].ShortName) ==
 			    0) {
 				length = generator_definitions[i].Generate(
-					location);
+					location, validBitsType);
 				section_generated = 1;
 				break;
 			}

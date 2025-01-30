@@ -1,0 +1,77 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 1782998683,
+        "recordLength": 281,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "timestamp": "0824-03-07T08:00:57+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": false,
+                "errorThresholdExceeded": false,
+                "latentError": true,
+                "overflow": true,
+                "primary": false,
+                "propagated": true,
+                "reset": true,
+                "resourceNotAccessible": false
+            },
+            "fruID": "88fff81e-2fa1-a063-831c-78680078fbb1",
+            "fruText": "\u001e\u001b3kgwZA\bN\u0006c\u0012\"\\[g^\u001a",
+            "revision": {
+                "major": 84,
+                "minor": 255
+            },
+            "sectionLength": 81,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "fbcd0a77-c260-417f-85a9-088b1621eba6",
+                "type": "CXL General Media Component Error"
+            },
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "CxlComponent": {
+                "cxlComponentEventLog": {
+                    "data": "Q9vLabVsgm1OTx6gQBobz/tvY3CxzaYPTzcYDaqTpu1ucVYj3dmQLCiuzGjI5zfDVg=="
+                },
+                "deviceID": {
+                    "busNumber": 84,
+                    "deviceID": 31740,
+                    "deviceNumber": 225,
+                    "functionNumber": 143,
+                    "segmentNumber": 30100,
+                    "slotNumber": 3368,
+                    "vendorID": 61521
+                },
+                "length": 81
+            }
+        }
+    ]
+}
