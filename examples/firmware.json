@@ -1,0 +1,71 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 831413059,
+        "recordLength": 232,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "timestamp": "0341-06-30T11:00:13+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": false,
+                "errorThresholdExceeded": false,
+                "latentError": true,
+                "overflow": true,
+                "primary": true,
+                "propagated": false,
+                "reset": false,
+                "resourceNotAccessible": true
+            },
+            "fruID": "68ccae28-e7c8-c337-569b-330868da17b7",
+            "fruText": "`%\u000f*\u000bmw\u001e\u000bS0^\u0001\u0017l\u000ezn\u0019",
+            "revision": {
+                "major": 111,
+                "minor": 251
+            },
+            "sectionLength": 32,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "81212a96-09ed-4996-9471-8d729c8e69ed",
+                "type": "Firmware Error Record Reference"
+            },
+            "severity": {
+                "code": 3,
+                "name": "Informational"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "Firmware": {
+                "errorRecordType": {
+                    "name": "SOC Firmware Error Record (Type2)",
+                    "value": 2
+                },
+                "recordID": 0,
+                "recordIDGUID": "54e18f7b-7594-6942-365d-829009be737a",
+                "revision": 2
+            }
+        }
+    ]
+}

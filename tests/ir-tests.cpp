@@ -8,24 +8,136 @@
 #include "gtest/gtest.h"
 #include "test-utils.hpp"
 #include <json.h>
+#include <nlohmann/json.hpp>
+#include <filesystem>
+#include <fstream>
 #include <libcper/cper-parse.h>
 #include <libcper/json-schema.h>
 #include <libcper/generator/cper-generate.h>
 #include <libcper/sections/cper-section.h>
 #include <libcper/generator/sections/gen-section.h>
 
+namespace fs = std::filesystem;
+
 /*
 * Test templates.
 */
+static const GEN_VALID_BITS_TEST_TYPE allValidbitsSet = ALL_VALID;
+static const GEN_VALID_BITS_TEST_TYPE fixedValidbitsSet = SOME_VALID;
+static const int GEN_EXAMPLES = 0;
+static const int debug = 1;
+
+void cper_create_examples(const char *section_name)
+{
+	//Generate full CPER record for the given type.
+	fs::path file_path = LIBCPER_EXAMPLES;
+	file_path /= section_name;
+	fs::path cper_out = file_path.replace_extension("cper");
+	fs::path json_out = file_path.replace_extension("json");
+
+	char *buf;
+	size_t size;
+	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
+						 0, fixedValidbitsSet);
+
+	// Write example CPER to disk
+	std::ofstream outFile(cper_out, std::ios::binary);
+	if (!outFile.is_open()) {
+		std::cerr << "Failed to create/open CPER output file: "
+			  << cper_out << std::endl;
+		return;
+	}
+
+	char buffer[1024];
+	size_t bytesRead;
+	rewind(record);
+	while ((bytesRead = fread(buffer, 1, sizeof(buffer), record)) > 0) {
+		outFile.write(buffer, bytesRead);
+		if (!outFile) {
+			std::cerr << "Failed to write to output file."
+				  << std::endl;
+			outFile.close();
+			return;
+		}
+	}
+	outFile.close();
+	json_object *ir;
+	//Convert to IR, free resources.
+	rewind(record);
+	ir = cper_to_ir(record);
+
+	char *str = ir ? strdup(json_object_to_json_string(ir)) : NULL;
+	fclose(record);
+	free(buf);
+
+	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, false);
+	if (jsonData.is_discarded()) {
+		std::cerr << "cper_create_examples: JSON parse error:"
+			  << std::endl;
+		return;
+	}
+
+	//Write json output to disk
+	std::ofstream jsonOutFile(json_out);
+	jsonOutFile << std::setw(4) << jsonData << std::endl;
+	jsonOutFile.close();
+}
+
+//Tests fixed CPER sections for IR validity with an example set.
+void cper_example_section_ir_test(const char *section_name)
+{
+	//Open CPER record for the given type.
+	fs::path fpath = LIBCPER_EXAMPLES;
+	fpath /= section_name;
+	fs::path cper = fpath.replace_extension("cper");
+	fs::path json = fpath.replace_extension("json");
+
+	// Do a C style read to obtain FILE*
+	FILE *record = fopen(cper.string().c_str(), "rb");
+	if (record == NULL) {
+		std::cerr
+			<< "cper_example_section_ir_test: File cannot be opened/does not exist "
+			<< cper << std::endl;
+		FAIL() << "cper_example_section_ir_test: File cannot be opened/does not exist";
+		return;
+	}
+
+	//Convert to IR, free resources.
+	json_object *ir;
+
+	ir = cper_to_ir(record);
+
+	char *str = ir ? strdup(json_object_to_json_string(ir)) : NULL;
+	fclose(record);
+
+	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, false);
+	if (jsonData.is_discarded()) {
+		std::cerr << "cper_example_section_ir_test: JSON parse error:"
+			  << std::endl;
+		FAIL() << "cper_example_section_ir_test: JSON parse error:";
+		return;
+	}
+	std::cerr << "jsonData: " << jsonData << std::endl;
+	//Open json example file
+	nlohmann::json jGolden = loadJson(json.string().c_str());
+	if (jGolden.is_discarded()) {
+		std::cerr << "Could not open JSON example file: " << json
+			  << std::endl;
+		FAIL() << "Could not open JSON example file";
+	}
+
+	EXPECT_EQ(jGolden, jsonData);
+}
 
 //Tests a single randomly generated CPER section of the given type to ensure CPER-JSON IR validity.
-void cper_log_section_ir_test(const char *section_name, int single_section)
+void cper_log_section_ir_test(const char *section_name, int single_section,
+			      GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate full CPER record for the given type.
 	char *buf;
 	size_t size;
 	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
-						 single_section);
+						 single_section, validBitsType);
 
 	//Convert to IR, free resources.
 	json_object *ir;
@@ -34,13 +146,19 @@ void cper_log_section_ir_test(const char *section_name, int single_section)
 	} else {
 		ir = cper_to_ir(record);
 	}
+	char *str = ir ? strdup(json_object_to_json_string(ir)) : NULL;
+	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, true);
+	// std::cout << "JSON DATA jsonData IS!!!!: " << jsonData.dump() << "\n";
+
 	fclose(record);
 	free(buf);
 
 	//Validate against schema.
-	char error_message[JSON_ERROR_MSG_MAX_LEN] = { 0 };
-	int valid =
-		validate_schema_from_file(LIBCPER_JSON_SPEC, ir, error_message);
+	std::string error_message;
+
+	int valid = schema_validate_from_file(LIBCPER_JSON_SPEC, jsonData,
+					      error_message);
+	// printf("Valid: %d\n", valid);
 	json_object_put(ir);
 	ASSERT_TRUE(valid)
 		<< "IR validation test failed (single section mode = "
@@ -48,13 +166,14 @@ void cper_log_section_ir_test(const char *section_name, int single_section)
 }
 
 //Checks for binary round-trip equality for a given randomly generated CPER record.
-void cper_log_section_binary_test(const char *section_name, int single_section)
+void cper_log_section_binary_test(const char *section_name, int single_section,
+				  GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate CPER record for the given type.
 	char *buf;
 	size_t size;
 	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
-						 single_section);
+						 single_section, validBitsType);
 
 	//Convert to IR.
 	json_object *ir;
@@ -75,9 +194,32 @@ void cper_log_section_binary_test(const char *section_name, int single_section)
 	}
 	size_t cper_len = ftell(stream);
 	fclose(stream);
-
-	//Validate the two are identical.
 	ASSERT_GE(size, cper_len);
+
+	if (debug) {
+		const char *pretty_json_str = json_object_to_json_string_ext(
+			ir, JSON_C_TO_STRING_PRETTY);
+		printf("cper_log_section_binary_test: JSON:\n%s\n",
+		       pretty_json_str);
+		printf("Original size: %ld, cper_buf_size:  %ld\n", size,
+		       cper_buf_size);
+		printf("Size of header %ld\n",
+		       sizeof(EFI_COMMON_ERROR_RECORD_HEADER));
+		printf("Size of section descriptor %ld\n",
+		       sizeof(EFI_ERROR_SECTION_DESCRIPTOR));
+		printf("Size of EFI_GENERIC_ERROR_STATUS %ld\n",
+		       sizeof(EFI_GENERIC_ERROR_STATUS));
+
+		//Print if round trip is not identical.
+		for (size_t i = 0; i < size; i++) {
+			uint8_t buf_i = (uint8_t)*(buf + i);
+			uint8_t cper_buf_i = (uint8_t)*(cper_buf + i);
+			if (buf_i != cper_buf_i) {
+				printf("At byte offset %li: Original bin: %x, Final bin: %x\n",
+				       i, buf_i, cper_buf_i);
+			}
+		}
+	}
 	ASSERT_EQ(memcmp(buf, cper_buf, cper_len), 0)
 		<< "Binary output was not identical to input (single section mode = "
 		<< single_section << ").";
@@ -92,15 +234,17 @@ void cper_log_section_binary_test(const char *section_name, int single_section)
 //Tests randomly generated CPER sections for IR validity of a given type, in both single section mode and full CPER log mode.
 void cper_log_section_dual_ir_test(const char *section_name)
 {
-	cper_log_section_ir_test(section_name, 0);
-	cper_log_section_ir_test(section_name, 1);
+	cper_log_section_ir_test(section_name, 0, allValidbitsSet);
+	cper_log_section_ir_test(section_name, 1, allValidbitsSet);
+	//Validate against examples
+	cper_example_section_ir_test(section_name);
 }
 
 //Tests randomly generated CPER sections for binary compatibility of a given type, in both single section mode and full CPER log mode.
 void cper_log_section_dual_binary_test(const char *section_name)
 {
-	cper_log_section_binary_test(section_name, 0);
-	cper_log_section_binary_test(section_name, 1);
+	cper_log_section_binary_test(section_name, 0, allValidbitsSet);
+	cper_log_section_binary_test(section_name, 1, allValidbitsSet);
 }
 
 /*
@@ -273,7 +417,7 @@ TEST(CCIXPERTests, BinaryEqual)
 	cper_log_section_dual_binary_test("ccixper");
 }
 
-//CXL Protocol tests.
+// CXL Protocol tests.
 TEST(CXLProtocolTests, IRValid)
 {
 	cper_log_section_dual_ir_test("cxlprotocol");
@@ -283,7 +427,7 @@ TEST(CXLProtocolTests, BinaryEqual)
 	cper_log_section_dual_binary_test("cxlprotocol");
 }
 
-//CXL Component tests.
+// //CXL Component tests.
 TEST(CXLComponentTests, IRValid)
 {
 	cper_log_section_dual_ir_test("cxlcomponent-media");
@@ -316,6 +460,24 @@ TEST(UnknownSectionTests, BinaryEqual)
 //Entrypoint for the testing program.
 int main()
 {
+	if (GEN_EXAMPLES) {
+		cper_create_examples("arm");
+		cper_create_examples("ia32x64");
+		cper_create_examples("memory");
+		cper_create_examples("memory2");
+		cper_create_examples("pcie");
+		cper_create_examples("firmware");
+		cper_create_examples("pcibus");
+		cper_create_examples("pcidev");
+		cper_create_examples("dmargeneric");
+		cper_create_examples("dmarvtd");
+		cper_create_examples("dmariommu");
+		cper_create_examples("ccixper");
+		cper_create_examples("cxlprotocol");
+		cper_create_examples("cxlcomponent-media");
+		cper_create_examples("nvidia");
+		cper_create_examples("unknown");
+	}
 	testing::InitGoogleTest();
 	return RUN_ALL_TESTS();
 }

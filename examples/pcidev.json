@@ -1,0 +1,97 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 138475881,
+        "recordLength": 304,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "timestamp": "5136-04-27T20:00:42+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": true,
+                "errorThresholdExceeded": true,
+                "latentError": true,
+                "overflow": false,
+                "primary": true,
+                "propagated": false,
+                "reset": true,
+                "resourceNotAccessible": false
+            },
+            "fruID": "bb39f461-7632-2ada-7562-cba4c66b28e2",
+            "fruText": "\u0016\ro\u001c]Y1o\u0004\u001cNsv\u000fr<\u0014ME",
+            "revision": {
+                "major": 255,
+                "minor": 248
+            },
+            "sectionLength": 104,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "eb5e4685-ca66-4769-b6a2-26068b001326",
+                "type": "PCI Component/Device"
+            },
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "PciComponent": {
+                "errorStatus": {
+                    "addressSignal": true,
+                    "controlSignal": false,
+                    "dataSignal": false,
+                    "detectedByRequester": true,
+                    "detectedByResponder": false,
+                    "errorType": {
+                        "description": "Detection of a protocol error.",
+                        "name": "ERR_PROTOCOL",
+                        "value": 23
+                    },
+                    "firstError": true,
+                    "overflowDroppedLogs": false
+                },
+                "memoryNumber": 1,
+                "registerDataPairs": [
+                    {
+                        "firstHalf": 18144751223266352719,
+                        "secondHalf": 5696955456022405999
+                    },
+                    {
+                        "firstHalf": 7993228066795886647,
+                        "secondHalf": 2894847925884769905
+                    },
+                    {
+                        "firstHalf": 6251902176359664814,
+                        "secondHalf": 1276515246198502299
+                    },
+                    {
+                        "firstHalf": 15794309069675414575,
+                        "secondHalf": 10592717995115042047
+                    }
+                ]
+            }
+        }
+    ]
+}

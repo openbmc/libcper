@@ -1,0 +1,97 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 1782998683,
+        "recordLength": 280,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "timestamp": "0824-03-07T08:00:57+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": false,
+                "errorThresholdExceeded": false,
+                "latentError": true,
+                "overflow": true,
+                "primary": false,
+                "propagated": true,
+                "reset": true,
+                "resourceNotAccessible": false
+            },
+            "fruID": "88fff81e-2fa1-a063-831c-78680078fbb1",
+            "fruText": "\u001e\u001b3kgwZA\bN\u0006c\u0012\"\\[g^\u001a",
+            "revision": {
+                "major": 84,
+                "minor": 255
+            },
+            "sectionLength": 80,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "a5bc1114-6f64-4ede-b863-3e83ed7c83b1",
+                "type": "Platform Memory"
+            },
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "Memory": {
+                "bank": {
+                    "value": 33388
+                },
+                "bitPosition": 6938,
+                "card": 52187,
+                "cardSmbiosHandle": 51304,
+                "errorStatus": {
+                    "addressSignal": false,
+                    "controlSignal": true,
+                    "dataSignal": false,
+                    "detectedByRequester": false,
+                    "detectedByResponder": false,
+                    "errorType": {
+                        "description": "Access to a memory address which is not mapped to any component.",
+                        "name": "ERR_UNIMPL",
+                        "value": 19
+                    },
+                    "firstError": true,
+                    "overflowDroppedLogs": true
+                },
+                "extended": {
+                    "chipIdentification": 1,
+                    "rowBit16": false,
+                    "rowBit17": false
+                },
+                "memoryErrorType": {
+                    "name": "Multi-bit ECC",
+                    "value": 3
+                },
+                "moduleSmbiosHandle": 14311,
+                "physicalAddressMask": 8823605043237379382,
+                "responderID": 12003124405090078479,
+                "row": 7759
+            }
+        }
+    ]
+}
