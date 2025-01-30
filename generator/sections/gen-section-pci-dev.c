@@ -11,7 +11,8 @@
 
 //Generates a single pseudo-random PCI component error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_pci_dev(void **location)
+size_t generate_section_pci_dev(void **location,
+				GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate how many register pairs will be attached to this section.
 	UINT32 num_memory_pairs = rand() % 4;
@@ -24,7 +25,12 @@ size_t generate_section_pci_dev(void **location)
 
 	//Set reserved areas to zero.
 	UINT64 *validation = (UINT64 *)bytes;
-	*validation &= 0x1F;	       //Validation 5-63
+	*validation &= 0x1F; //Validation 5-63
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x1F;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x15;
+	}
 	for (int i = 0; i < 5; i++) {
 		*(bytes + 27 + i) = 0; //Bytes 11-15 of ID info.
 	}
