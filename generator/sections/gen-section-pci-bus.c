@@ -11,7 +11,8 @@
 
 //Generates a single pseudo-random PCI/PCI-X bus error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_pci_bus(void **location)
+size_t generate_section_pci_bus(void **location,
+				GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	int size = 72;
@@ -20,6 +21,11 @@ size_t generate_section_pci_bus(void **location)
 	//Set reserved areas to zero.
 	UINT64 *validation = (UINT64 *)bytes;
 	*validation &= 0x1FF; //Validation 9-63
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x1FF;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x155;
+	}
 	UINT32 *reserved = (UINT32 *)(bytes + 20);
 	*reserved = 0;
 	UINT64 *bus_command = (UINT64 *)(bytes + 40);

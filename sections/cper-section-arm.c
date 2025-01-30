@@ -45,13 +45,13 @@ void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out);
 //Converts the given processor-generic CPER section into JSON IR.
 json_object *cper_section_arm_to_ir(void *section)
 {
+	printf("In cper-section arm\n");
 	EFI_ARM_ERROR_RECORD *record = (EFI_ARM_ERROR_RECORD *)section;
 	json_object *section_ir = json_object_new_object();
 
-	//Validation bits.
-	json_object *validation = bitfield_to_ir(
-		record->ValidFields, 4, ARM_ERROR_VALID_BITFIELD_NAMES);
-	json_object_object_add(section_ir, "validationBits", validation);
+	//Length of ValidationBits from spec
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = record->ValidFields };
 
 	//Number of error info and context info structures, and length.
 	json_object_object_add(section_ir, "errorInfoNum",
@@ -60,35 +60,45 @@ json_object *cper_section_arm_to_ir(void *section)
 			       json_object_new_int(record->ContextInfoNum));
 	json_object_object_add(section_ir, "sectionLength",
 			       json_object_new_uint64(record->SectionLength));
+	printf("Adding affinity\n");
 
 	//Error affinity.
-	json_object *error_affinity = json_object_new_object();
-	json_object_object_add(error_affinity, "value",
-			       json_object_new_int(record->ErrorAffinityLevel));
-	json_object_object_add(
-		error_affinity, "type",
-		json_object_new_string(record->ErrorAffinityLevel < 4 ?
-					       "Vendor Defined" :
-					       "Reserved"));
-	json_object_object_add(section_ir, "errorAffinity", error_affinity);
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *error_affinity = json_object_new_object();
+		json_object_object_add(
+			error_affinity, "value",
+			json_object_new_int(record->ErrorAffinityLevel));
+		json_object_object_add(
+			error_affinity, "type",
+			json_object_new_string(record->ErrorAffinityLevel < 4 ?
+						       "Vendor Defined" :
+						       "Reserved"));
+		json_object_object_add(section_ir, "errorAffinity",
+				       error_affinity);
+	}
 
 	//Processor ID (MPIDR_EL1) and chip ID (MIDR_EL1).
-	uint64_t sock;
-	uint64_t mpidr_eli1 = record->MPIDR_EL1;
-	json_object_object_add(section_ir, "mpidrEl1",
-			       json_object_new_uint64(mpidr_eli1));
-	//Arm Processor socket info
-	sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
-	json_object_object_add(section_ir, "affinity3",
-			       json_object_new_uint64(sock));
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		uint64_t mpidr_eli1 = record->MPIDR_EL1;
+		uint64_t sock;
+		json_object_object_add(section_ir, "mpidrEl1",
+				       json_object_new_uint64(mpidr_eli1));
+
+		//Arm Processor socket info dependes on mpidr_eli1
+		sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
+		json_object_object_add(section_ir, "affinity3",
+				       json_object_new_uint64(sock));
+	}
 
 	json_object_object_add(section_ir, "midrEl1",
 			       json_object_new_uint64(record->MIDR_EL1));
 
-	//Whether the processor is running, and the state of it if so.
-	json_object_object_add(section_ir, "running",
-			       json_object_new_boolean(record->RunningState &
-						       0x1));
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		//Whether the processor is running, and the state of it if so.
+		json_object_object_add(
+			section_ir, "running",
+			json_object_new_boolean(record->RunningState & 0x1));
+	}
 	if (!(record->RunningState >> 31)) {
 		//Bit 32 of running state is on, so PSCI state information is included.
 		//This can't be made human readable, as it is unknown whether this will be the pre-PSCI 1.0 format
@@ -124,23 +134,25 @@ json_object *cper_section_arm_to_ir(void *section)
 	json_object_object_add(section_ir, "contextInfo", context_info_array);
 
 	//Is there any vendor-specific information following?
-	if (cur_pos < (uint8_t *)section + record->SectionLength) {
-		json_object *vendor_specific = json_object_new_object();
-		size_t input_size =
-			(uint8_t *)section + record->SectionLength - cur_pos;
-		int32_t encoded_len = 0;
-		char *encoded =
-			base64_encode(cur_pos, input_size, &encoded_len);
-		if (encoded == NULL) {
-			return NULL;
-		}
-		json_object_object_add(vendor_specific, "data",
-				       json_object_new_string_len(encoded,
-								  encoded_len));
-		free(encoded);
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		if (cur_pos < (uint8_t *)section + record->SectionLength) {
+			json_object *vendor_specific = json_object_new_object();
+			size_t input_size = (uint8_t *)section +
+					    record->SectionLength - cur_pos;
+			int32_t encoded_len = 0;
+			char *encoded = base64_encode(cur_pos, input_size,
+						      &encoded_len);
+			if (encoded == NULL) {
+				return NULL;
+			}
+			json_object_object_add(vendor_specific, "data",
+					       json_object_new_string_len(
+						       encoded, encoded_len));
+			free(encoded);
 
-		json_object_object_add(section_ir, "vendorSpecificInfo",
-				       vendor_specific);
+			json_object_object_add(section_ir, "vendorSpecificInfo",
+					       vendor_specific);
+		}
 	}
 
 	return section_ir;
@@ -159,10 +171,8 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 			       json_object_new_int(error_info->Length));
 
 	//Validation bitfield.
-	json_object *validation =
-		bitfield_to_ir(error_info->ValidationBits, 5,
-			       ARM_ERROR_INFO_ENTRY_VALID_BITFIELD_NAMES);
-	json_object_object_add(error_info_ir, "validationBits", validation);
+	ValidationTypes ui16Type = { UINT_16T,
+				     .value.ui16 = error_info->ValidationBits };
 
 	//The type of error information in this log.
 	json_object *error_type = integer_to_readable_pair(
@@ -171,51 +181,66 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 	json_object_object_add(error_info_ir, "errorType", error_type);
 
 	//Multiple error count.
-	json_object *multiple_error = json_object_new_object();
-	json_object_object_add(multiple_error, "value",
-			       json_object_new_int(error_info->MultipleError));
-	json_object_object_add(
-		multiple_error, "type",
-		json_object_new_string(error_info->MultipleError < 1 ?
-					       "Single Error" :
-					       "Multiple Errors"));
-	json_object_object_add(error_info_ir, "multipleError", multiple_error);
+	if (isvalid_prop_to_ir(&ui16Type, 0)) {
+		json_object *multiple_error = json_object_new_object();
+		json_object_object_add(
+			multiple_error, "value",
+			json_object_new_int(error_info->MultipleError));
+		json_object_object_add(
+			multiple_error, "type",
+			json_object_new_string(error_info->MultipleError < 1 ?
+						       "Single Error" :
+						       "Multiple Errors"));
+		json_object_object_add(error_info_ir, "multipleError",
+				       multiple_error);
+	}
 
 	//Flags.
-	json_object *flags = bitfield_to_ir(error_info->Flags, 4,
-					    ARM_ERROR_INFO_ENTRY_FLAGS_NAMES);
-	json_object_object_add(error_info_ir, "flags", flags);
+	if (isvalid_prop_to_ir(&ui16Type, 1)) {
+		json_object *flags = bitfield_to_ir(
+			error_info->Flags, 4, ARM_ERROR_INFO_ENTRY_FLAGS_NAMES);
+		json_object_object_add(error_info_ir, "flags", flags);
+	}
 
 	//Error information, split by type.
-	json_object *error_subinfo = NULL;
-	switch (error_info->Type) {
-	case ARM_ERROR_INFORMATION_TYPE_CACHE: //Cache
-	case ARM_ERROR_INFORMATION_TYPE_TLB:   //TLB
-		error_subinfo = cper_arm_cache_tlb_error_to_ir(
-			(EFI_ARM_CACHE_ERROR_STRUCTURE *)&error_info
-				->ErrorInformation,
-			error_info);
-		break;
-	case ARM_ERROR_INFORMATION_TYPE_BUS: //Bus
-		error_subinfo = cper_arm_bus_error_to_ir(
-			(EFI_ARM_BUS_ERROR_STRUCTURE *)&error_info
-				->ErrorInformation);
-		break;
+	if (isvalid_prop_to_ir(&ui16Type, 2)) {
+		json_object *error_subinfo = NULL;
+		switch (error_info->Type) {
+		case ARM_ERROR_INFORMATION_TYPE_CACHE: //Cache
+		case ARM_ERROR_INFORMATION_TYPE_TLB:   //TLB
+			error_subinfo = cper_arm_cache_tlb_error_to_ir(
+				(EFI_ARM_CACHE_ERROR_STRUCTURE *)&error_info
+					->ErrorInformation,
+				error_info);
+			break;
+		case ARM_ERROR_INFORMATION_TYPE_BUS: //Bus
+			error_subinfo = cper_arm_bus_error_to_ir(
+				(EFI_ARM_BUS_ERROR_STRUCTURE *)&error_info
+					->ErrorInformation);
+			break;
 
-	default:
-		//Unknown/microarch, will not support.
-		break;
+		default:
+			//Unknown/microarch, will not support.
+			break;
+		}
+		json_object_object_add(error_info_ir, "errorInformation",
+				       error_subinfo);
 	}
-	json_object_object_add(error_info_ir, "errorInformation",
-			       error_subinfo);
 
 	//Virtual fault address, physical fault address.
-	json_object_object_add(
-		error_info_ir, "virtualFaultAddress",
-		json_object_new_uint64(error_info->VirtualFaultAddress));
-	json_object_object_add(
-		error_info_ir, "physicalFaultAddress",
-		json_object_new_uint64(error_info->PhysicalFaultAddress));
+	if (isvalid_prop_to_ir(&ui16Type, 3)) {
+		json_object_object_add(
+			error_info_ir, "virtualFaultAddress",
+			json_object_new_uint64(
+				error_info->VirtualFaultAddress));
+	}
+	if (isvalid_prop_to_ir(&ui16Type, 4)) {
+		json_object_object_add(
+			error_info_ir, "physicalFaultAddress",
+			json_object_new_uint64(
+				error_info->PhysicalFaultAddress));
+	}
+	printf("fin errinfo\n");
 
 	return error_info_ir;
 }
@@ -230,59 +255,103 @@ cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 	char *cache_tlb_propname;
 
 	//Validation bitfield.
-	json_object *validation =
-		bitfield_to_ir(cache_tlb_error->ValidationBits, 7,
-			       ARM_CACHE_TLB_ERROR_VALID_BITFIELD_NAMES);
-	json_object_object_add(cache_tlb_error_ir, "validationBits",
-			       validation);
+	ValidationTypes ui64Type = {
+		UINT_64T, .value.ui64 = cache_tlb_error->ValidationBits
+	};
+	printf("adding cache\n");
+	printf("cache VB: %x\n", cache_tlb_error->ValidationBits);
+	printf("fsdf VB: %llx\n", ui64Type.value.ui64 & 0x01);
 
 	//Transaction type.
-	json_object *transaction_type = integer_to_readable_pair(
-		cache_tlb_error->TransactionType, 3,
-		ARM_ERROR_TRANSACTION_TYPES_KEYS,
-		ARM_ERROR_TRANSACTION_TYPES_VALUES, "Unknown (Reserved)");
-	json_object_object_add(cache_tlb_error_ir, "transactionType",
-			       transaction_type);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		printf("transactiontype exists\n");
+
+		json_object *transaction_type = integer_to_readable_pair(
+			cache_tlb_error->TransactionType, 3,
+			ARM_ERROR_TRANSACTION_TYPES_KEYS,
+			ARM_ERROR_TRANSACTION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		printf("Generated transaction_type JSON:\n%s\n",
+		       json_object_to_json_string_ext(transaction_type,
+						      JSON_C_TO_STRING_PRETTY));
+
+		json_object_object_add(cache_tlb_error_ir, "transactionType",
+				       transaction_type);
+		printf("Generated cache_tlb_error_ir JSON:\n%s\n",
+		       json_object_to_json_string_ext(cache_tlb_error_ir,
+						      JSON_C_TO_STRING_PRETTY));
+	}
+	printf("fin cache3\n");
 
 	//Operation.
-	json_object *operation;
+	bool cacheErrorFlag = 1;
 	if (error_info->Type == 0) {
-		//Cache operation.
-		operation = integer_to_readable_pair(
-			cache_tlb_error->Operation, 11,
-			ARM_CACHE_BUS_OPERATION_TYPES_KEYS,
-			ARM_CACHE_BUS_OPERATION_TYPES_VALUES,
-			"Unknown (Reserved)");
 		cache_tlb_propname = "cacheError";
 	} else {
 		//TLB operation.
-		operation = integer_to_readable_pair(
-			cache_tlb_error->Operation, 9,
-			ARM_TLB_OPERATION_TYPES_KEYS,
-			ARM_TLB_OPERATION_TYPES_VALUES, "Unknown (Reserved)");
 		cache_tlb_propname = "tlbError";
+		cacheErrorFlag = 0;
 	}
-	json_object_object_add(cache_tlb_error_ir, "operation", operation);
+
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *operation;
+
+		if (cacheErrorFlag) {
+			//Cache operation.
+			operation = integer_to_readable_pair(
+				cache_tlb_error->Operation, 11,
+				ARM_CACHE_BUS_OPERATION_TYPES_KEYS,
+				ARM_CACHE_BUS_OPERATION_TYPES_VALUES,
+				"Unknown (Reserved)");
+		} else {
+			operation = integer_to_readable_pair(
+				cache_tlb_error->Operation, 9,
+				ARM_TLB_OPERATION_TYPES_KEYS,
+				ARM_TLB_OPERATION_TYPES_VALUES,
+				"Unknown (Reserved)");
+		}
+		json_object_object_add(cache_tlb_error_ir, "operation",
+				       operation);
+	}
+	printf("fin cache2\n");
 
 	//Miscellaneous remaining fields.
-	json_object_object_add(cache_tlb_error_ir, "level",
-			       json_object_new_int(cache_tlb_error->Level));
-	json_object_object_add(
-		cache_tlb_error_ir, "processorContextCorrupt",
-		json_object_new_boolean(
-			cache_tlb_error->ProcessorContextCorrupt));
-	json_object_object_add(
-		cache_tlb_error_ir, "corrected",
-		json_object_new_boolean(cache_tlb_error->Corrected));
-	json_object_object_add(
-		cache_tlb_error_ir, "precisePC",
-		json_object_new_boolean(cache_tlb_error->PrecisePC));
-	json_object_object_add(
-		cache_tlb_error_ir, "restartablePC",
-		json_object_new_boolean(cache_tlb_error->RestartablePC));
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			cache_tlb_error_ir, "level",
+			json_object_new_int(cache_tlb_error->Level));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			cache_tlb_error_ir, "processorContextCorrupt",
+			json_object_new_boolean(
+				cache_tlb_error->ProcessorContextCorrupt));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			cache_tlb_error_ir, "corrected",
+			json_object_new_boolean(cache_tlb_error->Corrected));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			cache_tlb_error_ir, "precisePC",
+			json_object_new_boolean(cache_tlb_error->PrecisePC));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
+		json_object_object_add(cache_tlb_error_ir, "restartablePC",
+				       json_object_new_boolean(
+					       cache_tlb_error->RestartablePC));
+	}
+	// printf("fin cache1\n");
+	// printf("Generated cache_tlb_error_ir JSON:\n%s\n", json_object_to_json_string_ext(cache_tlb_error_ir, JSON_C_TO_STRING_PRETTY));
+	// printf("Generated cache_tlb_propname JSON:\n%s\n", cache_tlb_propname);
 
 	json_object_object_add(cache_tlb_prop, cache_tlb_propname,
 			       cache_tlb_error_ir);
+	// printf("Generated cache_tlb_prop JSON:\n%s\n", json_object_to_json_string_ext(cache_tlb_prop, JSON_C_TO_STRING_PRETTY));
+
+	// printf("fin cache\n");
+
 	return cache_tlb_prop;
 }
 
@@ -292,69 +361,105 @@ json_object *cper_arm_bus_error_to_ir(EFI_ARM_BUS_ERROR_STRUCTURE *bus_error)
 	json_object *bus_error_ir = json_object_new_object();
 
 	//Validation bits.
-	json_object *validation =
-		bitfield_to_ir(bus_error->ValidationBits, 12,
-			       ARM_BUS_ERROR_VALID_BITFIELD_NAMES);
-	json_object_object_add(bus_error_ir, "validationBits", validation);
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = bus_error->ValidationBits };
 
 	//Transaction type.
-	json_object *transaction_type = integer_to_readable_pair(
-		bus_error->TransactionType, 3, ARM_ERROR_TRANSACTION_TYPES_KEYS,
-		ARM_ERROR_TRANSACTION_TYPES_VALUES, "Unknown (Reserved)");
-	json_object_object_add(bus_error_ir, "transactionType",
-			       transaction_type);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *transaction_type = integer_to_readable_pair(
+			bus_error->TransactionType, 3,
+			ARM_ERROR_TRANSACTION_TYPES_KEYS,
+			ARM_ERROR_TRANSACTION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		json_object_object_add(bus_error_ir, "transactionType",
+				       transaction_type);
+	}
 
 	//Operation.
-	json_object *operation = integer_to_readable_pair(
-		bus_error->Operation, 7, ARM_CACHE_BUS_OPERATION_TYPES_KEYS,
-		ARM_CACHE_BUS_OPERATION_TYPES_VALUES, "Unknown (Reserved)");
-	json_object_object_add(bus_error_ir, "operation", operation);
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *operation = integer_to_readable_pair(
+			bus_error->Operation, 7,
+			ARM_CACHE_BUS_OPERATION_TYPES_KEYS,
+			ARM_CACHE_BUS_OPERATION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		json_object_object_add(bus_error_ir, "operation", operation);
+	}
 
-	//Affinity level of bus error, + miscellaneous fields.
-	json_object_object_add(bus_error_ir, "level",
-			       json_object_new_int(bus_error->Level));
-	json_object_object_add(
-		bus_error_ir, "processorContextCorrupt",
-		json_object_new_boolean(bus_error->ProcessorContextCorrupt));
-	json_object_object_add(bus_error_ir, "corrected",
-			       json_object_new_boolean(bus_error->Corrected));
-	json_object_object_add(bus_error_ir, "precisePC",
-			       json_object_new_boolean(bus_error->PrecisePC));
-	json_object_object_add(
-		bus_error_ir, "restartablePC",
-		json_object_new_boolean(bus_error->RestartablePC));
-	json_object_object_add(bus_error_ir, "timedOut",
-			       json_object_new_boolean(bus_error->TimeOut));
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		//Affinity level of bus error, + miscellaneous fields.
+		json_object_object_add(bus_error_ir, "level",
+				       json_object_new_int(bus_error->Level));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			bus_error_ir, "processorContextCorrupt",
+			json_object_new_boolean(
+				bus_error->ProcessorContextCorrupt));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			bus_error_ir, "corrected",
+			json_object_new_boolean(bus_error->Corrected));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			bus_error_ir, "precisePC",
+			json_object_new_boolean(bus_error->PrecisePC));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
+		json_object_object_add(
+			bus_error_ir, "restartablePC",
+			json_object_new_boolean(bus_error->RestartablePC));
+	}
 
 	//Participation type.
-	json_object *participation_type = integer_to_readable_pair(
-		bus_error->ParticipationType, 4,
-		ARM_BUS_PARTICIPATION_TYPES_KEYS,
-		ARM_BUS_PARTICIPATION_TYPES_VALUES, "Unknown");
-	json_object_object_add(bus_error_ir, "participationType",
-			       participation_type);
+	if (isvalid_prop_to_ir(&ui64Type, 7)) {
+		json_object *participation_type = integer_to_readable_pair(
+			bus_error->ParticipationType, 4,
+			ARM_BUS_PARTICIPATION_TYPES_KEYS,
+			ARM_BUS_PARTICIPATION_TYPES_VALUES, "Unknown");
+		json_object_object_add(bus_error_ir, "participationType",
+				       participation_type);
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 8)) {
+		json_object_object_add(
+			bus_error_ir, "timedOut",
+			json_object_new_boolean(bus_error->TimeOut));
+	}
 
 	//Address space.
-	json_object *address_space = integer_to_readable_pair(
-		bus_error->AddressSpace, 3, ARM_BUS_ADDRESS_SPACE_TYPES_KEYS,
-		ARM_BUS_ADDRESS_SPACE_TYPES_VALUES, "Unknown");
-	json_object_object_add(bus_error_ir, "addressSpace", address_space);
+	if (isvalid_prop_to_ir(&ui64Type, 9)) {
+		json_object *address_space = integer_to_readable_pair(
+			bus_error->AddressSpace, 3,
+			ARM_BUS_ADDRESS_SPACE_TYPES_KEYS,
+			ARM_BUS_ADDRESS_SPACE_TYPES_VALUES, "Unknown");
+		json_object_object_add(bus_error_ir, "addressSpace",
+				       address_space);
+	}
 
 	//Memory access attributes.
 	//todo: find the specification of these in the ARM ARM
-	json_object_object_add(
-		bus_error_ir, "memoryAttributes",
-		json_object_new_int(bus_error->MemoryAddressAttributes));
+	if (isvalid_prop_to_ir(&ui64Type, 10)) {
+		json_object_object_add(
+			bus_error_ir, "memoryAttributes",
+			json_object_new_int(
+				bus_error->MemoryAddressAttributes));
+	}
 
 	//Access Mode
-	json_object *access_mode = json_object_new_object();
-	json_object_object_add(access_mode, "value",
-			       json_object_new_int(bus_error->AccessMode));
-	json_object_object_add(
-		access_mode, "name",
-		json_object_new_string(bus_error->AccessMode == 0 ? "Secure" :
-								    "Normal"));
-	json_object_object_add(bus_error_ir, "accessMode", access_mode);
+	if (isvalid_prop_to_ir(&ui64Type, 8)) {
+		json_object *access_mode = json_object_new_object();
+		json_object_object_add(
+			access_mode, "value",
+			json_object_new_int(bus_error->AccessMode));
+		json_object_object_add(
+			access_mode, "name",
+			json_object_new_string(bus_error->AccessMode == 0 ?
+						       "Secure" :
+						       "Normal"));
+		json_object_object_add(bus_error_ir, "accessMode", access_mode);
+	}
+	printf("fin bus\n");
 
 	return bus_error_ir;
 }
@@ -369,6 +474,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 	//Version.
 	json_object_object_add(context_ir, "version",
 			       json_object_new_int(header->Version));
+	printf("start context\n");
 
 	//Add the context type.
 	json_object *context_type = integer_to_readable_pair(
@@ -467,6 +573,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 
 	//Set the current position to after the processor context structure.
 	*cur_pos = (UINT8 *)(*cur_pos) + header->RegisterArraySize;
+	printf("fin context\n");
 
 	return context_ir;
 }
@@ -501,9 +608,8 @@ void ir_section_arm_to_cper(json_object *section, FILE *out)
 		(EFI_ARM_ERROR_RECORD *)calloc(1, sizeof(EFI_ARM_ERROR_RECORD));
 
 	//Validation bits.
-	section_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(section, "validationBits"), 4,
-		ARM_ERROR_VALID_BITFIELD_NAMES);
+	struct json_object *obj = NULL;
+	ValidationTypes u32Type = { UINT_32T, .value.ui32 = 0 };
 
 	//Count of error/context info structures.
 	section_cper->ErrInfoNum = json_object_get_int(
@@ -514,20 +620,37 @@ void ir_section_arm_to_cper(json_object *section, FILE *out)
 	//Miscellaneous raw value fields.
 	section_cper->SectionLength = json_object_get_uint64(
 		json_object_object_get(section, "sectionLength"));
-	section_cper->ErrorAffinityLevel = readable_pair_to_integer(
-		json_object_object_get(section, "errorAffinity"));
-	section_cper->MPIDR_EL1 = json_object_get_uint64(
-		json_object_object_get(section, "mpidrEl1"));
+	if (json_object_object_get_ex(section, "mpidrEl1", &obj)) {
+		section_cper->MPIDR_EL1 = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&u32Type, 0);
+	}
+	if (json_object_object_get_ex(section, "errorAffinity", &obj)) {
+		section_cper->ErrorAffinityLevel =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&u32Type, 1);
+	}
 	section_cper->MIDR_EL1 = json_object_get_uint64(
 		json_object_object_get(section, "midrEl1"));
-	section_cper->RunningState = json_object_get_boolean(
-		json_object_object_get(section, "running"));
+	if (json_object_object_get_ex(section, "running", &obj)) {
+		section_cper->RunningState = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&u32Type, 2);
+	}
 
 	//Optional PSCI state.
 	json_object *psci_state = json_object_object_get(section, "psciState");
 	if (psci_state != NULL) {
 		section_cper->PsciState = json_object_get_uint64(psci_state);
 	}
+
+	//Validationbits for EFI_ARM_ERROR_RECORD should also consider vendorSpecificInfo
+	bool vendorSpecificPresent =
+		json_object_object_get_ex(section, "vendorSpecificInfo", &obj);
+	json_object *vendor_specific_info = obj;
+	if (vendorSpecificPresent) {
+		add_to_valid_bitfield(&u32Type, 3);
+	}
+
+	section_cper->ValidFields = u32Type.value.ui32;
 
 	//Flush header to stream.
 	fwrite(section_cper, sizeof(EFI_ARM_ERROR_RECORD), 1, out);
@@ -549,9 +672,7 @@ void ir_section_arm_to_cper(json_object *section, FILE *out)
 	}
 
 	//Vendor specific error info.
-	json_object *vendor_specific_info =
-		json_object_object_get(section, "vendorSpecificInfo");
-	if (vendor_specific_info != NULL) {
+	if (vendorSpecificPresent) {
 		json_object *vendor_info_string =
 			json_object_object_get(vendor_specific_info, "data");
 		int vendor_specific_len =
@@ -577,6 +698,8 @@ void ir_section_arm_to_cper(json_object *section, FILE *out)
 void ir_arm_error_info_to_cper(json_object *error_info, FILE *out)
 {
 	EFI_ARM_ERROR_INFORMATION_ENTRY error_info_cper;
+	struct json_object *obj = NULL;
+	ValidationTypes ui16Type = { UINT_16T, .value.ui16 = 0 };
 
 	//Version, length.
 	error_info_cper.Version = json_object_get_int(
@@ -584,59 +707,72 @@ void ir_arm_error_info_to_cper(json_object *error_info, FILE *out)
 	error_info_cper.Length = json_object_get_int(
 		json_object_object_get(error_info, "length"));
 
-	//Validation bits.
-	error_info_cper.ValidationBits = ir_to_bitfield(
-		json_object_object_get(error_info, "validationBits"), 5,
-		ARM_ERROR_INFO_ENTRY_VALID_BITFIELD_NAMES);
-
 	//Type, multiple error.
 	error_info_cper.Type = (UINT8)readable_pair_to_integer(
 		json_object_object_get(error_info, "type"));
-	error_info_cper.MultipleError = (UINT16)readable_pair_to_integer(
-		json_object_object_get(error_info, "multipleError"));
+
+	if (json_object_object_get_ex(error_info, "multipleError", &obj)) {
+		error_info_cper.MultipleError =
+			(UINT16)readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui16Type, 0);
+	}
 
 	//Flags object.
-	error_info_cper.Flags = (UINT8)ir_to_bitfield(
-		json_object_object_get(error_info, "flags"), 4,
-		ARM_ERROR_INFO_ENTRY_FLAGS_NAMES);
+	if (json_object_object_get_ex(error_info, "flags", &obj)) {
+		error_info_cper.Flags = (UINT8)ir_to_bitfield(
+			obj, 4, ARM_ERROR_INFO_ENTRY_FLAGS_NAMES);
+		add_to_valid_bitfield(&ui16Type, 1);
+	}
 
 	//Error information.
-	json_object *error_info_information =
-		json_object_object_get(error_info, "errorInformation");
-	json_object *error_info_prop = NULL;
+	if (json_object_object_get_ex(error_info, "errorInformation", &obj)) {
+		json_object *error_info_information = obj;
+		json_object *error_info_prop = NULL;
 
-	switch (error_info_cper.Type) {
-	case ARM_ERROR_INFORMATION_TYPE_CACHE:
-		error_info_prop = json_object_object_get(error_info_information,
-							 "cacheError");
-		ir_arm_error_cache_tlb_info_to_cper(
-			error_info_prop,
-			&error_info_cper.ErrorInformation.CacheError);
-		break;
-	case ARM_ERROR_INFORMATION_TYPE_TLB:
-		error_info_prop = json_object_object_get(error_info_information,
-							 "tlbError");
-		ir_arm_error_cache_tlb_info_to_cper(
-			error_info_prop,
-			&error_info_cper.ErrorInformation.CacheError);
-		break;
+		switch (error_info_cper.Type) {
+		case ARM_ERROR_INFORMATION_TYPE_CACHE:
+			error_info_prop = json_object_object_get(
+				error_info_information, "cacheError");
+			ir_arm_error_cache_tlb_info_to_cper(
+				error_info_prop,
+				&error_info_cper.ErrorInformation.CacheError);
+			break;
+		case ARM_ERROR_INFORMATION_TYPE_TLB:
+			error_info_prop = json_object_object_get(
+				error_info_information, "tlbError");
+			ir_arm_error_cache_tlb_info_to_cper(
+				error_info_prop,
+				&error_info_cper.ErrorInformation.CacheError);
+			break;
 
-	case ARM_ERROR_INFORMATION_TYPE_BUS:
-		ir_arm_error_bus_info_to_cper(
-			error_info_information,
-			&error_info_cper.ErrorInformation.BusError);
-		break;
+		case ARM_ERROR_INFORMATION_TYPE_BUS:
+			ir_arm_error_bus_info_to_cper(
+				error_info_information,
+				&error_info_cper.ErrorInformation.BusError);
+			break;
 
-	default:
-		//Unknown error information type.
-		break;
+		default:
+			//Unknown error information type.
+			break;
+		}
+		add_to_valid_bitfield(&ui16Type, 2);
 	}
 
 	//Virtual/physical fault address.
-	error_info_cper.VirtualFaultAddress = json_object_get_uint64(
-		json_object_object_get(error_info, "virtualFaultAddress"));
-	error_info_cper.PhysicalFaultAddress = json_object_get_uint64(
-		json_object_object_get(error_info, "physicalFaultAddress"));
+	if (json_object_object_get_ex(error_info, "virtualFaultAddress",
+				      &obj)) {
+		error_info_cper.VirtualFaultAddress =
+			json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui16Type, 3);
+	}
+
+	if (json_object_object_get_ex(error_info, "physicalFaultAddress",
+				      &obj)) {
+		error_info_cper.PhysicalFaultAddress =
+			json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui16Type, 4);
+	}
+	error_info_cper.ValidationBits = ui16Type.value.ui16;
 
 	//Write out to stream.
 	fwrite(&error_info_cper, sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY), 1,
@@ -649,28 +785,46 @@ void ir_arm_error_cache_tlb_info_to_cper(
 	json_object *error_information,
 	EFI_ARM_CACHE_ERROR_STRUCTURE *error_info_cper)
 {
-	//Validation bits.
-	error_info_cper->ValidationBits = ir_to_bitfield(
-		json_object_object_get(error_information, "validationBits"), 7,
-		ARM_CACHE_TLB_ERROR_VALID_BITFIELD_NAMES);
+	// //Validation bits.
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Miscellaneous value fields.
-	error_info_cper->TransactionType = readable_pair_to_integer(
-		json_object_object_get(error_information, "transactionType"));
-	error_info_cper->Operation = readable_pair_to_integer(
-		json_object_object_get(error_information, "operation"));
-	error_info_cper->Level = json_object_get_uint64(
-		json_object_object_get(error_information, "level"));
-	error_info_cper->ProcessorContextCorrupt = json_object_get_boolean(
-		json_object_object_get(error_information,
-				       "processorContextCorrupt"));
-	error_info_cper->Corrected = json_object_get_boolean(
-		json_object_object_get(error_information, "corrected"));
-	error_info_cper->PrecisePC = json_object_get_boolean(
-		json_object_object_get(error_information, "precisePC"));
-	error_info_cper->RestartablePC = json_object_get_boolean(
-		json_object_object_get(error_information, "restartablePC"));
+	if (json_object_object_get_ex(error_information, "transactionType",
+				      &obj)) {
+		error_info_cper->TransactionType =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
+	if (json_object_object_get_ex(error_information, "operation", &obj)) {
+		error_info_cper->Operation = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(error_information, "level", &obj)) {
+		error_info_cper->Level = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(error_information,
+				      "processorContextCorrupt", &obj)) {
+		error_info_cper->ProcessorContextCorrupt =
+			json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(error_information, "corrected", &obj)) {
+		error_info_cper->Corrected = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(error_information, "precisePC", &obj)) {
+		error_info_cper->PrecisePC = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(error_information, "restartablePC",
+				      &obj)) {
+		error_info_cper->RestartablePC = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 6);
+	}
 	error_info_cper->Reserved = 0;
+	error_info_cper->ValidationBits = ui64Type.value.ui64;
 }
 
 //Converts a single ARM bus error information structure into a CPER structure.
@@ -678,35 +832,66 @@ void ir_arm_error_bus_info_to_cper(json_object *error_information,
 				   EFI_ARM_BUS_ERROR_STRUCTURE *error_info_cper)
 {
 	//Validation bits.
-	error_info_cper->ValidationBits = ir_to_bitfield(
-		json_object_object_get(error_information, "validationBits"), 7,
-		ARM_BUS_ERROR_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Miscellaneous value fields.
-	error_info_cper->TransactionType = readable_pair_to_integer(
-		json_object_object_get(error_information, "transactionType"));
-	error_info_cper->Operation = readable_pair_to_integer(
-		json_object_object_get(error_information, "operation"));
-	error_info_cper->Level = json_object_get_uint64(
-		json_object_object_get(error_information, "level"));
-	error_info_cper->ProcessorContextCorrupt = json_object_get_boolean(
-		json_object_object_get(error_information,
-				       "processorContextCorrupt"));
-	error_info_cper->Corrected = json_object_get_boolean(
-		json_object_object_get(error_information, "corrected"));
-	error_info_cper->PrecisePC = json_object_get_boolean(
-		json_object_object_get(error_information, "precisePC"));
-	error_info_cper->RestartablePC = json_object_get_boolean(
-		json_object_object_get(error_information, "restartablePC"));
-	error_info_cper->ParticipationType = readable_pair_to_integer(
-		json_object_object_get(error_information, "participationType"));
-	error_info_cper->AddressSpace = readable_pair_to_integer(
-		json_object_object_get(error_information, "addressSpace"));
-	error_info_cper->AccessMode = readable_pair_to_integer(
-		json_object_object_get(error_information, "accessMode"));
-	error_info_cper->MemoryAddressAttributes = json_object_get_uint64(
-		json_object_object_get(error_information, "memoryAttributes"));
+	if (json_object_object_get_ex(error_information, "transactionType",
+				      &obj)) {
+		error_info_cper->TransactionType =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
+	if (json_object_object_get_ex(error_information, "operation", &obj)) {
+		error_info_cper->Operation = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(error_information, "level", &obj)) {
+		error_info_cper->Level = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(error_information,
+				      "processorContextCorrupt", &obj)) {
+		error_info_cper->ProcessorContextCorrupt =
+			json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(error_information, "corrected", &obj)) {
+		error_info_cper->Corrected = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(error_information, "precisePC", &obj)) {
+		error_info_cper->PrecisePC = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(error_information, "restartablePC",
+				      &obj)) {
+		error_info_cper->RestartablePC = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 6);
+	}
+	if (json_object_object_get_ex(error_information, "participationType",
+				      &obj)) {
+		error_info_cper->ParticipationType =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 7);
+	}
+	if (json_object_object_get_ex(error_information, "addressSpace",
+				      &obj)) {
+		error_info_cper->AddressSpace = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 9);
+	}
+	if (json_object_object_get_ex(error_information, "accessMode", &obj)) {
+		error_info_cper->AccessMode = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 11);
+	}
+	if (json_object_object_get_ex(error_information, "memoryAttributes",
+				      &obj)) {
+		error_info_cper->MemoryAddressAttributes =
+			json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 10);
+	}
 	error_info_cper->Reserved = 0;
+	error_info_cper->ValidationBits = ui64Type.value.ui64;
 }
 
 //Converts a single ARM context information structure into CPER binary, outputting to the given stream.
