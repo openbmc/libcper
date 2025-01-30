@@ -5,18 +5,20 @@
  **/
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/gen-utils.h>
 #include <libcper/generator/sections/gen-section.h>
 #define ARM_ERROR_INFO_SIZE 32
 
-void *generate_arm_error_info();
+void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_arm_context_info(void **location);
 
 //Generates a single pseudo-random ARM processor section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_arm(void **location)
+size_t generate_section_arm(void **location,
+			    GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Set up for generation of error/context structures.
 	UINT16 error_structure_num = rand() % 4 + 1; //Must be at least 1.
@@ -27,7 +29,7 @@ size_t generate_section_arm(void **location)
 
 	//Generate the structures.
 	for (int i = 0; i < error_structure_num; i++) {
-		error_structures[i] = generate_arm_error_info();
+		error_structures[i] = generate_arm_error_info(validBitsType);
 	}
 	for (int i = 0; i < context_structure_num; i++) {
 		context_structure_lengths[i] =
@@ -35,7 +37,7 @@ size_t generate_section_arm(void **location)
 	}
 
 	//Determine a random amount of vendor specific info.
-	int vendor_info_len = rand() % 16;
+	size_t vendor_info_len = rand() % 16 + 4;
 
 	//Create the section as a whole.
 	size_t total_len = 40 + (error_structure_num * ARM_ERROR_INFO_SIZE);
@@ -56,8 +58,13 @@ size_t generate_section_arm(void **location)
 	*(section + 12) = rand() % 4;
 
 	//Reserved zero bytes.
-	UINT64 *validation = (UINT64 *)section;
-	*validation &= 0x7;
+	UINT32 *validation = (UINT32 *)section;
+	*validation &= 0xF;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0xF;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0xA;
+	}
 	UINT32 *running_state = (UINT32 *)(section + 32);
 	*running_state &= 0x1;
 	memset(section + 13, 0, 3);
@@ -76,13 +83,21 @@ size_t generate_section_arm(void **location)
 		cur_pos += context_structure_lengths[i];
 	}
 
+	//vendor specific
+	for (size_t i = 0; i < vendor_info_len; i++) {
+		//Ensure only ascii is used so we don't
+		// fail base64E
+		*cur_pos = rand() % 127 + 1;
+		cur_pos += 1;
+	}
+
 	//Set return values and exit.
 	*location = section;
 	return total_len;
 }
 
 //Generates a single pseudo-random ARM error info structure. Must be later freed.
-void *generate_arm_error_info()
+void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	UINT8 *error_info = generate_random_bytes(ARM_ERROR_INFO_SIZE);
 
@@ -91,12 +106,17 @@ void *generate_arm_error_info()
 	*(error_info + 1) = ARM_ERROR_INFO_SIZE;
 
 	//Type of error.
-	UINT8 error_type = rand() % 4;
+	UINT8 error_type = rand() % 3;
 	*(error_info + 4) = error_type;
 
 	//Reserved bits for error information.
 	UINT16 *validation = (UINT16 *)(error_info + 2);
 	*validation &= 0x1F;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x1F;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x15;
+	}
 
 	//Make sure reserved bits are zero according with the type.
 	UINT64 *error_subinfo = (UINT64 *)(error_info + 8);
@@ -105,17 +125,35 @@ void *generate_arm_error_info()
 	case 0:
 	case 1:
 		*error_subinfo &= 0xFFFFFFF;
+		//Reserved bits for cache/tlb.
+		UINT16 *val_cache = (UINT16 *)(error_info + 8);
+		if (validBitsType == ALL_VALID) {
+			*val_cache = 0x7F;
+		} else if (validBitsType == SOME_VALID) {
+			*val_cache = 0x55;
+		}
 		break;
 
 	//Bus
 	case 2:
 		*error_subinfo &= 0xFFFFFFFFFFF;
+		UINT16 *val_bus = (UINT16 *)(error_info + 8);
+		if (validBitsType == ALL_VALID) {
+			*val_bus = 0xFFF;
+		} else if (validBitsType == SOME_VALID) {
+			*val_bus = 0x555;
+		}
+
 		break;
 
 	//Microarch/other.
 	default:
 		break;
 	}
+
+	//flags
+	UINT8 *flags = (UINT8 *)(error_info + 7);
+	*flags &= 0xF;
 
 	return error_info;
 }
@@ -174,6 +212,14 @@ size_t generate_arm_context_info(void **location)
 	//Create context structure randomly.
 	int total_size = 8 + reg_size;
 	UINT16 *context_info = (UINT16 *)generate_random_bytes(total_size);
+
+	//UEFI spec is not clear about bit 15 in the
+	// reg type 8 section. This sets it to 0 to
+	// avoid confusion for now.
+	if (reg_type == 8) {
+		UINT8 *reg_decode = (UINT8 *)context_info;
+		*(reg_decode + 9) &= 0x7F;
+	}
 
 	//Set header information.
 	*(context_info + 1) = reg_type;

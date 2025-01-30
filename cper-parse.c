@@ -68,6 +68,7 @@ json_object *cper_to_ir(FILE *cper_file)
 			cper_section_descriptor_to_ir(&section_descriptor));
 
 		//Read the section itself.
+
 		json_object_array_add(sections_ir,
 				      cper_section_to_ir(cper_file, base_pos,
 							 &section_descriptor));
@@ -120,11 +121,6 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 			       json_object_new_string(severity_to_string(
 				       header->ErrorSeverity)));
 	json_object_object_add(header_ir, "severity", error_severity);
-
-	//The validation bits for each section.
-	json_object *validation_bits = bitfield_to_ir(
-		header->ValidationBits, 3, CPER_HEADER_VALID_BITFIELD_NAMES);
-	json_object_object_add(header_ir, "validationBits", validation_bits);
 
 	//Total length of the record (including headers) in bytes.
 	json_object_object_add(header_ir, "recordLength",
@@ -255,13 +251,6 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	//Revision.
 	json_object_object_add(section_descriptor_ir, "revision",
 			       revision_to_ir(section_descriptor->Revision));
-
-	//Validation bits.
-	json_object *validation_bits =
-		bitfield_to_ir(section_descriptor->SecValidMask, 2,
-			       CPER_SECTION_DESCRIPTOR_VALID_BITFIELD_NAMES);
-	json_object_object_add(section_descriptor_ir, "validationBits",
-			       validation_bits);
 
 	//Flag bits.
 	json_object *flags =

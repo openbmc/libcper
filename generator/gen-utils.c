@@ -44,5 +44,5 @@ void create_valid_error_section(UINT8 *start)
 //Initializes the random seed for rand() using the current time.
 void init_random()
 {
-	srand((unsigned int)time(NULL));
+	srand(1);
 }

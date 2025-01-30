@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <json.h>
+#include <string.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 
@@ -98,8 +99,10 @@ json_object *uniform_struct_to_ir(UINT32 *start, int len, const char *names[])
 
 	UINT32 *cur = start;
 	for (int i = 0; i < len; i++) {
+		UINT32 value;
+		memcpy(&value, cur, sizeof(UINT32));
 		json_object_object_add(result, names[i],
-				       json_object_new_uint64(*cur));
+				       json_object_new_uint64(value));
 		cur++;
 	}
 
@@ -196,6 +199,29 @@ json_object *bitfield_to_ir(UINT64 bitfield, int num_fields,
 	return result;
 }
 
+//Filters properties based on Validation Bits.
+// Refer to CPER spec for vbit_idx to be passed here.
+void add_to_valid_bitfield(ValidationTypes *val, int vbit_idx)
+{
+	switch (val->size) {
+	case UINT_8T:
+		val->value.ui8 |= (0x01 << vbit_idx);
+		break;
+	case UINT_16T:
+		val->value.ui16 |= (0x01 << vbit_idx);
+		break;
+	case UINT_32T:
+		val->value.ui32 |= (0x01 << vbit_idx);
+		break;
+	case UINT_64T:
+		val->value.ui64 |= (0x01 << vbit_idx);
+		break;
+	default:
+		printf("IR to CPER: Unknown validation bits size passed, Enum IntType=%d",
+		       val->size);
+	}
+}
+
 //Converts the given IR bitfield into a standard UINT64 bitfield, with fields beginning from bit 0.
 UINT64 ir_to_bitfield(json_object *ir, int num_fields, const char *names[])
 {
@@ -208,6 +234,53 @@ UINT64 ir_to_bitfield(json_object *ir, int num_fields, const char *names[])
 	}
 
 	return result;
+}
+
+// Filters properties based on Validation Bits.
+// Refer to CPER spec for vbit_idx to be passed here.
+// Overload function for 16, 32, 64b
+bool isvalid_prop_to_ir(ValidationTypes *val, int vbit_idx)
+{
+	UINT64 vbit_mask = 0x01 << vbit_idx;
+	switch (val->size) {
+	case UINT_16T:
+		return (vbit_mask & val->value.ui16);
+
+	case UINT_32T:
+		return (vbit_mask & val->value.ui32);
+
+	case UINT_64T:
+		return (vbit_mask & val->value.ui64);
+
+	default:
+		printf("CPER to IR:Unknown validation bits size passed. Enum IntType: %d",
+		       val->size);
+	}
+	return 0;
+}
+
+void print_val(ValidationTypes *val)
+{
+	switch (val->size) {
+	case UINT_8T:
+		printf("Validation bits: %x\n", val->value.ui8);
+		break;
+	case UINT_16T:
+		printf("Validation bits: %x\n", val->value.ui16);
+		break;
+
+	case UINT_32T:
+		printf("Validation bits: %x\n", val->value.ui32);
+		break;
+
+	case UINT_64T:
+		printf("Validation bits: %llx\n", val->value.ui64);
+		break;
+
+	default:
+		printf("CPER to IR:Unknown validation bits size passed. Enum IntType: %d",
+		       val->size);
+	}
 }
 
 //Converts the given UINT64 array into a JSON IR array, given the length.
