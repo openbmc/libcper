@@ -19,58 +19,83 @@ json_object *cper_section_pci_bus_to_ir(void *section)
 	json_object *section_ir = json_object_new_object();
 
 	//Validation bits.
-	json_object *validation = bitfield_to_ir(
-		bus_error->ValidFields, 9, PCI_BUS_ERROR_VALID_BITFIELD_NAMES);
-	json_object_object_add(section_ir, "validationBits", validation);
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = bus_error->ValidFields };
 
 	//Error status.
-	json_object *error_status =
-		cper_generic_error_status_to_ir(&bus_error->ErrorStatus);
-	json_object_object_add(section_ir, "errorStatus", error_status);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *error_status = cper_generic_error_status_to_ir(
+			&bus_error->ErrorStatus);
+		json_object_object_add(section_ir, "errorStatus", error_status);
+	}
 
 	//PCI bus error type.
-	json_object *error_type = integer_to_readable_pair(
-		bus_error->Type, 8, PCI_BUS_ERROR_TYPES_KEYS,
-		PCI_BUS_ERROR_TYPES_VALUES, "Unknown (Reserved)");
-	json_object_object_add(section_ir, "errorType", error_type);
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *error_type = integer_to_readable_pair(
+			bus_error->Type, 8, PCI_BUS_ERROR_TYPES_KEYS,
+			PCI_BUS_ERROR_TYPES_VALUES, "Unknown (Reserved)");
+		json_object_object_add(section_ir, "errorType", error_type);
+	}
 
 	//Bus ID.
-	json_object *bus_id = json_object_new_object();
-	json_object_object_add(bus_id, "busNumber",
-			       json_object_new_int(bus_error->BusId & 0xFF));
-	json_object_object_add(bus_id, "segmentNumber",
-			       json_object_new_int(bus_error->BusId >> 8));
-	json_object_object_add(section_ir, "busID", bus_id);
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object *bus_id = json_object_new_object();
+		json_object_object_add(bus_id, "busNumber",
+				       json_object_new_int(bus_error->BusId &
+							   0xFF));
+		json_object_object_add(bus_id, "segmentNumber",
+				       json_object_new_int(bus_error->BusId >>
+							   8));
+		json_object_object_add(section_ir, "busID", bus_id);
+	}
 
 	//Miscellaneous numeric fields.
 	UINT8 command_type = (bus_error->BusCommand >> 56) &
 			     0x1; //Byte 7, bit 0.
-	json_object_object_add(section_ir, "busAddress",
-			       json_object_new_uint64(bus_error->BusAddress));
-	json_object_object_add(section_ir, "busData",
-			       json_object_new_uint64(bus_error->BusData));
-	json_object_object_add(
-		section_ir, "busCommandType",
-		json_object_new_string(command_type == 0 ? "PCI" : "PCI-X"));
-
-	json_object_object_add(section_ir, "busRequestorID",
-			       json_object_new_uint64(bus_error->RequestorId));
-
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			section_ir, "busAddress",
+			json_object_new_uint64(bus_error->BusAddress));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			section_ir, "busData",
+			json_object_new_uint64(bus_error->BusData));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			section_ir, "busCommandType",
+			json_object_new_string(command_type == 0 ? "PCI" :
+								   "PCI-X"));
+	}
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
-		 bus_error->RequestorId);
-	json_object_object_add(section_ir, "busRequestorIDHex",
-			       json_object_new_string(hexstring_buf));
 
-	json_object_object_add(section_ir, "busCompleterID",
-			       json_object_new_uint64(bus_error->ResponderId));
-	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
-		 bus_error->ResponderId);
-	json_object_object_add(section_ir, "busCompleterIDHex",
-			       json_object_new_string(hexstring_buf));
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
+		json_object_object_add(
+			section_ir, "busRequestorID",
+			json_object_new_uint64(bus_error->RequestorId));
 
-	json_object_object_add(section_ir, "targetID",
-			       json_object_new_uint64(bus_error->TargetId));
+		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+			 bus_error->RequestorId);
+		json_object_object_add(section_ir, "busRequestorIDHex",
+				       json_object_new_string(hexstring_buf));
+	}
+
+	if (isvalid_prop_to_ir(&ui64Type, 7)) {
+		json_object_object_add(
+			section_ir, "busCompleterID",
+			json_object_new_uint64(bus_error->ResponderId));
+		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
+			 bus_error->ResponderId);
+		json_object_object_add(section_ir, "busCompleterIDHex",
+				       json_object_new_string(hexstring_buf));
+	}
+
+	if (isvalid_prop_to_ir(&ui64Type, 8)) {
+		json_object_object_add(
+			section_ir, "targetID",
+			json_object_new_uint64(bus_error->TargetId));
+	}
 
 	return section_ir;
 }
@@ -84,41 +109,62 @@ void ir_section_pci_bus_to_cper(json_object *section, FILE *out)
 			1, sizeof(EFI_PCI_PCIX_BUS_ERROR_DATA));
 
 	//Validation bits.
-	section_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(section, "validationBits"), 9,
-		PCI_BUS_ERROR_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Error status.
-	ir_generic_error_status_to_cper(json_object_object_get(section,
-							       "errorStatus"),
-					&section_cper->ErrorStatus);
+	if (json_object_object_get_ex(section, "errorStatus", &obj)) {
+		ir_generic_error_status_to_cper(obj,
+						&section_cper->ErrorStatus);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
 
 	//Bus ID.
-	json_object *bus_id = json_object_object_get(section, "busID");
-	UINT16 bus_number = (UINT8)json_object_get_int(
-		json_object_object_get(bus_id, "busNumber"));
-	UINT16 segment_number = (UINT8)json_object_get_int(
-		json_object_object_get(bus_id, "segmentNumber"));
-	section_cper->BusId = bus_number + (segment_number << 8);
+	if (json_object_object_get_ex(section, "busID", &obj)) {
+		json_object *bus_id = json_object_object_get(section, "busID");
+		UINT16 bus_number = (UINT8)json_object_get_int(
+			json_object_object_get(bus_id, "busNumber"));
+		UINT16 segment_number = (UINT8)json_object_get_int(
+			json_object_object_get(bus_id, "segmentNumber"));
+		section_cper->BusId = bus_number + (segment_number << 8);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
 
 	//Remaining fields.
 	UINT64 pcix_command = (UINT64)0x1 << 56;
-	const char *bus_command = json_object_get_string(
-		json_object_object_get(section, "busCommandType"));
-	section_cper->Type = (UINT16)readable_pair_to_integer(
-		json_object_object_get(section, "errorType"));
-	section_cper->BusAddress = json_object_get_uint64(
-		json_object_object_get(section, "busAddress"));
-	section_cper->BusData = json_object_get_uint64(
-		json_object_object_get(section, "busData"));
-	section_cper->BusCommand =
-		strcmp(bus_command, "PCI") == 0 ? 0 : pcix_command;
-	section_cper->RequestorId = json_object_get_uint64(
-		json_object_object_get(section, "busRequestorID"));
-	section_cper->ResponderId = json_object_get_uint64(
-		json_object_object_get(section, "busCompleterID"));
-	section_cper->TargetId = json_object_get_uint64(
-		json_object_object_get(section, "targetID"));
+
+	if (json_object_object_get_ex(section, "errorType", &obj)) {
+		section_cper->Type = (UINT16)readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(section, "busAddress", &obj)) {
+		section_cper->BusAddress = json_object_get_uint64(
+			json_object_object_get(section, "busAddress"));
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(section, "busData", &obj)) {
+		section_cper->BusData = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(section, "busCommandType", &obj)) {
+		const char *bus_command = json_object_get_string(obj);
+		section_cper->BusCommand =
+			strcmp(bus_command, "PCI") == 0 ? 0 : pcix_command;
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(section, "busRequestorID", &obj)) {
+		section_cper->RequestorId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 6);
+	}
+	if (json_object_object_get_ex(section, "busCompleterID", &obj)) {
+		section_cper->ResponderId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 7);
+	}
+	if (json_object_object_get_ex(section, "targetID", &obj)) {
+		section_cper->TargetId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 8);
+	}
+	section_cper->ValidFields = ui64Type.value.ui64;
 
 	//Write to stream, free resources.
 	fwrite(section_cper, sizeof(EFI_PCI_PCIX_BUS_ERROR_DATA), 1, out);
