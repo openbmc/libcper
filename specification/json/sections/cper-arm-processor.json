@@ -3,7 +3,6 @@
     "type": "object",
     "description": "ARM Processor Error Section",
     "required": [
-        "validationBits",
         "errorInfoNum",
         "contextInfoNum",
         "sectionLength",
@@ -17,30 +16,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indiciates what fields in the section are valid",
-            "required": [
-                "mpidrValid",
-                "errorAffinityLevelValid",
-                "runningStateValid",
-                "vendorSpecificInfoValid"
-            ],
-            "properties": {
-                "mpidrValid": {
-                    "type": "boolean"
-                },
-                "errorAffinityLevelValid": {
-                    "type": "boolean"
-                },
-                "runningStateValid": {
-                    "type": "boolean"
-                },
-                "vendorSpecificInfoValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "errorInfoNum": {
             "type": "integer",
             "description": "The number of Processor Error Information Structures"

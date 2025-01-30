@@ -11,12 +11,13 @@
 #include <libcper/generator/sections/gen-section.h>
 #define IA32X64_ERROR_STRUCTURE_SIZE 64
 
-void *generate_ia32x64_error_structure();
+void *generate_ia32x64_error_structure(GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_ia32x64_context_structure(void **location);
 
 //Generates a single pseudo-random IA32/x64 section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_ia32x64(void **location)
+size_t generate_section_ia32x64(void **location,
+				GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Set up for generation of error/context structures.
 	UINT16 error_structure_num = rand() % 4 + 1;
@@ -27,7 +28,8 @@ size_t generate_section_ia32x64(void **location)
 
 	//Generate the structures.
 	for (int i = 0; i < error_structure_num; i++) {
-		error_structures[i] = generate_ia32x64_error_structure();
+		error_structures[i] =
+			generate_ia32x64_error_structure(validBitsType);
 	}
 	for (int i = 0; i < context_structure_num; i++) {
 		context_structure_lengths[i] =
@@ -51,6 +53,11 @@ size_t generate_section_ia32x64(void **location)
 	//Set header information.
 	UINT64 *validation = (UINT64 *)section;
 	*validation &= 0x3;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x3;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x2;
+	}
 	*validation |= error_structure_num << 2;
 	*validation |= context_structure_num << 8;
 
@@ -75,7 +82,7 @@ size_t generate_section_ia32x64(void **location)
 }
 
 //Generates a single IA32/x64 error structure. Must later be freed.
-void *generate_ia32x64_error_structure()
+void *generate_ia32x64_error_structure(GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	UINT8 *error_structure =
 		generate_random_bytes(IA32X64_ERROR_STRUCTURE_SIZE);
@@ -83,6 +90,11 @@ void *generate_ia32x64_error_structure()
 	//Set error structure reserved space to zero.
 	UINT64 *validation = (UINT64 *)(error_structure + 16);
 	*validation &= 0x1F;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x1F;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x15;
+	}
 
 	//Create a random type of error structure.
 	EFI_GUID *guid = (EFI_GUID *)error_structure;
@@ -95,7 +107,7 @@ void *generate_ia32x64_error_structure()
 		       sizeof(EFI_GUID));
 
 		//Set reserved space to zero.
-		*check_info &= ~0x20FF00;
+		*check_info = ~0x20FF00;
 		*check_info &= 0x3FFFFFFF;
 		break;
 
@@ -105,7 +117,7 @@ void *generate_ia32x64_error_structure()
 		       sizeof(EFI_GUID));
 
 		//Set reserved space to zero.
-		*check_info &= ~0x20FF00;
+		*check_info = ~0x20FF00;
 		*check_info &= 0x3FFFFFFF;
 		break;
 
@@ -115,7 +127,7 @@ void *generate_ia32x64_error_structure()
 		       sizeof(EFI_GUID));
 
 		//Set reserved space to zero.
-		*check_info &= ~0x20F800;
+		*check_info = ~0x20F800;
 		*check_info &= 0x7FFFFFFFF;
 		break;
 
@@ -125,7 +137,7 @@ void *generate_ia32x64_error_structure()
 		       sizeof(EFI_GUID));
 
 		//Set reserved space to zero.
-		*check_info &= ~0xFFE0;
+		*check_info = ~0xFFC0;
 		*check_info &= 0xFFFFFF;
 		break;
 	}
