@@ -50,38 +50,40 @@ json_object *cper_section_ia32x64_to_ir(void *section)
 	json_object *record_ir = json_object_new_object();
 
 	//Validation bits.
-	json_object *validationBits = json_object_new_object();
-	json_object_object_add(validationBits, "localAPICIDValid",
-			       json_object_new_boolean(record->ValidFields &
-						       0x1));
-	json_object_object_add(
-		validationBits, "cpuIDInfoValid",
-		json_object_new_boolean((record->ValidFields >> 1) & 0x1));
+	//validation bits contain information
+	//about processorErrorInfoNum and processorContextInfoNum.
+	//Ensure this is decoded properly in IR->CPER
 	int processor_error_info_num = (record->ValidFields >> 2) & 0x3F;
-	json_object_object_add(validationBits, "processorErrorInfoNum",
+	json_object_object_add(record_ir, "processorErrorInfoNum",
 			       json_object_new_int(processor_error_info_num));
 	int processor_context_info_num = (record->ValidFields >> 8) & 0x3F;
-	json_object_object_add(validationBits, "processorContextInfoNum",
+	json_object_object_add(record_ir, "processorContextInfoNum",
 			       json_object_new_int(processor_context_info_num));
-	json_object_object_add(record_ir, "validationBits", validationBits);
+
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = record->ValidFields };
 
 	//APIC ID.
-	json_object_object_add(record_ir, "localAPICID",
-			       json_object_new_uint64(record->ApicId));
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object_object_add(record_ir, "localAPICID",
+				       json_object_new_uint64(record->ApicId));
+	}
 
 	//CPUID information.
-	json_object *cpuid_info_ir = json_object_new_object();
-	EFI_IA32_X64_CPU_ID *cpuid_info =
-		(EFI_IA32_X64_CPU_ID *)record->CpuIdInfo;
-	json_object_object_add(cpuid_info_ir, "eax",
-			       json_object_new_uint64(cpuid_info->Eax));
-	json_object_object_add(cpuid_info_ir, "ebx",
-			       json_object_new_uint64(cpuid_info->Ebx));
-	json_object_object_add(cpuid_info_ir, "ecx",
-			       json_object_new_uint64(cpuid_info->Ecx));
-	json_object_object_add(cpuid_info_ir, "edx",
-			       json_object_new_uint64(cpuid_info->Edx));
-	json_object_object_add(record_ir, "cpuidInfo", cpuid_info_ir);
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *cpuid_info_ir = json_object_new_object();
+		EFI_IA32_X64_CPU_ID *cpuid_info =
+			(EFI_IA32_X64_CPU_ID *)record->CpuIdInfo;
+		json_object_object_add(cpuid_info_ir, "eax",
+				       json_object_new_uint64(cpuid_info->Eax));
+		json_object_object_add(cpuid_info_ir, "ebx",
+				       json_object_new_uint64(cpuid_info->Ebx));
+		json_object_object_add(cpuid_info_ir, "ecx",
+				       json_object_new_uint64(cpuid_info->Ecx));
+		json_object_object_add(cpuid_info_ir, "edx",
+				       json_object_new_uint64(cpuid_info->Edx));
+		json_object_object_add(record_ir, "cpuidInfo", cpuid_info_ir);
+	}
 
 	//Processor error information, of the amount described above.
 	EFI_IA32_X64_PROCESS_ERROR_INFO *current_error_info =
@@ -148,44 +150,65 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 	json_object_object_add(error_info_ir, "type", type);
 
 	//Validation bits.
-	json_object *validation =
-		bitfield_to_ir(error_info->ValidFields, 5,
-			       IA32X64_PROCESSOR_ERROR_VALID_BITFIELD_NAMES);
-	json_object_object_add(error_info_ir, "validationBits", validation);
+	//remove
+	// json_object *validation =
+	// 	bitfield_to_ir(error_info->ValidFields, 5,
+	// 		       IA32X64_PROCESSOR_ERROR_VALID_BITFIELD_NAMES);
+	// json_object_object_add(error_info_ir, "validationBits", validation);
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = error_info->ValidFields };
 
 	//Add the check information on a per-structure basis.
 	//Cache and TLB check information are identical, so can be equated.
-	json_object *check_information = NULL;
-	if (guid_equal(&error_info->ErrorType,
-		       &gEfiIa32x64ErrorTypeCacheCheckGuid) ||
-	    guid_equal(&error_info->ErrorType,
-		       &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
-		check_information = cper_ia32x64_cache_tlb_check_to_ir(
-			(EFI_IA32_X64_CACHE_CHECK_INFO *)&error_info->CheckInfo);
-	} else if (guid_equal(&error_info->ErrorType,
-			      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
-		check_information = cper_ia32x64_bus_check_to_ir(
-			(EFI_IA32_X64_BUS_CHECK_INFO *)&error_info->CheckInfo);
-	} else if (guid_equal(&error_info->ErrorType,
-			      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
-		check_information = cper_ia32x64_ms_check_to_ir(
-			(EFI_IA32_X64_MS_CHECK_INFO *)&error_info->CheckInfo);
-	} else {
-		//Unknown check information.
-		printf("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *check_information = NULL;
+		if (guid_equal(&error_info->ErrorType,
+			       &gEfiIa32x64ErrorTypeCacheCheckGuid) ||
+		    guid_equal(&error_info->ErrorType,
+			       &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
+			check_information = cper_ia32x64_cache_tlb_check_to_ir(
+				(EFI_IA32_X64_CACHE_CHECK_INFO *)&error_info
+					->CheckInfo);
+		} else if (guid_equal(&error_info->ErrorType,
+				      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
+			check_information = cper_ia32x64_bus_check_to_ir(
+				(EFI_IA32_X64_BUS_CHECK_INFO *)&error_info
+					->CheckInfo);
+		} else if (guid_equal(&error_info->ErrorType,
+				      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
+			check_information = cper_ia32x64_ms_check_to_ir(
+				(EFI_IA32_X64_MS_CHECK_INFO *)&error_info
+					->CheckInfo);
+
+		} else {
+			//Unknown check information.
+			printf("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
+		}
+		json_object_object_add(error_info_ir, "checkInfo",
+				       check_information);
 	}
-	json_object_object_add(error_info_ir, "checkInfo", check_information);
 
 	//Target, requestor, and responder identifiers.
-	json_object_object_add(error_info_ir, "targetAddressID",
-			       json_object_new_uint64(error_info->TargetId));
-	json_object_object_add(error_info_ir, "requestorID",
-			       json_object_new_uint64(error_info->RequestorId));
-	json_object_object_add(error_info_ir, "responderID",
-			       json_object_new_uint64(error_info->ResponderId));
-	json_object_object_add(
-		error_info_ir, "instructionPointer",
-		json_object_new_uint64(error_info->InstructionIP));
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object_object_add(
+			error_info_ir, "targetAddressID",
+			json_object_new_uint64(error_info->TargetId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			error_info_ir, "requestorID",
+			json_object_new_uint64(error_info->RequestorId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			error_info_ir, "responderID",
+			json_object_new_uint64(error_info->ResponderId));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			error_info_ir, "instructionPointer",
+			json_object_new_uint64(error_info->InstructionIP));
+	}
 
 	return error_info_ir;
 }
@@ -197,49 +220,73 @@ json_object *cper_ia32x64_cache_tlb_check_to_ir(
 	json_object *cache_tlb_check_ir = json_object_new_object();
 
 	//Validation bits.
-	json_object *validation =
-		bitfield_to_ir(cache_tlb_check->ValidFields, 8,
-			       IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
-	json_object_object_add(cache_tlb_check_ir, "validationBits",
-			       validation);
+	//Remove
+	// json_object *validation =
+	// 	bitfield_to_ir(cache_tlb_check->ValidFields, 8,
+	// 		       IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
+	// json_object_object_add(cache_tlb_check_ir, "validationBits",
+	// 		       validation);
+	ValidationTypes ui64Type = {
+		UINT_64T, .value.ui64 = cache_tlb_check->ValidFields
+	};
 
 	//Transaction type.
-	json_object *transaction_type = integer_to_readable_pair(
-		cache_tlb_check->TransactionType, 3,
-		IA32X64_CHECK_INFO_TRANSACTION_TYPES_KEYS,
-		IA32X64_CHECK_INFO_TRANSACTION_TYPES_VALUES,
-		"Unknown (Reserved)");
-	json_object_object_add(cache_tlb_check_ir, "transactionType",
-			       transaction_type);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *transaction_type = integer_to_readable_pair(
+			cache_tlb_check->TransactionType, 3,
+			IA32X64_CHECK_INFO_TRANSACTION_TYPES_KEYS,
+			IA32X64_CHECK_INFO_TRANSACTION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		json_object_object_add(cache_tlb_check_ir, "transactionType",
+				       transaction_type);
+	}
 
 	//Operation.
-	json_object *operation = integer_to_readable_pair(
-		cache_tlb_check->Operation, 9,
-		IA32X64_CHECK_INFO_OPERATION_TYPES_KEYS,
-		IA32X64_CHECK_INFO_OPERATION_TYPES_VALUES,
-		"Unknown (Reserved)");
-	json_object_object_add(cache_tlb_check_ir, "operation", operation);
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *operation = integer_to_readable_pair(
+			cache_tlb_check->Operation, 9,
+			IA32X64_CHECK_INFO_OPERATION_TYPES_KEYS,
+			IA32X64_CHECK_INFO_OPERATION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		json_object_object_add(cache_tlb_check_ir, "operation",
+				       operation);
+	}
 
 	//Affected cache/TLB level.
-	json_object_object_add(cache_tlb_check_ir, "level",
-			       json_object_new_uint64(cache_tlb_check->Level));
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			cache_tlb_check_ir, "level",
+			json_object_new_uint64(cache_tlb_check->Level));
+	}
 
 	//Miscellaneous boolean fields.
-	json_object_object_add(
-		cache_tlb_check_ir, "processorContextCorrupt",
-		json_object_new_boolean(cache_tlb_check->ContextCorrupt));
-	json_object_object_add(
-		cache_tlb_check_ir, "uncorrected",
-		json_object_new_boolean(cache_tlb_check->ErrorUncorrected));
-	json_object_object_add(
-		cache_tlb_check_ir, "preciseIP",
-		json_object_new_boolean(cache_tlb_check->PreciseIp));
-	json_object_object_add(
-		cache_tlb_check_ir, "restartableIP",
-		json_object_new_boolean(cache_tlb_check->RestartableIp));
-	json_object_object_add(
-		cache_tlb_check_ir, "overflow",
-		json_object_new_boolean(cache_tlb_check->Overflow));
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			cache_tlb_check_ir, "processorContextCorrupt",
+			json_object_new_boolean(
+				cache_tlb_check->ContextCorrupt));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			cache_tlb_check_ir, "uncorrected",
+			json_object_new_boolean(
+				cache_tlb_check->ErrorUncorrected));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			cache_tlb_check_ir, "preciseIP",
+			json_object_new_boolean(cache_tlb_check->PreciseIp));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
+		json_object_object_add(cache_tlb_check_ir, "restartableIP",
+				       json_object_new_boolean(
+					       cache_tlb_check->RestartableIp));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 7)) {
+		json_object_object_add(
+			cache_tlb_check_ir, "overflow",
+			json_object_new_boolean(cache_tlb_check->Overflow));
+	}
 
 	return cache_tlb_check_ir;
 }
@@ -251,63 +298,95 @@ cper_ia32x64_bus_check_to_ir(EFI_IA32_X64_BUS_CHECK_INFO *bus_check)
 	json_object *bus_check_ir = json_object_new_object();
 
 	//Validation bits.
-	json_object *validation =
-		bitfield_to_ir(bus_check->ValidFields, 11,
-			       IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
-	json_object_object_add(bus_check_ir, "validationBits", validation);
+	//Remove
+	// json_object *validation =
+	// 	bitfield_to_ir(bus_check->ValidFields, 11,
+	// 		       IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
+	// json_object_object_add(bus_check_ir, "validationBits", validation);
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = bus_check->ValidFields };
 
 	//Transaction type.
-	json_object *transaction_type = integer_to_readable_pair(
-		bus_check->TransactionType, 3,
-		IA32X64_CHECK_INFO_TRANSACTION_TYPES_KEYS,
-		IA32X64_CHECK_INFO_TRANSACTION_TYPES_VALUES,
-		"Unknown (Reserved)");
-	json_object_object_add(bus_check_ir, "transactionType",
-			       transaction_type);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *transaction_type = integer_to_readable_pair(
+			bus_check->TransactionType, 3,
+			IA32X64_CHECK_INFO_TRANSACTION_TYPES_KEYS,
+			IA32X64_CHECK_INFO_TRANSACTION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		json_object_object_add(bus_check_ir, "transactionType",
+				       transaction_type);
+	}
 
 	//Operation.
-	json_object *operation = integer_to_readable_pair(
-		bus_check->Operation, 9,
-		IA32X64_CHECK_INFO_OPERATION_TYPES_KEYS,
-		IA32X64_CHECK_INFO_OPERATION_TYPES_VALUES,
-		"Unknown (Reserved)");
-	json_object_object_add(bus_check_ir, "operation", operation);
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object *operation = integer_to_readable_pair(
+			bus_check->Operation, 9,
+			IA32X64_CHECK_INFO_OPERATION_TYPES_KEYS,
+			IA32X64_CHECK_INFO_OPERATION_TYPES_VALUES,
+			"Unknown (Reserved)");
+		json_object_object_add(bus_check_ir, "operation", operation);
+	}
 
 	//Affected bus level.
-	json_object_object_add(bus_check_ir, "level",
-			       json_object_new_uint64(bus_check->Level));
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			bus_check_ir, "level",
+			json_object_new_uint64(bus_check->Level));
+	}
 
 	//Miscellaneous boolean fields.
-	json_object_object_add(
-		bus_check_ir, "processorContextCorrupt",
-		json_object_new_boolean(bus_check->ContextCorrupt));
-	json_object_object_add(
-		bus_check_ir, "uncorrected",
-		json_object_new_boolean(bus_check->ErrorUncorrected));
-	json_object_object_add(bus_check_ir, "preciseIP",
-			       json_object_new_boolean(bus_check->PreciseIp));
-	json_object_object_add(
-		bus_check_ir, "restartableIP",
-		json_object_new_boolean(bus_check->RestartableIp));
-	json_object_object_add(bus_check_ir, "overflow",
-			       json_object_new_boolean(bus_check->Overflow));
-	json_object_object_add(bus_check_ir, "timedOut",
-			       json_object_new_boolean(bus_check->TimeOut));
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			bus_check_ir, "processorContextCorrupt",
+			json_object_new_boolean(bus_check->ContextCorrupt));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			bus_check_ir, "uncorrected",
+			json_object_new_boolean(bus_check->ErrorUncorrected));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			bus_check_ir, "preciseIP",
+			json_object_new_boolean(bus_check->PreciseIp));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 6)) {
+		json_object_object_add(
+			bus_check_ir, "restartableIP",
+			json_object_new_boolean(bus_check->RestartableIp));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 7)) {
+		json_object_object_add(
+			bus_check_ir, "overflow",
+			json_object_new_boolean(bus_check->Overflow));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 9)) {
+		json_object_object_add(
+			bus_check_ir, "timedOut",
+			json_object_new_boolean(bus_check->TimeOut));
+	}
 
 	//Participation type.
-	json_object *participation_type = integer_to_readable_pair(
-		bus_check->ParticipationType, 4,
-		IA32X64_BUS_CHECK_INFO_PARTICIPATION_TYPES_KEYS,
-		IA32X64_BUS_CHECK_INFO_PARTICIPATION_TYPES_VALUES, "Unknown");
-	json_object_object_add(bus_check_ir, "participationType",
-			       participation_type);
+	if (isvalid_prop_to_ir(&ui64Type, 8)) {
+		json_object *participation_type = integer_to_readable_pair(
+			bus_check->ParticipationType, 4,
+			IA32X64_BUS_CHECK_INFO_PARTICIPATION_TYPES_KEYS,
+			IA32X64_BUS_CHECK_INFO_PARTICIPATION_TYPES_VALUES,
+			"Unknown");
+		json_object_object_add(bus_check_ir, "participationType",
+				       participation_type);
+	}
 
 	//Address space.
-	json_object *address_space = integer_to_readable_pair(
-		bus_check->AddressSpace, 4,
-		IA32X64_BUS_CHECK_INFO_ADDRESS_SPACE_TYPES_KEYS,
-		IA32X64_BUS_CHECK_INFO_ADDRESS_SPACE_TYPES_VALUES, "Unknown");
-	json_object_object_add(bus_check_ir, "addressSpace", address_space);
+	if (isvalid_prop_to_ir(&ui64Type, 10)) {
+		json_object *address_space = integer_to_readable_pair(
+			bus_check->AddressSpace, 4,
+			IA32X64_BUS_CHECK_INFO_ADDRESS_SPACE_TYPES_KEYS,
+			IA32X64_BUS_CHECK_INFO_ADDRESS_SPACE_TYPES_VALUES,
+			"Unknown");
+		json_object_object_add(bus_check_ir, "addressSpace",
+				       address_space);
+	}
 
 	return bus_check_ir;
 }
@@ -316,34 +395,50 @@ cper_ia32x64_bus_check_to_ir(EFI_IA32_X64_BUS_CHECK_INFO *bus_check)
 json_object *cper_ia32x64_ms_check_to_ir(EFI_IA32_X64_MS_CHECK_INFO *ms_check)
 {
 	json_object *ms_check_ir = json_object_new_object();
-
+	ValidationTypes ui64Type = { UINT_64T,
+				     .value.ui64 = ms_check->ValidFields };
 	//Validation bits.
-	json_object *validation = bitfield_to_ir(
-		ms_check->ValidFields, 6,
-		IA32X64_CHECK_INFO_MS_CHECK_VALID_BITFIELD_NAMES);
-	json_object_object_add(ms_check_ir, "validationBits", validation);
+	// json_object *validation = bitfield_to_ir(
+	// 	ms_check->ValidFields, 6,
+	// 	IA32X64_CHECK_INFO_MS_CHECK_VALID_BITFIELD_NAMES);
+	// json_object_object_add(ms_check_ir, "validationBits", validation);
 
 	//Error type (operation that caused the error).
-	json_object *error_type = integer_to_readable_pair(
-		ms_check->ErrorType, 4, IA32X64_MS_CHECK_INFO_ERROR_TYPES_KEYS,
-		IA32X64_MS_CHECK_INFO_ERROR_TYPES_VALUES,
-		"Unknown (Processor Specific)");
-	json_object_object_add(ms_check_ir, "errorType", error_type);
+	if (isvalid_prop_to_ir(&ui64Type, 0)) {
+		json_object *error_type = integer_to_readable_pair(
+			ms_check->ErrorType, 4,
+			IA32X64_MS_CHECK_INFO_ERROR_TYPES_KEYS,
+			IA32X64_MS_CHECK_INFO_ERROR_TYPES_VALUES,
+			"Unknown (Processor Specific)");
+		json_object_object_add(ms_check_ir, "errorType", error_type);
+	}
 
 	//Miscellaneous fields.
-	json_object_object_add(
-		ms_check_ir, "processorContextCorrupt",
-		json_object_new_boolean(ms_check->ContextCorrupt));
-	json_object_object_add(
-		ms_check_ir, "uncorrected",
-		json_object_new_boolean(ms_check->ErrorUncorrected));
-	json_object_object_add(ms_check_ir, "preciseIP",
-			       json_object_new_boolean(ms_check->PreciseIp));
-	json_object_object_add(
-		ms_check_ir, "restartableIP",
-		json_object_new_boolean(ms_check->RestartableIp));
-	json_object_object_add(ms_check_ir, "overflow",
-			       json_object_new_boolean(ms_check->Overflow));
+	if (isvalid_prop_to_ir(&ui64Type, 1)) {
+		json_object_object_add(
+			ms_check_ir, "processorContextCorrupt",
+			json_object_new_boolean(ms_check->ContextCorrupt));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 2)) {
+		json_object_object_add(
+			ms_check_ir, "uncorrected",
+			json_object_new_boolean(ms_check->ErrorUncorrected));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 3)) {
+		json_object_object_add(
+			ms_check_ir, "preciseIP",
+			json_object_new_boolean(ms_check->PreciseIp));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 4)) {
+		json_object_object_add(
+			ms_check_ir, "restartableIP",
+			json_object_new_boolean(ms_check->RestartableIp));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 5)) {
+		json_object_object_add(
+			ms_check_ir, "overflow",
+			json_object_new_boolean(ms_check->Overflow));
+	}
 
 	return ms_check_ir;
 }
@@ -568,43 +663,42 @@ void ir_section_ia32x64_to_cper(json_object *section, FILE *out)
 		(EFI_IA32_X64_PROCESSOR_ERROR_RECORD *)calloc(
 			1, sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD));
 
-	//Validation bits.
-	json_object *validation =
-		json_object_object_get(section, "validationBits");
-	section_cper->ValidFields = 0x0;
-	section_cper->ValidFields |= json_object_get_boolean(
-		json_object_object_get(validation, "localAPICIDValid"));
-	section_cper->ValidFields |=
-		json_object_get_boolean(
-			json_object_object_get(validation, "cpuIDInfoValid"))
-		<< 1;
-	int proc_error_info_num =
-		json_object_get_int(json_object_object_get(
-			validation, "processorErrorInfoNum")) &
-		0x3F;
-	int proc_ctx_info_num =
-		json_object_get_int(json_object_object_get(
-			validation, "processorContextInfoNum")) &
-		0x3F;
-	section_cper->ValidFields |= proc_error_info_num << 2;
-	section_cper->ValidFields |= proc_ctx_info_num << 8;
+	uint64_t valid = 0x0;
+
+	int proc_error_info_num = json_object_get_int(json_object_object_get(
+					  section, "processorErrorInfoNum")) &
+				  0x3F;
+	int proc_ctx_info_num = json_object_get_int(json_object_object_get(
+					section, "processorContextInfoNum")) &
+				0x3F;
+	valid |= proc_error_info_num << 2;
+	valid |= proc_ctx_info_num << 8;
+
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = valid };
+	struct json_object *obj = NULL;
 
 	//Local APIC ID.
-	section_cper->ApicId = json_object_get_uint64(
-		json_object_object_get(section, "localAPICID"));
+	if (json_object_object_get_ex(section, "localAPICID", &obj)) {
+		section_cper->ApicId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
 
 	//CPUID info.
-	json_object *cpuid_info = json_object_object_get(section, "cpuidInfo");
-	EFI_IA32_X64_CPU_ID *cpuid_info_cper =
-		(EFI_IA32_X64_CPU_ID *)section_cper->CpuIdInfo;
-	cpuid_info_cper->Eax = json_object_get_uint64(
-		json_object_object_get(cpuid_info, "eax"));
-	cpuid_info_cper->Ebx = json_object_get_uint64(
-		json_object_object_get(cpuid_info, "ebx"));
-	cpuid_info_cper->Ecx = json_object_get_uint64(
-		json_object_object_get(cpuid_info, "ecx"));
-	cpuid_info_cper->Edx = json_object_get_uint64(
-		json_object_object_get(cpuid_info, "edx"));
+	if (json_object_object_get_ex(section, "cpuidInfo", &obj)) {
+		json_object *cpuid_info = obj;
+		EFI_IA32_X64_CPU_ID *cpuid_info_cper =
+			(EFI_IA32_X64_CPU_ID *)section_cper->CpuIdInfo;
+		cpuid_info_cper->Eax = json_object_get_uint64(
+			json_object_object_get(cpuid_info, "eax"));
+		cpuid_info_cper->Ebx = json_object_get_uint64(
+			json_object_object_get(cpuid_info, "ebx"));
+		cpuid_info_cper->Ecx = json_object_get_uint64(
+			json_object_object_get(cpuid_info, "ecx"));
+		cpuid_info_cper->Edx = json_object_get_uint64(
+			json_object_object_get(cpuid_info, "edx"));
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	section_cper->ValidFields = ui64Type.value.ui64;
 
 	//Flush the header to file before dealing w/ info sections.
 	fwrite(section_cper, sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD), 1,
@@ -642,45 +736,59 @@ void ir_ia32x64_error_info_to_cper(json_object *error_info, FILE *out)
 		json_object_get_string(json_object_object_get(type, "guid")));
 
 	//Validation bits.
-	error_info_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(error_info, "validationBits"), 5,
-		IA32X64_PROCESSOR_ERROR_VALID_BITFIELD_NAMES);
+	// Remove
+	// error_info_cper->ValidFields = ir_to_bitfield(
+	// 	json_object_object_get(error_info, "validationBits"), 5,
+	// 	IA32X64_PROCESSOR_ERROR_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Check information, parsed based on the error type.
-	json_object *check_info =
-		json_object_object_get(error_info, "checkInfo");
-	if (guid_equal(&error_info_cper->ErrorType,
-		       &gEfiIa32x64ErrorTypeCacheCheckGuid) ||
-	    guid_equal(&error_info_cper->ErrorType,
-		       &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
-		ir_ia32x64_cache_tlb_check_error_to_cper(
-			check_info,
-			(EFI_IA32_X64_CACHE_CHECK_INFO *)&error_info_cper
-				->CheckInfo);
-	} else if (guid_equal(&error_info_cper->ErrorType,
-			      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
-		ir_ia32x64_bus_check_error_to_cper(
-			check_info,
-			(EFI_IA32_X64_BUS_CHECK_INFO *)&error_info_cper
-				->CheckInfo);
-	} else if (guid_equal(&error_info_cper->ErrorType,
-			      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
-		ir_ia32x64_ms_check_error_to_cper(
-			check_info,
-			(EFI_IA32_X64_MS_CHECK_INFO *)&error_info_cper
-				->CheckInfo);
+	if (json_object_object_get_ex(error_info, "checkInfo", &obj)) {
+		json_object *check_info = obj;
+		if (guid_equal(&error_info_cper->ErrorType,
+			       &gEfiIa32x64ErrorTypeCacheCheckGuid) ||
+		    guid_equal(&error_info_cper->ErrorType,
+			       &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
+			ir_ia32x64_cache_tlb_check_error_to_cper(
+				check_info,
+				(EFI_IA32_X64_CACHE_CHECK_INFO
+					 *)&error_info_cper->CheckInfo);
+		} else if (guid_equal(&error_info_cper->ErrorType,
+				      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
+			ir_ia32x64_bus_check_error_to_cper(
+				check_info,
+				(EFI_IA32_X64_BUS_CHECK_INFO *)&error_info_cper
+					->CheckInfo);
+		} else if (guid_equal(&error_info_cper->ErrorType,
+				      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
+			ir_ia32x64_ms_check_error_to_cper(
+				check_info,
+				(EFI_IA32_X64_MS_CHECK_INFO *)&error_info_cper
+					->CheckInfo);
+		}
+		add_to_valid_bitfield(&ui64Type, 0);
 	}
 
 	//Miscellaneous numeric fields.
-	error_info_cper->TargetId = json_object_get_uint64(
-		json_object_object_get(error_info, "targetAddressID"));
-	error_info_cper->RequestorId = json_object_get_uint64(
-		json_object_object_get(error_info, "requestorID"));
-	error_info_cper->ResponderId = json_object_get_uint64(
-		json_object_object_get(error_info, "responderID"));
-	error_info_cper->InstructionIP = json_object_get_uint64(
-		json_object_object_get(error_info, "instructionPointer"));
+	if (json_object_object_get_ex(error_info, "targetAddressID", &obj)) {
+		error_info_cper->TargetId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(error_info, "requestorID", &obj)) {
+		error_info_cper->RequestorId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(error_info, "responderID", &obj)) {
+		error_info_cper->ResponderId = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(error_info, "instructionPointer", &obj)) {
+		error_info_cper->InstructionIP = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
 
+	error_info_cper->ValidFields = ui64Type.value.ui64;
 	//Write out to stream, then free resources.
 	fwrite(error_info_cper, sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO), 1,
 	       out);
@@ -693,29 +801,52 @@ void ir_ia32x64_cache_tlb_check_error_to_cper(
 	json_object *check_info, EFI_IA32_X64_CACHE_CHECK_INFO *check_info_cper)
 {
 	//Validation bits.
-	check_info_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(check_info, "validationBits"), 8,
-		IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
+	//Remove
+	// check_info_cper->ValidFields = ir_to_bitfield(
+	// 	json_object_object_get(check_info, "validationBits"), 8,
+	// 	IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Transaction type, operation.
-	check_info_cper->TransactionType = readable_pair_to_integer(
-		json_object_object_get(check_info, "transactionType"));
-	check_info_cper->Operation = readable_pair_to_integer(
-		json_object_object_get(check_info, "operation"));
+	if (json_object_object_get_ex(check_info, "transactionType", &obj)) {
+		check_info_cper->TransactionType =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
+	if (json_object_object_get_ex(check_info, "operation", &obj)) {
+		check_info_cper->Operation = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
 
 	//Miscellaneous raw value fields.
-	check_info_cper->Level = json_object_get_uint64(
-		json_object_object_get(check_info, "level"));
-	check_info_cper->ContextCorrupt = json_object_get_boolean(
-		json_object_object_get(check_info, "processorContextCorrupt"));
-	check_info_cper->ErrorUncorrected = json_object_get_boolean(
-		json_object_object_get(check_info, "uncorrected"));
-	check_info_cper->PreciseIp = json_object_get_boolean(
-		json_object_object_get(check_info, "preciseIP"));
-	check_info_cper->RestartableIp = json_object_get_boolean(
-		json_object_object_get(check_info, "restartableIP"));
-	check_info_cper->Overflow = json_object_get_boolean(
-		json_object_object_get(check_info, "overflow"));
+	if (json_object_object_get_ex(check_info, "level", &obj)) {
+		check_info_cper->Level = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(check_info, "processorContextCorrupt",
+				      &obj)) {
+		check_info_cper->ContextCorrupt = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(check_info, "uncorrected", &obj)) {
+		check_info_cper->ErrorUncorrected =
+			json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(check_info, "preciseIP", &obj)) {
+		check_info_cper->PreciseIp = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(check_info, "restartableIP", &obj)) {
+		check_info_cper->RestartableIp = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 6);
+	}
+	if (json_object_object_get_ex(check_info, "overflow", &obj)) {
+		check_info_cper->Overflow = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 7);
+	}
+	check_info_cper->ValidFields = ui64Type.value.ui64;
 }
 
 //Converts a single CPER-JSON IA32/x64 bus error info structure to CPER binary.
@@ -723,35 +854,66 @@ void ir_ia32x64_bus_check_error_to_cper(
 	json_object *check_info, EFI_IA32_X64_BUS_CHECK_INFO *check_info_cper)
 {
 	//Validation bits.
-	check_info_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(check_info, "validationBits"), 11,
-		IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
+	//Remove
+	// check_info_cper->ValidFields = ir_to_bitfield(
+	// 	json_object_object_get(check_info, "validationBits"), 11,
+	// 	IA32X64_CHECK_INFO_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Readable pair fields.
-	check_info_cper->TransactionType = readable_pair_to_integer(
-		json_object_object_get(check_info, "transactionType"));
-	check_info_cper->Operation = readable_pair_to_integer(
-		json_object_object_get(check_info, "operation"));
-	check_info_cper->ParticipationType = readable_pair_to_integer(
-		json_object_object_get(check_info, "participationType"));
-	check_info_cper->AddressSpace = readable_pair_to_integer(
-		json_object_object_get(check_info, "addressSpace"));
+	if (json_object_object_get_ex(check_info, "transactionType", &obj)) {
+		check_info_cper->TransactionType =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
+	if (json_object_object_get_ex(check_info, "operation", &obj)) {
+		check_info_cper->Operation = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(check_info, "participationType", &obj)) {
+		check_info_cper->ParticipationType =
+			readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 8);
+	}
+
+	if (json_object_object_get_ex(check_info, "addressSpace", &obj)) {
+		check_info_cper->AddressSpace = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 10);
+	}
 
 	//Miscellaneous raw value fields.
-	check_info_cper->Level = json_object_get_uint64(
-		json_object_object_get(check_info, "level"));
-	check_info_cper->ContextCorrupt = json_object_get_boolean(
-		json_object_object_get(check_info, "processorContextCorrupt"));
-	check_info_cper->ErrorUncorrected = json_object_get_boolean(
-		json_object_object_get(check_info, "uncorrected"));
-	check_info_cper->PreciseIp = json_object_get_boolean(
-		json_object_object_get(check_info, "preciseIP"));
-	check_info_cper->RestartableIp = json_object_get_boolean(
-		json_object_object_get(check_info, "restartableIP"));
-	check_info_cper->Overflow = json_object_get_boolean(
-		json_object_object_get(check_info, "overflow"));
-	check_info_cper->TimeOut = json_object_get_boolean(
-		json_object_object_get(check_info, "timedOut"));
+	if (json_object_object_get_ex(check_info, "level", &obj)) {
+		check_info_cper->Level = json_object_get_uint64(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(check_info, "processorContextCorrupt",
+				      &obj)) {
+		check_info_cper->ContextCorrupt = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(check_info, "uncorrected", &obj)) {
+		check_info_cper->ErrorUncorrected =
+			json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(check_info, "preciseIP", &obj)) {
+		check_info_cper->PreciseIp = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	if (json_object_object_get_ex(check_info, "restartableIP", &obj)) {
+		check_info_cper->RestartableIp = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 6);
+	}
+	if (json_object_object_get_ex(check_info, "overflow", &obj)) {
+		check_info_cper->Overflow = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 7);
+	}
+	if (json_object_object_get_ex(check_info, "timedOut", &obj)) {
+		check_info_cper->TimeOut = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 9);
+	}
+	check_info_cper->ValidFields = ui64Type.value.ui64;
 }
 
 //Converts a single CPER-JSON IA32/x64 MS error info structure to CPER binary.
@@ -759,25 +921,43 @@ void ir_ia32x64_ms_check_error_to_cper(
 	json_object *check_info, EFI_IA32_X64_MS_CHECK_INFO *check_info_cper)
 {
 	//Validation bits.
-	check_info_cper->ValidFields = ir_to_bitfield(
-		json_object_object_get(check_info, "validationBits"), 6,
-		IA32X64_CHECK_INFO_MS_CHECK_VALID_BITFIELD_NAMES);
+	//Remove
+	// check_info_cper->ValidFields = ir_to_bitfield(
+	// 	json_object_object_get(check_info, "validationBits"), 6,
+	// 	IA32X64_CHECK_INFO_MS_CHECK_VALID_BITFIELD_NAMES);
+	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
+	struct json_object *obj = NULL;
 
 	//Type of MS check error.
-	check_info_cper->ErrorType = readable_pair_to_integer(
-		json_object_object_get(check_info, "errorType"));
+	if (json_object_object_get_ex(check_info, "errorType", &obj)) {
+		check_info_cper->ErrorType = readable_pair_to_integer(obj);
+		add_to_valid_bitfield(&ui64Type, 0);
+	}
 
 	//Miscellaneous raw value fields.
-	check_info_cper->ContextCorrupt = json_object_get_boolean(
-		json_object_object_get(check_info, "processorContextCorrupt"));
-	check_info_cper->ErrorUncorrected = json_object_get_boolean(
-		json_object_object_get(check_info, "uncorrected"));
-	check_info_cper->PreciseIp = json_object_get_boolean(
-		json_object_object_get(check_info, "preciseIP"));
-	check_info_cper->RestartableIp = json_object_get_boolean(
-		json_object_object_get(check_info, "restartableIP"));
-	check_info_cper->Overflow = json_object_get_boolean(
-		json_object_object_get(check_info, "overflow"));
+	if (json_object_object_get_ex(check_info, "processorContextCorrupt",
+				      &obj)) {
+		check_info_cper->ContextCorrupt = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 1);
+	}
+	if (json_object_object_get_ex(check_info, "uncorrected", &obj)) {
+		check_info_cper->ErrorUncorrected =
+			json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 2);
+	}
+	if (json_object_object_get_ex(check_info, "preciseIP", &obj)) {
+		check_info_cper->PreciseIp = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 3);
+	}
+	if (json_object_object_get_ex(check_info, "restartableIP", &obj)) {
+		check_info_cper->RestartableIp = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 4);
+	}
+	if (json_object_object_get_ex(check_info, "overflow", &obj)) {
+		check_info_cper->Overflow = json_object_get_boolean(obj);
+		add_to_valid_bitfield(&ui64Type, 5);
+	}
+	check_info_cper->ValidFields = ui64Type.value.ui64;
 }
 
 //Converts a single CPER-JSON IA32/x64 context information structure into CPER binary, outputting to the

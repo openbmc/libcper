@@ -1,0 +1,82 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 664602596,
+        "recordLength": 392,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 0,
+            "name": "Recoverable"
+        },
+        "timestamp": "0526-02-13T23:00:32+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": false,
+                "errorThresholdExceeded": true,
+                "latentError": false,
+                "overflow": false,
+                "primary": false,
+                "propagated": true,
+                "reset": false,
+                "resourceNotAccessible": true
+            },
+            "fruID": "1513d8f7-3697-0666-30bc-4b89d0f869d2",
+            "fruText": "I-z$'4\u0005?\u0014k\\JwQ'D.=A",
+            "revision": {
+                "major": 250,
+                "minor": 111
+            },
+            "sectionLength": 192,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "9876ccad-47b4-4bdb-b65e-16f193c4f3db",
+                "type": "Processor Generic"
+            },
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "GenericProcessor": {
+                "cpuVersionInfo": 7734561938538041774,
+                "errorType": {
+                    "name": "Unknown (Reserved)",
+                    "value": 135
+                },
+                "flags": {
+                    "corrected": false,
+                    "overflow": true,
+                    "preciseIP": true,
+                    "restartable": false
+                },
+                "instructionIP": 5477017754825663287,
+                "processorID": 15736279619630431944,
+                "processorType": {
+                    "name": "Unknown (Reserved)",
+                    "value": 216
+                },
+                "requestorID": 15774649500972722180
+            }
+        }
+    ]
+}
