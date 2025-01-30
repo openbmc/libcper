@@ -7,7 +7,6 @@
         "revision",
         "sectionCount",
         "severity",
-        "validationBits",
         "recordLength",
         "creatorID",
         "notificationType",
@@ -51,26 +50,6 @@
                 }
             }
         },
-        "validationBits": {
-            "type": "object",
-            "description": "This field indicates the validity of other header feilds.",
-            "required": [
-                "platformIDValid",
-                "timestampValid",
-                "partitionIDValid"
-            ],
-            "properties": {
-                "platformIDValid": {
-                    "type": "boolean"
-                },
-                "timestampValid": {
-                    "type": "boolean"
-                },
-                "partitionIDValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "recordLength": {
             "type": "integer",
             "description": "Indicates the size of the actual error record, including the size of the record header, all section descriptors, and section bodies.",
@@ -103,7 +82,7 @@
             "properties": {
                 "guid": {
                     "type": "string",
-                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{16}$"
+                    "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
                 },
                 "type": {
                     "type": "string"

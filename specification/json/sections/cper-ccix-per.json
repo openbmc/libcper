@@ -1,36 +1,11 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "required": [
-        "length",
-        "validationBits",
-        "ccixSourceID",
-        "ccixPortID",
-        "ccixPERLog"
-    ],
+    "required": ["length", "ccixSourceID", "ccixPortID", "ccixPERLog"],
     "additionalProperties": false,
     "properties": {
         "length": {
             "type": "integer"
-        },
-        "validationBits": {
-            "type": "object",
-            "required": [
-                "ccixSourceIDValid",
-                "ccixPortIDValid",
-                "ccixPERLogValid"
-            ],
-            "properties": {
-                "ccixSourceIDValid": {
-                    "type": "boolean"
-                },
-                "ccixPortIDValid": {
-                    "type": "boolean"
-                },
-                "ccixPERLogValid": {
-                    "type": "boolean"
-                }
-            }
         },
         "ccixSourceID": {
             "type": "integer"
