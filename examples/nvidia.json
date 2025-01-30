@@ -1,0 +1,100 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 1422495136,
+        "recordLength": 328,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "timestamp": "4828-09-03T01:00:15+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": false,
+                "errorThresholdExceeded": true,
+                "latentError": true,
+                "overflow": false,
+                "primary": true,
+                "propagated": false,
+                "reset": false,
+                "resourceNotAccessible": true
+            },
+            "fruID": "bfdce13d-1257-1f7d-3fde-13789945ee73",
+            "fruText": "\u0015\b2)u\u0005>4oT8Vo\u0015' \u0004#4",
+            "revision": {
+                "major": 44,
+                "minor": 200
+            },
+            "sectionLength": 128,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "6d5244f2-2712-11ec-bea7-cb3fdb95c786",
+                "type": "NVIDIA"
+            },
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "Nvidia": {
+                "errorInstance": 21729,
+                "errorType": 36731,
+                "instanceBase": 8823605043237379382,
+                "registerCount": 6,
+                "registers": [
+                    {
+                        "address": 9398085988411720601,
+                        "value": 1952944444865990253
+                    },
+                    {
+                        "address": 12019458076784458703,
+                        "value": 12003124405090078479
+                    },
+                    {
+                        "address": 10437616755251703533,
+                        "value": 4028408744142317612
+                    },
+                    {
+                        "address": 1718800592230110915,
+                        "value": 12135726257609314743
+                    },
+                    {
+                        "address": 16493546021549234992,
+                        "value": 2278987830320468736
+                    },
+                    {
+                        "address": 6488891720834628590,
+                        "value": 3432175023993797693
+                    }
+                ],
+                "severity": {
+                    "code": 0,
+                    "name": "Recoverable"
+                },
+                "signature": "PCIe-DPC",
+                "socket": 117
+            }
+        }
+    ]
+}

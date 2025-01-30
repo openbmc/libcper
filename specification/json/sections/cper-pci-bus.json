@@ -2,7 +2,6 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": [
-        "validationBits",
         "errorStatus",
         "errorType",
         "busID",
@@ -17,50 +16,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Inidicates which fields are valid in the section.",
-            "required": [
-                "errorStatusValid",
-                "errorTypeValid",
-                "busIDValid",
-                "busAddressValid",
-                "busDataValid",
-                "commandValid",
-                "requestorIDValid",
-                "completerIDValid",
-                "targetIDValid"
-            ],
-            "properties": {
-                "errorStatusValid": {
-                    "type": "boolean"
-                },
-                "errorTypeValid": {
-                    "type": "boolean"
-                },
-                "busIDValid": {
-                    "type": "boolean"
-                },
-                "busAddressValid": {
-                    "type": "boolean"
-                },
-                "busDataValid": {
-                    "type": "boolean"
-                },
-                "commandValid": {
-                    "type": "boolean"
-                },
-                "requestorIDValid": {
-                    "type": "boolean"
-                },
-                "completerIDValid": {
-                    "type": "boolean"
-                },
-                "targetIDValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "errorStatus": {
             "type": "object",
             "description": "PCI Bus Error Status.",

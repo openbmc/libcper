@@ -2,45 +2,9 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "description": "ARM Processor Error Section",
-    "required": [
-        "validationBits",
-        "errorInfoNum",
-        "contextInfoNum",
-        "sectionLength",
-        "errorAffinity",
-        "mpidrEl1",
-        "affinity3",
-        "midrEl1",
-        "running",
-        "errorInfo",
-        "contextInfo"
-    ],
+    "required": ["errorInfoNum", "contextInfoNum", "sectionLength", "midrEl1"],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indiciates what fields in the section are valid",
-            "required": [
-                "mpidrValid",
-                "errorAffinityLevelValid",
-                "runningStateValid",
-                "vendorSpecificInfoValid"
-            ],
-            "properties": {
-                "mpidrValid": {
-                    "type": "boolean"
-                },
-                "errorAffinityLevelValid": {
-                    "type": "boolean"
-                },
-                "runningStateValid": {
-                    "type": "boolean"
-                },
-                "vendorSpecificInfoValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "errorInfoNum": {
             "type": "integer",
             "description": "The number of Processor Error Information Structures"
@@ -86,17 +50,7 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": [
-                    "version",
-                    "length",
-                    "validationBits",
-                    "errorType",
-                    "multipleError",
-                    "flags",
-                    "errorInformation",
-                    "virtualFaultAddress",
-                    "physicalFaultAddress"
-                ],
+                "required": ["version", "length", "errorType"],
                 "additionalProperties": false,
                 "properties": {
                     "version": {
@@ -104,33 +58,6 @@
                     },
                     "length": {
                         "type": "integer"
-                    },
-                    "validationBits": {
-                        "type": "object",
-                        "required": [
-                            "multipleErrorValid",
-                            "flagsValid",
-                            "errorInformationValid",
-                            "virtualFaultAddressValid",
-                            "physicalFaultAddressValid"
-                        ],
-                        "properties": {
-                            "multipleErrorValid": {
-                                "type": "boolean"
-                            },
-                            "flagsValid": {
-                                "type": "boolean"
-                            },
-                            "errorInformationValid": {
-                                "type": "boolean"
-                            },
-                            "virtualFaultAddressValid": {
-                                "type": "boolean"
-                            },
-                            "physicalFaultAddressValid": {
-                                "type": "boolean"
-                            }
-                        }
                     },
                     "errorType": {
                         "type": "object",
@@ -182,53 +109,9 @@
                                 "properties": {
                                     "cacheError": {
                                         "type": "object",
-                                        "required": [
-                                            "validationBits",
-                                            "transactionType",
-                                            "operation",
-                                            "level",
-                                            "processorContextCorrupt",
-                                            "corrected",
-                                            "precisePC",
-                                            "restartablePC"
-                                        ],
+                                        "required": [],
                                         "additionalProperties": false,
                                         "properties": {
-                                            "validationBits": {
-                                                "type": "object",
-                                                "required": [
-                                                    "transactionTypeValid",
-                                                    "operationValid",
-                                                    "levelValid",
-                                                    "processorContextCorruptValid",
-                                                    "correctedValid",
-                                                    "precisePCValid",
-                                                    "restartablePCValid"
-                                                ],
-                                                "properties": {
-                                                    "transactionTypeValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "operationValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "levelValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "processorContextCorruptValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "correctedValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "precisePCValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "restartablePCValid": {
-                                                        "type": "boolean"
-                                                    }
-                                                }
-                                            },
                                             "transactionType": {
                                                 "type": "object",
                                                 "$ref": "./common/cper-json-nvp.json"
@@ -263,15 +146,44 @@
                                 "properties": {
                                     "tlbError": {
                                         "type": "object",
+                                        "required": [],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "transactionType": {
+                                                "type": "object",
+                                                "$ref": "./common/cper-json-nvp.json"
+                                            },
+                                            "operation": {
+                                                "type": "object",
+                                                "$ref": "./common/cper-json-nvp.json"
+                                            },
+                                            "level": {
+                                                "type": "integer"
+                                            },
+                                            "processorContextCorrupt": {
+                                                "type": "boolean"
+                                            },
+                                            "corrected": {
+                                                "type": "boolean"
+                                            },
+                                            "precisePC": {
+                                                "type": "boolean"
+                                            },
+                                            "restartablePC": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "$id": "cper-json-buserror-section",
+                                "type": "object",
+                                "required": ["busError"],
+                                "properties": {
+                                    "busError": {
+                                        "type": "object",
                                         "required": [
-                                            "validationBits",
-                                            "transactionType",
-                                            "operation",
-                                            "level",
-                                            "processorContextCorrupt",
-                                            "corrected",
-                                            "precisePC",
-                                            "restartablePC",
                                             "timedOut",
                                             "participationType",
                                             "addressSpace",
@@ -280,61 +192,6 @@
                                         ],
                                         "additionalProperties": false,
                                         "properties": {
-                                            "validationBits": {
-                                                "type": "object",
-                                                "required": [
-                                                    "transactionTypeValid",
-                                                    "operationValid",
-                                                    "levelValid",
-                                                    "processorContextCorruptValid",
-                                                    "correctedValid",
-                                                    "precisePCValid",
-                                                    "restartablePCValid",
-                                                    "participationTypeValid",
-                                                    "timedOutValid",
-                                                    "addressSpaceValid",
-                                                    "memoryAttributesValid",
-                                                    "accessModeValid"
-                                                ],
-                                                "properties": {
-                                                    "transactionTypeValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "operationValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "levelValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "processorContextCorruptValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "correctedValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "precisePCValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "restartablePCValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "participationTypeValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "timedOutValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "addressSpaceValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "memoryAttributesValid": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "accessModeValid": {
-                                                        "type": "boolean"
-                                                    }
-                                                }
-                                            },
                                             "transactionType": {
                                                 "type": "object",
                                                 "$ref": "./common/cper-json-nvp.json"
