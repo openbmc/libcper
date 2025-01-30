@@ -2,7 +2,6 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "required": [
-        "validationBits",
         "errorStatus",
         "idInfo",
         "memoryNumber",
@@ -11,34 +10,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indicates which other fields are valid in the section.",
-            "required": [
-                "errorStatusValid",
-                "idInfoValid",
-                "memoryNumberValid",
-                "ioNumberValid",
-                "registerDataPairsValid"
-            ],
-            "properties": {
-                "errorStatusValid": {
-                    "type": "boolean"
-                },
-                "idInfoValid": {
-                    "type": "boolean"
-                },
-                "memoryNumberValid": {
-                    "type": "boolean"
-                },
-                "ioNumberValid": {
-                    "type": "boolean"
-                },
-                "registerDataPairsValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "errorStatus": {
             "type": "object",
             "description": "PCI Component Error Status.",

@@ -7,7 +7,6 @@
         "revision",
         "sectionCount",
         "severity",
-        "validationBits",
         "recordLength",
         "creatorID",
         "notificationType",
@@ -48,26 +47,6 @@
                 "code": {
                     "type": "integer",
                     "minimum": 0
-                }
-            }
-        },
-        "validationBits": {
-            "type": "object",
-            "description": "This field indicates the validity of other header feilds.",
-            "required": [
-                "platformIDValid",
-                "timestampValid",
-                "partitionIDValid"
-            ],
-            "properties": {
-                "platformIDValid": {
-                    "type": "boolean"
-                },
-                "timestampValid": {
-                    "type": "boolean"
-                },
-                "partitionIDValid": {
-                    "type": "boolean"
                 }
             }
         },

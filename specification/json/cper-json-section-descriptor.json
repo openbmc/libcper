@@ -7,7 +7,6 @@
         "sectionOffset",
         "sectionLength",
         "revision",
-        "validationBits",
         "flags",
         "sectionType",
         "severity"
@@ -34,19 +33,6 @@
                 "minor": {
                     "type": "integer",
                     "minimum": 0
-                }
-            }
-        },
-        "validationBits": {
-            "type": "object",
-            "description": "This field indicates the validity of other feilds in this descriptor.",
-            "required": ["fruIDValid", "fruStringValid"],
-            "properties": {
-                "fruIDValid": {
-                    "type": "boolean"
-                },
-                "fruStringValid": {
-                    "type": "boolean"
                 }
             }
         },
