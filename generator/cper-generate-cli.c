@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 	char *out_file = NULL;
 	char *single_section = NULL;
 	char **sections = NULL;
+	const GEN_VALID_BITS_TEST_TYPE randomValidbitsSet = RANDOM_VALID;
 	UINT16 num_sections = 0;
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "--out") == 0 && i < argc - 1) {
@@ -73,9 +74,11 @@ int main(int argc, char *argv[])
 
 	//Which type are we generating?
 	if (single_section != NULL && sections == NULL) {
-		generate_single_section_record(single_section, cper_file);
+		generate_single_section_record(single_section, cper_file,
+					       randomValidbitsSet);
 	} else if (sections != NULL && single_section == NULL) {
-		generate_cper_record(sections, num_sections, cper_file);
+		generate_cper_record(sections, num_sections, cper_file,
+				     randomValidbitsSet);
 	} else {
 		//Invalid arguments.
 		printf("Invalid argument. Either both '--sections' and '--single-section' were set, or neither. For command information, refer to 'cper-generate --help'.\n");
