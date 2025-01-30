@@ -1436,9 +1436,9 @@ typedef struct {
 	UINT64 ParticipationType : 2;
 	UINT64 TimeOut : 1;
 	UINT64 AddressSpace : 2;
-	UINT64 MemoryAddressAttributes : 8;
+	UINT64 MemoryAddressAttributes : 9;
 	UINT64 AccessMode : 1;
-	UINT64 Reserved : 19;
+	UINT64 Reserved : 20;
 } EFI_ARM_BUS_ERROR_STRUCTURE;
 
 typedef union {
@@ -1644,6 +1644,7 @@ typedef struct {
 	UINT64 MrsCrn : 4;
 	UINT64 MrsOp1 : 3;
 	UINT64 MrsO0 : 1;
+	UINT64 Rsvd : 1;
 	UINT64 Value : 64;
 } EFI_ARM_MISC_CONTEXT_REGISTER;
 #pragma pack(pop)

@@ -3,7 +3,6 @@
     "type": "object",
     "description": "Generic Processor Error Section",
     "required": [
-        "validationBits",
         "processorType",
         "processorISA",
         "errorType",
@@ -20,66 +19,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indiciates what fields in the section are valid",
-            "required": [
-                "processorTypeValid",
-                "processorISAValid",
-                "processorErrorTypeValid",
-                "operationValid",
-                "flagsValid",
-                "levelValid",
-                "cpuVersionValid",
-                "cpuBrandInfoValid",
-                "cpuIDValid",
-                "targetAddressValid",
-                "requestorIDValid",
-                "responderIDValid",
-                "instructionIPValid"
-            ],
-            "properties": {
-                "processorTypeValid": {
-                    "type": "boolean"
-                },
-                "processorISAValid": {
-                    "type": "boolean"
-                },
-                "processorErrorTypeValid": {
-                    "type": "boolean"
-                },
-                "operationValid": {
-                    "type": "boolean"
-                },
-                "flagsValid": {
-                    "type": "boolean"
-                },
-                "levelValid": {
-                    "type": "boolean"
-                },
-                "cpuVersionValid": {
-                    "type": "boolean"
-                },
-                "cpuBrandInfoValid": {
-                    "type": "boolean"
-                },
-                "cpuIDValid": {
-                    "type": "boolean"
-                },
-                "targetAddressValid": {
-                    "type": "boolean"
-                },
-                "requestorIDValid": {
-                    "type": "boolean"
-                },
-                "responderIDValid": {
-                    "type": "boolean"
-                },
-                "instructionIPValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "processorType": {
             "type": "object",
             "description": "Identifies the type of the processor architecture.",

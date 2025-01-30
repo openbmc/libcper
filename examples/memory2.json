@@ -1,0 +1,94 @@
+{
+    "header": {
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "persistenceInfo": 0,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "recordID": 953791316,
+        "recordLength": 296,
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 0,
+            "name": "Recoverable"
+        },
+        "timestamp": "9228-09-30T04:00:32+00:00",
+        "timestampIsPrecise": false
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": true,
+                "errorThresholdExceeded": true,
+                "latentError": false,
+                "overflow": false,
+                "primary": false,
+                "propagated": true,
+                "reset": false,
+                "resourceNotAccessible": true
+            },
+            "fruID": "75824856-bd36-2cc8-61f4-39bb3276da2a",
+            "fruText": "^\u001a\u001dvS\u001e>k\u0016\ro\u001c]Y1o\u0004\u001cN",
+            "revision": {
+                "major": 163,
+                "minor": 246
+            },
+            "sectionLength": 96,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "61ec04fc-48e6-d813-25c9-8daa44750b12",
+                "type": "Platform Memory 2"
+            },
+            "severity": {
+                "code": 3,
+                "name": "Informational"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "Memory2": {
+                "bank": {
+                    "value": 33388
+                },
+                "card": 52187,
+                "cardSmbiosHandle": 3291419063,
+                "chipID": 13,
+                "errorStatus": {
+                    "addressSignal": false,
+                    "controlSignal": true,
+                    "dataSignal": false,
+                    "detectedByRequester": false,
+                    "detectedByResponder": false,
+                    "errorType": {
+                        "description": "Detection of a PATH_ERROR.",
+                        "name": "ERR_ERROR",
+                        "value": 24
+                    },
+                    "firstError": true,
+                    "overflowDroppedLogs": true
+                },
+                "physicalAddress": 7584754002385014651,
+                "physicalAddressHex": "0x6942759454E18F7B",
+                "physicalAddressMask": 8823605043237379382,
+                "rank": 2798498160,
+                "responderID": 4028408744142317612,
+                "row": 454705312,
+                "status": {
+                    "state": "Uncorrected",
+                    "value": 1
+                }
+            }
+        }
+    ]
+}
