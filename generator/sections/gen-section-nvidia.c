@@ -13,7 +13,9 @@
 
 //Generates a single pseudo-random NVIDIA error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_nvidia(void **location)
+size_t
+generate_section_nvidia(void **location,
+			[[maybe_unused]] GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	const char *signatures[] = {
 		"DCC-ECC",   "DCC-COH",	      "HSS-BUSY",      "HSS-IDLE",
