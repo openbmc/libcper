@@ -11,12 +11,13 @@
 #include <libcper/generator/sections/gen-section.h>
 #define ARM_ERROR_INFO_SIZE 32
 
-void *generate_arm_error_info();
+void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_arm_context_info(void **location);
 
 //Generates a single pseudo-random ARM processor section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_arm(void **location)
+size_t generate_section_arm(void **location,
+			    GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Set up for generation of error/context structures.
 	UINT16 error_structure_num = rand() % 4 + 1; //Must be at least 1.
@@ -27,7 +28,7 @@ size_t generate_section_arm(void **location)
 
 	//Generate the structures.
 	for (int i = 0; i < error_structure_num; i++) {
-		error_structures[i] = generate_arm_error_info();
+		error_structures[i] = generate_arm_error_info(validBitsType);
 	}
 	for (int i = 0; i < context_structure_num; i++) {
 		context_structure_lengths[i] =
@@ -58,6 +59,11 @@ size_t generate_section_arm(void **location)
 	//Reserved zero bytes.
 	UINT64 *validation = (UINT64 *)section;
 	*validation &= 0x7;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x7;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x5;
+	}
 	UINT32 *running_state = (UINT32 *)(section + 32);
 	*running_state &= 0x1;
 	memset(section + 13, 0, 3);
@@ -82,7 +88,7 @@ size_t generate_section_arm(void **location)
 }
 
 //Generates a single pseudo-random ARM error info structure. Must be later freed.
-void *generate_arm_error_info()
+void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	UINT8 *error_info = generate_random_bytes(ARM_ERROR_INFO_SIZE);
 
@@ -97,6 +103,11 @@ void *generate_arm_error_info()
 	//Reserved bits for error information.
 	UINT16 *validation = (UINT16 *)(error_info + 2);
 	*validation &= 0x1F;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x1F;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x15;
+	}
 
 	//Make sure reserved bits are zero according with the type.
 	UINT64 *error_subinfo = (UINT64 *)(error_info + 8);

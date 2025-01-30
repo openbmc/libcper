@@ -11,7 +11,9 @@
 
 //Generates a single pseudo-random firmware error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_firmware(void **location)
+size_t generate_section_firmware(
+	void **location,
+	[[maybe_unused]] GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	int size = 32;

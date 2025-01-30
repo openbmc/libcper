@@ -3,7 +3,6 @@
     "type": "object",
     "required": [
         "length",
-        "validationBits",
         "ccixSourceID",
         "ccixPortID",
         "ccixPERLog"
@@ -12,25 +11,6 @@
     "properties": {
         "length": {
             "type": "integer"
-        },
-        "validationBits": {
-            "type": "object",
-            "required": [
-                "ccixSourceIDValid",
-                "ccixPortIDValid",
-                "ccixPERLogValid"
-            ],
-            "properties": {
-                "ccixSourceIDValid": {
-                    "type": "boolean"
-                },
-                "ccixPortIDValid": {
-                    "type": "boolean"
-                },
-                "ccixPERLogValid": {
-                    "type": "boolean"
-                }
-            }
         },
         "ccixSourceID": {
             "type": "integer"

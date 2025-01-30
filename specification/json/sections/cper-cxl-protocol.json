@@ -3,7 +3,6 @@
     "type": "object",
     "description": "Compute Express Link (CXL) Protocol Error Section",
     "required": [
-        "validationBits",
         "agentType",
         "cxlAgentAddress",
         "deviceID",
@@ -14,42 +13,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "validationBits": {
-            "type": "object",
-            "description": "Indiciates what fields in the section are valid",
-            "required": [
-                "cxlAgentTypeValid",
-                "cxlAgentAddressValid",
-                "deviceIDValid",
-                "deviceSerialValid",
-                "capabilityStructureValid",
-                "cxlDVSECValid",
-                "cxlErrorLogValid"
-            ],
-            "properties": {
-                "cxlAgentTypeValid": {
-                    "type": "boolean"
-                },
-                "cxlAgentAddressValid": {
-                    "type": "boolean"
-                },
-                "deviceIDValid": {
-                    "type": "boolean"
-                },
-                "deviceSerialValid": {
-                    "type": "boolean"
-                },
-                "capabilityStructureValid": {
-                    "type": "boolean"
-                },
-                "cxlDVSECValid": {
-                    "type": "boolean"
-                },
-                "cxlErrorLogValid": {
-                    "type": "boolean"
-                }
-            }
-        },
         "agentType": {
             "type": "object",
             "description": "CXL Agent Type",
