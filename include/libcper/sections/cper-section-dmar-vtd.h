@@ -9,9 +9,16 @@ extern "C" {
 #include <json.h>
 #include <libcper/Cper.h>
 
-#define VTD_FAULT_RECORD_TYPES_KEYS (int[]){ 0, 1 }
+#define VTD_FAULT_RECORD_TYPES_KEYS                                            \
+	(int[])                                                                \
+	{                                                                      \
+		0, 1                                                           \
+	}
 #define VTD_FAULT_RECORD_TYPES_VALUES                                          \
-	(const char *[]){ "Write Request", "Read/AtomicOp Request" }
+	(const char *[])                                                       \
+	{                                                                      \
+		"Write Request", "Read/AtomicOp Request"                       \
+	}
 
 typedef struct {
 	UINT64 Resv1 : 12;

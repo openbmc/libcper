@@ -12,7 +12,9 @@
 
 //Generates a single pseudo-random Ampere error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_ampere(void **location)
+size_t
+generate_section_ampere(void **location,
+			[[maybe_unused]] GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	size_t size = sizeof(EFI_AMPERE_ERROR_DATA);

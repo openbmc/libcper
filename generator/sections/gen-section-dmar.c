@@ -11,7 +11,9 @@
 
 //Generates a single pseudo-random generic DMAr error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_dmar_generic(void **location)
+size_t generate_section_dmar_generic(
+	void **location,
+	[[maybe_unused]] GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	int size = 32;
@@ -35,7 +37,9 @@ size_t generate_section_dmar_generic(void **location)
 
 //Generates a single pseudo-random VT-d DMAr error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_dmar_vtd(void **location)
+size_t generate_section_dmar_vtd(
+	void **location,
+	[[maybe_unused]] GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	int size = 144;
@@ -59,7 +63,9 @@ size_t generate_section_dmar_vtd(void **location)
 
 //Generates a single pseudo-random IOMMU DMAr error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_dmar_iommu(void **location)
+size_t generate_section_dmar_iommu(
+	void **location,
+	[[maybe_unused]] GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	int size = 144;

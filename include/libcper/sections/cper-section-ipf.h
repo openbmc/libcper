@@ -9,12 +9,18 @@ extern "C" {
 #include <libcper/Cper.h>
 
 #define IPF_MOD_ERROR_VALID_BITFIELD_NAMES                                     \
-	(const char *[]){ "checkInfoValid", "requestorIdentifierValid",        \
-			  "responderIdentifierValid", "targetIdentifierValid", \
-			  "preciseIPValid" }
+	(const char *[])                                                       \
+	{                                                                      \
+		"checkInfoValid", "requestorIdentifierValid",                  \
+			"responderIdentifierValid", "targetIdentifierValid",   \
+			"preciseIPValid"                                       \
+	}
 #define IPF_PSI_STATIC_INFO_VALID_BITFIELD_NAMES                               \
-	(const char *[]){ "minstateValid", "brValid", "crValid",               \
-			  "arValid",	   "rrValid", "frValid" }
+	(const char *[])                                                       \
+	{                                                                      \
+		"minstateValid", "brValid", "crValid", "arValid", "rrValid",   \
+			"frValid"                                              \
+	}
 
 ///
 /// IPF Error Record Section

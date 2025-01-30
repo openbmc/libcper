@@ -10,8 +10,10 @@ extern "C" {
 #include <libcper/Cper.h>
 
 #define CCIX_PER_ERROR_VALID_BITFIELD_NAMES                                    \
-	(const char *[]){ "ccixSourceIDValid", "ccixPortIDValid",              \
-			  "ccixPERLogValid" }
+	(const char *[])                                                       \
+	{                                                                      \
+		"ccixSourceIDValid", "ccixPortIDValid", "ccixPERLogValid"      \
+	}
 
 ///
 /// CCIX PER Log Error Section

@@ -9,11 +9,16 @@
 #include <libcper/generator/gen-utils.h>
 #include <libcper/generator/sections/gen-section.h>
 
-#define PCIE_PORT_TYPES (int[]){ 0, 1, 4, 5, 6, 7, 8, 9, 10 }
+#define PCIE_PORT_TYPES                                                        \
+	(int[])                                                                \
+	{                                                                      \
+		0, 1, 4, 5, 6, 7, 8, 9, 10                                     \
+	}
 
 //Generates a single pseudo-random PCIe error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_pcie(void **location)
+size_t generate_section_pcie(void **location,
+			     GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create random bytes.
 	int size = 208;
@@ -21,7 +26,12 @@ size_t generate_section_pcie(void **location)
 
 	//Set reserved areas to zero.
 	UINT64 *validation = (UINT64 *)bytes;
-	*validation &= 0xFF;   //Validation 8-63
+	*validation &= 0xFF; //Validation 8-63
+	if (validBitsType == ALL_VALID) {
+		*validation = 0xFF;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x55;
+	}
 	UINT32 *version = (UINT32 *)(bytes + 12);
 	*version &= 0xFFFF;    //Version bytes 2-3
 	UINT32 *reserved = (UINT32 *)(bytes + 20);
