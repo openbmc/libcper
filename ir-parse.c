@@ -98,36 +98,40 @@ void ir_header_to_cper(json_object *header_ir,
 		json_object_object_get(severity, "code"));
 
 	//Validation bits.
-	header->ValidationBits = ir_to_bitfield(
-		json_object_object_get(header_ir, "validationBits"), 3,
-		CPER_HEADER_VALID_BITFIELD_NAMES);
+	ValidationTypes ui32Type = { UINT_32T, .value.ui32 = 0 };
+	struct json_object *obj = NULL;
 
 	//Record length.
 	header->RecordLength = (UINT32)json_object_get_uint64(
 		json_object_object_get(header_ir, "recordLength"));
 
 	//Timestamp, if present.
-	json_object *timestamp = json_object_object_get(header_ir, "timestamp");
-	if (timestamp != NULL) {
-		string_to_timestamp(&header->TimeStamp,
-				    json_object_get_string(timestamp));
-		header->TimeStamp.Flag = json_object_get_boolean(
-			json_object_object_get(header_ir,
-					       "timestampIsPrecise"));
+	if (json_object_object_get_ex(header_ir, "timestamp", &obj)) {
+		json_object *timestamp = obj;
+		if (timestamp != NULL) {
+			string_to_timestamp(&header->TimeStamp,
+					    json_object_get_string(timestamp));
+			header->TimeStamp.Flag = json_object_get_boolean(
+				json_object_object_get(header_ir,
+						       "timestampIsPrecise"));
+		}
+		add_to_valid_bitfield(&ui32Type, 1);
 	}
 
 	//Various GUIDs.
-	json_object *platform_id =
-		json_object_object_get(header_ir, "platformID");
-	json_object *partition_id =
-		json_object_object_get(header_ir, "partitionID");
+	json_object *platform_id;
+	json_object_object_get_ex(header_ir, "platformID", &platform_id);
+	json_object *partition_id;
+	json_object_object_get_ex(header_ir, "partitionID", &partition_id);
 	if (platform_id != NULL) {
 		string_to_guid(&header->PlatformID,
 			       json_object_get_string(platform_id));
+		add_to_valid_bitfield(&ui32Type, 0);
 	}
 	if (partition_id != NULL) {
 		string_to_guid(&header->PartitionID,
 			       json_object_get_string(partition_id));
+		add_to_valid_bitfield(&ui32Type, 2);
 	}
 	string_to_guid(&header->CreatorID,
 		       json_object_get_string(
@@ -150,6 +154,8 @@ void ir_header_to_cper(json_object *header_ir,
 	json_object *flags = json_object_object_get(header_ir, "flags");
 	header->Flags = (UINT32)json_object_get_uint64(
 		json_object_object_get(flags, "value"));
+
+	header->ValidationBits = ui32Type.value.ui32;
 }
 
 //Converts a single given IR section into CPER, outputting to the given stream.
@@ -212,9 +218,9 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 	descriptor->Revision = minor + (major << 8);
 
 	//Validation bits, flags.
-	descriptor->SecValidMask = ir_to_bitfield(
-		json_object_object_get(section_descriptor_ir, "validationBits"),
-		2, CPER_SECTION_DESCRIPTOR_VALID_BITFIELD_NAMES);
+	ValidationTypes ui8Type = { UINT_8T, .value.ui8 = 0 };
+	struct json_object *obj = NULL;
+
 	descriptor->SectionFlags = ir_to_bitfield(
 		json_object_object_get(section_descriptor_ir, "flags"), 8,
 		CPER_SECTION_DESCRIPTOR_FLAGS_BITFIELD_NAMES);
@@ -227,11 +233,13 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 			       json_object_object_get(section_type, "data")));
 
 	//FRU ID, if present.
-	json_object *fru_id =
-		json_object_object_get(section_descriptor_ir, "fruID");
-	if (fru_id != NULL) {
-		string_to_guid(&descriptor->FruId,
-			       json_object_get_string(fru_id));
+	if (json_object_object_get_ex(section_descriptor_ir, "fruID", &obj)) {
+		json_object *fru_id = obj;
+		if (fru_id != NULL) {
+			string_to_guid(&descriptor->FruId,
+				       json_object_get_string(fru_id));
+			add_to_valid_bitfield(&ui8Type, 0);
+		}
 	}
 
 	//Severity code.
@@ -241,13 +249,19 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 		json_object_object_get(severity, "code"));
 
 	//FRU text, if present.
-	json_object *fru_text =
-		json_object_object_get(section_descriptor_ir, "fruText");
-	if (fru_text != NULL) {
-		strncpy(descriptor->FruString, json_object_get_string(fru_text),
-			sizeof(descriptor->FruString) - 1);
-		descriptor->FruString[sizeof(descriptor->FruString) - 1] = '\0';
+	if (json_object_object_get_ex(section_descriptor_ir, "fruText", &obj)) {
+		json_object *fru_text = obj;
+		if (fru_text != NULL) {
+			strncpy(descriptor->FruString,
+				json_object_get_string(fru_text),
+				sizeof(descriptor->FruString) - 1);
+			descriptor
+				->FruString[sizeof(descriptor->FruString) - 1] =
+				'\0';
+			add_to_valid_bitfield(&ui8Type, 1);
+		}
 	}
+	descriptor->SecValidMask = ui8Type.value.ui8;
 }
 
 //Converts IR for a given single section format CPER record into CPER binary.

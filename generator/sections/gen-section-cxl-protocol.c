@@ -11,7 +11,8 @@
 
 //Generates a single pseudo-random CXL protocol error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_cxl_protocol(void **location)
+size_t generate_section_cxl_protocol(void **location,
+				     GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Create a random length for the CXL DVSEC and CXL error log.
 	//The logs attached here do not necessarily conform to the specification, and are simply random.
@@ -28,7 +29,12 @@ size_t generate_section_cxl_protocol(void **location)
 
 	//Set reserved areas to zero.
 	UINT64 *validation = (UINT64 *)bytes;
-	*validation &= 0x3F;	      //Validation bits 6-63.
+	*validation &= 0x67;
+	if (validBitsType == ALL_VALID) {
+		*validation = 0x67;
+	} else if (validBitsType == SOME_VALID) {
+		*validation = 0x25;
+	}
 	for (int i = 0; i < 7; i++) {
 		*(bytes + 9 + i) = 0; //Reserved bytes 9-15.
 	}
@@ -38,6 +44,8 @@ size_t generate_section_cxl_protocol(void **location)
 		for (int i = 0; i < 3; i++) {
 			*(bytes + 21 + i) = 0; //CXL agent address bytes 5-7.
 		}
+		*validation |=
+			0x18; //Device Serial Number depends on agent type
 	}
 
 	*(bytes + 34) &= ~0x7; //Device ID byte 10 bits 0-2.
