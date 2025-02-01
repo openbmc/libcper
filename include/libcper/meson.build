@@ -6,7 +6,7 @@ install_headers(
     'cper-utils.h',
     'common-utils.h',
     subdir: 'libcper',
-    preserve_path : true
+    preserve_path: true,
 )
 
 install_headers('generator/cper-generate.h', subdir: 'libcper/generator')
