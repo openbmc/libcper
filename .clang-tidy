@@ -206,9 +206,6 @@ readability-string-compare,
 readability-suspicious-call-argument,
 '
 
-ExtraArgs:
-  - -Wno-unknown-pragmas  # TODO: remove this after switch to clang-tidy-18
-
 WarningsAsErrors: '*'
 HeaderFilterRegex: '(libcper)|(src)/'
 CheckOptions:

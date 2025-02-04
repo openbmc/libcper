@@ -83,7 +83,7 @@ typedef struct {
   @return A 16-bit value built from the two ASCII characters specified by A and B.
 
 **/
-#define SIGNATURE_16(A, B) ((A) | (B << 8))
+#define SIGNATURE_16(A, B) ((A) | ((B) << 8))
 /**
   Returns a 32-bit signature built from 4 ASCII characters.
 
