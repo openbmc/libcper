@@ -25,9 +25,8 @@ size_t generate_section_generic(void **location)
 	//Ensure CPU brand string does not terminate early.
 	for (int i = 0; i < 128; i++) {
 		UINT8 *byte = start_byte + 24 + i;
-		if (*byte == 0x0) {
-			*byte = rand() % 127 + 1;
-		}
+		//CPU brand can only be ASCII
+		*byte = rand() % 127 + 1;
 
 		//Null terminate last byte.
 		if (i == 127) {
