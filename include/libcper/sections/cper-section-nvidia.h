@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
 #include <json.h>
 #include <libcper/Cper.h>
 

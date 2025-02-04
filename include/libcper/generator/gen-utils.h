@@ -18,7 +18,6 @@ size_t generate_random_section(void **location, size_t size);
 UINT8 *generate_random_bytes(size_t size);
 void init_random();
 void create_valid_error_section(UINT8 *start);
-UINT8 int_to_bcd(int value);
 
 #ifdef __cplusplus
 }
