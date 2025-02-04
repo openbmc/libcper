@@ -9,22 +9,16 @@ extern "C" {
 #include <libcper/Cper.h>
 
 #define CXL_PROTOCOL_ERROR_VALID_BITFIELD_NAMES                                \
-	(const char *[])                                                       \
-	{                                                                      \
-		"cxlAgentTypeValid", "cxlAgentAddressValid", "deviceIDValid",  \
-			"deviceSerialValid", "capabilityStructureValid",       \
-			"cxlDVSECValid", "cxlErrorLogValid"                    \
-	}
-#define CXL_PROTOCOL_ERROR_AGENT_TYPES_KEYS                                    \
-	(int[])                                                                \
-	{                                                                      \
-		0, 1                                                           \
-	}
+	(const char *[]){ "cxlAgentTypeValid",                                 \
+			  "cxlAgentAddressValid",                              \
+			  "deviceIDValid",                                     \
+			  "deviceSerialValid",                                 \
+			  "capabilityStructureValid",                          \
+			  "cxlDVSECValid",                                     \
+			  "cxlErrorLogValid" }
+#define CXL_PROTOCOL_ERROR_AGENT_TYPES_KEYS (int[]){ 0, 1 }
 #define CXL_PROTOCOL_ERROR_AGENT_TYPES_VALUES                                  \
-	(const char *[])                                                       \
-	{                                                                      \
-		"CXL 1.1 Device", "CXL 1.1 Host Downstream Port"               \
-	}
+	(const char *[]){ "CXL 1.1 Device", "CXL 1.1 Host Downstream Port" }
 #define CXL_PROTOCOL_ERROR_DEVICE_AGENT		      0
 #define CXL_PROTOCOL_ERROR_HOST_DOWNSTREAM_PORT_AGENT 1
 
