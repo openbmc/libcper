@@ -10,8 +10,8 @@
 
 **/
 
-#ifndef __CPER_GUID_H__
-#define __CPER_GUID_H__
+#ifndef CPER_GUID_H
+#define CPER_GUID_H
 
 #include <libcper/BaseTypes.h>
 #include <libcper/common-utils.h>

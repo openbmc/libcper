@@ -1,6 +1,7 @@
 #ifndef CPER_SECTION_AMPERE_H
 #define CPER_SECTION_AMPERE_H
 
+#include <stdio.h>
 #include <json.h>
 #include <libcper/Cper.h>
 

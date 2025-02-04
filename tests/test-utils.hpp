@@ -2,6 +2,7 @@
 #define CPER_IR_TEST_UTILS_H
 
 extern "C" {
+#include <stdio.h>
 #include <libcper/BaseTypes.h>
 }
 
