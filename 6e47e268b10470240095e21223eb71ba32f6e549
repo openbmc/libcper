@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "660dabe5_90cc57bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-18T18:01:48Z",
+      "side": 1,
+      "message": "This is a breakout of https://gerrit.openbmc.org/c/openbmc/libcper/+/78197\n\nwill trust the unit tests in the above commit.",
+      "revId": "6e47e268b10470240095e21223eb71ba32f6e549",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
