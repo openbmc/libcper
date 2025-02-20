@@ -192,7 +192,6 @@ void ir_section_to_cper(json_object *section,
 			printf("Failed to allocate decode output buffer. \n");
 		} else {
 			fwrite(decoded, decoded_len, 1, out);
-			fflush(out);
 			free(decoded);
 		}
 	}
@@ -268,20 +267,17 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 void ir_single_section_to_cper(json_object *ir, FILE *out)
 {
 	//Create & write a section descriptor to file.
-	EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor =
-		(EFI_ERROR_SECTION_DESCRIPTOR *)calloc(
-			1, sizeof(EFI_ERROR_SECTION_DESCRIPTOR));
+	EFI_ERROR_SECTION_DESCRIPTOR section_descriptor;
+	memset(&section_descriptor, 0, sizeof(section_descriptor));
+
 	ir_section_descriptor_to_cper(
 		json_object_object_get(ir, "sectionDescriptor"),
-		section_descriptor);
-	fwrite(section_descriptor, sizeof(EFI_ERROR_SECTION_DESCRIPTOR), 1,
-	       out);
-	fflush(out);
+		&section_descriptor);
+	fwrite(&section_descriptor, sizeof(section_descriptor), 1, out);
 
 	//Write section to file.
 	ir_section_to_cper(json_object_object_get(ir, "section"),
-			   section_descriptor, out);
+			   &section_descriptor, out);
 
-	//Free remaining resources.
-	free(section_descriptor);
+	fflush(out);
 }
