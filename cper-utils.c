@@ -98,8 +98,10 @@ json_object *uniform_struct_to_ir(UINT32 *start, int len, const char *names[])
 
 	UINT32 *cur = start;
 	for (int i = 0; i < len; i++) {
+		UINT32 value;
+		memcpy(&value, cur, sizeof(UINT32));
 		json_object_object_add(result, names[i],
-				       json_object_new_uint64(*cur));
+				       json_object_new_uint64(value));
 		cur++;
 	}
 

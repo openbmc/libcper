@@ -68,6 +68,8 @@ json_object *cper_section_cxl_protocol_to_ir(void *section)
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
 		json_object_object_add(section_ir, "cxlAgentAddress",
 				       agent_address);
+	} else {
+		json_object_put(agent_address);
 	}
 
 	json_object *device_id = json_object_new_object();

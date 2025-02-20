@@ -91,9 +91,6 @@ size_t generate_section_arm(void **location,
 		cur_pos += 1;
 	}
 
-	// UINT64 *vendor_spec = (UINT64 *) (section + 80);
-	// *vendor_spec = 0xDEADBEEFDEADBEEF;
-
 	//Set return values and exit.
 	*location = section;
 	return total_len;
