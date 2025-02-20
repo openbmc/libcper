@@ -111,6 +111,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bf904b5_a5ced717",
+        "filename": "cper-parse.c",
+        "patchSetId": 23
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-20T22:43:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8384e8ee_15b481d9",
+      "range": {
+        "startLine": 257,
+        "startChar": 0,
+        "endLine": 257,
+        "endChar": 26
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa6c9b0d_7ef70be0",
