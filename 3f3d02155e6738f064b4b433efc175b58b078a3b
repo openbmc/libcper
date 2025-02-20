@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa5fbfd8_5dbf576e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-20T22:37:45Z",
+      "side": 1,
+      "message": "nit \"and update tests\" is assumed, not as valuable in the first line.\n\nFix if you want to.",
+      "range": {
+        "startLine": 7,
+        "startChar": 22,
+        "endLine": 7,
+        "endChar": 39
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbd8d689_14126c07",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-20T22:37:45Z",
+      "side": 1,
+      "message": "Please don\u0027t make this a list.   Make this prose.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 3
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85e3d400_12152a3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-20T22:37:45Z",
+      "side": 1,
+      "message": "Please also give some basic indication of what the resulting change in the json will be.  Ie,\nbefore\n{\n   field1valid: false\n   field1: \u003cgarbage\u003e\n}\n\nafter\n\n{}",
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48a79bf2_a70d7dec",
+        "filename": "cper-parse.c",
+        "patchSetId": 23
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-20T22:37:45Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 257,
+        "startChar": 0,
+        "endLine": 257,
+        "endChar": 26
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
