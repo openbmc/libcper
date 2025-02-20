@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3606c363_7c7e9e00",
+        "filename": "cper-parse.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-20T22:38:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c875fa8_33f3cc05",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 26
+      },
+      "revId": "42ce49806950c7102dc1802bdb9df39da2aa8092",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fbc1b604_f24996a4",
         "filename": "tests/ir-tests.cpp",
         "patchSetId": 13
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f32da1c5_0808e46f",
+        "filename": "tests/ir-tests.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-20T22:38:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbc1b604_f24996a4",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 16
+      },
+      "revId": "42ce49806950c7102dc1802bdb9df39da2aa8092",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "22a9b706_8a7b180c",
         "filename": "tests/ir-tests.cpp",
         "patchSetId": 13
@@ -60,6 +108,30 @@
       "writtenOn": "2025-02-14T22:37:02Z",
       "side": 1,
       "message": "This looks like a memory leak.",
+      "range": {
+        "startLine": 106,
+        "startChar": 14,
+        "endLine": 106,
+        "endChar": 16
+      },
+      "revId": "42ce49806950c7102dc1802bdb9df39da2aa8092",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9aac33f8_bb8d278d",
+        "filename": "tests/ir-tests.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-20T22:38:35Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "22a9b706_8a7b180c",
       "range": {
         "startLine": 106,
         "startChar": 14,
