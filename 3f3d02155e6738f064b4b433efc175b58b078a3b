@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "02837364_be95f526",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-21T00:49:50Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "fa5fbfd8_5dbf576e",
+      "range": {
+        "startLine": 7,
+        "startChar": 22,
+        "endLine": 7,
+        "endChar": 39
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fbd8d689_14126c07",
         "filename": "/COMMIT_MSG",
         "patchSetId": 23
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "44eb1f6e_1dfdf979",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-21T00:49:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbd8d689_14126c07",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 3
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "85e3d400_12152a3d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 23
@@ -60,6 +108,24 @@
       "writtenOn": "2025-02-20T22:37:45Z",
       "side": 1,
       "message": "Please also give some basic indication of what the resulting change in the json will be.  Ie,\nbefore\n{\n   field1valid: false\n   field1: \u003cgarbage\u003e\n}\n\nafter\n\n{}",
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61b359d6_622fab40",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-21T00:49:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85e3d400_12152a3d",
       "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -183,6 +249,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43e49cb0_f22f88cc",
+        "filename": "tests/ir-tests.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-21T00:49:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2de1b6d7_d1c25077",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 20
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8e4b5ce8_d740da89",
         "filename": "tests/ir-tests.cpp",
         "patchSetId": 23
@@ -194,6 +284,30 @@
       "writtenOn": "2025-02-20T22:42:13Z",
       "side": 1,
       "message": "Pretty sure this can be removed.",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 237,
+        "endChar": 2
+      },
+      "revId": "3f3d02155e6738f064b4b433efc175b58b078a3b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9511d934_5b54fd27",
+        "filename": "tests/ir-tests.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-21T00:49:50Z",
+      "side": 1,
+      "message": "This was helpful in debugging unit tests, can we leave it in?",
+      "parentUuid": "8e4b5ce8_d740da89",
       "range": {
         "startLine": 213,
         "startChar": 0,
