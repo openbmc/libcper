@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a390f109_5d23af0e",
+        "filename": "meson.build",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-28T19:53:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2a9c18c_b9de4a75",
+      "range": {
+        "startLine": 165,
+        "startChar": 3,
+        "endLine": 165,
+        "endChar": 13
+      },
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a617761a_31dbc35c",
         "filename": "meson.options",
         "patchSetId": 4
@@ -107,6 +131,30 @@
       "writtenOn": "2025-02-28T19:49:36Z",
       "side": 1,
       "message": "Could we add \"for debug\" at the end just to clarify that this isn\u0027t really an option that we expect to be used outside of development.",
+      "range": {
+        "startLine": 7,
+        "startChar": 51,
+        "endLine": 7,
+        "endChar": 61
+      },
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec1da747_8b96cf92",
+        "filename": "meson.options",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-02-28T19:53:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01add438_107f2da6",
       "range": {
         "startLine": 7,
         "startChar": 51,
