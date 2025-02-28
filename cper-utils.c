@@ -491,3 +491,36 @@ void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid)
 		json_object_new_string_len(platform_string,
 					   sizeof(platform_string) - 1));
 }
+
+void add_int(json_object *register_ir, const char *field_name, int value)
+{
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_uint64(value));
+}
+
+void add_bool(json_object *register_ir, const char *field_name, UINT64 value)
+{
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_boolean(value));
+}
+
+void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
+	      const char *dict[], size_t dict_size)
+{
+	json_object *field_ir = json_object_new_object();
+	json_object_object_add(register_ir, field_name, field_ir);
+	json_object_object_add(field_ir, "raw", json_object_new_uint64(value));
+
+	if (dict != NULL) {
+		if (value < dict_size) {
+			const char *name = dict[value];
+			if (name != NULL) {
+				const char *value_name = name;
+
+				json_object_object_add(
+					field_ir, "value",
+					json_object_new_string(value_name));
+			}
+		}
+	}
+}
