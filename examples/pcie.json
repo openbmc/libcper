@@ -11,7 +11,7 @@
         },
         "persistenceInfo": 0,
         "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1531150234,
+        "recordID": 532670688,
         "recordLength": 408,
         "revision": {
             "major": 0,
@@ -19,10 +19,10 @@
         },
         "sectionCount": 1,
         "severity": {
-            "code": 0,
-            "name": "Recoverable"
+            "code": 1,
+            "name": "Fatal"
         },
-        "timestamp": "5512-04-26T21:00:13+00:00",
+        "timestamp": "1717-01-04T16:00:30+00:00",
         "timestampIsPrecise": false
     },
     "sectionDescriptors": [
@@ -32,16 +32,16 @@
                 "errorThresholdExceeded": false,
                 "latentError": true,
                 "overflow": true,
-                "primary": true,
-                "propagated": true,
+                "primary": false,
+                "propagated": false,
                 "reset": false,
                 "resourceNotAccessible": false
             },
-            "fruID": "8a936866-6ca3-3f6e-2b9d-cf0ef92fd4d8",
-            "fruText": "HI<CH\n\u0002hn5;o\\\u0002-l'm\u0012",
+            "fruID": "4e82fd49-08a9-d470-b28a-2954489a0abc",
+            "fruText": "\u000f+jw?xB7Let\r\fJoP.$[",
             "revision": {
-                "major": 191,
-                "minor": 156
+                "major": 170,
+                "minor": 43
             },
             "sectionLength": 208,
             "sectionOffset": 200,
@@ -50,8 +50,8 @@
                 "type": "PCIe"
             },
             "severity": {
-                "code": 2,
-                "name": "Corrected"
+                "code": 1,
+                "name": "Fatal"
             }
         }
     ],
@@ -59,16 +59,58 @@
         {
             "Pcie": {
                 "capabilityStructure": {
-                    "data": "cLHNpg9PNxgNqpOm7W5xViPd2ZAsKK7MaMjnN8NWmzMIaNoXtxEvxLvCaqgw2/9UuNjk5ACTsGlbl6Af"
+                    "data": "m7RUEQ6CdEEhPdyHcOk+oUHh/Gc+AX6X6txrlo84XCrssDv7Mq88VOwY21wCGv5D+/qqOvsp0eYFPHyU",
+                    "device_capabilities": 2279357729,
+                    "device_capabilities_2": 1557862636,
+                    "device_capabilities_2_hex": "0x5CDB18EC",
+                    "device_capabilities_hex": "0x87DC3D21",
+                    "device_control": 59760,
+                    "device_control_2": 17406,
+                    "device_control_2_hex": "0x000043FE",
+                    "device_control_hex": "0x0000E970",
+                    "device_status": 41278,
+                    "device_status_2": 6658,
+                    "device_status_2_hex": "0x00001A02",
+                    "device_status_hex": "0x0000A13E",
+                    "link_capabilities": 1744625985,
+                    "link_capabilities_2": 984283899,
+                    "link_capabilities_2_hex": "0x3AAAFAFB",
+                    "link_capabilities_hex": "0x67FCE141",
+                    "link_control": 318,
+                    "link_control_2": 15365,
+                    "link_control_2_hex": "0x00003C05",
+                    "link_control_hex": "0x0000013E",
+                    "link_status": 38782,
+                    "link_status_2": 3872467451,
+                    "link_status_2_hex": "0xE6D129FB",
+                    "link_status_hex": "0x0000977E",
+                    "next_ptr": 180,
+                    "next_ptr_hex": "0x000000B4",
+                    "pcie_cap_id": 155,
+                    "pcie_cap_id_hex": "0x0000009B",
+                    "pcie_capabilities": 1098154510,
+                    "pcie_capabilities_hex": "0x4174820E",
+                    "root_capabilities": 64315,
+                    "root_capabilities_hex": "0x0000FB3B",
+                    "root_control": 45292,
+                    "root_control_hex": "0x0000B0EC",
+                    "root_status": 1413263154,
+                    "root_status_hex": "0x543CAF32",
+                    "slot_capabilities": 2523651306,
+                    "slot_capabilities_hex": "0x966BDCEA",
+                    "slot_control": 14479,
+                    "slot_control_hex": "0x0000388F",
+                    "slot_status": 10844,
+                    "slot_status_hex": "0x00002A5C"
                 },
                 "commandStatus": {
-                    "commandRegister": 36731,
-                    "statusRegister": 21729
+                    "commandRegister": 49788,
+                    "statusRegister": 63572
                 },
-                "deviceSerialNumber": 1952944444865990253,
+                "deviceSerialNumber": 15302925148404145445,
                 "portType": {
-                    "name": "PCI Express to PCI/PCI-X Bridge",
-                    "value": 7
+                    "name": "Upstream Switch Port",
+                    "value": 5
                 }
             }
         }
