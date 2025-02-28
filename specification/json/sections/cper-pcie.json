@@ -108,64 +108,11 @@
         },
         "capabilityStructure": {
             "type": "object",
-            "additionalProperties": false,
-            "description": "This feild reports either the PCIe 2.0 Capability structure",
-            "required": ["data"],
-            "properties": {
-                "data": {
-                    "type": "string"
-                }
-            }
+            "description": "PCIe Capabilities structure"
         },
         "aerInfo": {
             "type": "object",
-            "additionalProperties": false,
-            "description": "PCIe Advanced Error Reporting Extended Capability Structure.",
-            "required": ["data"],
-            "properties": {
-                "data": {
-                    "type": "string"
-                },
-                "capability_header": {
-                    "type": "integer"
-                },
-                "uncorrectable_error_status": {
-                    "type": "integer"
-                },
-                "uncorrectable_error_status_hex": {
-                    "type": "string"
-                },
-                "uncorrectable_error_mask": {
-                    "type": "integer"
-                },
-                "uncorrectable_error_severity": {
-                    "type": "integer"
-                },
-                "correctable_error_status": {
-                    "type": "integer"
-                },
-                "correctable_error_status_hex": {
-                    "type": "string"
-                },
-                "correctable_error_mask": {
-                    "type": "integer"
-                },
-                "capabilites_control": {
-                    "type": "integer"
-                },
-                "tlp_header_0": {
-                    "type": "integer"
-                },
-                "tlp_header_1": {
-                    "type": "integer"
-                },
-                "tlp_header_2": {
-                    "type": "integer"
-                },
-                "tlp_header_3": {
-                    "type": "integer"
-                }
-            }
+            "description": "PCIe Advanced Error Reporting Information"
         }
     }
 }
