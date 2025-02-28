@@ -105,10 +105,220 @@
         },
         "capabilityStructure": {
             "type": "object",
-            "description": "This feild reports either the PCIe 2.0 Capability structure",
-            "required": ["data"],
+            "description": "PCIe 1.0 or PCIe 2.0 Capability structure",
+            "required": [
+                "data",
+                "pcie_cap_id",
+                "pcie_cap_id_hex",
+                "next_ptr",
+                "next_ptr_hex",
+                "pcie_capabilities",
+                "pcie_capabilities_hex",
+                "device_capabilities",
+                "device_capabilities_hex",
+                "device_control",
+                "device_control_hex",
+                "device_status",
+                "device_status_hex",
+                "link_capabilities",
+                "link_capabilities_hex",
+                "link_control",
+                "link_control_hex",
+                "link_status",
+                "link_status_hex",
+                "slot_capabilities",
+                "slot_capabilities_hex",
+                "slot_control",
+                "slot_control_hex",
+                "slot_status",
+                "slot_status_hex",
+                "root_control",
+                "root_control_hex",
+                "root_capabilities",
+                "root_capabilities_hex",
+                "root_status",
+                "root_status_hex"
+            ],
             "properties": {
                 "data": {
+                    "type": "string"
+                },
+                "pcie_cap_id": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "pcie_cap_id_hex": {
+                    "type": "string"
+                },
+                "next_ptr": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "next_ptr_hex": {
+                    "type": "string"
+                },
+                "pcie_capabilities": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "pcie_capabilities_hex": {
+                    "type": "string"
+                },
+                "device_capabilities": {
+                    "type": "integer"
+                },
+                "device_capabilities_hex": {
+                    "type": "string"
+                },
+                "device_control": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "device_control_hex": {
+                    "type": "string"
+                },
+                "device_status": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "device_status_hex": {
+                    "type": "string"
+                },
+                "link_capabilities": {
+                    "type": "integer"
+                },
+                "link_capabilities_hex": {
+                    "type": "string"
+                },
+                "link_control": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "link_control_hex": {
+                    "type": "string"
+                },
+                "link_status": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "link_status_hex": {
+                    "type": "string"
+                },
+                "slot_capabilities": {
+                    "type": "integer"
+                },
+                "slot_capabilities_hex": {
+                    "type": "string"
+                },
+                "slot_control": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "slot_control_hex": {
+                    "type": "string"
+                },
+                "slot_status": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "slot_status_hex": {
+                    "type": "string"
+                },
+                "root_control": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "root_control_hex": {
+                    "type": "string"
+                },
+                "root_capabilities": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "root_capabilities_hex": {
+                    "type": "string"
+                },
+                "root_status": {
+                    "type": "integer"
+                },
+                "root_status_hex": {
+                    "type": "string"
+                },
+                "device_capabilities_2": {
+                    "type": "integer"
+                },
+                "device_capabilities_2_hex": {
+                    "type": "string"
+                },
+                "device_control_2": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "device_control_2_hex": {
+                    "type": "string"
+                },
+                "device_status_2": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "device_status_2_hex": {
+                    "type": "string"
+                },
+                "link_capabilities_2": {
+                    "type": "integer"
+                },
+                "link_capabilities_2_hex": {
+                    "type": "string"
+                },
+                "link_control_2": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "link_control_2_hex": {
+                    "type": "string"
+                },
+                "link_status_2": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "link_status_2_hex": {
+                    "type": "string"
+                },
+                "slot_capabilities_2": {
+                    "type": "integer"
+                },
+                "slot_capabilities_2_hex": {
+                    "type": "string"
+                },
+                "slot_control_2": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "slot_control_2_hex": {
+                    "type": "string"
+                },
+                "slot_status_2": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "slot_status_2_hex": {
                     "type": "string"
                 }
             }
@@ -116,13 +326,46 @@
         "aerInfo": {
             "type": "object",
             "description": "PCIe Advanced Error Reporting Extended Capability Structure.",
-            "required": ["data"],
+            "required": [
+                "data",
+                "capability_header",
+                "capability_header_hex",
+                "uncorrectable_error_status",
+                "uncorrectable_error_status_hex",
+                "uncorrectable_error_mask",
+                "uncorrectable_error_mask_hex",
+                "uncorrectable_error_severity",
+                "uncorrectable_error_severity_hex",
+                "correctable_error_status",
+                "correctable_error_status_hex",
+                "correctable_error_mask",
+                "correctable_error_mask_hex",
+                "capabilities_control",
+                "capabilities_control_hex",
+                "tlp_header_0",
+                "tlp_header_0_hex",
+                "tlp_header_1",
+                "tlp_header_1_hex",
+                "tlp_header_2",
+                "tlp_header_2_hex",
+                "tlp_header_3",
+                "tlp_header_3_hex",
+                "root_error_command",
+                "root_error_command_hex",
+                "root_error_status",
+                "root_error_status_hex",
+                "error_source_id",
+                "error_source_id_hex"
+            ],
             "properties": {
                 "data": {
                     "type": "string"
                 },
                 "capability_header": {
                     "type": "integer"
+                },
+                "capability_header_hex": {
+                    "type": "string"
                 },
                 "uncorrectable_error_status": {
                     "type": "integer"
@@ -133,8 +376,14 @@
                 "uncorrectable_error_mask": {
                     "type": "integer"
                 },
+                "uncorrectable_error_mask_hex": {
+                    "type": "string"
+                },
                 "uncorrectable_error_severity": {
                     "type": "integer"
+                },
+                "uncorrectable_error_severity_hex": {
+                    "type": "string"
                 },
                 "correctable_error_status": {
                     "type": "integer"
@@ -145,20 +394,140 @@
                 "correctable_error_mask": {
                     "type": "integer"
                 },
-                "capabilites_control": {
+                "correctable_error_mask_hex": {
+                    "type": "string"
+                },
+                "capabilities_control": {
                     "type": "integer"
+                },
+                "capabilities_control_hex": {
+                    "type": "string"
+                },
+                "root_error_command": {
+                    "type": "integer"
+                },
+                "root_error_command_hex": {
+                    "type": "string"
+                },
+                "root_error_status": {
+                    "type": "integer"
+                },
+                "root_error_status_hex": {
+                    "type": "string"
+                },
+                "error_source_id": {
+                    "type": "integer"
+                },
+                "error_source_id_hex": {
+                    "type": "string"
                 },
                 "tlp_header_0": {
                     "type": "integer"
                 },
+                "tlp_header_0_hex": {
+                    "type": "string"
+                },
                 "tlp_header_1": {
                     "type": "integer"
+                },
+                "tlp_header_1_hex": {
+                    "type": "string"
                 },
                 "tlp_header_2": {
                     "type": "integer"
                 },
+                "tlp_header_2_hex": {
+                    "type": "string"
+                },
                 "tlp_header_3": {
                     "type": "integer"
+                },
+                "tlp_header_3_hex": {
+                    "type": "string"
+                },
+                "tlp_header_4": {
+                    "type": "integer"
+                },
+                "tlp_header_4_hex": {
+                    "type": "string"
+                },
+                "tlp_header_5": {
+                    "type": "integer"
+                },
+                "tlp_header_5_hex": {
+                    "type": "string"
+                },
+                "tlp_header_6": {
+                    "type": "integer"
+                },
+                "tlp_header_6_hex": {
+                    "type": "string"
+                },
+                "tlp_header_7": {
+                    "type": "integer"
+                },
+                "tlp_header_7_hex": {
+                    "type": "string"
+                },
+                "tlp_header_8": {
+                    "type": "integer"
+                },
+                "tlp_header_8_hex": {
+                    "type": "string"
+                },
+                "tlp_header_9": {
+                    "type": "integer"
+                },
+                "tlp_header_9_hex": {
+                    "type": "string"
+                },
+                "tlp_header_10": {
+                    "type": "integer"
+                },
+                "tlp_header_10_hex": {
+                    "type": "string"
+                },
+                "tlp_header_11": {
+                    "type": "integer"
+                },
+                "tlp_header_11_hex": {
+                    "type": "string"
+                },
+                "tlp_header_12": {
+                    "type": "integer"
+                },
+                "tlp_header_12_hex": {
+                    "type": "string"
+                },
+                "tlp_header_13": {
+                    "type": "integer"
+                },
+                "tlp_header_13_hex": {
+                    "type": "string"
+                },
+                "tlp_prefix_log_0": {
+                    "type": "integer"
+                },
+                "tlp_prefix_log_0_hex": {
+                    "type": "string"
+                },
+                "tlp_prefix_log_1": {
+                    "type": "integer"
+                },
+                "tlp_prefix_log_1_hex": {
+                    "type": "string"
+                },
+                "tlp_prefix_log_2": {
+                    "type": "integer"
+                },
+                "tlp_prefix_log_2_hex": {
+                    "type": "string"
+                },
+                "tlp_prefix_log_3": {
+                    "type": "integer"
+                },
+                "tlp_prefix_log_3_hex": {
+                    "type": "string"
                 }
             }
         }
