@@ -457,7 +457,6 @@ int main()
 		cper_create_examples("ia32x64");
 		cper_create_examples("memory");
 		cper_create_examples("memory2");
-		cper_create_examples("pcie");
 		cper_create_examples("firmware");
 		cper_create_examples("pcibus");
 		cper_create_examples("pcidev");
