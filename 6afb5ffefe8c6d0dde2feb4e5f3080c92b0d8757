@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f38b3a9_3f18f7ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-28T19:49:36Z",
+      "side": 1,
+      "message": "Overall seems fine.",
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2a9c18c_b9de4a75",
+        "filename": "meson.build",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-28T19:49:36Z",
+      "side": 1,
+      "message": "nit, add an inline note here that the unit tests will fail if this option is enabled because it changes the output behavior.",
+      "range": {
+        "startLine": 165,
+        "startChar": 3,
+        "endLine": 165,
+        "endChar": 13
+      },
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a617761a_31dbc35c",
@@ -14,6 +54,47 @@
       "writtenOn": "2025-02-28T19:44:02Z",
       "side": 1,
       "message": "Can we kebab-case this?  `output-all-properties`?",
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "967f614f_ce150832",
+        "filename": "meson.options",
+        "patchSetId": 4
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-28T19:49:36Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "a617761a_31dbc35c",
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01add438_107f2da6",
+        "filename": "meson.options",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-02-28T19:49:36Z",
+      "side": 1,
+      "message": "Could we add \"for debug\" at the end just to clarify that this isn\u0027t really an option that we expect to be used outside of development.",
+      "range": {
+        "startLine": 7,
+        "startChar": 51,
+        "endLine": 7,
+        "endChar": 61
+      },
       "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
