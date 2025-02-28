@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a617761a_31dbc35c",
+        "filename": "meson.options",
+        "patchSetId": 4
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-02-28T19:44:02Z",
+      "side": 1,
+      "message": "Can we kebab-case this?  `output-all-properties`?",
+      "revId": "6afb5ffefe8c6d0dde2feb4e5f3080c92b0d8757",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
