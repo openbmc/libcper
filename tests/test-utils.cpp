@@ -30,6 +30,13 @@ const static std::map<std::string, std::vector<std::string> >
 		    "timedOut", "level", "operation", "preciseIP",
 		    "restartableIP", "overflow", "uncorrected",
 		    "transactionType" } },
+		// Several PCIe properties are dependent on the device capability
+		// version and whether the device is running in Flit-Mode.
+		// All of these properties are optional.
+		{ "./sections/cper-pcie.json",
+		  { "device_capabilities2", "device_status2", "device_control2",
+		    "link_capabilities2", "link_status2", "link_control2",
+		    "slot_capabilities2", "slot_status2", "slot_control2" } },
 	};
 
 nlohmann::json loadJson(const char *filePath)
