@@ -241,6 +241,11 @@ UINT64 ir_to_bitfield(json_object *ir, int num_fields, const char *names[])
 // Overload function for 16, 32, 64b
 bool isvalid_prop_to_ir(ValidationTypes *val, int vbit_idx)
 {
+	// If the option is enabled, output invalid properties
+	// as well as valid ones.
+	#ifdef OUTPUT_ALL_PROPERTIES
+		return true;
+	#endif //OUTPUT_ALL_PROPERTIES
 	UINT64 vbit_mask = 0x01 << vbit_idx;
 	switch (val->size) {
 	case UINT_16T:

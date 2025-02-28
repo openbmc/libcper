@@ -27,6 +27,10 @@ add_project_arguments(
 library_is_share = get_option('default_library') == 'shared'
 add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
 
+if get_option('output_all_properties').enabled()
+    add_project_arguments('-DOUTPUT_ALL_PROPERTIES', language: ['c', 'cpp'])
+endif
+
 project_description = 'libcper library'
 
 section_sources = files(
@@ -161,6 +165,8 @@ if get_option('utility').allowed()
     )
 endif
 
-if get_option('tests').allowed()
-    subdir('tests')
+if get_option('output_all_properties').disabled()
+    if get_option('tests').allowed()
+        subdir('tests')
+    endif
 endif
