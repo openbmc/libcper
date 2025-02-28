@@ -1,0 +1,153 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "PCIe Capability Structure",
+    "type": "object",
+    "description": "PCIe Advanced Error Reporting Extended Capability Structure",
+    "additionalProperties": false,
+    "required": [
+        "data",
+        "capability_header",
+        "uncorrectable_error_status",
+        "uncorrectable_error_mask",
+        "uncorrectable_error_severity",
+        "correctable_error_status",
+        "correctable_error_mask",
+        "advanced_error_capabilities_and_control",
+        "root_error_command",
+        "root_error_status",
+        "error_source_id"
+    ],
+    "properties": {
+        "data": {
+            "type": "string"
+        },
+        "capability_header": {
+            "type": "object",
+            "description": "AER Capability Header (Offset: 0x0)",
+            "required": [
+                "capability_id",
+                "capability_version",
+                "next_capability_offset"
+            ],
+            "properties": {
+                "capability_id": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "capability_version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 15
+                },
+                "next_capability_offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4095
+                }
+            }
+        },
+        "uncorrectable_error_status": {
+            "type": "object",
+            "description": "Uncorrectable Error Status Register (Offset: 0x4)",
+            "required": [],
+            "properties": {}
+        },
+        "uncorrectable_error_mask": {
+            "type": "object",
+            "description": "Uncorrectable Error Mask Register (Offset: 0x8)",
+            "required": [],
+            "properties": {}
+        },
+        "uncorrectable_error_severity": {
+            "type": "object",
+            "description": "Uncorrectable Error Severity Register (Offset: 0xC)",
+            "required": [],
+            "properties": {}
+        },
+        "correctable_error_status": {
+            "type": "object",
+            "description": "Correctable Error Status Register (Offset: 0x10)",
+            "required": [],
+            "properties": {}
+        },
+        "correctable_error_mask": {
+            "type": "object",
+            "description": "Correctable Error Mask Register (Offset: 0x14)",
+            "required": [],
+            "properties": {}
+        },
+        "advanced_error_capabilities_and_control": {
+            "type": "object",
+            "description": "Advanced Error Capabilities and Control Register (Offset: 0x18)",
+            "required": [
+                "first_error_pointer",
+                "header_log_size",
+                "logged_tlp_size"
+            ],
+            "properties": {
+                "first_error_pointer": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 31
+                },
+                "header_log_size": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 31
+                },
+                "logged_tlp_size": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 31
+                }
+            }
+        },
+        "root_error_command": {
+            "type": "object",
+            "description": "Root Error Command Register (Offset: 0x2C)",
+            "required": [],
+            "properties": {}
+        },
+        "root_error_status": {
+            "type": "object",
+            "description": "Root Error Status Register (Offset: 0x30)",
+            "required": [
+                "err_cor_subclass",
+                "advanced_error_interrupt_message_number"
+            ],
+            "properties": {
+                "err_cor_subclass": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                },
+                "advanced_error_interrupt_message_number": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 31
+                }
+            }
+        },
+        "error_source_id": {
+            "type": "object",
+            "description": "Error Source Identification Register (Offset: 0x34)",
+            "required": [
+                "err_cor_source_identification",
+                "err_fatal_nonfatal_source_identification"
+            ],
+            "properties": {
+                "err_cor_source_identification": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "err_fatal_nonfatal_source_identification": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                }
+            }
+        }
+    }
+}
