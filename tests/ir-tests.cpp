@@ -488,7 +488,7 @@ TEST(UnknownSectionTests, BinaryEqual)
 }
 
 //Entrypoint for the testing program.
-int main()
+int main(int argc, char **argv)
 {
 	if (GEN_EXAMPLES) {
 		cper_create_examples("arm");
@@ -508,6 +508,6 @@ int main()
 		cper_create_examples("nvidia");
 		cper_create_examples("unknown");
 	}
-	testing::InitGoogleTest();
+	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

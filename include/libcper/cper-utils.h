@@ -67,6 +67,16 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 
 void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid);
 
+void add_int(json_object *register_ir, const char *field_name, int value);
+
+void add_bool(json_object *register_ir, const char *field_name, UINT64 value);
+
+void add_bool_enum(json_object *register_ir, const char *field_name,
+		   const char *value_dict[2], UINT64 value);
+
+void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
+	      const char *dict[], size_t dict_size);
+
 //The available severity types for CPER.
 extern const char *CPER_SEVERITY_TYPES[4];
 
