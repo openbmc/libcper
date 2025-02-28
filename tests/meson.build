@@ -55,7 +55,7 @@ cper_tests = executable(
         gtest,
         gmock,
         nlohmann_json_dep,
-        valijson_dep
+        valijson_dep,
     ],
 )
 test('test-cper-tests', cper_tests)
