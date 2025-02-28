@@ -11,7 +11,7 @@
         },
         "persistenceInfo": 0,
         "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1531150234,
+        "recordID": 532670688,
         "recordLength": 408,
         "revision": {
             "major": 0,
@@ -19,10 +19,10 @@
         },
         "sectionCount": 1,
         "severity": {
-            "code": 0,
-            "name": "Recoverable"
+            "code": 1,
+            "name": "Fatal"
         },
-        "timestamp": "5512-04-26T21:00:13+00:00",
+        "timestamp": "1717-01-04T16:00:30+00:00",
         "timestampIsPrecise": false
     },
     "sectionDescriptors": [
@@ -32,16 +32,16 @@
                 "errorThresholdExceeded": false,
                 "latentError": true,
                 "overflow": true,
-                "primary": true,
-                "propagated": true,
+                "primary": false,
+                "propagated": false,
                 "reset": false,
                 "resourceNotAccessible": false
             },
-            "fruID": "8a936866-6ca3-3f6e-2b9d-cf0ef92fd4d8",
-            "fruText": "HI<CH\n\u0002hn5;o\\\u0002-l'm\u0012",
+            "fruID": "4e82fd49-08a9-d470-b28a-2954489a0abc",
+            "fruText": "\u000f+jw?xB7Let\r\fJoP.$[",
             "revision": {
-                "major": 191,
-                "minor": 156
+                "major": 170,
+                "minor": 43
             },
             "sectionLength": 208,
             "sectionOffset": 200,
@@ -50,8 +50,8 @@
                 "type": "PCIe"
             },
             "severity": {
-                "code": 2,
-                "name": "Corrected"
+                "code": 1,
+                "name": "Fatal"
             }
         }
     ],
@@ -59,16 +59,237 @@
         {
             "Pcie": {
                 "capabilityStructure": {
-                    "data": "cLHNpg9PNxgNqpOm7W5xViPd2ZAsKK7MaMjnN8NWmzMIaNoXtxEvxLvCaqgw2/9UuNjk5ACTsGlbl6Af"
+                    "data": "m7RUEQ6CdEEhPdyHcOk+oUHh/Gc+AX6X6txrlo84XCrssDv7Mq88VOwY21wCGv5D+/qqOvsp0eYFPHyU",
+                    "device_capabilities": {
+                        "captured_slot_power_limit_scale": {
+                            "value": 0
+                        },
+                        "captured_slot_power_limit_value": {
+                            "value": 93
+                        },
+                        "endpoint_l0s_acceptable_latency": {
+                            "value": 0
+                        },
+                        "endpoint_l1_acceptable_latency": {
+                            "value": 1
+                        },
+                        "max_payload_size_supported": {
+                            "value": 6
+                        },
+                        "phantom_functions_supported": {
+                            "value": 1
+                        },
+                        "undefined": {
+                            "value": 0
+                        }
+                    },
+                    "device_capabilities2": {
+                        "completion_timeout_ranges_supported": {
+                            "value": 2
+                        },
+                        "dmwr_lengths_supported": {
+                            "value": 2
+                        },
+                        "emergency_power_reduction_supported": {
+                            "value": 0
+                        },
+                        "max_end_end_tlp_prefixes": {
+                            "value": 0
+                        },
+                        "obff_supported": {
+                            "value": 3
+                        },
+                        "tph_completer_supported": {
+                            "value": 2
+                        },
+                        "undefined": {
+                            "value": 2
+                        }
+                    },
+                    "device_control": {
+                        "max_payload_size": {
+                            "value": 1
+                        },
+                        "max_read_request_size": {
+                            "value": 3
+                        }
+                    },
+                    "device_control2": {
+                        "completion_timeout_value": {
+                            "value": 12
+                        },
+                        "obff_enable": {
+                            "value": 0
+                        }
+                    },
+                    "device_status": {
+                        "emergency_power_reduction": {
+                            "value": 3
+                        },
+                        "rsvdz": {
+                            "value": 135
+                        }
+                    },
+                    "device_status2": {
+                        "rsvdz": {
+                            "value": 23771
+                        }
+                    },
+                    "link_capabilities": {
+                        "aspm_support": {
+                            "value": 2
+                        },
+                        "l0s_exit_latency": {
+                            "value": 6
+                        },
+                        "l1_exit_latency": {
+                            "value": 5
+                        },
+                        "max_link_speed": {
+                            "value": 0
+                        },
+                        "maximum_link_width": {
+                            "value": 23
+                        },
+                        "port_number": {
+                            "value": 161
+                        }
+                    },
+                    "link_capabilities2": {
+                        "lower_skp_os_generation_supported": {
+                            "value": 13
+                        },
+                        "lower_skp_os_reception_supported": {
+                            "value": 126
+                        },
+                        "reserved": {
+                            "value": 33
+                        },
+                        "supported_link_speeds": {
+                            "value": 1
+                        }
+                    },
+                    "link_control": {
+                        "aspm_control": {
+                            "value": 1
+                        }
+                    },
+                    "link_control2": {
+                        "compliance_preset_de_emphasis": {
+                            "value": 15
+                        },
+                        "target_link_speed": {
+                            "value": 11
+                        },
+                        "transmit_margin": {
+                            "value": 5
+                        }
+                    },
+                    "link_status": {
+                        "current_link_speed": {
+                            "value": 12
+                        },
+                        "negotiated_link_width": {
+                            "value": 63
+                        }
+                    },
+                    "link_status2": {
+                        "crosslink_resolution": {
+                            "value": 2
+                        },
+                        "current_de_emphasis_level": {
+                            "value": 0
+                        },
+                        "downstream_component_presence": {
+                            "value": 3
+                        }
+                    },
+                    "pcie_capabilities": {
+                        "capability_version": {
+                            "value": 4
+                        },
+                        "device_port_type": {
+                            "name": "UPSTREAM",
+                            "value": 5
+                        },
+                        "interrupt_message_number": {
+                            "value": 8
+                        }
+                    },
+                    "pcie_capability_header": {
+                        "capability_id": {
+                            "value": 155
+                        },
+                        "next_capability_pointer": {
+                            "value": 180
+                        }
+                    },
+                    "root_capabilities": {
+                        "rsvdp": {
+                            "value": 5422
+                        }
+                    },
+                    "root_control": {
+                        "rsvdp": {
+                            "value": 226
+                        }
+                    },
+                    "root_status": {
+                        "pme_requester_id": {
+                            "value": 45292
+                        },
+                        "rsvdp": {
+                            "value": 16078
+                        }
+                    },
+                    "slot_capabilities": {
+                        "physical_slot_number": {
+                            "value": 4847
+                        },
+                        "slot_power_limit_scale": {
+                            "value": 0
+                        },
+                        "slot_power_limit_value": {
+                            "value": 2
+                        }
+                    },
+                    "slot_capabilities2": {
+                        "rsvdp": {
+                            "value": 3872467451
+                        }
+                    },
+                    "slot_control": {
+                        "attention_indicator_control": {
+                            "value": 3
+                        },
+                        "power_indicator_control": {
+                            "value": 0
+                        }
+                    },
+                    "slot_control2": {
+                        "rsvdp": {
+                            "value": 15365
+                        }
+                    },
+                    "slot_status": {
+                        "rsvdz": {
+                            "value": 75
+                        }
+                    },
+                    "slot_status2": {
+                        "rsvdp": {
+                            "value": 38012
+                        }
+                    }
                 },
                 "commandStatus": {
-                    "commandRegister": 36731,
-                    "statusRegister": 21729
+                    "commandRegister": 49788,
+                    "statusRegister": 63572
                 },
-                "deviceSerialNumber": 1952944444865990253,
+                "deviceSerialNumber": 15302925148404145445,
                 "portType": {
-                    "name": "PCI Express to PCI/PCI-X Bridge",
-                    "value": 7
+                    "name": "Upstream Switch Port",
+                    "value": 5
                 }
             }
         }
