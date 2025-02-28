@@ -26,7 +26,15 @@ size_t generate_section_pcie(void **location,
 	if (validBitsType == ALL_VALID) {
 		*validation = 0xFF;
 	} else if (validBitsType == SOME_VALID) {
-		*validation = 0x55;
+		/*
+		 * Valid Sections
+		 * 0b00000001 : Port Type
+		 * 0b00000100 : Command Status Valid
+		 * 0b00010000 : Device Serial Number Valid
+		 * 0b01000000 : Capability Structure Valid
+		 * 0b10000000 : AER Info Valid
+		 */
+		*validation = 0xD5;
 	}
 	UINT32 *version = (UINT32 *)(bytes + 12);
 	*version &= 0xFFFF;    //Version bytes 2-3
