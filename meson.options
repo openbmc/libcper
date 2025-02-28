@@ -1,2 +1,8 @@
 option('tests', type: 'feature', value: 'enabled', description: 'Build tests')
 option('utility', type: 'feature', value: 'enabled', description: 'Utility')
+option(
+    'output-all-properties',
+    type: 'feature',
+    value: 'enabled',
+    description: 'Force enabling of all CPER to IR properties for debugging',
+)
