@@ -18,11 +18,8 @@ add_project_arguments(
     language: ['c', 'cpp'],
 )
 
-add_project_arguments(
-    '-DLIBCPER_EXAMPLES="'
-    + meson.current_source_dir() + '/examples"',
-    language: ['c', 'cpp'],
-)
+add_project_arguments('-DLIBCPER_EXAMPLES="'
+    meson.current_source_dir() + '/examples"', language: ['c', 'cpp'])
 
 library_is_share = get_option('default_library') == 'shared'
 add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')

@@ -2,16 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "description": "PCI Express Error Section",
-    "required": [
-        "portType",
-        "version",
-        "commandStatus",
-        "deviceID",
-        "deviceSerialNumber",
-        "bridgeControlStatus",
-        "capabilityStructure",
-        "aerInfo"
-    ],
+    "required": [],
     "additionalProperties": false,
     "properties": {
         "portType": {
