@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6c181ce_613037fd",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-04T22:27:23Z",
+      "side": 1,
+      "message": "Can we simplify these macros a little?  They have a level of obfuscation that isn\u0027t great... and frankly I\u0027m having trouble reading them.\n\nI get these deduplicate some patterns, which is great, but not being able to trace field -\u003e code that generates it is hard.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "65fe368ef2d7a0576a698951be490275192704ab",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
