@@ -38,6 +38,7 @@ reviewers:
 - patrick@stwcx.xyz
 - aadriance@nvidia.com
 - krajagopalan@nvidia.com
+- anagarkatti@nvidia.com
 
 openbmc:
 - name: Ed Tanous
@@ -50,3 +51,5 @@ openbmc:
   email: aadriance@nvidia.com
 - name: Karthik Rajagopalan
   email: krajagopalan@nvidia.com
+- name: Aushim Nagarkatti
+  email: anagarkatti@nvidia.com
