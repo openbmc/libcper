@@ -2,15 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "description": "Compute Express Link (CXL) Protocol Error Section",
-    "required": [
-        "agentType",
-        "cxlAgentAddress",
-        "deviceID",
-        "dvsecLength",
-        "errorLogLength",
-        "cxlDVSEC",
-        "cxlErrorLog"
-    ],
+    "required": [],
     "additionalProperties": false,
     "properties": {
         "agentType": {
