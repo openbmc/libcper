@@ -3,13 +3,8 @@
     "type": "object",
     "description": "Compute Express Link (CXL) Protocol Error Section",
     "required": [
-        "agentType",
-        "cxlAgentAddress",
-        "deviceID",
         "dvsecLength",
-        "errorLogLength",
-        "cxlDVSEC",
-        "cxlErrorLog"
+        "errorLogLength"
     ],
     "additionalProperties": false,
     "properties": {

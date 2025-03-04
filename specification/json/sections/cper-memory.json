@@ -1,28 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "required": [
-        "errorStatus",
-        "bank",
-        "memoryErrorType",
-        "extended",
-        "physicalAddress",
-        "physicalAddressHex",
-        "physicalAddressMask",
-        "node",
-        "card",
-        "moduleRank",
-        "device",
-        "row",
-        "column",
-        "bitPosition",
-        "requestorID",
-        "responderID",
-        "targetID",
-        "rankNumber",
-        "cardSmbiosHandle",
-        "moduleSmbiosHandle"
-    ],
+    "required": [],
     "additionalProperties": false,
     "properties": {
         "errorStatus": {

@@ -2,21 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "description": "Generic Processor Error Section",
-    "required": [
-        "processorType",
-        "processorISA",
-        "errorType",
-        "operation",
-        "flags",
-        "level",
-        "cpuVersionInfo",
-        "cpuBrandString",
-        "processorID",
-        "targetAddress",
-        "requestorID",
-        "responderID",
-        "instructionIP"
-    ],
+    "required": [],
     "additionalProperties": false,
     "properties": {
         "processorType": {
