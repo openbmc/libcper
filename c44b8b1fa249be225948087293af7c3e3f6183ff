@@ -62,6 +62,29 @@
       },
       "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1064976_e764b06f",
+        "filename": "tests/test-utils.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-05T17:10:07Z",
+      "side": 1,
+      "message": "I suspect when you add more structure to this, this list will drop considerably.",
+      "range": {
+        "startLine": 35,
+        "startChar": 6,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
