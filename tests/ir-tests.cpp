@@ -8,6 +8,7 @@
 #include "gtest/gtest.h"
 #include "test-utils.hpp"
 #include <json.h>
+#include <charconv>
 #include <nlohmann/json.hpp>
 #include <filesystem>
 #include <fstream>
@@ -84,29 +85,48 @@ void cper_create_examples(const char *section_name)
 	jsonOutFile.close();
 }
 
+std::vector<unsigned char> string_to_binary(const std::string &source)
+{
+	std::vector<unsigned char> retval;
+	bool uppernibble = true;
+	for (const char c : source) {
+		if (!isxdigit(c)) {
+			continue;
+		}
+		unsigned char value = 0;
+		std::from_chars(&c, &c + 1, value, 16);
+		if (uppernibble) {
+			retval.push_back(value << 4);
+		} else {
+			retval.back() += value;
+		}
+		uppernibble = !uppernibble;
+	}
+	return retval;
+}
+
 //Tests fixed CPER sections for IR validity with an example set.
 void cper_example_section_ir_test(const char *section_name)
 {
 	//Open CPER record for the given type.
 	fs::path fpath = LIBCPER_EXAMPLES;
 	fpath /= section_name;
-	fs::path cper = fpath.replace_extension("cper");
+	fs::path cper = fpath.replace_extension("cperhex");
 	fs::path json = fpath.replace_extension("json");
 
-	// Do a C style read to obtain FILE*
-	FILE *record = fopen(cper.string().c_str(), "rb");
-	if (record == NULL) {
-		std::cerr
-			<< "cper_example_section_ir_test: File cannot be opened/does not exist "
-			<< cper << std::endl;
-		FAIL() << "cper_example_section_ir_test: File cannot be opened/does not exist";
+	std::ifstream cper_file(cper, std::ios::binary);
+	if (!cper_file.is_open()) {
+		std::cerr << "Failed to open CPER file: " << cper << std::endl;
+		FAIL() << "Failed to open CPER file";
 		return;
 	}
+	std::string cper_str((std::istreambuf_iterator<char>(cper_file)),
+			     std::istreambuf_iterator<char>());
 
+	std::vector<unsigned char> cper_bin = string_to_binary(cper_str);
 	//Convert to IR, free resources.
-	json_object *ir = cper_to_ir(record);
+	json_object *ir = cper_buf_to_ir(cper_bin.data(), cper_bin.size());
 	if (ir == NULL) {
-		fclose(record);
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
 		FAIL();
 		return;
@@ -117,12 +137,10 @@ void cper_example_section_ir_test(const char *section_name)
 		std::cerr << "cper_example_section_ir_test: JSON parse error:"
 			  << std::endl;
 		FAIL() << "cper_example_section_ir_test: JSON parse error:";
-		fclose(record);
 		json_object_put(ir);
 
 		return;
 	}
-	fclose(record);
 
 	//Open json example file
 	nlohmann::json jGolden = loadJson(json.string().c_str());
