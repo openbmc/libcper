@@ -34,6 +34,24 @@
       "parentUuid": "15376ed0_4e3fbfe1",
       "revId": "517282fff97cde22285b6870579e007c3f342c4c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b751f8e6_152d8875",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-05T02:28:16Z",
+      "side": 1,
+      "message": "all good.  I eventually found the patch where we started enforcing this.",
+      "parentUuid": "f61fd7b5_5984bdda",
+      "revId": "517282fff97cde22285b6870579e007c3f342c4c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ],
   "submitRequirementResults": []
