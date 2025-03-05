@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60036907_1e868c67",
+        "filename": "examples/pcie.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-05T17:00:49Z",
+      "side": 1,
+      "message": "Why did we change a number of fields that are unrelated to the new feature being added?",
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78f948bb_16ca2a81",
+        "filename": "examples/pcie.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-05T17:00:49Z",
+      "side": 1,
+      "message": "The device capabilities register breaks down into smaller fields than this.  Lets decode these into as close to human readable fields as possible.\n\nFor example, this field would be\n\ndevice_capabilies: {\n   maximum_payload_size: 1,\n   extended_tags_supported: true,\n   acceptable_los_latency: 3\n   ....\n}\n\nI suspect that will remove the need to have both hex and int decodes for a lot of the fields.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 2
+      },
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4a39392_4f7c1c07",
+        "filename": "examples/pcie.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-05T17:00:49Z",
+      "side": 1,
+      "message": "The sort order on these is a little awkward.  I can\u0027t tell if that\u0027s just how you build this file, and these just need sorted, or if that\u0027s how they show up in the json file itself.  We probably want the hex decode next to the int decode.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 55
+      },
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
