@@ -22,6 +22,21 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor);
 json_object *cper_section_to_ir(FILE *handle, long base_pos,
 				EFI_ERROR_SECTION_DESCRIPTOR *descriptor);
 
+json_object *cper_buf_to_ir(void *cper_buf, size_t size)
+{
+	// TODO, this really should avoid the overhead of fmemopen()
+	// but doing so would require a lot of code changes to evict FILE* from
+	// The internals of libcper
+	FILE *cper_file = fmemopen(cper_buf, size, "r");
+	if (!cper_file) {
+		printf("Failed to open CPER buffer.\n");
+		return NULL;
+	}
+	json_object *ir = cper_to_ir(cper_file);
+	fclose(cper_file);
+	return ir;
+}
+
 //Reads a CPER log file at the given file location, and returns an intermediate
 //JSON representation of this CPER record.
 json_object *cper_to_ir(FILE *cper_file)
@@ -374,6 +389,21 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 	//Free section memory, return result.
 	free(section);
 	return result;
+}
+
+json_object *cper_buf_single_section_to_ir(void *cper_buf, size_t size)
+{
+	// TODO, this really should avoid the overhead of fmemopen()
+	// but doing so would require a lot of code changes to evict FILE* from
+	// The internals of libcper.
+	FILE *cper_file = fmemopen(cper_buf, size, "r");
+	if (!cper_file) {
+		printf("Failed to open CPER buffer.\n");
+		return NULL;
+	}
+	json_object *ir = cper_to_ir(cper_file);
+	fclose(cper_file);
+	return ir;
 }
 
 //Converts a single CPER section, without a header but with a section descriptor, to JSON.
