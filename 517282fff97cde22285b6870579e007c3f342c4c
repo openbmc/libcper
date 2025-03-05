@@ -16,6 +16,24 @@
       "message": "Merging quickly because we\u0027re now enforcing meson formatting???",
       "revId": "517282fff97cde22285b6870579e007c3f342c4c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f61fd7b5_5984bdda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-05T00:29:04Z",
+      "side": 1,
+      "message": "I6732c91e1d2b06ffbdd0ac281c3ab2302942277b fixed all the formatting here, but then there was a regression.   My cronjob had sent this one yesterday but it seems like it got missed:  https://gerrit.openbmc.org/c/openbmc/libcper/+/78592",
+      "parentUuid": "15376ed0_4e3fbfe1",
+      "revId": "517282fff97cde22285b6870579e007c3f342c4c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ],
   "submitRequirementResults": []
