@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eac1065_511f9d37",
+        "filename": "examples/pcie.cper",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-05T12:44:06Z",
+      "side": 1,
+      "message": "@ed@tanous.net - Should we do something with these like save them in `xxd` format and reverse-xxd them during test cases?  These probably won\u0027t change often, I understand, but pretty impossible to review them if they do.",
+      "revId": "ae8dc7242c6a9d43239959afa3478b6f22b52f34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
