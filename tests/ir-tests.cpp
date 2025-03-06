@@ -128,8 +128,7 @@ void cper_example_section_ir_test(const char *section_name)
 
 	std::vector<unsigned char> cper_bin = string_to_binary(cper_str);
 	//Convert to IR, free resources.
-	json_object *ir =
-		cper_buf_to_ir((void *)cper_bin.data(), cper_bin.size());
+	json_object *ir = cper_buf_to_ir(cper_bin.data(), cper_bin.size());
 	if (ir == NULL) {
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
 		FAIL();
