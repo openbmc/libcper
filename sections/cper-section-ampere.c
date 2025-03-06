@@ -5,7 +5,7 @@
 #include <libcper/sections/cper-section-ampere.h>
 
 //Converts the given processor-generic CPER section into JSON IR.
-json_object *cper_section_ampere_to_ir(void *section)
+json_object *cper_section_ampere_to_ir(const void *section)
 {
 	EFI_AMPERE_ERROR_DATA *record = (EFI_AMPERE_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();

@@ -28,7 +28,7 @@ typedef struct {
 	UINT64 Resv3 : 1;
 } EFI_VTD_FAULT_RECORD;
 
-json_object *cper_section_dmar_vtd_to_ir(void *section);
+json_object *cper_section_dmar_vtd_to_ir(const void *section);
 void ir_section_dmar_vtd_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
