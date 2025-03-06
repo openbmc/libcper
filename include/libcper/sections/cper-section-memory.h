@@ -75,8 +75,8 @@ extern "C" {
 			  "bankGroupValid",                                    \
 			  "bankAddressValid" }
 
-json_object *cper_section_platform_memory_to_ir(void *section);
-json_object *cper_section_platform_memory2_to_ir(void *section);
+json_object *cper_section_platform_memory_to_ir(const void *section);
+json_object *cper_section_platform_memory2_to_ir(const void *section);
 void ir_section_memory_to_cper(json_object *section, FILE *out);
 void ir_section_memory2_to_cper(json_object *section, FILE *out);
 
