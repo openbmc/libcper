@@ -91,8 +91,9 @@ std::vector<unsigned char> string_to_binary(const std::string &source)
 	bool uppernibble = true;
 	for (const char c : source) {
 		unsigned char value = 0;
-		std::from_chars_result r = std::from_chars(&c, &c + 1, value, 16);
-		if (r.ec != std::error_code()){
+		std::from_chars_result r =
+			std::from_chars(&c, &c + 1, value, 16);
+		if (r.ec != std::error_code()) {
 			continue;
 		}
 		if (uppernibble) {
