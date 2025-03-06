@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 char *cperbuf_to_str_ir(const unsigned char *cper, size_t size);
-char *cperbuf_single_section_to_str_ir(const unsigned char *cper_section,
+char *cperbuf_single_section_to_str_ir(unsigned char *cper_section,
 				       size_t size);
 
 #ifdef __cplusplus

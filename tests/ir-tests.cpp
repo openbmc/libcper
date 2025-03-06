@@ -96,10 +96,12 @@ std::vector<unsigned char> string_to_binary(const std::string &source)
 			continue;
 		}
 		unsigned char v = 0;
-		if (std::isxdigit(*it))
+		if (std::isxdigit(*it)) {
 			v = nibbles[std::toupper(*it) - '0'] << 4;
-		if (it + 1 < source.end() && std::isxdigit(*(it + 1)))
+		}
+		if (it + 1 < source.end() && std::isxdigit(*(it + 1))) {
 			v += nibbles[std::toupper(*(it + 1)) - '0'];
+		}
 		retval.push_back(v);
 		it += 2;
 	}
@@ -126,8 +128,7 @@ void cper_example_section_ir_test(const char *section_name)
 
 	std::vector<unsigned char> cper_bin = string_to_binary(cper_str);
 	//Convert to IR, free resources.
-	json_object *ir =
-		cper_buf_to_ir((void *)cper_bin.data(), cper_str.size());
+	json_object *ir = cper_buf_to_ir(cper_bin.data(), cper_str.size());
 	if (ir == NULL) {
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
 		FAIL();
