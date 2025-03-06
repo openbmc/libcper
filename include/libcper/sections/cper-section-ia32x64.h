@@ -74,7 +74,7 @@ typedef struct {
 	UINT64 Reserved[2];
 } EFI_IA32_X64_CPU_ID;
 
-json_object *cper_section_ia32x64_to_ir(void *section);
+json_object *cper_section_ia32x64_to_ir(const void *section);
 void ir_section_ia32x64_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
