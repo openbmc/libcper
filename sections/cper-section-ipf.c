@@ -15,7 +15,7 @@ json_object *cper_ipf_mod_error_read_array(EFI_IPF_MOD_ERROR_INFO **cur_error,
 json_object *cper_ipf_mod_error_to_ir(EFI_IPF_MOD_ERROR_INFO *mod_error);
 
 //Converts a single Intel IPF error CPER section into JSON IR.
-json_object *cper_section_ipf_to_ir(void *section)
+json_object *cper_section_ipf_to_ir(const void *section)
 {
 	EFI_IPF_ERROR_INFO_HEADER *ipf_error =
 		(EFI_IPF_ERROR_INFO_HEADER *)section;

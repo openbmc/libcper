@@ -36,8 +36,8 @@ typedef struct {
 	UINT32 IoNumber;
 } __attribute__((packed, aligned(1))) EFI_PCI_PCIX_DEVICE_ERROR_DATA;
 
-json_object *cper_section_pci_dev_to_ir(void *section);
-void ir_section_pci_dev_to_cper(json_object *section, FILE *out);
+json_object *cper_section_pci_dev_to_ir(const void *section);
+void ir_section_pci_dev_to_cper(json_object *const ection, FILE *out);
 
 #ifdef __cplusplus
 }
