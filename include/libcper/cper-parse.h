@@ -29,9 +29,10 @@ extern "C" {
 			  "HW_ERROR_FLAGS_SIMULATED" }
 
 json_object *cper_to_ir(FILE *cper_file);
-json_object *cper_buf_to_ir(void *cper_buf, size_t size);
+json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size);
 json_object *cper_single_section_to_ir(FILE *cper_section_file);
-json_object *cper_buf_single_section_to_ir(void *cper_buf, size_t size);
+json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
+					   size_t size);
 
 void ir_to_cper(json_object *ir, FILE *out);
 void ir_single_section_to_cper(json_object *ir, FILE *out);
