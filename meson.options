@@ -1,3 +1,9 @@
+option(
+    'fuzz',
+    type: 'feature',
+    value: 'enabled',
+    description: 'Build fuzz targets',
+)
 option('tests', type: 'feature', value: 'enabled', description: 'Build tests')
 option('utility', type: 'feature', value: 'enabled', description: 'Utility')
 option(
