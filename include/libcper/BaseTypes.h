@@ -15,6 +15,9 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+#include <limits.h>
+
 ///
 /// 8-byte unsigned value
 ///
