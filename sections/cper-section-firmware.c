@@ -11,7 +11,7 @@
 #include <libcper/sections/cper-section-firmware.h>
 
 //Converts a single firmware CPER section into JSON IR.
-json_object *cper_section_firmware_to_ir(void *section)
+json_object *cper_section_firmware_to_ir(const void *section)
 {
 	EFI_FIRMWARE_ERROR_DATA *firmware_error =
 		(EFI_FIRMWARE_ERROR_DATA *)section;

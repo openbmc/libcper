@@ -9,7 +9,7 @@ extern "C" {
 #include <json.h>
 #include <libcper/Cper.h>
 
-json_object *cper_section_nvidia_to_ir(void *section);
+json_object *cper_section_nvidia_to_ir(const void *section);
 void ir_section_nvidia_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus

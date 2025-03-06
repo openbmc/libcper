@@ -43,7 +43,7 @@ void ir_ia32x64_x64_registers_to_cper(json_object *registers, FILE *out);
 //////////////////
 
 //Converts the IA32/x64 error section described in the given descriptor into intermediate format.
-json_object *cper_section_ia32x64_to_ir(void *section)
+json_object *cper_section_ia32x64_to_ir(const void *section)
 {
 	EFI_IA32_X64_PROCESSOR_ERROR_RECORD *record =
 		(EFI_IA32_X64_PROCESSOR_ERROR_RECORD *)section;
