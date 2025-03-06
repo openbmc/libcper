@@ -20,6 +20,10 @@ CHAR8 *base64_encode(const UINT8 *src, INT32 len, INT32 *out_len)
 	const UINT8 *src_end;
 	const UINT8 *in_pos;
 
+	if (len <= 0) {
+		return NULL;
+	}
+
 	if (!out_len) {
 		return NULL;
 	}
