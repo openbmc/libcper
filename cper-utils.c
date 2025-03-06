@@ -321,15 +321,39 @@ const char *severity_to_string(UINT32 severity)
 void timestamp_to_string(char *out, int out_len,
 			 EFI_ERROR_TIME_STAMP *timestamp)
 {
+	//Cannot go to three digits.
+	int century = bcd_to_int(timestamp->Century) % 100;
+	if (century >= 100) {
+		return;
+	}
+	int year = bcd_to_int(timestamp->Year) % 100;
+	if (year >= 100) {
+		return;
+	}
+	int month = bcd_to_int(timestamp->Month);
+	if (month > 12) {
+		return;
+	}
+	int day = bcd_to_int(timestamp->Day);
+	if (day > 31) {
+		return;
+	}
+	int hours = bcd_to_int(timestamp->Hours);
+	if (hours >= 24) {
+		return;
+	}
+	int minutes = bcd_to_int(timestamp->Minutes);
+	if (minutes > 60) {
+		return;
+	}
+	int seconds = bcd_to_int(timestamp->Seconds);
+	if (seconds >= 60) {
+		return;
+	}
 	int written = snprintf(
 		out, out_len,
 		"%02hhu%02hhu-%02hhu-%02hhuT%02hhu:%02hhu:%02hhu+00:00",
-		bcd_to_int(timestamp->Century) %
-			100,			   //Cannot go to three digits.
-		bcd_to_int(timestamp->Year) % 100, //Cannot go to three digits.
-		bcd_to_int(timestamp->Month), bcd_to_int(timestamp->Day),
-		bcd_to_int(timestamp->Hours), bcd_to_int(timestamp->Minutes),
-		bcd_to_int(timestamp->Seconds));
+		century, year, month, day, hours, minutes, seconds);
 
 	if (written < 0 || written >= out_len) {
 		printf("Timestamp buffer of insufficient size\n");
