@@ -37,6 +37,10 @@ void ir_to_cper(json_object *ir, FILE *out)
 	//Create the CPER section descriptors.
 	json_object *section_descriptors =
 		json_object_object_get(ir, "sectionDescriptors");
+	if (section_descriptors == NULL) {
+		printf("Invalid CPER file: No section descriptors.\n");
+		return;
+	}
 	int amt_descriptors = json_object_array_length(section_descriptors);
 	EFI_ERROR_SECTION_DESCRIPTOR *descriptors[amt_descriptors];
 	for (int i = 0; i < amt_descriptors; i++) {
@@ -52,6 +56,10 @@ void ir_to_cper(json_object *ir, FILE *out)
 
 	//Run through each section in turn.
 	json_object *sections = json_object_object_get(ir, "sections");
+	if (sections == NULL) {
+		printf("Invalid CPER file: No sections.\n");
+		return;
+	}
 	int amt_sections = json_object_array_length(sections);
 	if (amt_sections == amt_descriptors) {
 		for (int i = 0; i < amt_sections; i++) {
