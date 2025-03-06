@@ -26,65 +26,97 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 
 json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 {
+	json_object *parent = NULL;
 	json_object *header_ir = NULL;
 	json_object *section_descriptors_ir = NULL;
 	json_object *sections_ir = NULL;
 
 	const unsigned char *pos = cper_buf;
+	unsigned int remaining = size;
 
-	if (size < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
-		return NULL;
+	if (remaining < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
+		printf("Invalid CPER file: Invalid header (incorrect signature).\n");
+		goto fail;
 	}
 
 	EFI_COMMON_ERROR_RECORD_HEADER *header = NULL;
 	header = (EFI_COMMON_ERROR_RECORD_HEADER *)cper_buf;
+	pos += sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
+	remaining -= sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
 	if (header->SignatureStart != EFI_ERROR_RECORD_SIGNATURE_START) {
 		printf("Invalid CPER file: Invalid header (incorrect signature).\n");
 		goto fail;
 	}
-	pos += sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
+	if (header->SectionCount == 0) {
+		printf("Invalid CPER file: Invalid section count (0).\n");
+		goto fail;
+	}
+	if (remaining < sizeof(EFI_ERROR_SECTION_DESCRIPTOR)) {
+		printf("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
+		goto fail;
+	}
 
 	//Create the header JSON object from the read bytes.
+	parent = json_object_new_object();
 	header_ir = cper_header_to_ir(header);
+
+	json_object_object_add(parent, "header", header_ir);
+
 	//Read the appropriate number of section descriptors & sections, and convert them into IR format.
 	section_descriptors_ir = json_object_new_array();
 	sections_ir = json_object_new_array();
 	for (int i = 0; i < header->SectionCount; i++) {
 		//Create the section descriptor.
-		if (pos + sizeof(EFI_ERROR_SECTION_DESCRIPTOR) >
-		    cper_buf + size) {
+		if (remaining < sizeof(EFI_ERROR_SECTION_DESCRIPTOR)) {
 			printf("Invalid number of section headers: Header states %d sections, could not read section %d.\n",
 			       header->SectionCount, i + 1);
 			goto fail;
 		}
+
 		EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor;
-		section_descriptor = (EFI_ERROR_SECTION_DESCRIPTOR *)pos;
+		section_descriptor = (EFI_ERROR_SECTION_DESCRIPTOR *)(pos);
 		pos += sizeof(EFI_ERROR_SECTION_DESCRIPTOR);
+		remaining -= sizeof(EFI_ERROR_SECTION_DESCRIPTOR);
+
+		if (section_descriptor->SectionOffset > size) {
+			printf("Invalid section descriptor: Section offset > size.\n");
+			goto fail;
+		}
+
+		if (section_descriptor->SectionLength <= 0) {
+			printf("Invalid section descriptor: Section length <= 0.\n");
+			goto fail;
+		}
+
+		if (section_descriptor->SectionOffset >
+		    UINT_MAX - section_descriptor->SectionLength) {
+			printf("Invalid section descriptor: Section offset + length would overflow.\n");
+			goto fail;
+		}
+
+		if (section_descriptor->SectionOffset +
+			    section_descriptor->SectionLength >
+		    size) {
+			printf("Invalid section descriptor: Section offset + length > size.\n");
+			goto fail;
+		}
+
+		const unsigned char *section_begin =
+			cper_buf + section_descriptor->SectionOffset;
 
 		json_object_array_add(
 			section_descriptors_ir,
 			cper_section_descriptor_to_ir(section_descriptor));
 
-		if (section_descriptor->SectionOffset +
-			    section_descriptor->SectionLength >
-		    size) {
-			printf("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
-			goto fail;
-		}
-		const void *section_buf =
-			cper_buf + section_descriptor->SectionOffset;
-
 		//Read the section itself.
 		json_object_array_add(sections_ir,
 				      cper_buf_section_to_ir(
-					      section_buf,
+					      section_begin,
 					      section_descriptor->SectionLength,
 					      section_descriptor));
 	}
 
 	//Add the header, section descriptors, and sections to a parent object.
-	json_object *parent = json_object_new_object();
-	json_object_object_add(parent, "header", header_ir);
 	json_object_object_add(parent, "sectionDescriptors",
 			       section_descriptors_ir);
 	json_object_object_add(parent, "sections", sections_ir);
@@ -94,7 +126,8 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 fail:
 	json_object_put(sections_ir);
 	json_object_put(section_descriptors_ir);
-	json_object_put(header_ir);
+	json_object_put(parent);
+	printf("Failed to parse CPER file.\n");
 	return NULL;
 }
 
@@ -173,15 +206,20 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	//If a timestamp exists according to validation bits, then add it.
 	if (header->ValidationBits & 0x2) {
 		char timestamp_string[TIMESTAMP_LENGTH];
-		timestamp_to_string(timestamp_string, TIMESTAMP_LENGTH,
-				    &header->TimeStamp);
-
-		json_object_object_add(
-			header_ir, "timestamp",
-			json_object_new_string(timestamp_string));
-		json_object_object_add(
-			header_ir, "timestampIsPrecise",
-			json_object_new_boolean(header->TimeStamp.Flag));
+		int ret = timestamp_to_string(
+			timestamp_string, TIMESTAMP_LENGTH, &header->TimeStamp);
+		if (ret < 0) {
+			printf("Failed to convert timestamp to string\n");
+			json_object_put(header_ir);
+			return NULL;
+		} else {
+			json_object_object_add(
+				header_ir, "timestamp",
+				json_object_new_string(timestamp_string));
+			json_object_object_add(header_ir, "timestampIsPrecise",
+					       json_object_new_boolean(
+						       header->TimeStamp.Flag));
+		}
 	}
 
 	//If a platform ID exists according to the validation bits, then add it.
@@ -335,9 +373,27 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 
 	//If validation bits indicate it exists, add FRU text.
 	if ((section_descriptor->SecValidMask & 0x2) >> 1) {
-		json_object_object_add(
-			section_descriptor_ir, "fruText",
-			json_object_new_string(section_descriptor->FruString));
+		int fru_text_len = 0;
+		for (;
+		     fru_text_len < (int)sizeof(section_descriptor->FruString);
+		     fru_text_len++) {
+			char c = section_descriptor->FruString[fru_text_len];
+			if (c < 0) {
+				//printf("Fru text contains non-ASCII character\n");
+				fru_text_len = -1;
+				break;
+			}
+			if (c == '\0') {
+				break;
+			}
+		}
+		if (fru_text_len >= 0) {
+			json_object_object_add(
+				section_descriptor_ir, "fruText",
+				json_object_new_string_len(
+					section_descriptor->FruString,
+					fru_text_len));
+		}
 	}
 
 	//Section severity.
@@ -393,7 +449,7 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 					      descriptor->SectionLength,
 					      &encoded_len);
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
+			//printf("Failed to allocate encode output buffer. \n");
 		} else {
 			section_ir = json_object_new_object();
 			json_object_object_add(section_ir, "data",
@@ -478,7 +534,11 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 					   size_t size)
 {
-	json_object *ir = json_object_new_object();
+	const unsigned char *cper_end;
+	const unsigned char *section_begin;
+	json_object *ir;
+
+	cper_end = cper_buf + size;
 
 	//Read the section descriptor out.
 	EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor;
@@ -486,16 +546,18 @@ json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 		printf("Failed to read section descriptor for CPER single section\n");
 		return NULL;
 	}
+
+	ir = json_object_new_object();
 	section_descriptor = (EFI_ERROR_SECTION_DESCRIPTOR *)cper_buf;
 	//Convert the section descriptor to IR.
 	json_object *section_descriptor_ir =
 		cper_section_descriptor_to_ir(section_descriptor);
 	json_object_object_add(ir, "sectionDescriptor", section_descriptor_ir);
+	section_begin = cper_buf + section_descriptor->SectionOffset;
 
-	if (section_descriptor->SectionOffset +
-		    section_descriptor->SectionLength >
-	    size) {
-		printf("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
+	if (section_begin + section_descriptor->SectionLength >= cper_end) {
+		json_object_put(ir);
+		//printf("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
 		return NULL;
 	}
 
@@ -522,6 +584,7 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 	if (fread(&section_descriptor, sizeof(EFI_ERROR_SECTION_DESCRIPTOR), 1,
 		  cper_section_file) != 1) {
 		printf("Failed to read section descriptor for CPER single section (fread() returned an unexpected value).\n");
+		json_object_put(ir);
 		return NULL;
 	}
 
@@ -542,6 +605,7 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 		printf("Section read failed: Could not read %u bytes from global offset %d.\n",
 		       section_descriptor.SectionLength,
 		       section_descriptor.SectionOffset);
+		json_object_put(ir);
 		free(section);
 		return NULL;
 	}
