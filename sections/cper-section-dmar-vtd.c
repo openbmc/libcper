@@ -13,7 +13,7 @@
 #include <libcper/sections/cper-section-dmar-vtd.h>
 
 //Converts a single VT-d specific DMAr CPER section into JSON IR.
-json_object *cper_section_dmar_vtd_to_ir(void *section)
+json_object *cper_section_dmar_vtd_to_ir(const void *section)
 {
 	EFI_DIRECTED_IO_DMAR_ERROR_DATA *vtd_error =
 		(EFI_DIRECTED_IO_DMAR_ERROR_DATA *)section;
