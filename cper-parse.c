@@ -65,10 +65,12 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 		json_object_array_add(
 			section_descriptors_ir,
 			cper_section_descriptor_to_ir(section_descriptor));
-
-		if (section_descriptor->SectionOffset +
-			    section_descriptor->SectionLength >
-		    size) {
+		const unsigned char *section_begin =
+			cper_buf + section_descriptor->SectionOffset;
+		const unsigned char *section_end =
+			section_begin + section_descriptor->SectionLength;
+		const unsigned char *cper_end = cper_buf + size;
+		if (section_end > cper_end) {
 			printf("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
 			// Free json objects
 			json_object_put(sections_ir);
@@ -76,13 +78,11 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 			json_object_put(header_ir);
 			return NULL;
 		}
-		const void *section_buf =
-			cper_buf + section_descriptor->SectionOffset;
 
 		//Read the section itself.
 		json_object_array_add(sections_ir,
 				      cper_buf_section_to_ir(
-					      section_buf,
+					      section_begin,
 					      section_descriptor->SectionLength,
 					      section_descriptor));
 	}
@@ -333,9 +333,27 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 
 	//If validation bits indicate it exists, add FRU text.
 	if ((section_descriptor->SecValidMask & 0x2) >> 1) {
-		json_object_object_add(
-			section_descriptor_ir, "fruText",
-			json_object_new_string(section_descriptor->FruString));
+		int fru_text_len = 0;
+		for (;
+		     fru_text_len < (int)sizeof(section_descriptor->FruString);
+		     fru_text_len++) {
+			char c = section_descriptor->FruString[fru_text_len];
+			if (c < 0 || c > 0x7f) {
+				printf("Fru text contains non-ASCII character\n");
+				fru_text_len = -1;
+				break;
+			}
+			if (c == '\0') {
+				break;
+			}
+		}
+		if (fru_text_len >= 0) {
+			json_object_object_add(
+				section_descriptor_ir, "fruText",
+				json_object_new_string_len(
+					section_descriptor->FruString,
+					fru_text_len));
+		}
 	}
 
 	//Section severity.
@@ -476,7 +494,11 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 					   size_t size)
 {
-	json_object *ir = json_object_new_object();
+	const unsigned char *cper_end;
+	const unsigned char *section_begin;
+	json_object *ir;
+
+	cper_end = cper_buf + size;
 
 	//Read the section descriptor out.
 	EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor;
@@ -484,15 +506,17 @@ json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 		printf("Failed to read section descriptor for CPER single section\n");
 		return NULL;
 	}
+
+	ir = json_object_new_object();
 	section_descriptor = (EFI_ERROR_SECTION_DESCRIPTOR *)cper_buf;
 	//Convert the section descriptor to IR.
 	json_object *section_descriptor_ir =
 		cper_section_descriptor_to_ir(section_descriptor);
 	json_object_object_add(ir, "sectionDescriptor", section_descriptor_ir);
+	section_begin = cper_buf + section_descriptor->SectionOffset;
 
-	if (section_descriptor->SectionOffset +
-		    section_descriptor->SectionLength >
-	    size) {
+	if (section_begin + section_descriptor->SectionLength >= cper_end) {
+		json_object_put(ir);
 		printf("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
 		return NULL;
 	}
@@ -520,6 +544,7 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 	if (fread(&section_descriptor, sizeof(EFI_ERROR_SECTION_DESCRIPTOR), 1,
 		  cper_section_file) != 1) {
 		printf("Failed to read section descriptor for CPER single section (fread() returned an unexpected value).\n");
+		json_object_put(ir);
 		return NULL;
 	}
 
@@ -540,6 +565,7 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 		printf("Section read failed: Could not read %u bytes from global offset %d.\n",
 		       section_descriptor.SectionLength,
 		       section_descriptor.SectionOffset);
+		json_object_put(ir);
 		free(section);
 		return NULL;
 	}
