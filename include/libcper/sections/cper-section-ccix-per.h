@@ -24,7 +24,7 @@ typedef struct {
 	UINT16 Reserved;
 } __attribute__((packed, aligned(1))) EFI_CCIX_PER_LOG_DATA;
 
-json_object *cper_section_ccix_per_to_ir(void *section);
+json_object *cper_section_ccix_per_to_ir(const void *section);
 void ir_section_ccix_per_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus

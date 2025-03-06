@@ -13,7 +13,7 @@
 #include <libcper/sections/cper-section-generic.h>
 
 //Converts the given processor-generic CPER section into JSON IR.
-json_object *cper_section_generic_to_ir(void *section)
+json_object *cper_section_generic_to_ir(const void *section)
 {
 	EFI_PROCESSOR_GENERIC_ERROR_DATA *section_generic =
 		(EFI_PROCESSOR_GENERIC_ERROR_DATA *)section;
