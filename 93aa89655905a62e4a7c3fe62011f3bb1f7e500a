@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e6f2911_21b61827",
+        "filename": "tests/ir-tests.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-03-06T20:31:36Z",
+      "side": 1,
+      "message": "Might want to fix the random example generator to generate cperhex as well, especially if we have new schemas\nhttps://github.com/openbmc/libcper/blob/a6730793584537a67264b2f8a5f5be9187a7a6ef/tests/ir-tests.cpp#L29",
+      "revId": "93aa89655905a62e4a7c3fe62011f3bb1f7e500a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
