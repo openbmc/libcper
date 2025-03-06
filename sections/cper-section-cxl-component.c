@@ -12,7 +12,7 @@
 #include <libcper/sections/cper-section-cxl-component.h>
 
 //Converts a single CXL component error CPER section into JSON IR.
-json_object *cper_section_cxl_component_to_ir(void *section)
+json_object *cper_section_cxl_component_to_ir(const void *section)
 {
 	EFI_CXL_COMPONENT_EVENT_HEADER *cxl_error =
 		(EFI_CXL_COMPONENT_EVENT_HEADER *)section;

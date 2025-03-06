@@ -63,7 +63,7 @@ typedef struct {
 	UINT32 Reserved;
 } __attribute__((packed, aligned(1))) EFI_CXL_PROTOCOL_ERROR_DATA;
 
-json_object *cper_section_cxl_protocol_to_ir(void *section);
+json_object *cper_section_cxl_protocol_to_ir(const void *section);
 void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus

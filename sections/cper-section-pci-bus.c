@@ -12,7 +12,7 @@
 #include <libcper/sections/cper-section-pci-bus.h>
 
 //Converts a single PCI/PCI-X bus CPER section into JSON IR.
-json_object *cper_section_pci_bus_to_ir(void *section)
+json_object *cper_section_pci_bus_to_ir(const void *section)
 {
 	EFI_PCI_PCIX_BUS_ERROR_DATA *bus_error =
 		(EFI_PCI_PCIX_BUS_ERROR_DATA *)section;
