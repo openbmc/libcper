@@ -12,7 +12,7 @@
 #include <libcper/sections/cper-section-cxl-protocol.h>
 
 //Converts a single CXL protocol error CPER section into JSON IR.
-json_object *cper_section_cxl_protocol_to_ir(void *section)
+json_object *cper_section_cxl_protocol_to_ir(const void *section)
 {
 	EFI_CXL_PROTOCOL_ERROR_DATA *cxl_protocol_error =
 		(EFI_CXL_PROTOCOL_ERROR_DATA *)section;
