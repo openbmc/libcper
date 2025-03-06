@@ -13,7 +13,7 @@
 #include <libcper/sections/cper-section-ccix-per.h>
 
 //Converts a single CCIX PER log CPER section into JSON IR.
-json_object *cper_section_ccix_per_to_ir(void *section)
+json_object *cper_section_ccix_per_to_ir(const void *section)
 {
 	EFI_CCIX_PER_LOG_DATA *ccix_error = (EFI_CCIX_PER_LOG_DATA *)section;
 	json_object *section_ir = json_object_new_object();
