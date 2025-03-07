@@ -18,6 +18,10 @@ add_project_arguments(
     language: ['c', 'cpp'],
 )
 
+if get_option('fuzz').allowed()
+    add_project_arguments('-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION', language: ['c', 'cpp'])
+endif
+
 add_project_arguments('-DLIBCPER_EXAMPLES="'
     + meson.current_source_dir() + '/examples"', language: ['c', 'cpp'])
 
