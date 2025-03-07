@@ -373,6 +373,17 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	return section_descriptor_ir;
 }
 
+json_object *read_section(const unsigned char *cper_section_buf,
+			  CPER_SECTION_DEFINITION *definition,
+			  json_object **section_ir)
+{
+	*section_ir = definition->ToIR(cper_section_buf);
+
+	json_object *result = json_object_new_object();
+	json_object_object_add(result, definition->ShortName, *section_ir);
+	return result;
+}
+
 //Converts the section described by a single given section descriptor.
 json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 				    EFI_ERROR_SECTION_DESCRIPTOR *descriptor)
@@ -388,21 +399,36 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 	json_object *section_ir = NULL;
 	int section_converted = 0;
 	for (size_t i = 0; i < section_definitions_len; i++) {
-		if (guid_equal(section_definitions[i].Guid,
-			       &descriptor->SectionType) &&
-		    section_definitions[i].ToIR != NULL) {
-			section_ir =
-				section_definitions[i].ToIR(cper_section_buf);
+		if (!guid_equal(section_definitions[i].Guid,
+				&descriptor->SectionType)) {
+			continue;
+		}
+		result = read_section(cper_section_buf, &section_definitions[i],
+				      &section_ir);
+		section_converted = 1;
+		break;
+	}
 
-			result = json_object_new_object();
-			json_object_object_add(result,
-					       section_definitions[i].ShortName,
-					       section_ir);
-
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	// It's unlikely fuzzing can reliably come up with a correct guid, given how
+	// much entropy there is.  If we're in fuzzing mode, and if we haven't found
+	// a match, try to force a match so we get some coverage.  Note, we still
+	// want coverage of the section failed to convert code, so treat index ==
+	// size as section failed to convert.
+	if (!section_converted) {
+		unsigned char index = 0;
+		if (index > 0) {
+			index = descriptor->SectionType.Data1 %
+				section_definitions_len;
+		}
+		if (index < section_definitions_len) {
+			result = read_section(cper_section_buf,
+					      &section_definitions[index],
+					      &section_ir);
 			section_converted = 1;
-			break;
 		}
 	}
+#endif
 
 	//Was it an unknown GUID/failed read?
 	if (!section_converted) {
@@ -506,7 +532,7 @@ json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 	//Read the section descriptor out.
 	EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor;
 	if (sizeof(EFI_ERROR_SECTION_DESCRIPTOR) > size) {
-		printf("Failed to read section descriptor for CPER single section\n");
+		//printf("Size of cper buffer was too small to read section descriptor %zu\n", size);
 		return NULL;
 	}
 

@@ -30,7 +30,7 @@ endif
 
 project_description = 'libcper library'
 
-section_sources = files(
+libcper_parse_sources = files(
     'sections/cper-section-ampere.c',
     'sections/cper-section-arm.c',
     'sections/cper-section-ccix-per.c',
@@ -83,7 +83,7 @@ if not json_c_dep.found()
     json_c_dep = json_c.get_variable('json_c_dep')
 endif
 
-libcper_parse_sources = files(
+libcper_parse_sources += files(
     'base64.c',
     'common-utils.c',
     'cper-parse.c',
@@ -99,7 +99,6 @@ subdir('include')
 libcper_parse = library(
     'cper-parse',
     libcper_parse_sources,
-    section_sources,
     edk_sources,
     version: meson.project_version(),
     include_directories: libcper_include_dir,
