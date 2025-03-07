@@ -27,7 +27,6 @@ typedef long long INT64;
 /// 4-byte unsigned value
 ///
 typedef unsigned int UINT32;
-#define UINT_MAX UINT32_MAX
 ///
 /// 4-byte signed value
 ///

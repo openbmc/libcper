@@ -61,21 +61,26 @@ cper_tests = executable(
 test('test-cper-tests', cper_tests)
 cxx = meson.get_compiler('cpp')
 if (cxx.get_id() == 'clang') and get_option('fuzz').allowed()
+    fuzz_args = [
+        '-fsanitize=fuzzer,address,leak',
+        '-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION',
+    ]
+
     foreach fuzzer_test : [
         'fuzz_base64_encode',
         'fuzz_cper_buf_section_to_ir',
         'fuzz_cper_buf_to_ir',
     ]
+
         fuzz_exe = executable(
             fuzzer_test,
-            [fuzzer_test + '.cpp'],
+            [fuzzer_test + '.cpp'] + libcper_parse_sources + edk_sources,
             implicit_include_directories: false,
             include_directories: include_directories(test_include_dirs),
-            cpp_args: ['-fpermissive', '-fsanitize=fuzzer,address,leak'],
-            link_args: ['-fsanitize=fuzzer,address,leak'],
+            cpp_args: fuzz_args,
+            c_args: fuzz_args,
+            link_args: fuzz_args,
             dependencies: [
-                libcper_parse_dep,
-                libcper_generate_dep,
                 json_c_dep,
                 gtest,
                 gmock,
@@ -91,6 +96,7 @@ if (cxx.get_id() == 'clang') and get_option('fuzz').allowed()
                 '-max_len=131072',
                 '-error_exitcode=1',
                 '-timeout_exitcode=2',
+                #fuzzer_test + '_corpus',
             ],
         )
     endforeach
