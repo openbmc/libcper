@@ -94,9 +94,9 @@ json_object *cper_section_generic_to_ir(const UINT8 *section, UINT32 size)
 
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
 		//CPU brand string. May not exist if on ARM.
-		json_object_object_add(
-			section_ir, "cpuBrandString",
-			json_object_new_string(section_generic->BrandString));
+		add_untrusted_string(section_ir, "cpuBrandString",
+				     section_generic->BrandString,
+				     sizeof(section_generic->BrandString));
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 8)) {

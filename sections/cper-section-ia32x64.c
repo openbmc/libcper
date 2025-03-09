@@ -118,7 +118,6 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	//Processor context information, of the amount described above.
 	if (remaining_size < (processor_context_info_num *
 			      sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO))) {
-		json_object_put(error_info_array);
 		json_object_put(record_ir);
 		printf("Invalid CPER file: Invalid processor context info num.\n");
 		return NULL;
