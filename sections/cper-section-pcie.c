@@ -212,11 +212,12 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size)
 			json_object_new_uint64(
 				aer_decode->correctable_error_status));
 
-		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN,
-			 "0x%08" PRIX32, aer_decode->correctable_error_status);
-		json_object_object_add(aer_capability_ir,
-				       "correctable_error_status_hex",
-				       json_object_new_string(hexstring_buf));
+		int len = snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN,
+				   "0x%08" PRIX32,
+				   aer_decode->correctable_error_status);
+		json_object_object_add(
+			aer_capability_ir, "correctable_error_status_hex",
+			json_object_new_string_len(hexstring_buf, len));
 
 		json_object_object_add(
 			aer_capability_ir, "correctable_error_mask",
