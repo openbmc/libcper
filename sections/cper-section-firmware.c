@@ -35,10 +35,7 @@ json_object *cper_section_firmware_to_ir(const UINT8 *section, UINT32 size)
 		json_object_new_uint64(firmware_error->RecordId));
 
 	//Record GUID.
-	char record_id_guid[GUID_STRING_LENGTH];
-	guid_to_string(record_id_guid, &firmware_error->RecordIdGuid);
-	json_object_object_add(section_ir, "recordIDGUID",
-			       json_object_new_string(record_id_guid));
+	add_guid(section_ir, "recordIDGUID", &firmware_error->RecordIdGuid);
 
 	return section_ir;
 }
