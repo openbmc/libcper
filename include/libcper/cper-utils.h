@@ -1,7 +1,7 @@
 #ifndef CPER_UTILS_H
 #define CPER_UTILS_H
 
-#define GUID_STRING_LENGTH 48
+#define GUID_STRING_LENGTH 36
 #define TIMESTAMP_LENGTH   26
 
 #ifdef __cplusplus
@@ -57,12 +57,14 @@ const char *severity_to_string(UINT32 severity);
 int timestamp_to_string(char *out, int out_len,
 			EFI_ERROR_TIME_STAMP *timestamp);
 void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp);
-void guid_to_string(char *out, size_t out_len, EFI_GUID *guid);
+int guid_to_string(char *out, size_t out_len, EFI_GUID *guid);
 void string_to_guid(EFI_GUID *out, const char *guid);
 int guid_equal(EFI_GUID *a, EFI_GUID *b);
 
 void add_untrusted_string(json_object *ir, const char *field_name,
 			  const char *str, int len);
+
+void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid);
 
 //The available severity types for CPER.
 extern const char *CPER_SEVERITY_TYPES[4];
