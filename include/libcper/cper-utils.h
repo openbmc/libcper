@@ -57,7 +57,7 @@ const char *severity_to_string(UINT32 severity);
 int timestamp_to_string(char *out, int out_len,
 			EFI_ERROR_TIME_STAMP *timestamp);
 void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp);
-void guid_to_string(char *out, EFI_GUID *guid);
+void guid_to_string(char *out, size_t out_len, EFI_GUID *guid);
 void string_to_guid(EFI_GUID *out, const char *guid);
 int guid_equal(EFI_GUID *a, EFI_GUID *b);
 
