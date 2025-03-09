@@ -20,8 +20,9 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size)
 	EFI_PCI_PCIX_DEVICE_ERROR_DATA *dev_error =
 		(EFI_PCI_PCIX_DEVICE_ERROR_DATA *)section;
 
-	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA) + ((dev_error->MemoryNumber + dev_error->IoNumber) *
-			   sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA_REGISTER))) {
+	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA) +
+			   ((dev_error->MemoryNumber + dev_error->IoNumber) *
+			    sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA_REGISTER))) {
 		return NULL;
 	}
 

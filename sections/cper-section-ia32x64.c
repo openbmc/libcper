@@ -21,7 +21,8 @@ json_object *
 cper_ia32x64_bus_check_to_ir(EFI_IA32_X64_BUS_CHECK_INFO *bus_check);
 json_object *cper_ia32x64_ms_check_to_ir(EFI_IA32_X64_MS_CHECK_INFO *ms_check);
 json_object *cper_ia32x64_processor_context_info_to_ir(
-	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *context_info, void **cur_pos, UINT32 *remaining_size);
+	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *context_info, void **cur_pos,
+	UINT32 *remaining_size);
 json_object *
 cper_ia32x64_register_32bit_to_ir(EFI_CONTEXT_IA32_REGISTER_STATE *registers);
 json_object *
@@ -50,7 +51,8 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	}
 	EFI_IA32_X64_PROCESSOR_ERROR_RECORD *record =
 		(EFI_IA32_X64_PROCESSOR_ERROR_RECORD *)section;
-	UINT32 remaining_size = size - sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD);
+	UINT32 remaining_size =
+		size - sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD);
 	json_object *record_ir = json_object_new_object();
 
 	//Validation bits.
@@ -93,27 +95,29 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	EFI_IA32_X64_PROCESS_ERROR_INFO *current_error_info =
 		(EFI_IA32_X64_PROCESS_ERROR_INFO *)(record + 1);
 	json_object *error_info_array = json_object_new_array();
-	if (remaining_size < (processor_error_info_num * sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO))) {
+	if (remaining_size < (processor_error_info_num *
+			      sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO))) {
 		json_object_put(error_info_array);
 		json_object_put(record_ir);
 		printf("Invalid CPER file: Invalid processor error info num.\n");
 		return NULL;
 	}
-	
+
 	for (int i = 0; i < processor_error_info_num; i++) {
 		json_object_array_add(error_info_array,
 				      cper_ia32x64_processor_error_info_to_ir(
 					      current_error_info));
 		current_error_info++;
 	}
-	remaining_size -= processor_error_info_num * sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO);
+	remaining_size -= processor_error_info_num *
+			  sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO);
 
 	json_object_object_add(record_ir, "processorErrorInfo",
 			       error_info_array);
 
 	//Processor context information, of the amount described above.
-	if (remaining_size < (processor_context_info_num * sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO))) {
-		json_object_put(error_info_array);
+	if (remaining_size < (processor_context_info_num *
+			      sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO))) {
 		json_object_put(record_ir);
 		printf("Invalid CPER file: Invalid processor context info num.\n");
 		return NULL;
@@ -125,7 +129,8 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	for (int i = 0; i < processor_context_info_num; i++) {
 		json_object_array_add(context_info_array,
 				      cper_ia32x64_processor_context_info_to_ir(
-					      current_context_info, &cur_pos, &remaining_size));
+					      current_context_info, &cur_pos,
+					      &remaining_size));
 		current_context_info =
 			(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *)cur_pos;
 
@@ -445,7 +450,8 @@ json_object *cper_ia32x64_ms_check_to_ir(EFI_IA32_X64_MS_CHECK_INFO *ms_check)
 
 //Converts a single IA32/x64 processor context info entry into JSON IR format.
 json_object *cper_ia32x64_processor_context_info_to_ir(
-	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *context_info, void **cur_pos, UINT32 *remaining_size)
+	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *context_info, void **cur_pos,
+	UINT32 *remaining_size)
 {
 	if (*remaining_size < sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO)) {
 		return NULL;
@@ -519,7 +525,6 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 		*cur_pos =
 			(void *)(((char *)*cur_pos) + context_info->ArraySize);
 		*remaining_size -= context_info->ArraySize;
-
 	}
 	json_object_object_add(context_info_ir, "registerArray",
 			       register_array);
