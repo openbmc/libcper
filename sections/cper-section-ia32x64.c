@@ -148,13 +148,10 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 	EFI_IA32_X64_PROCESS_ERROR_INFO *error_info)
 {
 	json_object *error_info_ir = json_object_new_object();
+	json_object *type = json_object_new_object();
 
 	//Error structure type (as GUID).
-	char error_type[GUID_STRING_LENGTH];
-	guid_to_string(error_type, &error_info->ErrorType);
-	json_object *type = json_object_new_object();
-	json_object_object_add(type, "guid",
-			       json_object_new_string(error_type));
+	add_guid(type, "guid", &error_info->ErrorType);
 
 	//Get the error structure type as a readable string.
 	const char *readable_type = "Unknown";
