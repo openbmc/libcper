@@ -18,10 +18,6 @@ add_project_arguments(
     language: ['c', 'cpp'],
 )
 
-if get_option('fuzz').allowed()
-    add_project_arguments('-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION', language: ['c', 'cpp'])
-endif
-
 add_project_arguments('-DLIBCPER_EXAMPLES="'
     + meson.current_source_dir() + '/examples"', language: ['c', 'cpp'])
 
@@ -34,7 +30,7 @@ endif
 
 project_description = 'libcper library'
 
-section_sources = files(
+libcper_parse_sources = files(
     'sections/cper-section-ampere.c',
     'sections/cper-section-arm.c',
     'sections/cper-section-ccix-per.c',
@@ -87,7 +83,7 @@ if not json_c_dep.found()
     json_c_dep = json_c.get_variable('json_c_dep')
 endif
 
-libcper_parse_sources = files(
+libcper_parse_sources += files(
     'base64.c',
     'common-utils.c',
     'cper-parse.c',
@@ -103,7 +99,6 @@ subdir('include')
 libcper_parse = library(
     'cper-parse',
     libcper_parse_sources,
-    section_sources,
     edk_sources,
     version: meson.project_version(),
     include_directories: libcper_include_dir,

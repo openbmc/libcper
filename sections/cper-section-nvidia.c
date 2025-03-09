@@ -12,9 +12,19 @@
 #include <libcper/sections/cper-section-nvidia.h>
 
 //Converts a single NVIDIA CPER section into JSON IR.
-json_object *cper_section_nvidia_to_ir(const void *section)
+json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 {
+	if (size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
+		return NULL;
+	}
+
 	EFI_NVIDIA_ERROR_DATA *nvidia_error = (EFI_NVIDIA_ERROR_DATA *)section;
+	if (size < sizeof(EFI_NVIDIA_ERROR_DATA) +
+			   nvidia_error->NumberRegs *
+				   sizeof(EFI_NVIDIA_REGISTER_DATA)) {
+		return NULL;
+	}
+
 	json_object *section_ir = json_object_new_object();
 
 	json_object_object_add(section_ir, "signature",

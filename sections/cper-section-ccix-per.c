@@ -13,9 +13,18 @@
 #include <libcper/sections/cper-section-ccix-per.h>
 
 //Converts a single CCIX PER log CPER section into JSON IR.
-json_object *cper_section_ccix_per_to_ir(const void *section)
+json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size)
 {
+	if (size < sizeof(EFI_CCIX_PER_LOG_DATA)) {
+		return NULL;
+	}
+
 	EFI_CCIX_PER_LOG_DATA *ccix_error = (EFI_CCIX_PER_LOG_DATA *)section;
+
+	if (size < ccix_error->Length) {
+		return NULL;
+	}
+
 	json_object *section_ir = json_object_new_object();
 	ValidationTypes ui64Type = { UINT_64T,
 				     .value.ui64 = ccix_error->ValidBits };
@@ -39,7 +48,7 @@ json_object *cper_section_ccix_per_to_ir(const void *section)
 	//CCIX PER Log.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		//This is formatted as described in Section 7.3.2 of CCIX Base Specification (Rev 1.0).
-		const char *cur_pos = (const char *)(ccix_error + 1);
+		const UINT8 *cur_pos = (const UINT8 *)(ccix_error + 1);
 		int remaining_length =
 			ccix_error->Length - sizeof(EFI_CCIX_PER_LOG_DATA);
 		if (remaining_length > 0) {
