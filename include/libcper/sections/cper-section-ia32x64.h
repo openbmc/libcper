@@ -67,7 +67,7 @@ extern "C" {
 			  "Memory Mapper Registers" }
 
 #define IA32X64_REGISTER_CONTEXT_TYPES_SIZE                                    \
-	sizeof(IA32X64_REGISTER_CONTEXT_TYPES_KEYS) / sizeof(int)
+	((sizeof(IA32X64_REGISTER_CONTEXT_TYPES_KEYS) / sizeof(int)))
 
 typedef struct {
 	UINT64 Eax;
