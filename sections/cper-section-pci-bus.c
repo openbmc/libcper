@@ -54,8 +54,8 @@ json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size)
 	}
 
 	//Miscellaneous numeric fields.
-	UINT8 command_type = (bus_error->BusCommand >> 56) &
-			     0x1; //Byte 7, bit 0.
+	//Byte 7, bit 0.
+	UINT8 command_type = (bus_error->BusCommand >> 56) & 0x1;
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
 		json_object_object_add(
 			section_ir, "busAddress",
