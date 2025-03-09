@@ -383,13 +383,18 @@ void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp)
 }
 
 //Helper function to convert an EDK EFI GUID into a string for intermediate use.
-void guid_to_string(char *out, size_t out_len, EFI_GUID *guid)
+int guid_to_string(char *out, size_t out_len, EFI_GUID *guid)
 {
-	snprintf(out, out_len,
-		 "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-		 guid->Data1, guid->Data2, guid->Data3, guid->Data4[0],
-		 guid->Data4[1], guid->Data4[2], guid->Data4[3], guid->Data4[4],
-		 guid->Data4[5], guid->Data4[6], guid->Data4[7]);
+	size_t len = snprintf(
+		out, out_len,
+		"%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", guid->Data1,
+		guid->Data2, guid->Data3, guid->Data4[0], guid->Data4[1],
+		guid->Data4[2], guid->Data4[3], guid->Data4[4], guid->Data4[5],
+		guid->Data4[6], guid->Data4[7]);
+	if (len != out_len) {
+		return -1;
+	}
+	return len;
 }
 
 //Helper function to convert a string into an EDK EFI GUID.
@@ -445,4 +450,16 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 			ir, field_name,
 			json_object_new_string_len(str, fru_text_len));
 	}
+}
+
+void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid)
+{
+	char platform_string[GUID_STRING_LENGTH + 1];
+	if (!guid_to_string(platform_string, sizeof(platform_string), guid)) {
+		return;
+	}
+	json_object_object_add(
+		ir, field_name,
+		json_object_new_string_len(platform_string,
+					   sizeof(platform_string) - 1));
 }
