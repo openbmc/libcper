@@ -18,7 +18,7 @@ json_object *
 cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info);
 json_object *
 cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
-				 void **cur_pos);
+				 const UINT8 **cur_pos, UINT32 *remaining_size);
 json_object *
 cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 			       EFI_ARM_ERROR_INFORMATION_ENTRY *error_info);
@@ -46,10 +46,15 @@ void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out);
 //Converts the given processor-generic CPER section into JSON IR.
 json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 {
-	if (size < sizeof(EFI_ARM_ERROR_RECORD)) {
+	const UINT8 *cur_pos = section;
+	UINT32 remaining_size = size;
+
+	if (remaining_size < sizeof(EFI_ARM_ERROR_RECORD)) {
 		return NULL;
 	}
-	EFI_ARM_ERROR_RECORD *record = (EFI_ARM_ERROR_RECORD *)section;
+	EFI_ARM_ERROR_RECORD *record = (EFI_ARM_ERROR_RECORD *)cur_pos;
+	cur_pos += sizeof(EFI_ARM_ERROR_RECORD);
+	remaining_size -= sizeof(EFI_ARM_ERROR_RECORD);
 	json_object *section_ir = json_object_new_object();
 
 	//Length of ValidationBits from spec
@@ -114,23 +119,51 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 	json_object *error_info_array = json_object_new_array();
 	EFI_ARM_ERROR_INFORMATION_ENTRY *cur_error =
 		(EFI_ARM_ERROR_INFORMATION_ENTRY *)(record + 1);
+	if (remaining_size <
+	    (record->ErrInfoNum * sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY))) {
+		json_object_put(error_info_array);
+		json_object_put(section_ir);
+		printf("Invalid CPER file: Invalid processor error info num.\n");
+		return NULL;
+	}
 	for (int i = 0; i < record->ErrInfoNum; i++) {
 		json_object_array_add(error_info_array,
 				      cper_arm_error_info_to_ir(cur_error));
 		cur_error++;
 	}
+
+	cur_pos += (UINT32)(record->ErrInfoNum *
+			    sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY));
+	remaining_size -= (UINT32)(record->ErrInfoNum *
+				   sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY));
+
 	json_object_object_add(section_ir, "errorInfo", error_info_array);
 
 	//Processor context structures.
 	//The current position is moved within the processing, as it is a dynamic size structure.
-	uint8_t *cur_pos = (uint8_t *)cur_error;
 	json_object *context_info_array = json_object_new_array();
 	for (int i = 0; i < record->ContextInfoNum; i++) {
+		if (remaining_size <
+		    sizeof(EFI_ARM_CONTEXT_INFORMATION_HEADER)) {
+			json_object_put(context_info_array);
+			json_object_put(section_ir);
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			return NULL;
+		}
 		EFI_ARM_CONTEXT_INFORMATION_HEADER *header =
 			(EFI_ARM_CONTEXT_INFORMATION_HEADER *)cur_pos;
+
+		cur_pos += sizeof(EFI_ARM_CONTEXT_INFORMATION_HEADER);
+		remaining_size -= sizeof(EFI_ARM_CONTEXT_INFORMATION_HEADER);
 		json_object *processor_context =
-			cper_arm_processor_context_to_ir(header,
-							 (void **)&cur_pos);
+			cper_arm_processor_context_to_ir(header, &cur_pos,
+							 &remaining_size);
+		if (processor_context == NULL) {
+			json_object_put(context_info_array);
+			json_object_put(section_ir);
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			return NULL;
+		}
 		json_object_array_add(context_info_array, processor_context);
 	}
 	json_object_object_add(section_ir, "contextInfo", context_info_array);
@@ -141,10 +174,18 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 			json_object *vendor_specific = json_object_new_object();
 			size_t input_size = (uint8_t *)section +
 					    record->SectionLength - cur_pos;
+			if (remaining_size < input_size) {
+				json_object_put(vendor_specific);
+				json_object_put(section_ir);
+				printf("Invalid CPER file: Invalid vendor-specific info length.\n");
+				return NULL;
+			}
 			int32_t encoded_len = 0;
 			char *encoded = base64_encode(cur_pos, input_size,
 						      &encoded_len);
 			if (encoded == NULL) {
+				json_object_put(vendor_specific);
+				json_object_put(section_ir);
 				printf("base64 encode of vendorSpecificInfo failed\n");
 				return NULL;
 			}
@@ -453,8 +494,13 @@ json_object *cper_arm_bus_error_to_ir(EFI_ARM_BUS_ERROR_STRUCTURE *bus_error)
 //Converts a single ARM processor context block into JSON IR.
 json_object *
 cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
-				 void **cur_pos)
+				 const UINT8 **cur_pos, UINT32 *remaining_size)
 {
+	if (header->RegisterArraySize > *remaining_size) {
+		printf("Invalid CPER file: Invalid processor context info num.\n");
+		return NULL;
+	}
+
 	json_object *context_ir = json_object_new_object();
 
 	//Version.
@@ -463,7 +509,8 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 
 	//Add the context type.
 	json_object *context_type = integer_to_readable_pair(
-		header->RegisterContextType, 9,
+		header->RegisterContextType,
+		ARM_PROCESSOR_INFO_REGISTER_CONTEXT_TYPES_COUNT,
 		ARM_PROCESSOR_INFO_REGISTER_CONTEXT_TYPES_KEYS,
 		ARM_PROCESSOR_INFO_REGISTER_CONTEXT_TYPES_VALUES,
 		"Unknown (Reserved)");
@@ -475,16 +522,34 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		json_object_new_uint64(header->RegisterArraySize));
 
 	//The register array itself.
-	*cur_pos = (void *)(header + 1);
 	json_object *register_array = NULL;
 	switch (header->RegisterContextType) {
 	case EFI_ARM_CONTEXT_TYPE_AARCH32_GPR:
+		if (*remaining_size < sizeof(EFI_ARM_V8_AARCH32_GPR)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_V8_AARCH32_GPR)) {
+			printf("Invalid CPER file: Not enough bytes for aarch32 gpr\n");
+			goto fail;
+		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
 			sizeof(EFI_ARM_V8_AARCH32_GPR) / sizeof(UINT32),
 			ARM_AARCH32_GPR_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH32_EL1:
+		if (*remaining_size <
+		    sizeof(EFI_ARM_AARCH32_EL1_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_AARCH32_EL1_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Not enough bytes for aarch32 el1\n");
+			goto fail;
+		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
 			sizeof(EFI_ARM_AARCH32_EL1_CONTEXT_REGISTERS) /
@@ -492,13 +557,35 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 			ARM_AARCH32_EL1_REGISTER_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH32_EL2:
+		if (*remaining_size <
+		    sizeof(EFI_ARM_AARCH32_EL2_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_AARCH32_EL2_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Not enough bytes for aarch32 el2\n");
+			goto fail;
+		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
 			sizeof(EFI_ARM_AARCH32_EL2_CONTEXT_REGISTERS) /
 				sizeof(UINT32),
 			ARM_AARCH32_EL2_REGISTER_NAMES);
+
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH32_SECURE:
+		if (*remaining_size <
+		    sizeof(EFI_ARM_AARCH32_SECURE_CONTEXT_REGISTERS)) {
+			json_object_put(context_ir);
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			return NULL;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_AARCH32_SECURE_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Not enough bytes for aarch32 secure\n");
+			goto fail;
+		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
 			sizeof(EFI_ARM_AARCH32_SECURE_CONTEXT_REGISTERS) /
@@ -506,12 +593,31 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 			ARM_AARCH32_SECURE_REGISTER_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH64_GPR:
+		if (*remaining_size < sizeof(EFI_ARM_V8_AARCH64_GPR)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_V8_AARCH64_GPR)) {
+			printf("Invalid CPER file: Not enough bytes for aarch64 gpr\n");
+			goto fail;
+		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
 			sizeof(EFI_ARM_V8_AARCH64_GPR) / sizeof(UINT64),
 			ARM_AARCH64_GPR_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH64_EL1:
+		if (*remaining_size <
+		    sizeof(EFI_ARM_AARCH64_EL1_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_AARCH64_EL1_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Not enough bytes for aarch64 el1\n");
+			goto fail;
+		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
 			sizeof(EFI_ARM_AARCH64_EL1_CONTEXT_REGISTERS) /
@@ -519,6 +625,16 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 			ARM_AARCH64_EL1_REGISTER_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH64_EL2:
+		if (*remaining_size <
+		    sizeof(EFI_ARM_AARCH64_EL2_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_AARCH64_EL2_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Not enough bytes for aarch64 el2\n");
+			goto fail;
+		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
 			sizeof(EFI_ARM_AARCH64_EL2_CONTEXT_REGISTERS) /
@@ -526,6 +642,16 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 			ARM_AARCH64_EL2_REGISTER_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_AARCH64_EL3:
+		if (*remaining_size <
+		    sizeof(EFI_ARM_AARCH64_EL3_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_AARCH64_EL3_CONTEXT_REGISTERS)) {
+			printf("Invalid CPER file: Not enough bytes for aarch64 el3\n");
+			goto fail;
+		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
 			sizeof(EFI_ARM_AARCH64_EL3_CONTEXT_REGISTERS) /
@@ -533,20 +659,32 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 			ARM_AARCH64_EL3_REGISTER_NAMES);
 		break;
 	case EFI_ARM_CONTEXT_TYPE_MISC:
+		if (*remaining_size < sizeof(EFI_ARM_MISC_CONTEXT_REGISTER)) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
+		if (header->RegisterArraySize <
+		    sizeof(EFI_ARM_MISC_CONTEXT_REGISTER)) {
+			printf("Invalid CPER file: Not enough bytes for misc\n");
+			goto fail;
+		}
 		register_array = cper_arm_misc_register_array_to_ir(
 			(EFI_ARM_MISC_CONTEXT_REGISTER *)*cur_pos);
 		break;
 	default:
+		if (*remaining_size < header->RegisterArraySize) {
+			printf("Invalid CPER file: Invalid processor context info num.\n");
+			goto fail;
+		}
 		//Unknown register array type, add as base64 data instead.
-		register_array = json_object_new_object();
 		int32_t encoded_len = 0;
 		char *encoded = base64_encode((UINT8 *)*cur_pos,
 					      header->RegisterArraySize,
 					      &encoded_len);
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
-			return NULL;
+			goto fail;
 		}
+		register_array = json_object_new_object();
 		json_object_object_add(register_array, "data",
 				       json_object_new_string_len(encoded,
 								  encoded_len));
@@ -558,8 +696,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 
 	//Set the current position to after the processor context structure.
 	*cur_pos = (UINT8 *)(*cur_pos) + header->RegisterArraySize;
+	*remaining_size -= header->RegisterArraySize;
 
 	return context_ir;
+
+fail:
+	json_object_put(context_ir);
+	return NULL;
 }
 
 //Converts a single CPER ARM miscellaneous register array to JSON IR format.
