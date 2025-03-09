@@ -11,8 +11,13 @@
 #include <libcper/sections/cper-section-memory.h>
 
 //Converts a single memory error CPER section into JSON IR.
-json_object *cper_section_platform_memory_to_ir(const void *section)
+json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
+						UINT32 size)
 {
+	if (size < sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA)) {
+		return NULL;
+	}
+
 	EFI_PLATFORM_MEMORY_ERROR_DATA *memory_error =
 		(EFI_PLATFORM_MEMORY_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();
@@ -166,8 +171,13 @@ json_object *cper_section_platform_memory_to_ir(const void *section)
 }
 
 //Converts a single memory error 2 CPER section into JSON IR.
-json_object *cper_section_platform_memory2_to_ir(const void *section)
+json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
+						 UINT32 size)
 {
+	if (size < sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA)) {
+		return NULL;
+	}
+
 	EFI_PLATFORM_MEMORY2_ERROR_DATA *memory_error =
 		(EFI_PLATFORM_MEMORY2_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();

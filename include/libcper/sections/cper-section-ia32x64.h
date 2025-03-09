@@ -66,6 +66,9 @@ extern "C" {
 			  "64-bit Mode Debug Registers",                       \
 			  "Memory Mapper Registers" }
 
+#define IA32X64_REGISTER_CONTEXT_TYPES_SIZE                                    \
+	sizeof(IA32X64_REGISTER_CONTEXT_TYPES_KEYS) / sizeof(int)
+
 typedef struct {
 	UINT64 Eax;
 	UINT64 Ebx;
@@ -74,7 +77,7 @@ typedef struct {
 	UINT64 Reserved[2];
 } EFI_IA32_X64_CPU_ID;
 
-json_object *cper_section_ia32x64_to_ir(const void *section);
+json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_ia32x64_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus

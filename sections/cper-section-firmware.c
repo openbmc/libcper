@@ -11,8 +11,12 @@
 #include <libcper/sections/cper-section-firmware.h>
 
 //Converts a single firmware CPER section into JSON IR.
-json_object *cper_section_firmware_to_ir(const void *section)
+json_object *cper_section_firmware_to_ir(const UINT8 *section, UINT32 size)
 {
+	if (size < sizeof(EFI_FIRMWARE_ERROR_DATA)) {
+		return NULL;
+	}
+
 	EFI_FIRMWARE_ERROR_DATA *firmware_error =
 		(EFI_FIRMWARE_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();
@@ -32,7 +36,8 @@ json_object *cper_section_firmware_to_ir(const void *section)
 
 	//Record GUID.
 	char record_id_guid[GUID_STRING_LENGTH];
-	guid_to_string(record_id_guid, &firmware_error->RecordIdGuid);
+	guid_to_string(record_id_guid, sizeof(record_id_guid),
+		       &firmware_error->RecordIdGuid);
 	json_object_object_add(section_ir, "recordIDGUID",
 			       json_object_new_string(record_id_guid));
 
