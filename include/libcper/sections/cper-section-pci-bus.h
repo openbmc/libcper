@@ -26,7 +26,7 @@ extern "C" {
 			  "Address Parity Error",                              \
 			  "Command Parity Error" }
 
-json_object *cper_section_pci_bus_to_ir(const void *section);
+json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_pci_bus_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
