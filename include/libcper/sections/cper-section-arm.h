@@ -77,7 +77,6 @@ extern "C" {
 			  "Device Memory Access" }
 #define ARM_PROCESSOR_INFO_REGISTER_CONTEXT_TYPES_KEYS                         \
 	(int[]){ 0, 1, 2, 3, 4, 5, 6, 7, 8 }
-#define ARM_BUS_ADDRESS_SPACE_TYPES_COUNT 9
 
 #define ARM_PROCESSOR_INFO_REGISTER_CONTEXT_TYPES_VALUES                       \
 	(const char *[]){ "AArch32 General Purpose Registers",                 \
@@ -89,6 +88,9 @@ extern "C" {
 			  "AArch64 EL2 Context Registers",                     \
 			  "AArch64 EL3 Context Registers",                     \
 			  "Miscellaneous System Register Structure" }
+
+#define ARM_PROCESSOR_INFO_REGISTER_CONTEXT_TYPES_COUNT 9
+
 #define ARM_AARCH32_GPR_NAMES                                                  \
 	(const char *[]){ "r0",	 "r1",	   "r2",     "r3",    "r4",  "r5",     \
 			  "r6",	 "r7",	   "r8",     "r9",    "r10", "r11",    \
