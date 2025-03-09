@@ -27,8 +27,8 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 
 	json_object *section_ir = json_object_new_object();
 
-	json_object_object_add(section_ir, "signature",
-			       json_object_new_string(nvidia_error->Signature));
+	add_untrusted_string(section_ir, "signature", nvidia_error->Signature,
+			     sizeof(nvidia_error->Signature));
 
 	json_object *severity = json_object_new_object();
 	json_object_object_add(severity, "code",
