@@ -426,3 +426,24 @@ int guid_equal(EFI_GUID *a, EFI_GUID *b)
 
 	return 1;
 }
+
+void add_untrusted_string(json_object *ir, const char *field_name,
+			  const char *str, int len)
+{
+	int fru_text_len = 0;
+	for (; fru_text_len < len; fru_text_len++) {
+		char c = str[fru_text_len];
+		if (c < 0) {
+			fru_text_len = -1;
+			break;
+		}
+		if (c == '\0') {
+			break;
+		}
+	}
+	if (fru_text_len >= 0) {
+		json_object_object_add(
+			ir, field_name,
+			json_object_new_string_len(str, fru_text_len));
+	}
+}
