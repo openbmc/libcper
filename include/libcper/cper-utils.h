@@ -61,6 +61,9 @@ void guid_to_string(char *out, EFI_GUID *guid);
 void string_to_guid(EFI_GUID *out, const char *guid);
 int guid_equal(EFI_GUID *a, EFI_GUID *b);
 
+void add_untrusted_string(json_object *ir, const char *field_name,
+			  const char *str, int len);
+
 //The available severity types for CPER.
 extern const char *CPER_SEVERITY_TYPES[4];
 
