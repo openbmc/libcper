@@ -29,14 +29,25 @@ typedef struct {
 } EFI_PCI_PCIX_DEVICE_ID_INFO;
 
 typedef struct {
+	UINT64 Address;
+	UINT64 Value;
+} EFI_PCI_PCIX_DEVICE_ERROR_DATA_REGISTER;
+
+typedef struct {
 	UINT64 ValidFields;
 	EFI_GENERIC_ERROR_STATUS ErrorStatus;
 	EFI_PCI_PCIX_DEVICE_ID_INFO IdInfo;
 	UINT32 MemoryNumber;
 	UINT32 IoNumber;
+	// Keep this at the end of this struct
+	// and allocate based on NumberRegs
+#ifndef __cplusplus
+	EFI_PCI_PCIX_DEVICE_ERROR_DATA_REGISTER MemoryRegister[];
+#endif
+
 } __attribute__((packed, aligned(1))) EFI_PCI_PCIX_DEVICE_ERROR_DATA;
 
-json_object *cper_section_pci_dev_to_ir(const void *section);
+json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_pci_dev_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus

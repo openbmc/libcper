@@ -39,7 +39,7 @@ extern "C" {
 #define GENERIC_FLAGS_BITFIELD_NAMES                                           \
 	(const char *[]){ "restartable", "preciseIP", "overflow", "corrected" }
 
-json_object *cper_section_generic_to_ir(const void *section);
+json_object *cper_section_generic_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_generic_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
