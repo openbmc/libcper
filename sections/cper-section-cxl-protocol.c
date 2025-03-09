@@ -12,10 +12,21 @@
 #include <libcper/sections/cper-section-cxl-protocol.h>
 
 //Converts a single CXL protocol error CPER section into JSON IR.
-json_object *cper_section_cxl_protocol_to_ir(const void *section)
+json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
 {
+	if (size < sizeof(EFI_CXL_PROTOCOL_ERROR_DATA)) {
+		return NULL;
+	}
+
 	EFI_CXL_PROTOCOL_ERROR_DATA *cxl_protocol_error =
 		(EFI_CXL_PROTOCOL_ERROR_DATA *)section;
+
+	if (size < sizeof(EFI_CXL_PROTOCOL_ERROR_DATA) +
+			   cxl_protocol_error->CxlDvsecLength +
+			   cxl_protocol_error->CxlErrorLogLength) {
+		return NULL;
+	}
+
 	json_object *section_ir = json_object_new_object();
 	ValidationTypes ui64Type = {
 		UINT_64T, .value.ui64 = cxl_protocol_error->ValidBits
@@ -99,10 +110,8 @@ json_object *cper_section_cxl_protocol_to_ir(const void *section)
 			device_id, "slotNumber",
 			json_object_new_uint64(
 				cxl_protocol_error->DeviceId.SlotNumber));
-		json_object_object_add(section_ir, "deviceID", device_id);
 	}
-
-	char *encoded;
+	json_object_object_add(section_ir, "deviceID", device_id);
 
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
 		//Device serial & capability structure (if CXL 1.1 device).
@@ -115,6 +124,7 @@ json_object *cper_section_cxl_protocol_to_ir(const void *section)
 		}
 	}
 
+	char *encoded;
 	int32_t encoded_len = 0;
 
 	//The PCIe capability structure provided here could either be PCIe 1.1 Capability Structure
@@ -126,6 +136,8 @@ json_object *cper_section_cxl_protocol_to_ir(const void *section)
 			60, &encoded_len);
 		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
+			json_object_put(section_ir);
+
 			return NULL;
 		}
 		json_object_object_add(section_ir, "capabilityStructure",
@@ -134,7 +146,7 @@ json_object *cper_section_cxl_protocol_to_ir(const void *section)
 		free(encoded);
 	}
 
-	const char *cur_pos = (const char *)(cxl_protocol_error + 1);
+	const UINT8 *cur_pos = (const UINT8 *)(cxl_protocol_error + 1);
 
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
 		//CXL DVSEC & error log length.
@@ -147,10 +159,11 @@ json_object *cper_section_cxl_protocol_to_ir(const void *section)
 		//For CXL 1.1 host downstream ports, this is the "CXL DVSEC For Flex Bus Port" structure as in CXL 1.1 spec.
 		int32_t encoded_len = 0;
 
-		encoded = base64_encode((UINT8 *)cur_pos,
+		encoded = base64_encode(cur_pos,
 					cxl_protocol_error->CxlDvsecLength,
 					&encoded_len);
 		if (encoded == NULL) {
+			json_object_put(section_ir);
 			return NULL;
 		}
 		json_object_object_add(section_ir, "cxlDVSEC",
@@ -178,6 +191,7 @@ json_object *cper_section_cxl_protocol_to_ir(const void *section)
 
 		if (encoded == NULL) {
 			printf("Failed to allocate encode output buffer. \n");
+			json_object_put(section_ir);
 			return NULL;
 		}
 		json_object_object_add(section_ir, "cxlErrorLog",

@@ -15,7 +15,7 @@ extern "C" {
 			  "SOC Firmware Error Record (Type1 Legacy)",          \
 			  "SOC Firmware Error Record (Type2)" }
 
-json_object *cper_section_firmware_to_ir(const void *section);
+json_object *cper_section_firmware_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_firmware_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
