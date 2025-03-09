@@ -65,7 +65,7 @@ typedef struct {
 	UINT64 Frs[256];
 } EFI_IPF_PSI_STATIC;
 
-json_object *cper_section_ipf_to_ir(const void *section);
+json_object *cper_section_ipf_to_ir(const UINT8 *section, UINT32 size);
 
 #ifdef __cplusplus
 }

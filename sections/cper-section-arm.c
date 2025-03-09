@@ -44,8 +44,11 @@ void ir_arm_misc_registers_to_cper(json_object *registers, FILE *out);
 void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out);
 
 //Converts the given processor-generic CPER section into JSON IR.
-json_object *cper_section_arm_to_ir(const void *section)
+json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 {
+	if (size < sizeof(EFI_ARM_ERROR_RECORD)) {
+		return NULL;
+	}
 	EFI_ARM_ERROR_RECORD *record = (EFI_ARM_ERROR_RECORD *)section;
 	json_object *section_ir = json_object_new_object();
 

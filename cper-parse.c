@@ -188,7 +188,8 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	//If a platform ID exists according to the validation bits, then add it.
 	if (header->ValidationBits & 0x1) {
 		char platform_string[GUID_STRING_LENGTH];
-		guid_to_string(platform_string, &header->PlatformID);
+		guid_to_string(platform_string, sizeof(platform_string),
+			       &header->PlatformID);
 		json_object_object_add(header_ir, "platformID",
 				       json_object_new_string(platform_string));
 	}
@@ -196,7 +197,8 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	//If a partition ID exists according to the validation bits, then add it.
 	if (header->ValidationBits & 0x4) {
 		char partition_string[GUID_STRING_LENGTH];
-		guid_to_string(partition_string, &header->PartitionID);
+		guid_to_string(partition_string, sizeof(partition_string),
+			       &header->PartitionID);
 		json_object_object_add(
 			header_ir, "partitionID",
 			json_object_new_string(partition_string));
@@ -204,14 +206,17 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 
 	//Creator ID of the header.
 	char creator_string[GUID_STRING_LENGTH];
-	guid_to_string(creator_string, &header->CreatorID);
+	guid_to_string(creator_string, sizeof(creator_string),
+		       &header->CreatorID);
 	json_object_object_add(header_ir, "creatorID",
 			       json_object_new_string(creator_string));
 
 	//Notification type for the header. Some defined types are available.
 	json_object *notification_type = json_object_new_object();
 	char notification_type_string[GUID_STRING_LENGTH];
-	guid_to_string(notification_type_string, &header->NotificationType);
+	guid_to_string(notification_type_string,
+		       sizeof(notification_type_string),
+		       &header->NotificationType);
 	json_object_object_add(
 		notification_type, "guid",
 		json_object_new_string(notification_type_string));
@@ -306,7 +311,8 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	//Section type (GUID).
 	json_object *section_type = json_object_new_object();
 	char section_type_string[GUID_STRING_LENGTH];
-	guid_to_string(section_type_string, &section_descriptor->SectionType);
+	guid_to_string(section_type_string, sizeof(section_type_string),
+		       &section_descriptor->SectionType);
 	json_object_object_add(section_type, "data",
 			       json_object_new_string(section_type_string));
 
@@ -329,7 +335,8 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	//If validation bits indicate it exists, add FRU ID.
 	if (section_descriptor->SecValidMask & 0x1) {
 		char fru_id_string[GUID_STRING_LENGTH];
-		guid_to_string(fru_id_string, &section_descriptor->FruId);
+		guid_to_string(fru_id_string, sizeof(fru_id_string),
+			       &section_descriptor->FruId);
 		json_object_object_add(section_descriptor_ir, "fruID",
 				       json_object_new_string(fru_id_string));
 	}
@@ -373,14 +380,17 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	return section_descriptor_ir;
 }
 
-json_object *read_section(const unsigned char *cper_section_buf,
-			  CPER_SECTION_DEFINITION *definition,
-			  json_object **section_ir)
+json_object *read_section(const unsigned char *cper_section_buf, UINT32 size,
+			  CPER_SECTION_DEFINITION *definition)
 {
-	*section_ir = definition->ToIR(cper_section_buf);
+	json_object *section_ir;
+	if (definition->ToIR == NULL) {
+		return NULL;
+	}
+	section_ir = definition->ToIR(cper_section_buf, size);
 
 	json_object *result = json_object_new_object();
-	json_object_object_add(result, definition->ShortName, *section_ir);
+	json_object_object_add(result, definition->ShortName, section_ir);
 	return result;
 }
 
@@ -403,20 +413,26 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 				&descriptor->SectionType)) {
 			continue;
 		}
-		result = read_section(cper_section_buf, &section_definitions[i],
-				      &section_ir);
+		result = read_section(cper_section_buf, size,
+				      &section_definitions[i]);
 		section_converted = 1;
 		break;
 	}
 
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-	// It's unlikely fuzzing can reliably come up with a correct guid, given how much entropy there is.  If we're in fuzzing mode, and if we haven't found a match, try to force a match so we get some coverage
+	// It's unlikely fuzzing can reliably come up with a correct guid, given how
+	// much entropy there is.  If we're in fuzzing mode, and if we haven't found
+	// a match, try to force a match so we get some coverage
 	if (!section_converted) {
-		unsigned char index = descriptor->SectionType.Data1 %
-				      (section_definitions_len - 1);
-
-		result = read_section(cper_section_buf,
-				      &section_definitions[index], &section_ir);
+		size_t index =
+			descriptor->SectionType.Data1 % section_definitions_len;
+		// Note, allow the possibility of index being out of bounds, so that the
+		// base64 section below might still be exercised.
+		if (index < section_definitions_len) {
+			result = read_section(cper_section_buf, size,
+					      &section_definitions[index]);
+			section_converted = 1;
+		}
 	}
 #endif
 
@@ -473,7 +489,8 @@ json_object *cper_section_to_ir(FILE *handle, long base_pos,
 		if (guid_equal(section_definitions[i].Guid,
 			       &descriptor->SectionType) &&
 		    section_definitions[i].ToIR != NULL) {
-			section_ir = section_definitions[i].ToIR(section);
+			section_ir = section_definitions[i].ToIR(
+				section, descriptor->SectionLength);
 
 			result = json_object_new_object();
 			json_object_object_add(result,
