@@ -411,14 +411,15 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	return section_descriptor_ir;
 }
 
-json_object *read_section(const unsigned char *cper_section_buf,
-			  CPER_SECTION_DEFINITION *definition,
-			  json_object **section_ir)
+json_object *read_section(const unsigned char *cper_section_buf, size_t size,
+			  CPER_SECTION_DEFINITION *definition)
 {
-	*section_ir = definition->ToIR(cper_section_buf);
-
+	if (definition->ToIR == NULL) {
+		return NULL;
+	}
+	json_object *section_ir = definition->ToIR(cper_section_buf, size);
 	json_object *result = json_object_new_object();
-	json_object_object_add(result, definition->ShortName, *section_ir);
+	json_object_object_add(result, definition->ShortName, section_ir);
 	return result;
 }
 
@@ -435,15 +436,14 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 	json_object *result = NULL;
 
 	json_object *section_ir = NULL;
-	int section_converted = 0;
 	for (size_t i = 0; i < section_definitions_len; i++) {
 		if (!guid_equal(section_definitions[i].Guid,
 				&descriptor->SectionType)) {
 			continue;
 		}
-		result = read_section(cper_section_buf, &section_definitions[i],
-				      &section_ir);
-		section_converted = 1;
+		result = read_section(cper_section_buf, size,
+				      &section_definitions[i]);
+
 		break;
 	}
 
@@ -453,23 +453,21 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 	// a match, try to force a match so we get some coverage.  Note, we still
 	// want coverage of the section failed to convert code, so treat index ==
 	// size as section failed to convert.
-	if (!section_converted) {
+	if (result == NULL) {
 		unsigned char index = 0;
 		if (index > 0) {
 			index = descriptor->SectionType.Data1 %
 				section_definitions_len;
 		}
 		if (index < section_definitions_len) {
-			result = read_section(cper_section_buf,
-					      &section_definitions[index],
-					      &section_ir);
-			section_converted = 1;
+			result = read_section(cper_section_buf, size,
+					      &section_definitions[index]);
 		}
 	}
 #endif
 
 	//Was it an unknown GUID/failed read?
-	if (!section_converted) {
+	if (result == NULL) {
 		//Output the data as formatted base64.
 		int32_t encoded_len = 0;
 		char *encoded = base64_encode(cper_section_buf,
