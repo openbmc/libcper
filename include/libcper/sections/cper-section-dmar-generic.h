@@ -43,7 +43,7 @@ extern "C" {
 #define DMAR_GENERIC_ERROR_ARCH_TYPES_KEYS   (int[]){ 0x0, 0x1 }
 #define DMAR_GENERIC_ERROR_ARCH_TYPES_VALUES (const char *[]){ "VT-d", "IOMMU" }
 
-json_object *cper_section_dmar_generic_to_ir(const void *section);
+json_object *cper_section_dmar_generic_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_dmar_generic_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
