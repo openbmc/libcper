@@ -383,12 +383,13 @@ void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp)
 }
 
 //Helper function to convert an EDK EFI GUID into a string for intermediate use.
-void guid_to_string(char *out, EFI_GUID *guid)
+void guid_to_string(char *out, size_t out_len, EFI_GUID *guid)
 {
-	sprintf(out, "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-		guid->Data1, guid->Data2, guid->Data3, guid->Data4[0],
-		guid->Data4[1], guid->Data4[2], guid->Data4[3], guid->Data4[4],
-		guid->Data4[5], guid->Data4[6], guid->Data4[7]);
+	snprintf(out, out_len,
+		 "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+		 guid->Data1, guid->Data2, guid->Data3, guid->Data4[0],
+		 guid->Data4[1], guid->Data4[2], guid->Data4[3], guid->Data4[4],
+		 guid->Data4[5], guid->Data4[6], guid->Data4[7]);
 }
 
 //Helper function to convert a string into an EDK EFI GUID.
