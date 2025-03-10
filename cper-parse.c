@@ -206,12 +206,14 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	//If a timestamp exists according to validation bits, then add it.
 	if (header->ValidationBits & 0x2) {
 		char timestamp_string[TIMESTAMP_LENGTH];
-		timestamp_to_string(timestamp_string, TIMESTAMP_LENGTH,
-				    &header->TimeStamp);
-
+		if (timestamp_to_string(timestamp_string, TIMESTAMP_LENGTH,
+					&header->TimeStamp) < 0) {
+			goto fail;
+		}
 		json_object_object_add(
 			header_ir, "timestamp",
 			json_object_new_string(timestamp_string));
+
 		json_object_object_add(
 			header_ir, "timestampIsPrecise",
 			json_object_new_boolean(header->TimeStamp.Flag));
@@ -309,6 +311,10 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	json_object_object_add(header_ir, "persistenceInfo",
 			       json_object_new_uint64(header->PersistenceInfo));
 	return header_ir;
+
+fail:
+	json_object_put(header_ir);
+	return NULL;
 }
 
 //Converts the given EFI section descriptor into JSON IR format.
