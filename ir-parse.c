@@ -174,16 +174,12 @@ void ir_section_to_cper(json_object *section,
 
 	//Find the correct section type, and parse.
 	int section_converted = 0;
-	for (size_t i = 0; i < section_definitions_len; i++) {
-		if (guid_equal(section_definitions[i].Guid,
-			       &descriptor->SectionType) &&
-		    section_definitions[i].ToCPER != NULL) {
-			ir = json_object_object_get(
-				section, section_definitions[i].ShortName);
-			section_definitions[i].ToCPER(ir, out);
-			section_converted = 1;
-			break;
-		}
+	CPER_SECTION_DEFINITION *definition =
+		select_section_by_guid(&descriptor->SectionType);
+	if (definition != NULL) {
+		ir = json_object_object_get(section, definition->ShortName);
+		definition->ToCPER(ir, out);
+		section_converted = 1;
 	}
 
 	//If unknown GUID, so read as a base64 unknown section.

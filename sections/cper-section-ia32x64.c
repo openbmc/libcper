@@ -143,6 +143,13 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	return record_ir;
 }
 
+EFI_GUID *gEfiIa32x64ErrorTypeGuids[] = {
+	&gEfiIa32x64ErrorTypeCacheCheckGuid,
+	&gEfiIa32x64ErrorTypeTlbCheckGuid,
+	&gEfiIa32x64ErrorTypeBusCheckGuid,
+	&gEfiIa32x64ErrorTypeMsCheckGuid,
+};
+
 //Converts a single IA32/x64 processor error info block into JSON IR format.
 json_object *cper_ia32x64_processor_error_info_to_ir(
 	EFI_IA32_X64_PROCESS_ERROR_INFO *error_info)
@@ -155,19 +162,22 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 
 	//Get the error structure type as a readable string.
 	const char *readable_type = "Unknown";
-	if (guid_equal(&error_info->ErrorType,
-		       &gEfiIa32x64ErrorTypeCacheCheckGuid)) {
-		readable_type = "Cache Check Error";
-	} else if (guid_equal(&error_info->ErrorType,
-			      &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
-		readable_type = "TLB Check Error";
-	} else if (guid_equal(&error_info->ErrorType,
-			      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
-		readable_type = "Bus Check Error";
-	} else if (guid_equal(&error_info->ErrorType,
-			      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
-		readable_type = "MS Check Error";
+
+	const char *readable_names[] = {
+		"Cache Check Error",
+		"TLB Check Error",
+		"Bus Check Error",
+		"MS Check Error",
+	};
+
+	int index = select_guid_from_list(
+		&error_info->ErrorType, gEfiIa32x64ErrorTypeGuids,
+		sizeof(gEfiIa32x64ErrorTypeGuids) / sizeof(EFI_GUID *));
+
+	if (index < (int)(sizeof(readable_names) / sizeof(char *))) {
+		readable_type = readable_names[index];
 	}
+
 	json_object_object_add(type, "name",
 			       json_object_new_string(readable_type));
 	json_object_object_add(error_info_ir, "type", type);
@@ -180,28 +190,30 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 	//Cache and TLB check information are identical, so can be equated.
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
 		json_object *check_information = NULL;
-		if (guid_equal(&error_info->ErrorType,
-			       &gEfiIa32x64ErrorTypeCacheCheckGuid) ||
-		    guid_equal(&error_info->ErrorType,
-			       &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
+
+		switch (index) {
+		case 0:
+		case 1:
 			check_information = cper_ia32x64_cache_tlb_check_to_ir(
 				(EFI_IA32_X64_CACHE_CHECK_INFO *)&error_info
 					->CheckInfo);
-		} else if (guid_equal(&error_info->ErrorType,
-				      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
+			break;
+		case 2:
 			check_information = cper_ia32x64_bus_check_to_ir(
 				(EFI_IA32_X64_BUS_CHECK_INFO *)&error_info
 					->CheckInfo);
-		} else if (guid_equal(&error_info->ErrorType,
-				      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
+			break;
+		case 3:
 			check_information = cper_ia32x64_ms_check_to_ir(
 				(EFI_IA32_X64_MS_CHECK_INFO *)&error_info
 					->CheckInfo);
-
-		} else {
+			break;
+		default:
 			//Unknown check information.
 			printf("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
+			break;
 		}
+
 		json_object_object_add(error_info_ir, "checkInfo",
 				       check_information);
 	}
@@ -763,26 +775,35 @@ void ir_ia32x64_error_info_to_cper(json_object *error_info, FILE *out)
 	//Check information, parsed based on the error type.
 	if (json_object_object_get_ex(error_info, "checkInfo", &obj)) {
 		json_object *check_info = obj;
-		if (guid_equal(&error_info_cper->ErrorType,
-			       &gEfiIa32x64ErrorTypeCacheCheckGuid) ||
-		    guid_equal(&error_info_cper->ErrorType,
-			       &gEfiIa32x64ErrorTypeTlbCheckGuid)) {
+
+		int index = select_guid_from_list(
+			&error_info_cper->ErrorType, gEfiIa32x64ErrorTypeGuids,
+			sizeof(gEfiIa32x64ErrorTypeGuids) / sizeof(EFI_GUID *));
+
+		switch (index) {
+		case 0:
+		case 1:
 			ir_ia32x64_cache_tlb_check_error_to_cper(
 				check_info,
 				(EFI_IA32_X64_CACHE_CHECK_INFO
 					 *)&error_info_cper->CheckInfo);
-		} else if (guid_equal(&error_info_cper->ErrorType,
-				      &gEfiIa32x64ErrorTypeBusCheckGuid)) {
+			break;
+		case 2:
 			ir_ia32x64_bus_check_error_to_cper(
 				check_info,
 				(EFI_IA32_X64_BUS_CHECK_INFO *)&error_info_cper
 					->CheckInfo);
-		} else if (guid_equal(&error_info_cper->ErrorType,
-				      &gEfiIa32x64ErrorTypeMsCheckGuid)) {
+			break;
+		case 3:
 			ir_ia32x64_ms_check_error_to_cper(
 				check_info,
 				(EFI_IA32_X64_MS_CHECK_INFO *)&error_info_cper
 					->CheckInfo);
+			break;
+		default:
+			//Unknown check information.
+			printf("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
+			break;
 		}
 		add_to_valid_bitfield(&ui64Type, 0);
 	}

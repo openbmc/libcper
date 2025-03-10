@@ -432,6 +432,28 @@ int guid_equal(EFI_GUID *a, EFI_GUID *b)
 	return 1;
 }
 
+int select_guid_from_list(EFI_GUID *guid, EFI_GUID *guid_list[], int len)
+{
+	int i = 0;
+	for (; i < len; i++) {
+		if (guid_equal(guid, guid_list[i])) {
+			break;
+		}
+	}
+	// It's unlikely fuzzing can reliably come up with a correct guid, given how
+	// much entropy there is.  If we're in fuzzing mode, and if we haven't found
+	// a match, try to force a match so we get some coverage.  Note, we still
+	// want coverage of the section failed to convert code, so treat index ==
+	// size as section failed to convert.
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	if (i == len) {
+		i = guid->Data1 % (len + 1);
+	}
+#endif
+
+	return i;
+}
+
 void add_untrusted_string(json_object *ir, const char *field_name,
 			  const char *str, int len)
 {
