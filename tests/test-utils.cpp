@@ -193,16 +193,13 @@ int schema_validate_from_file(const char *schema_file_path,
 		unsigned int errorNum = 1;
 		while (results.popError(error)) {
 			std::string context;
-			std::vector<std::string>::iterator itr =
-				error.context.begin();
-			for (; itr != error.context.end(); itr++) {
-				context += *itr;
+			for (const std::string &str : error.context) {
+				context += str;
 			}
 
-			std::cout << "Error #" << errorNum << std::endl
-				  << "  context: " << context << std::endl
-				  << "  desc:    " << error.description
-				  << std::endl;
+			std::cout << "Error #" << errorNum << '\n'
+				  << "  context: " << context << '\n'
+				  << "  desc:    " << error.description << '\n';
 			++errorNum;
 		}
 		return 0;
