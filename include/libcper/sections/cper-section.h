@@ -22,6 +22,8 @@ typedef struct {
 extern CPER_SECTION_DEFINITION section_definitions[];
 extern const size_t section_definitions_len;
 
+CPER_SECTION_DEFINITION *select_section_by_guid(EFI_GUID *guid);
+
 #ifdef __cplusplus
 }
 #endif

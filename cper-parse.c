@@ -237,43 +237,33 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 
 	//Add the human readable notification type if possible.
 	const char *notification_type_readable = "Unknown";
-	if (guid_equal(&header->NotificationType,
-		       &gEfiEventNotificationTypeCmcGuid)) {
-		notification_type_readable = "CMC";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeCpeGuid)) {
-		notification_type_readable = "CPE";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeMceGuid)) {
-		notification_type_readable = "MCE";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypePcieGuid)) {
-		notification_type_readable = "PCIe";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeInitGuid)) {
-		notification_type_readable = "INIT";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeNmiGuid)) {
-		notification_type_readable = "NMI";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeBootGuid)) {
-		notification_type_readable = "Boot";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeDmarGuid)) {
-		notification_type_readable = "DMAr";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeSeaGuid)) {
-		notification_type_readable = "SEA";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeSeiGuid)) {
-		notification_type_readable = "SEI";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypePeiGuid)) {
-		notification_type_readable = "PEI";
-	} else if (guid_equal(&header->NotificationType,
-			      &gEfiEventNotificationTypeCxlGuid)) {
-		notification_type_readable = "CXL Component";
+
+	EFI_GUID *guids[] = {
+		&gEfiEventNotificationTypeCmcGuid,
+		&gEfiEventNotificationTypeCpeGuid,
+		&gEfiEventNotificationTypeMceGuid,
+		&gEfiEventNotificationTypePcieGuid,
+		&gEfiEventNotificationTypeInitGuid,
+		&gEfiEventNotificationTypeNmiGuid,
+		&gEfiEventNotificationTypeBootGuid,
+		&gEfiEventNotificationTypeDmarGuid,
+		&gEfiEventNotificationTypeSeaGuid,
+		&gEfiEventNotificationTypeSeiGuid,
+		&gEfiEventNotificationTypePeiGuid,
+		&gEfiEventNotificationTypeCxlGuid,
+	};
+
+	const char *readable_names[] = {
+		"CMC",	"CPE",	"MCE", "PCIe", "INIT", "NMI",
+		"Boot", "DMAr", "SEA", "SEI",  "PEI",  "CXL Component"
+	};
+
+	int index = select_guid_from_list(&header->NotificationType, guids,
+					  sizeof(guids) / sizeof(EFI_GUID *));
+	if (index < (int)(sizeof(readable_names) / sizeof(char *))) {
+		notification_type_readable = readable_names[index];
 	}
+
 	json_object_object_add(
 		notification_type, "type",
 		json_object_new_string(notification_type_readable));
@@ -332,13 +322,11 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	add_guid(section_type, "data", &section_descriptor->SectionType);
 	//Readable section type, if possible.
 	const char *section_type_readable = "Unknown";
-	for (size_t i = 0; i < section_definitions_len; i++) {
-		if (guid_equal(section_definitions[i].Guid,
-			       &section_descriptor->SectionType)) {
-			section_type_readable =
-				section_definitions[i].ReadableName;
-			break;
-		}
+
+	CPER_SECTION_DEFINITION *section =
+		select_section_by_guid(&section_descriptor->SectionType);
+	if (section != NULL) {
+		section_type_readable = section->ReadableName;
 	}
 
 	json_object_object_add(section_type, "type",
@@ -403,6 +391,31 @@ json_object *read_section(const unsigned char *cper_section_buf, size_t size,
 	return result;
 }
 
+CPER_SECTION_DEFINITION *select_section_by_guid(EFI_GUID *guid)
+{
+	size_t i = 0;
+	for (; i < section_definitions_len; i++) {
+		if (guid_equal(guid, section_definitions[i].Guid)) {
+			break;
+		}
+	}
+	// It's unlikely fuzzing can reliably come up with a correct guid, given how
+	// much entropy there is.  If we're in fuzzing mode, and if we haven't found
+	// a match, try to force a match so we get some coverage.  Note, we still
+	// want coverage of the section failed to convert code, so treat index ==
+	// size as section failed to convert.
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	if (i == section_definitions_len) {
+		i = guid->Data1 % (section_definitions_len + 1);
+	}
+#endif
+	if (i < section_definitions_len) {
+		return &section_definitions[i];
+	}
+
+	return NULL;
+}
+
 //Converts the section described by a single given section descriptor.
 json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 				    EFI_ERROR_SECTION_DESCRIPTOR *descriptor)
@@ -416,35 +429,12 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 	json_object *result = NULL;
 
 	json_object *section_ir = NULL;
-	for (size_t i = 0; i < section_definitions_len; i++) {
-		if (!guid_equal(section_definitions[i].Guid,
-				&descriptor->SectionType)) {
-			continue;
-		}
-		result = read_section(cper_section_buf, size,
-				      &section_definitions[i]);
 
-		break;
+	CPER_SECTION_DEFINITION *section =
+		select_section_by_guid(&descriptor->SectionType);
+	if (section != NULL) {
+		result = read_section(cper_section_buf, size, section);
 	}
-
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-	// It's unlikely fuzzing can reliably come up with a correct guid, given how
-	// much entropy there is.  If we're in fuzzing mode, and if we haven't found
-	// a match, try to force a match so we get some coverage.  Note, we still
-	// want coverage of the section failed to convert code, so treat index ==
-	// size as section failed to convert.
-	if (result == NULL) {
-		unsigned char index = 0;
-		if (index > 0) {
-			index = descriptor->SectionType.Data1 %
-				section_definitions_len;
-		}
-		if (index < section_definitions_len) {
-			result = read_section(cper_section_buf, size,
-					      &section_definitions[index]);
-		}
-	}
-#endif
 
 	//Was it an unknown GUID/failed read?
 	if (result == NULL) {
