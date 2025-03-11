@@ -342,7 +342,7 @@ int timestamp_to_string(char *out, int out_len, EFI_ERROR_TIME_STAMP *timestamp)
 		return -1;
 	}
 	int hours = bcd_to_int(timestamp->Hours);
-	if (hours >= 24) {
+	if (hours > 24) {
 		return -1;
 	}
 	int minutes = bcd_to_int(timestamp->Minutes);

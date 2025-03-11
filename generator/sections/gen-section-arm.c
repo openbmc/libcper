@@ -21,8 +21,8 @@ size_t generate_section_arm(void **location,
 			    GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Set up for generation of error/context structures.
-	UINT16 error_structure_num = rand() % 4 + 1; //Must be at least 1.
-	UINT16 context_structure_num = rand() % 3 + 1;
+	UINT16 error_structure_num = cper_rand() % 4 + 1; //Must be at least 1.
+	UINT16 context_structure_num = cper_rand() % 3 + 1;
 	void *error_structures[error_structure_num];
 	void *context_structures[context_structure_num];
 	size_t context_structure_lengths[context_structure_num];
@@ -37,7 +37,7 @@ size_t generate_section_arm(void **location,
 	}
 
 	//Determine a random amount of vendor specific info.
-	size_t vendor_info_len = rand() % 16 + 4;
+	size_t vendor_info_len = cper_rand() % 16 + 4;
 
 	//Create the section as a whole.
 	size_t total_len = 40 + (error_structure_num * ARM_ERROR_INFO_SIZE);
@@ -55,7 +55,7 @@ size_t generate_section_arm(void **location,
 	*section_length = total_len;
 
 	//Error affinity.
-	*(section + 12) = rand() % 4;
+	*(section + 12) = cper_rand() % 4;
 
 	//Reserved zero bytes.
 	UINT32 *validation = (UINT32 *)section;
@@ -87,7 +87,7 @@ size_t generate_section_arm(void **location,
 	for (size_t i = 0; i < vendor_info_len; i++) {
 		//Ensure only ascii is used so we don't
 		// fail base64E
-		*cur_pos = rand() % 127 + 1;
+		*cur_pos = cper_rand() % 127 + 1;
 		cur_pos += 1;
 	}
 
@@ -106,7 +106,7 @@ void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 	*(error_info + 1) = ARM_ERROR_INFO_SIZE;
 
 	//Type of error.
-	UINT8 error_type = rand() % 3;
+	UINT8 error_type = cper_rand() % 3;
 	*(error_info + 4) = error_type;
 
 	//Reserved bits for error information.
@@ -162,7 +162,7 @@ void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 size_t generate_arm_context_info(void **location)
 {
 	//Initial length is 8 bytes. Add extra based on type.
-	UINT16 reg_type = rand() % 9;
+	UINT16 reg_type = cper_rand() % 9;
 	UINT32 reg_size = 0;
 
 	//Set register size.

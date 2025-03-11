@@ -24,9 +24,6 @@ size_t generate_section(void **location, char *type,
 void generate_cper_record(char **types, UINT16 num_sections, FILE *out,
 			  GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
-	//Initialise randomiser.
-	init_random(0);
-
 	//Generate the sections.
 	void *sections[num_sections];
 	size_t section_lengths[num_sections];
@@ -199,7 +196,7 @@ size_t generate_section(void **location, char *type,
 	//If the section name is "unknown", simply generate a random bytes section.
 	int section_generated = 0;
 	if (strcmp(type, "unknown") == 0) {
-		length = generate_random_section(location, rand() % 256);
+		length = generate_random_section(location, ALL_VALID);
 		section_generated = 1;
 	} else {
 		//Function defined section, switch on the type, generate accordingly.
