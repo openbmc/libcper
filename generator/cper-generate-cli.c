@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libcper/log.h>
 #include <libcper/Cper.h>
 #include <libcper/generator/cper-generate.h>
 #include <libcper/generator/sections/gen-section.h>
@@ -15,6 +16,7 @@ void print_help();
 
 int main(int argc, char *argv[])
 {
+	cper_set_log_stdio();
 	//If help requested, print help.
 	if (argc == 2 && strcmp(argv[1], "--help") == 0) {
 		print_help();

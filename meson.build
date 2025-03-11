@@ -83,16 +83,19 @@ if not json_c_dep.found()
     json_c_dep = json_c.get_variable('json_c_dep')
 endif
 
+libcper_include = ['include']
+libcper_include_dir = include_directories(libcper_include, is_system: true)
+
+
 libcper_parse_sources += files(
     'base64.c',
     'common-utils.c',
     'cper-parse.c',
     'cper-utils.c',
     'ir-parse.c',
+    'log.c',
 )
 
-libcper_include = ['include']
-libcper_include_dir = include_directories(libcper_include, is_system: true)
 subdir('include')
 
 libcper_parse = library(
@@ -108,7 +111,7 @@ libcper_parse = library(
 )
 libcper_parse_dep = declare_dependency(
     include_directories: libcper_include_dir,
-    link_with: libcper_parse,
+    link_with: [libcper_parse],
 )
 
 libcper_generate_sources = [
@@ -123,7 +126,8 @@ libcper_generate = library(
     generator_section_sources,
     version: meson.project_version(),
     include_directories: libcper_include_dir,
-    dependencies: [libcper_parse_dep, json_c_dep],
+    dependencies: [json_c_dep],
+    link_with: [libcper_parse],
     install: true,
     install_dir: get_option('libdir'),
 )
@@ -144,7 +148,8 @@ if get_option('utility').allowed()
         'cper-convert',
         'cli-app/cper-convert.c',
         include_directories: libcper_include_dir,
-        dependencies: [libcper_parse_dep, json_c_dep],
+        dependencies: [json_c_dep],
+        link_with: [libcper_parse, libcper_generate],
         install: true,
         install_dir: get_option('bindir'),
     )
@@ -154,7 +159,7 @@ if get_option('utility').allowed()
         'generator/cper-generate-cli.c',
         edk_sources,
         include_directories: libcper_include_dir,
-        dependencies: [libcper_generate_dep],
+        link_with: [libcper_parse, libcper_generate],
         install: true,
         install_dir: get_option('bindir'),
     )
