@@ -9,6 +9,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-pci-dev.h>
+#include <libcper/log.h>
 
 //Converts a single PCI/PCI-X device CPER section into JSON IR.
 json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size)

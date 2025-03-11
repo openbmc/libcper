@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libcper/log.h>
 #include <libcper/Cper.h>
 #include <libcper/generator/cper-generate.h>
 #include <libcper/generator/sections/gen-section.h>
@@ -15,6 +16,7 @@ void print_help();
 
 int main(int argc, char *argv[])
 {
+	cper_set_log_stdio();
 	//If help requested, print help.
 	if (argc == 2 && strcmp(argv[1], "--help") == 0) {
 		print_help();
@@ -46,7 +48,7 @@ int main(int argc, char *argv[])
 			}
 			break;
 		} else {
-			printf("Unrecognised argument '%s'. For command information, refer to 'cper-generate --help'.\n",
+			cper_print_log("Unrecognised argument '%s'. For command information, refer to 'cper-generate --help'.\n",
 			       argv[i]);
 			return -1;
 		}
@@ -54,7 +56,7 @@ int main(int argc, char *argv[])
 
 	//If no output file passed as argument, exit.
 	if (out_file == NULL) {
-		printf("No output file provided. For command information, refer to 'cper-generate --help'.\n");
+		cper_print_log("No output file provided. For command information, refer to 'cper-generate --help'.\n");
 		if (sections) {
 			free(sections);
 		}
@@ -64,7 +66,7 @@ int main(int argc, char *argv[])
 	//Open a file handle to write output.
 	FILE *cper_file = fopen(out_file, "w");
 	if (cper_file == NULL) {
-		printf("Could not get a handle for output file '%s', file handle returned null.\n",
+		cper_print_log("Could not get a handle for output file '%s', file handle returned null.\n",
 		       out_file);
 		if (sections) {
 			free(sections);
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
 				     randomValidbitsSet);
 	} else {
 		//Invalid arguments.
-		printf("Invalid argument. Either both '--sections' and '--single-section' were set, or neither. For command information, refer to 'cper-generate --help'.\n");
+		cper_print_log("Invalid argument. Either both '--sections' and '--single-section' were set, or neither. For command information, refer to 'cper-generate --help'.\n");
 		if (sections) {
 			free(sections);
 		}
@@ -98,17 +100,17 @@ int main(int argc, char *argv[])
 //Prints command help for this CPER generator.
 void print_help()
 {
-	printf(":: --out cper.file [--sections section1 ...] [--single-section sectiontype]\n");
-	printf("\tGenerates a pseudo-random CPER file with the provided section types and outputs to the given file name.\n\n");
-	printf("\tWhen the '--sections' flag is set, all following arguments are section names, and a full CPER log is generated\n");
-	printf("\tcontaining the given sections.\n");
-	printf("\tWhen the '--single-section' flag is set, the next argument is the single section that should be generated, and\n");
-	printf("\ta single section (no header, only a section descriptor & section) CPER file is generated.\n\n");
-	printf("\tValid section type names are the following:\n");
+	cper_print_log(":: --out cper.file [--sections section1 ...] [--single-section sectiontype]\n");
+	cper_print_log("\tGenerates a pseudo-random CPER file with the provided section types and outputs to the given file name.\n\n");
+	cper_print_log("\tWhen the '--sections' flag is set, all following arguments are section names, and a full CPER log is generated\n");
+	cper_print_log("\tcontaining the given sections.\n");
+	cper_print_log("\tWhen the '--single-section' flag is set, the next argument is the single section that should be generated, and\n");
+	cper_print_log("\ta single section (no header, only a section descriptor & section) CPER file is generated.\n\n");
+	cper_print_log("\tValid section type names are the following:\n");
 	for (size_t i = 0; i < generator_definitions_len; i++) {
-		printf("\t\t- %s\n", generator_definitions[i].ShortName);
+		cper_print_log("\t\t- %s\n", generator_definitions[i].ShortName);
 	}
-	printf("\t\t- unknown\n");
-	printf("\n:: --help\n");
-	printf("\tDisplays help information to the console.\n");
+	cper_print_log("\t\t- unknown\n");
+	cper_print_log("\n:: --help\n");
+	cper_print_log("\tDisplays help information to the console.\n");
 }

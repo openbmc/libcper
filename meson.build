@@ -89,6 +89,7 @@ libcper_parse_sources += files(
     'cper-parse.c',
     'cper-utils.c',
     'ir-parse.c',
+    'log.c',
 )
 
 libcper_include = ['include']
@@ -115,6 +116,7 @@ libcper_generate_sources = [
     'common-utils.c',
     'generator/cper-generate.c',
     'generator/gen-utils.c',
+    'log.c',
 ]
 
 libcper_generate = library(

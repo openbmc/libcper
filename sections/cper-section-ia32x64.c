@@ -11,6 +11,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ia32x64.h>
+#include <libcper/log.h>
 
 //Private pre-definitions.
 json_object *cper_ia32x64_processor_error_info_to_ir(
@@ -99,7 +100,7 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 			      sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO))) {
 		json_object_put(error_info_array);
 		json_object_put(record_ir);
-		printf("Invalid CPER file: Invalid processor error info num.\n");
+		cper_print_log("Invalid CPER file: Invalid processor error info num.\n");
 		return NULL;
 	}
 
@@ -119,7 +120,7 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	if (remaining_size < (processor_context_info_num *
 			      sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO))) {
 		json_object_put(record_ir);
-		printf("Invalid CPER file: Invalid processor context info num.\n");
+		cper_print_log("Invalid CPER file: Invalid processor context info num.\n");
 		return NULL;
 	}
 	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *current_context_info =
@@ -210,7 +211,7 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 			break;
 		default:
 			//Unknown check information.
-			printf("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
+			cper_print_log("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
 			break;
 		}
 
@@ -522,7 +523,7 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 					      context_info->ArraySize,
 					      &encoded_len);
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
+			cper_print_log("Failed to allocate encode output buffer. \n");
 		} else {
 			register_array = json_object_new_object();
 			json_object_object_add(register_array, "data",
@@ -802,7 +803,7 @@ void ir_ia32x64_error_info_to_cper(json_object *error_info, FILE *out)
 			break;
 		default:
 			//Unknown check information.
-			printf("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
+			cper_print_log("WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
 			break;
 		}
 		add_to_valid_bitfield(&ui64Type, 0);
@@ -1028,7 +1029,7 @@ void ir_ia32x64_context_info_to_cper(json_object *context_info, FILE *out)
 		int j_size = json_object_get_string_len(encoded);
 		UINT8 *decoded = base64_decode(j_string, j_size, &decoded_len);
 		if (decoded == NULL) {
-			printf("Failed to allocate decode output buffer. \n");
+			cper_print_log("Failed to allocate decode output buffer. \n");
 		} else {
 			fwrite(decoded, decoded_len, 1, out);
 			fflush(out);

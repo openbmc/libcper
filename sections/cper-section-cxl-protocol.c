@@ -10,6 +10,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-cxl-protocol.h>
+#include <libcper/log.h>
 
 //Converts a single CXL protocol error CPER section into JSON IR.
 json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
@@ -135,7 +136,7 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
 			(UINT8 *)cxl_protocol_error->CapabilityStructure.PcieCap,
 			60, &encoded_len);
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
+			cper_print_log("Failed to allocate encode output buffer. \n");
 			json_object_put(section_ir);
 
 			return NULL;
@@ -190,7 +191,7 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
 					&encoded_len);
 
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
+			cper_print_log("Failed to allocate encode output buffer. \n");
 			json_object_put(section_ir);
 			return NULL;
 		}
@@ -295,7 +296,7 @@ void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out)
 				&decoded_len);
 
 			if (decoded == NULL) {
-				printf("Failed to allocate decode output buffer. \n");
+				cper_print_log("Failed to allocate decode output buffer. \n");
 			} else {
 				memcpy(section_cper->CapabilityStructure.PcieCap,
 				       decoded, decoded_len);
@@ -338,7 +339,7 @@ void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out)
 					json_object_get_string_len(encodedsrc),
 					&decoded_len);
 		if (decoded == NULL) {
-			printf("Failed to allocate decode output buffer. \n");
+			cper_print_log("Failed to allocate decode output buffer. \n");
 		} else {
 			fwrite(decoded, decoded_len, 1, out);
 			fflush(out);
@@ -353,7 +354,7 @@ void ir_section_cxl_protocol_to_cper(json_object *section, FILE *out)
 					json_object_get_string_len(encodederr),
 					&decoded_len);
 		if (decoded == NULL) {
-			printf("Failed to allocate decode output buffer. \n");
+			cper_print_log("Failed to allocate decode output buffer. \n");
 		} else {
 			fwrite(decoded, decoded_len, 1, out);
 			fflush(out);
