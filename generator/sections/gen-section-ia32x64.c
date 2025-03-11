@@ -20,8 +20,8 @@ size_t generate_section_ia32x64(void **location,
 				GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Set up for generation of error/context structures.
-	UINT16 error_structure_num = rand() % 4 + 1;
-	UINT16 context_structure_num = rand() % 4 + 1;
+	UINT16 error_structure_num = cper_rand() % 4 + 1;
+	UINT16 context_structure_num = cper_rand() % 4 + 1;
 	void *error_structures[error_structure_num];
 	void *context_structures[context_structure_num];
 	size_t context_structure_lengths[context_structure_num];
@@ -99,7 +99,7 @@ void *generate_ia32x64_error_structure(GEN_VALID_BITS_TEST_TYPE validBitsType)
 	//Create a random type of error structure.
 	EFI_GUID *guid = (EFI_GUID *)error_structure;
 	UINT64 *check_info = (UINT64 *)(error_structure + 24);
-	int error_structure_type = rand() % 4;
+	int error_structure_type = cper_rand() % 4;
 	switch (error_structure_type) {
 	//Cache
 	case 0:
@@ -149,16 +149,16 @@ void *generate_ia32x64_error_structure(GEN_VALID_BITS_TEST_TYPE validBitsType)
 size_t generate_ia32x64_context_structure(void **location)
 {
 	//Initial length is 16 bytes. Add extra based on type.
-	int reg_type = rand() % 8;
+	int reg_type = cper_rand() % 8;
 	int reg_size = 0;
 
 	//Set register size.
 	if (reg_type == 2) {
-		reg_size = 92;			  //IA32 registers.
+		reg_size = 92;			       //IA32 registers.
 	} else if (reg_type == 3) {
-		reg_size = 244;			  //x64 registers.
+		reg_size = 244;			       //x64 registers.
 	} else {
-		reg_size = (rand() % 5 + 1) * 32; //Not table defined.
+		reg_size = (cper_rand() % 5 + 1) * 32; //Not table defined.
 	}
 
 	//Create structure randomly.

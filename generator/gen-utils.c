@@ -8,6 +8,22 @@
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/gen-utils.h>
 
+UINT32 lfsr = 0xACE1u;
+
+void cper_rand_seed(UINT32 seed)
+{
+	lfsr = seed;
+}
+
+UINT32 cper_rand()
+{
+	lfsr |= lfsr == 0; // if x == 0, set x = 1 instead
+	lfsr ^= (lfsr & 0x0007ffff) << 13;
+	lfsr ^= lfsr >> 17;
+	lfsr ^= (lfsr & 0x07ffffff) << 5;
+	return lfsr;
+}
+
 //Generates a random section of the given byte size, saving the result to the given location.
 //Returns the length of the section as passed in.
 size_t generate_random_section(void **location, size_t size)
@@ -21,7 +37,7 @@ UINT8 *generate_random_bytes(size_t size)
 {
 	UINT8 *bytes = malloc(size);
 	for (size_t i = 0; i < size; i++) {
-		bytes[i] = rand();
+		bytes[i] = cper_rand();
 	}
 	return bytes;
 }
@@ -36,13 +52,7 @@ void create_valid_error_section(UINT8 *start)
 	*error_section &= 0x7FFFFF; //Reserved bits 23-63
 
 	//Ensure error type has a valid value.
-	*(start + 1) =
-		CPER_ERROR_TYPES_KEYS[rand() % (sizeof(CPER_ERROR_TYPES_KEYS) /
-						sizeof(int))];
-}
-
-//Initializes the random seed for rand() using the current time.
-void init_random()
-{
-	srand(1);
+	*(start + 1) = CPER_ERROR_TYPES_KEYS[cper_rand() %
+					     (sizeof(CPER_ERROR_TYPES_KEYS) /
+					      sizeof(int))];
 }

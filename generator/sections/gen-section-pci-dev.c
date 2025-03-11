@@ -15,8 +15,8 @@ size_t generate_section_pci_dev(void **location,
 				GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate how many register pairs will be attached to this section.
-	UINT32 num_memory_pairs = rand() % 4;
-	UINT32 num_io_pairs = rand() % 4;
+	UINT32 num_memory_pairs = cper_rand() % 4;
+	UINT32 num_io_pairs = cper_rand() % 4;
 	UINT32 num_registers = num_memory_pairs + num_io_pairs;
 
 	//Create random bytes.
