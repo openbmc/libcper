@@ -11,6 +11,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-dmar-vtd.h>
+#include <libcper/log.h>
 
 //Converts a single VT-d specific DMAr CPER section into JSON IR.
 json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size)
@@ -100,7 +101,7 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size)
 	encoded = base64_encode((UINT8 *)vtd_error->ContextEntry, 16,
 				&encoded_len);
 	if (encoded == NULL) {
-		printf("Failed to allocate encode output buffer. \n");
+		cper_print_log("Failed to allocate encode output buffer. \n");
 	} else {
 		json_object_object_add(section_ir, "contextEntry",
 				       json_object_new_string_len(encoded,
@@ -188,7 +189,7 @@ void ir_section_dmar_vtd_to_cper(json_object *section, FILE *out)
 				       json_object_get_string_len(encoded),
 				       &decoded_len);
 	if (decoded == NULL) {
-		printf("Failed to allocate decode output buffer. \n");
+		cper_print_log("Failed to allocate decode output buffer. \n");
 	} else {
 		memcpy(section_cper->RootEntry, decoded, decoded_len);
 		free(decoded);
@@ -202,7 +203,7 @@ void ir_section_dmar_vtd_to_cper(json_object *section, FILE *out)
 				json_object_get_string_len(encoded),
 				&decoded_len);
 	if (decoded == NULL) {
-		printf("Failed to allocate decode output buffer. \n");
+		cper_print_log("Failed to allocate decode output buffer. \n");
 
 	} else {
 		memcpy(section_cper->ContextEntry, decoded, decoded_len);

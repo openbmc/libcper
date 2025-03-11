@@ -3,6 +3,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ampere.h>
+#include <libcper/log.h>
 
 //Converts the given processor-generic CPER section into JSON IR.
 json_object *cper_section_ampere_to_ir(const UINT8 *section, UINT32 size)

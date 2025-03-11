@@ -9,6 +9,7 @@
 #include <string.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
+#include <libcper/log.h>
 
 //The available severity types for CPER.
 const char *CPER_SEVERITY_TYPES[4] = { "Recoverable", "Fatal", "Corrected",
@@ -217,7 +218,7 @@ void add_to_valid_bitfield(ValidationTypes *val, int vbit_idx)
 		val->value.ui64 |= (0x01 << vbit_idx);
 		break;
 	default:
-		printf("IR to CPER: Unknown validation bits size passed, Enum IntType=%d",
+		cper_print_log("IR to CPER: Unknown validation bits size passed, Enum IntType=%d",
 		       val->size);
 	}
 }
@@ -258,7 +259,7 @@ bool isvalid_prop_to_ir(ValidationTypes *val, int vbit_idx)
 		return (vbit_mask & val->value.ui64);
 
 	default:
-		printf("CPER to IR:Unknown validation bits size passed. Enum IntType: %d",
+		cper_print_log("CPER to IR:Unknown validation bits size passed. Enum IntType: %d",
 		       val->size);
 	}
 	return 0;
@@ -268,22 +269,22 @@ void print_val(ValidationTypes *val)
 {
 	switch (val->size) {
 	case UINT_8T:
-		printf("Validation bits: %x\n", val->value.ui8);
+		cper_print_log("Validation bits: %x\n", val->value.ui8);
 		break;
 	case UINT_16T:
-		printf("Validation bits: %x\n", val->value.ui16);
+		cper_print_log("Validation bits: %x\n", val->value.ui16);
 		break;
 
 	case UINT_32T:
-		printf("Validation bits: %x\n", val->value.ui32);
+		cper_print_log("Validation bits: %x\n", val->value.ui32);
 		break;
 
 	case UINT_64T:
-		printf("Validation bits: %llx\n", val->value.ui64);
+		cper_print_log("Validation bits: %llx\n", val->value.ui64);
 		break;
 
 	default:
-		printf("CPER to IR:Unknown validation bits size passed. Enum IntType: %d",
+		cper_print_log("CPER to IR:Unknown validation bits size passed. Enum IntType: %d",
 		       val->size);
 	}
 }
@@ -355,7 +356,7 @@ int timestamp_to_string(char *out, int out_len, EFI_ERROR_TIME_STAMP *timestamp)
 		century, year, month, day, hours, minutes, seconds);
 
 	if (written < 0 || written >= out_len) {
-		printf("Timestamp buffer of insufficient size\n");
+		cper_print_log("Timestamp buffer of insufficient size\n");
 		return -1;
 	}
 	return 0;

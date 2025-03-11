@@ -10,6 +10,7 @@
 #include <libgen.h>
 #include <limits.h>
 #include <json.h>
+#include <libcper/log.h>
 #include <libcper/cper-parse.h>
 #include <libcper/json-schema.h>
 
@@ -19,6 +20,7 @@ void print_help(void);
 
 int main(int argc, char *argv[])
 {
+	cper_set_log_stdio();
 	//Print help if requested.
 	if (argc == 2 && strcmp(argv[1], "--help") == 0) {
 		print_help();
