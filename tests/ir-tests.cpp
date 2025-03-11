@@ -203,6 +203,15 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 		<< single_section << ") with message: " << error_message;
 }
 
+std::string to_hex(char *input, size_t size)
+{
+	std::string out;
+	for (char c : std::span<unsigned char>((unsigned char *)input, size)) {
+		out += std::format("{:02x}", static_cast<unsigned char>(c));
+	}
+	return out;
+}
+
 //Checks for binary round-trip equality for a given randomly generated CPER record.
 void cper_log_section_binary_test(const char *section_name, int single_section,
 				  GEN_VALID_BITS_TEST_TYPE validBitsType)
@@ -239,8 +248,8 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 
 	std::cout << "size: " << size << ", cper_buf_size: " << cper_buf_size
 		  << std::endl;
-	EXPECT_EQ(std::string_view(buf, size),
-		  std::string_view(cper_buf, std::min(size, cper_buf_size)))
+	EXPECT_EQ(to_hex(buf, size),
+		  to_hex(cper_buf, std::min(size, cper_buf_size)))
 		<< "Binary output was not identical to input (single section mode = "
 		<< single_section << ").";
 
