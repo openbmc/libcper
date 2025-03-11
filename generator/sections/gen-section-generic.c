@@ -33,7 +33,7 @@ size_t generate_section_generic(void **location,
 	for (int i = 0; i < 128; i++) {
 		UINT8 *byte = start_byte + 24 + i;
 		//Ensure only ascii is used
-		*byte = rand() % 127 + 1;
+		*byte = cper_rand() % 127 + 1;
 
 		//Null terminate last byte.
 		if (i == 127) {

@@ -30,7 +30,7 @@ size_t generate_section_memory(void **location,
 	*(bytes + 73) &= ~0x1C; //Extended bits 2-4
 
 	//Fix values that could be above range.
-	*(bytes + 72) = rand() % 16; //Memory error type
+	*(bytes + 72) = cper_rand() % 16; //Memory error type
 
 	//Fix error status.
 	create_valid_error_section(bytes + 8);
@@ -61,8 +61,8 @@ size_t generate_section_memory2(void **location,
 	*(bytes + 63) = 0; //Reserved byte 63
 
 	//Fix values that could be above range.
-	*(bytes + 61) = rand() % 16; //Memory error type
-	*(bytes + 62) = rand() % 2;  //Status
+	*(bytes + 61) = cper_rand() % 16; //Memory error type
+	*(bytes + 62) = cper_rand() % 2;  //Status
 
 	//Fix error status.
 	create_valid_error_section(bytes + 8);

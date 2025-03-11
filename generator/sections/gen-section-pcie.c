@@ -36,14 +36,14 @@ size_t generate_section_pcie(void **location,
 	*(bytes + 39) = 0;     //Device ID byte 15
 
 	//Set expected values.
-	int minor = rand() % 128;
-	int major = rand() % 128;
+	int minor = cper_rand() % 128;
+	int major = cper_rand() % 128;
 	*version = int_to_bcd(minor);
 	*version |= int_to_bcd(major) << 8;
 
 	//Fix values that could be above range.
 	UINT32 *port_type = (UINT32 *)(bytes + 8);
-	*port_type = PCIE_PORT_TYPES[rand() %
+	*port_type = PCIE_PORT_TYPES[cper_rand() %
 				     (sizeof(PCIE_PORT_TYPES) / sizeof(int))];
 
 	//Set return values, exit.

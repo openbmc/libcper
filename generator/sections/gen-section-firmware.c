@@ -25,10 +25,10 @@ size_t generate_section_firmware(void **location,
 	}
 
 	//Set expected values.
-	*(bytes + 1) = 2;    //Revision, referenced version of spec is 2.
+	*(bytes + 1) = 2;	  //Revision, referenced version of spec is 2.
 	UINT64 *record_id = (UINT64 *)(bytes + 8);
-	*record_id = 0;	     //Record ID, should be forced to NULL.
-	*bytes = rand() % 3; //Record type.
+	*record_id = 0;		  //Record ID, should be forced to NULL.
+	*bytes = cper_rand() % 3; //Record type.
 
 	//Set return values, exit.
 	*location = bytes;
