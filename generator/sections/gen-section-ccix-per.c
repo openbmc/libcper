@@ -16,7 +16,7 @@ size_t generate_section_ccix_per(void **location,
 {
 	//Create a random length for the CCIX PER log.
 	//The log attached here does not necessarily conform to the CCIX specification, and is simply random.
-	int log_len = (rand() % 5 + 1) * 32;
+	int log_len = (cper_rand() % 5 + 1) * 32;
 
 	//Create random bytes.
 	int size = 16 + log_len;
