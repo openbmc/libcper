@@ -14,8 +14,7 @@
 #include <libcper/json-schema.h>
 
 void cper_to_json(char *in_file, char *out_file, int is_single_section);
-void json_to_cper(char *in_file, char *out_file, char *specification_file,
-		  char *program_dir, int no_validate, int debug);
+void json_to_cper(char *in_file, char *out_file);
 void print_help(void);
 
 int main(int argc, char *argv[])
@@ -62,14 +61,17 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	// Debug is not used at the moment.  Leave for compatibility.
+	(void)debug;
+	(void)no_validate;
+	(void)specification_file;
 	//Run the requested command.
 	if (strcmp(argv[1], "to-json") == 0) {
 		cper_to_json(input_file, output_file, 0);
 	} else if (strcmp(argv[1], "to-json-section") == 0) {
 		cper_to_json(input_file, output_file, 1);
 	} else if (strcmp(argv[1], "to-cper") == 0) {
-		json_to_cper(input_file, output_file, specification_file,
-			     argv[0], no_validate, debug);
+		json_to_cper(input_file, output_file);
 	} else {
 		printf("Unrecognised argument '%s'. See 'cper-convert --help' for command information.\n",
 		       argv[1]);
@@ -124,8 +126,7 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 }
 
 //Command for converting a provided CPER-JSON JSON file to CPER binary.
-void json_to_cper(char *in_file, char *out_file, char *specification_file,
-		  char *program_dir, int no_validate, int debug)
+void json_to_cper(char *in_file, char *out_file)
 {
 	//Verify output file exists.
 	if (out_file == NULL) {
@@ -139,47 +140,6 @@ void json_to_cper(char *in_file, char *out_file, char *specification_file,
 		printf("Could not read JSON from file '%s', import returned null.\n",
 		       in_file);
 		return;
-	}
-
-	//Validate the JSON against specification, unless otherwise specified.
-	if (!no_validate) {
-		int using_default_spec_path = 0;
-
-		//Is there a specification file path?
-		if (specification_file == NULL) {
-			using_default_spec_path = 1;
-
-			//Make the specification path the assumed default (application directory + specification/cper-json.json).
-			specification_file = malloc(PATH_MAX);
-			char *dir = dirname(program_dir);
-			strcpy(specification_file, dir);
-			strcat(specification_file,
-			       "/specification/cper-json.json");
-		}
-
-		//Enable debug mode if indicated.
-		if (debug) {
-			validate_schema_debug_enable();
-		}
-
-		//Attempt to verify with the the specification.
-		char *error_message = malloc(JSON_ERROR_MSG_MAX_LEN);
-		int success = validate_schema_from_file(specification_file, ir,
-							error_message);
-
-		//Free specification path (if necessary).
-		if (using_default_spec_path) {
-			free(specification_file);
-		}
-
-		//If failed, early exit before conversion.
-		if (!success) {
-			printf("JSON format validation failed: %s\n",
-			       error_message);
-			free(error_message);
-			return;
-		}
-		free(error_message);
 	}
 
 	//Open a read for the output file.
