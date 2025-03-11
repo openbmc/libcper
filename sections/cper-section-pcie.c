@@ -11,6 +11,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-pcie.h>
+#include <libcper/log.h>
 
 struct aer_info_registers {
 	UINT32 pcie_capability_header;
@@ -150,7 +151,8 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size)
 			base64_encode((UINT8 *)pcie_error->Capability.PcieCap,
 				      60, &encoded_len);
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
+			cper_print_log(
+				"Failed to allocate encode output buffer. \n");
 		} else {
 			json_object *capability = json_object_new_object();
 			json_object_object_add(capability, "data",
@@ -172,7 +174,8 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size)
 		encoded = base64_encode((UINT8 *)pcie_error->AerInfo.PcieAer,
 					96, &encoded_len);
 		if (encoded == NULL) {
-			printf("Failed to allocate encode output buffer. \n");
+			cper_print_log(
+				"Failed to allocate encode output buffer. \n");
 		} else {
 			json_object_object_add(aer_capability_ir, "data",
 					       json_object_new_string_len(
@@ -341,7 +344,8 @@ void ir_section_pcie_to_cper(json_object *section, FILE *out)
 			json_object_get_string(encoded),
 			json_object_get_string_len(encoded), &decoded_len);
 		if (decoded == NULL) {
-			printf("Failed to allocate decode output buffer. \n");
+			cper_print_log(
+				"Failed to allocate decode output buffer. \n");
 		} else {
 			memcpy(section_cper->Capability.PcieCap, decoded,
 			       decoded_len);
@@ -363,7 +367,8 @@ void ir_section_pcie_to_cper(json_object *section, FILE *out)
 					&decoded_len);
 
 		if (decoded == NULL) {
-			printf("Failed to allocate decode output buffer. \n");
+			cper_print_log(
+				"Failed to allocate decode output buffer. \n");
 		} else {
 			memcpy(section_cper->AerInfo.PcieAer, decoded,
 			       decoded_len);
