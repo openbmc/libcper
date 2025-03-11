@@ -25,10 +25,10 @@ size_t generate_section_dmar_generic(void **location,
 	*(reserved + 1) = 0;
 
 	//Set expected values.
-	*(bytes + 4) = rand() % 0xC;   //Fault reason.
-	*(bytes + 5) = rand() % 2;     //Access type.
-	*(bytes + 6) = rand() % 2;     //Address type.
-	*(bytes + 7) = rand() % 2 + 1; //Architecture type.
+	*(bytes + 4) = cper_rand() % 0xC;   //Fault reason.
+	*(bytes + 5) = cper_rand() % 2;	    //Access type.
+	*(bytes + 6) = cper_rand() % 2;	    //Address type.
+	*(bytes + 7) = cper_rand() % 2 + 1; //Architecture type.
 
 	//Set return values, exit.
 	*location = bytes;

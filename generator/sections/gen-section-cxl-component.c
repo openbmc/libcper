@@ -16,7 +16,7 @@ size_t generate_section_cxl_component(void **location,
 {
 	//Create a random length for the CXL component event log.
 	//The logs attached here do not necessarily conform to the specification, and are simply random.
-	int log_len = rand() % 64;
+	int log_len = cper_rand() % 64;
 
 	//Create random bytes.
 	int size = 32 + log_len;

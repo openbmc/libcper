@@ -16,15 +16,15 @@ size_t generate_section_cxl_protocol(void **location,
 {
 	//Create a random length for the CXL DVSEC and CXL error log.
 	//The logs attached here do not necessarily conform to the specification, and are simply random.
-	int dvsec_len = rand() % 64;
-	int error_log_len = rand() % 64;
+	int dvsec_len = cper_rand() % 64;
+	int error_log_len = cper_rand() % 64;
 
 	//Create random bytes.
 	int size = 116 + dvsec_len + error_log_len;
 	UINT8 *bytes = generate_random_bytes(size);
 
 	//Set CXL agent type.
-	int cxl_agent_type = rand() % 2;
+	int cxl_agent_type = cper_rand() % 2;
 	*(bytes + 8) = cxl_agent_type;
 
 	//Set reserved areas to zero.
