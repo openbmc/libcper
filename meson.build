@@ -89,7 +89,6 @@ libcper_parse_sources += files(
     'cper-parse.c',
     'cper-utils.c',
     'ir-parse.c',
-    'json-schema.c',
 )
 
 libcper_include = ['include']
