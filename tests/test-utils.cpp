@@ -42,12 +42,12 @@ nlohmann::json loadJson(const char *filePath)
 
 //Returns a ready-for-use memory stream containing a CPER record with the given sections inside.
 FILE *generate_record_memstream(const char **types, UINT16 num_types,
-				char **buf, size_t *buf_size,
+				unsigned char **buf, size_t *buf_size,
 				int single_section,
 				GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Open a memory stream.
-	FILE *stream = open_memstream(buf, buf_size);
+	FILE *stream = open_memstream((char *)buf, buf_size);
 
 	//Generate a section to the stream, close & return.
 	if (!single_section) {

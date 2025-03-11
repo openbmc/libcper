@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
+#include <libcper/log.h>
 #include <libcper/base64.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-parse.h>
@@ -38,7 +39,7 @@ void ir_to_cper(json_object *ir, FILE *out)
 	json_object *section_descriptors =
 		json_object_object_get(ir, "sectionDescriptors");
 	if (section_descriptors == NULL) {
-		printf("Invalid CPER file: No section descriptors.\n");
+		cper_print_log("Invalid CPER file: No section descriptors.\n");
 		return;
 	}
 	int amt_descriptors = json_object_array_length(section_descriptors);
@@ -57,7 +58,7 @@ void ir_to_cper(json_object *ir, FILE *out)
 	//Run through each section in turn.
 	json_object *sections = json_object_object_get(ir, "sections");
 	if (sections == NULL) {
-		printf("Invalid CPER file: No sections.\n");
+		cper_print_log("Invalid CPER file: No sections.\n");
 		return;
 	}
 	int amt_sections = json_object_array_length(sections);
@@ -193,7 +194,8 @@ void ir_section_to_cper(json_object *section,
 			json_object_get_string(encoded),
 			json_object_get_string_len(encoded), &decoded_len);
 		if (decoded == NULL) {
-			printf("Failed to allocate decode output buffer. \n");
+			cper_print_log(
+				"Failed to allocate decode output buffer. \n");
 		} else {
 			fwrite(decoded, decoded_len, 1, out);
 			free(decoded);

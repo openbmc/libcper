@@ -203,12 +203,21 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 		<< single_section << ") with message: " << error_message;
 }
 
+std::string to_hex(unsigned char *input, size_t size)
+{
+	std::string out;
+	for (char c : std::span<unsigned char>(input, size)) {
+		out += std::format("{:02x}", static_cast<unsigned char>(c));
+	}
+	return out;
+}
+
 //Checks for binary round-trip equality for a given randomly generated CPER record.
 void cper_log_section_binary_test(const char *section_name, int single_section,
 				  GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate CPER record for the given type.
-	char *buf;
+	unsigned char *buf;
 	size_t size;
 	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
 						 single_section, validBitsType);
@@ -227,9 +236,9 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 	}
 
 	//Now convert back to binary, and get a stream out.
-	char *cper_buf;
+	unsigned char *cper_buf;
 	size_t cper_buf_size;
-	FILE *stream = open_memstream(&cper_buf, &cper_buf_size);
+	FILE *stream = open_memstream((char *)&cper_buf, &cper_buf_size);
 	if (single_section) {
 		ir_single_section_to_cper(ir, stream);
 	} else {
@@ -239,8 +248,8 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 
 	std::cout << "size: " << size << ", cper_buf_size: " << cper_buf_size
 		  << std::endl;
-	EXPECT_EQ(std::string_view(buf, size),
-		  std::string_view(cper_buf, std::min(size, cper_buf_size)))
+	EXPECT_EQ(std::to_hex(buf, size),
+		  std::to_hex(cper_buf, std::min(size, cper_buf_size)))
 		<< "Binary output was not identical to input (single section mode = "
 		<< single_section << ").";
 
