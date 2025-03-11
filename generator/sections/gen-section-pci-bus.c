@@ -33,7 +33,7 @@ size_t generate_section_pci_bus(void **location,
 
 	//Fix values that could be above range.
 	UINT16 *error_type = (UINT16 *)(bytes + 16);
-	*error_type = rand() % 8;
+	*error_type = cper_rand() % 8;
 
 	//Fix error status.
 	create_valid_error_section(bytes + 8);

@@ -26,8 +26,6 @@ size_t generate_section_nvidia(void **location,
 		"MCF",	     "GPU-STATUS",    "GPU-CONTNMT",   "SMMU",
 	};
 
-	init_random();
-
 	//Create random bytes.
 	int numRegs = 6;
 	size_t size = offsetof(EFI_NVIDIA_ERROR_DATA, Register) +
@@ -45,7 +43,8 @@ size_t generate_section_nvidia(void **location,
 	nvidia_error->Severity %= 4;
 
 	//Signature.
-	int idx_random = rand() % (sizeof(signatures) / sizeof(signatures[0]));
+	int idx_random =
+		cper_rand() % (sizeof(signatures) / sizeof(signatures[0]));
 	strncpy(nvidia_error->Signature, signatures[idx_random],
 		sizeof(nvidia_error->Signature) - 1);
 	nvidia_error->Signature[sizeof(nvidia_error->Signature) - 1] = '\0';
