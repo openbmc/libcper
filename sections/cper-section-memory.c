@@ -9,6 +9,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-memory.h>
+#include <libcper/log.h>
 
 //Converts a single memory error CPER section into JSON IR.
 json_object *cper_section_platform_memory_to_ir(const UINT8 *section,

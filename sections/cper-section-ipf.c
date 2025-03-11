@@ -9,6 +9,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ipf.h>
+#include <libcper/log.h>
 
 json_object *cper_ipf_mod_error_read_array(EFI_IPF_MOD_ERROR_INFO **cur_error,
 					   int num_to_read);

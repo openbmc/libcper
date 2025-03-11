@@ -9,6 +9,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-dmar-generic.h>
+#include <libcper/log.h>
 
 //Converts a single generic DMAr CPER section into JSON IR.
 json_object *cper_section_dmar_generic_to_ir(const UINT8 *section, UINT32 size)
