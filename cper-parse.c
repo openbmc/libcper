@@ -162,13 +162,22 @@ json_object *cper_to_ir(FILE *cper_file)
 	}
 	fseek(cper_file, -sizeof(EFI_COMMON_ERROR_RECORD_HEADER), SEEK_CUR);
 	unsigned char *cper_buf = malloc(header.RecordLength);
-	if (fread(cper_buf, header.RecordLength, 1, cper_file) != 1) {
-		cper_print_log("File read failed\n");
+	int bytes_read = fread(cper_buf, 1, header.RecordLength, cper_file);
+	if (bytes_read < 0) {
+		cper_print_log("File read failed with code %u\n", bytes_read);
+		free(cper_buf);
+		return NULL;
+	}
+	if ((UINT32)bytes_read != header.RecordLength) {
+		int position = ftell(cper_file);
+		cper_print_log(
+			"File read failed file was %u bytes, expecting %u bytes from header.\n",
+			position, header.RecordLength);
 		free(cper_buf);
 		return NULL;
 	}
 
-	json_object *ir = cper_buf_to_ir(cper_buf, header.RecordLength);
+	json_object *ir = cper_buf_to_ir(cper_buf, bytes_read);
 	free(cper_buf);
 	return ir;
 }
