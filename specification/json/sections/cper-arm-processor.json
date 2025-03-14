@@ -2,12 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "description": "ARM Processor Error Section",
-    "required": [
-        "errorInfoNum",
-        "contextInfoNum",
-        "sectionLength",
-        "midrEl1"
-    ],
+    "required": ["errorInfoNum", "contextInfoNum", "sectionLength", "midrEl1"],
     "additionalProperties": false,
     "properties": {
         "errorInfoNum": {
@@ -26,10 +21,7 @@
             "type": "object",
             "additionalProperties": false,
             "description": "For errors that can be attributed to a specific affinity level, this field defines the affinity level at which the error was produced, detected, and/or consumed",
-            "required": [
-                "value",
-                "type"
-            ],
+            "required": ["value", "type"],
             "properties": {
                 "value": {
                     "type": "integer"
@@ -59,11 +51,7 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": [
-                    "version",
-                    "length",
-                    "errorType"
-                ],
+                "required": ["version", "length", "errorType"],
                 "additionalProperties": false,
                 "properties": {
                     "version": {
@@ -78,10 +66,7 @@
                     },
                     "multipleError": {
                         "type": "object",
-                        "required": [
-                            "type",
-                            "value"
-                        ],
+                        "required": ["type", "value"],
                         "additionalProperties": false,
                         "properties": {
                             "type": {
@@ -521,10 +506,7 @@
                                 "$id": "cper-json-registerarray3",
                                 "type": "object",
                                 "additionalProperties": false,
-                                "required": [
-                                    "sctlr_s",
-                                    "spsr_mon"
-                                ],
+                                "required": ["sctlr_s", "spsr_mon"],
                                 "properties": {
                                     "sctlr_s": {
                                         "type": "integer"
@@ -869,10 +851,7 @@
                             {
                                 "$id": "cper-json-registerarray8",
                                 "type": "object",
-                                "required": [
-                                    "mrsEncoding",
-                                    "value"
-                                ],
+                                "required": ["mrsEncoding", "value"],
                                 "additionalProperties": false,
                                 "properties": {
                                     "mrsEncoding": {
@@ -911,9 +890,7 @@
                                 "$id": "cper-json-registerarray9",
                                 "type": "object",
                                 "additionalProperties": false,
-                                "required": [
-                                    "data"
-                                ],
+                                "required": ["data"],
                                 "properties": {
                                     "data": {
                                         "type": "string"
@@ -927,9 +904,7 @@
         },
         "vendorSpecificInfo": {
             "type": "object",
-            "required": [
-                "data"
-            ],
+            "required": ["data"],
             "additionalProperties": false,
             "properties": {
                 "data": {

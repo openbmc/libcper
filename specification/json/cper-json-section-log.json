@@ -14,59 +14,59 @@
             "minProperties": 1,
             "maxProperties": 1,
             "additionalProperties": false,
-            "properties":{
-                "GenericProcessor":{
+            "properties": {
+                "GenericProcessor": {
                     "$ref": "./sections/cper-generic-processor.json"
                 },
-                "Ia32x64Processor":{
+                "Ia32x64Processor": {
                     "$ref": "./sections/cper-ia32x64-processor.json"
                 },
-                "ArmProcessor":{
+                "ArmProcessor": {
                     "$ref": "./sections/cper-arm-processor.json"
                 },
-                "Memory":{
+                "Memory": {
                     "$ref": "./sections/cper-memory.json"
                 },
-                "Memory2":{
+                "Memory2": {
                     "$ref": "./sections/cper-memory2.json"
                 },
-                "Pcie":{
+                "Pcie": {
                     "$ref": "./sections/cper-pcie.json"
                 },
-                "PciBus":{
+                "PciBus": {
                     "$ref": "./sections/cper-pci-bus.json"
                 },
-                "PciComponent":{
+                "PciComponent": {
                     "$ref": "./sections/cper-pci-component.json"
                 },
-                "Firmware":{
+                "Firmware": {
                     "$ref": "./sections/cper-firmware.json"
                 },
-                "GenericDmar":{
+                "GenericDmar": {
                     "$ref": "./sections/cper-generic-dmar.json"
                 },
-                "VtdDmar":{
+                "VtdDmar": {
                     "$ref": "./sections/cper-vtd-dmar.json"
                 },
-                "IommuDmar":{
+                "IommuDmar": {
                     "$ref": "./sections/cper-iommu-dmar.json"
                 },
-                "CcixPer":{
+                "CcixPer": {
                     "$ref": "./sections/cper-ccix-per.json"
                 },
-                "CxlProtocol":{
+                "CxlProtocol": {
                     "$ref": "./sections/cper-cxl-protocol.json"
                 },
-                "CxlComponent":{
+                "CxlComponent": {
                     "$ref": "./sections/cper-cxl-component.json"
                 },
-                "Nvidia":{
+                "Nvidia": {
                     "$ref": "./sections/cper-nvidia.json"
                 },
-                "Ampere":{
+                "Ampere": {
                     "$ref": "./sections/cper-ampere.json"
                 },
-                "Unknown":{
+                "Unknown": {
                     "$ref": "./sections/cper-unknown.json"
                 }
             }
