@@ -114,15 +114,19 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 
 		const unsigned char *section_begin =
 			cper_buf + section_descriptor->SectionOffset;
-
-		json_object_array_add(
-			section_descriptors_ir,
-			cper_section_descriptor_to_ir(section_descriptor));
+		json_object *section_descriptor_ir =
+			cper_section_descriptor_to_ir(section_descriptor);
+		json_object_array_add(section_descriptors_ir,
+				      section_descriptor_ir);
 
 		//Read the section itself.
 		json_object *section_ir = cper_buf_section_to_ir(
 			section_begin, section_descriptor->SectionLength,
 			section_descriptor);
+		if (section_ir == NULL) {
+			cper_print_log("Failed to parse section %d\n", i);
+			section_ir = json_object_new_object();
+		}
 		json_object_array_add(sections_ir, section_ir);
 	}
 
@@ -219,16 +223,15 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	if (header->ValidationBits & 0x2) {
 		char timestamp_string[TIMESTAMP_LENGTH];
 		if (timestamp_to_string(timestamp_string, TIMESTAMP_LENGTH,
-					&header->TimeStamp) < 0) {
-			goto fail;
-		}
-		json_object_object_add(
-			header_ir, "timestamp",
-			json_object_new_string(timestamp_string));
+					&header->TimeStamp) >= 0) {
+			json_object_object_add(
+				header_ir, "timestamp",
+				json_object_new_string(timestamp_string));
 
-		json_object_object_add(
-			header_ir, "timestampIsPrecise",
-			json_object_new_boolean(header->TimeStamp.Flag));
+			json_object_object_add(header_ir, "timestampIsPrecise",
+					       json_object_new_boolean(
+						       header->TimeStamp.Flag));
+		}
 	}
 
 	//If a platform ID exists according to the validation bits, then add it.
@@ -298,10 +301,6 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	json_object_object_add(header_ir, "persistenceInfo",
 			       json_object_new_uint64(header->PersistenceInfo));
 	return header_ir;
-
-fail:
-	json_object_put(header_ir);
-	return NULL;
 }
 
 //Converts the given EFI section descriptor into JSON IR format.
@@ -398,6 +397,9 @@ json_object *read_section(const unsigned char *cper_section_buf, size_t size,
 		return NULL;
 	}
 	json_object *section_ir = definition->ToIR(cper_section_buf, size);
+	if (section_ir == NULL) {
+		return NULL;
+	}
 	json_object *result = json_object_new_object();
 	json_object_object_add(result, definition->ShortName, section_ir);
 	return result;
@@ -440,12 +442,13 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 
 	//Parse section to IR based on GUID.
 	json_object *result = NULL;
-
 	json_object *section_ir = NULL;
 
 	CPER_SECTION_DEFINITION *section =
 		select_section_by_guid(&descriptor->SectionType);
-	if (section != NULL) {
+	if (section == NULL) {
+		cper_print_log("Unknown section type guid\n");
+	} else {
 		result = read_section(cper_section_buf, size, section);
 	}
 
@@ -457,7 +460,8 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 					      descriptor->SectionLength,
 					      &encoded_len);
 		if (encoded == NULL) {
-			//cper_print_log("Failed to allocate encode output buffer. \n");
+			cper_print_log(
+				"Failed to allocate encode output buffer. \n");
 		} else {
 			section_ir = json_object_new_object();
 			json_object_object_add(section_ir, "data",
@@ -469,7 +473,9 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 			json_object_object_add(result, "Unknown", section_ir);
 		}
 	}
-
+	if (result == NULL) {
+		cper_print_log("RETURNING NULL!! !!\n");
+	}
 	return result;
 }
 
@@ -511,6 +517,9 @@ json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 	//Parse the single section.
 	json_object *section_ir = cper_buf_section_to_ir(
 		section, section_descriptor->SectionLength, section_descriptor);
+	if (section_ir == NULL) {
+		cper_print_log("RETURNING NULL2!! !!\n");
+	}
 	json_object_object_add(ir, "section", section_ir);
 	return ir;
 }
