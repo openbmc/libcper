@@ -57,116 +57,51 @@
                     },
                     "checkInfo": {
                         "type": "object",
-                        "oneOf": [
-                            {
-                                "$id": "cper-json-checkinfo0",
+                        "additionalProperties": false,
+                        "properties": {
+                            "transactionType": {
                                 "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "transactionType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "operation": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "level": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                    },
-                                    "processorContextCorrupt": {
-                                        "type": "boolean"
-                                    },
-                                    "uncorrected": {
-                                        "type": "boolean"
-                                    },
-                                    "preciseIP": {
-                                        "type": "boolean"
-                                    },
-                                    "restartableIP": {
-                                        "type": "boolean"
-                                    },
-                                    "overflow": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "./common/cper-json-nvp.json"
                             },
-                            {
-                                "$id": "cper-json-checkinfo1",
+                            "operation": {
                                 "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "transactionType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "operation": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "level": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                    },
-                                    "processorContextCorrupt": {
-                                        "type": "boolean"
-                                    },
-                                    "uncorrected": {
-                                        "type": "boolean"
-                                    },
-                                    "preciseIP": {
-                                        "type": "boolean"
-                                    },
-                                    "restartableIP": {
-                                        "type": "boolean"
-                                    },
-                                    "overflow": {
-                                        "type": "boolean"
-                                    },
-                                    "participationType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "addressSpace": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "timedOut": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "./common/cper-json-nvp.json"
                             },
-                            {
-                                "$id": "cper-json-checkinfo2",
+                            "level": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "processorContextCorrupt": {
+                                "type": "boolean"
+                            },
+                            "uncorrected": {
+                                "type": "boolean"
+                            },
+                            "preciseIP": {
+                                "type": "boolean"
+                            },
+                            "restartableIP": {
+                                "type": "boolean"
+                            },
+                            "overflow": {
+                                "type": "boolean"
+                            },
+                            "participationType": {
                                 "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "errorType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "processorContextCorrupt": {
-                                        "type": "boolean"
-                                    },
-                                    "uncorrected": {
-                                        "type": "boolean"
-                                    },
-                                    "preciseIP": {
-                                        "type": "boolean"
-                                    },
-                                    "restartableIP": {
-                                        "type": "boolean"
-                                    },
-                                    "overflow": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "./common/cper-json-nvp.json"
+                            },
+                            "addressSpace": {
+                                "type": "object",
+                                "$ref": "./common/cper-json-nvp.json"
+                            },
+                            "timedOut": {
+                                "type": "boolean"
+                            },
+                            "errorType": {
+                                "type": "object",
+                                "$ref": "./common/cper-json-nvp.json"
                             }
-                        ]
+                        }
                     },
                     "targetAddressID": {
                         "type": "integer"
@@ -244,31 +179,81 @@
                                 ],
                                 "additionalProperties": false,
                                 "properties": {
-                                    "eax": { "type": "integer" },
-                                    "ebx": { "type": "integer" },
-                                    "ecx": { "type": "integer" },
-                                    "edx": { "type": "integer" },
-                                    "esi": { "type": "integer" },
-                                    "edi": { "type": "integer" },
-                                    "ebp": { "type": "integer" },
-                                    "esp": { "type": "integer" },
-                                    "cs": { "type": "integer" },
-                                    "ds": { "type": "integer" },
-                                    "ss": { "type": "integer" },
-                                    "es": { "type": "integer" },
-                                    "fs": { "type": "integer" },
-                                    "gs": { "type": "integer" },
-                                    "eflags": { "type": "integer" },
-                                    "eip": { "type": "integer" },
-                                    "cr0": { "type": "integer" },
-                                    "cr1": { "type": "integer" },
-                                    "cr2": { "type": "integer" },
-                                    "cr3": { "type": "integer" },
-                                    "cr4": { "type": "integer" },
-                                    "gdtr": { "type": "integer" },
-                                    "idtr": { "type": "integer" },
-                                    "ldtr": { "type": "integer" },
-                                    "tr": { "type": "integer" }
+                                    "eax": {
+                                        "type": "integer"
+                                    },
+                                    "ebx": {
+                                        "type": "integer"
+                                    },
+                                    "ecx": {
+                                        "type": "integer"
+                                    },
+                                    "edx": {
+                                        "type": "integer"
+                                    },
+                                    "esi": {
+                                        "type": "integer"
+                                    },
+                                    "edi": {
+                                        "type": "integer"
+                                    },
+                                    "ebp": {
+                                        "type": "integer"
+                                    },
+                                    "esp": {
+                                        "type": "integer"
+                                    },
+                                    "cs": {
+                                        "type": "integer"
+                                    },
+                                    "ds": {
+                                        "type": "integer"
+                                    },
+                                    "ss": {
+                                        "type": "integer"
+                                    },
+                                    "es": {
+                                        "type": "integer"
+                                    },
+                                    "fs": {
+                                        "type": "integer"
+                                    },
+                                    "gs": {
+                                        "type": "integer"
+                                    },
+                                    "eflags": {
+                                        "type": "integer"
+                                    },
+                                    "eip": {
+                                        "type": "integer"
+                                    },
+                                    "cr0": {
+                                        "type": "integer"
+                                    },
+                                    "cr1": {
+                                        "type": "integer"
+                                    },
+                                    "cr2": {
+                                        "type": "integer"
+                                    },
+                                    "cr3": {
+                                        "type": "integer"
+                                    },
+                                    "cr4": {
+                                        "type": "integer"
+                                    },
+                                    "gdtr": {
+                                        "type": "integer"
+                                    },
+                                    "idtr": {
+                                        "type": "integer"
+                                    },
+                                    "ldtr": {
+                                        "type": "integer"
+                                    },
+                                    "tr": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
@@ -313,42 +298,114 @@
                                 ],
                                 "additionalProperties": false,
                                 "properties": {
-                                    "rax": { "type": "integer" },
-                                    "rbx": { "type": "integer" },
-                                    "rcx": { "type": "integer" },
-                                    "rdx": { "type": "integer" },
-                                    "rsi": { "type": "integer" },
-                                    "rdi": { "type": "integer" },
-                                    "rbp": { "type": "integer" },
-                                    "rsp": { "type": "integer" },
-                                    "r8": { "type": "integer" },
-                                    "r9": { "type": "integer" },
-                                    "r10": { "type": "integer" },
-                                    "r11": { "type": "integer" },
-                                    "r12": { "type": "integer" },
-                                    "r13": { "type": "integer" },
-                                    "r14": { "type": "integer" },
-                                    "r15": { "type": "integer" },
-                                    "cs": { "type": "integer" },
-                                    "ds": { "type": "integer" },
-                                    "ss": { "type": "integer" },
-                                    "es": { "type": "integer" },
-                                    "fs": { "type": "integer" },
-                                    "gs": { "type": "integer" },
-                                    "rflags": { "type": "integer" },
-                                    "eip": { "type": "integer" },
-                                    "cr0": { "type": "integer" },
-                                    "cr1": { "type": "integer" },
-                                    "cr2": { "type": "integer" },
-                                    "cr3": { "type": "integer" },
-                                    "cr4": { "type": "integer" },
-                                    "cr8": { "type": "integer" },
-                                    "gdtr_0": { "type": "integer" },
-                                    "gdtr_1": { "type": "integer" },
-                                    "idtr_0": { "type": "integer" },
-                                    "idtr_1": { "type": "integer" },
-                                    "ldtr": { "type": "integer" },
-                                    "tr": { "type": "integer" }
+                                    "rax": {
+                                        "type": "integer"
+                                    },
+                                    "rbx": {
+                                        "type": "integer"
+                                    },
+                                    "rcx": {
+                                        "type": "integer"
+                                    },
+                                    "rdx": {
+                                        "type": "integer"
+                                    },
+                                    "rsi": {
+                                        "type": "integer"
+                                    },
+                                    "rdi": {
+                                        "type": "integer"
+                                    },
+                                    "rbp": {
+                                        "type": "integer"
+                                    },
+                                    "rsp": {
+                                        "type": "integer"
+                                    },
+                                    "r8": {
+                                        "type": "integer"
+                                    },
+                                    "r9": {
+                                        "type": "integer"
+                                    },
+                                    "r10": {
+                                        "type": "integer"
+                                    },
+                                    "r11": {
+                                        "type": "integer"
+                                    },
+                                    "r12": {
+                                        "type": "integer"
+                                    },
+                                    "r13": {
+                                        "type": "integer"
+                                    },
+                                    "r14": {
+                                        "type": "integer"
+                                    },
+                                    "r15": {
+                                        "type": "integer"
+                                    },
+                                    "cs": {
+                                        "type": "integer"
+                                    },
+                                    "ds": {
+                                        "type": "integer"
+                                    },
+                                    "ss": {
+                                        "type": "integer"
+                                    },
+                                    "es": {
+                                        "type": "integer"
+                                    },
+                                    "fs": {
+                                        "type": "integer"
+                                    },
+                                    "gs": {
+                                        "type": "integer"
+                                    },
+                                    "rflags": {
+                                        "type": "integer"
+                                    },
+                                    "eip": {
+                                        "type": "integer"
+                                    },
+                                    "cr0": {
+                                        "type": "integer"
+                                    },
+                                    "cr1": {
+                                        "type": "integer"
+                                    },
+                                    "cr2": {
+                                        "type": "integer"
+                                    },
+                                    "cr3": {
+                                        "type": "integer"
+                                    },
+                                    "cr4": {
+                                        "type": "integer"
+                                    },
+                                    "cr8": {
+                                        "type": "integer"
+                                    },
+                                    "gdtr_0": {
+                                        "type": "integer"
+                                    },
+                                    "gdtr_1": {
+                                        "type": "integer"
+                                    },
+                                    "idtr_0": {
+                                        "type": "integer"
+                                    },
+                                    "idtr_1": {
+                                        "type": "integer"
+                                    },
+                                    "ldtr": {
+                                        "type": "integer"
+                                    },
+                                    "tr": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
