@@ -14,7 +14,7 @@ project(
 
 add_project_arguments(
     '-DLIBCPER_JSON_SPEC="'
-    + meson.current_source_dir() + '/specification/json/cper-json.json"',
+    + meson.current_source_dir() + '/specification/json"',
     language: ['c', 'cpp'],
 )
 
@@ -53,7 +53,7 @@ libcper_parse_sources = files(
 
 edk_sources = files('Cper.c')
 
-generator_section_sources = files(
+libcper_generate_sources = files(
     'generator/sections/gen-section-ampere.c',
     'generator/sections/gen-section-arm.c',
     'generator/sections/gen-section-ccix-per.c',
@@ -114,16 +114,14 @@ libcper_parse_dep = declare_dependency(
     link_with: [libcper_parse],
 )
 
-libcper_generate_sources = [
-    'common-utils.c',
+libcper_generate_sources += files(
     'generator/cper-generate.c',
     'generator/gen-utils.c',
-]
+)
 
 libcper_generate = library(
     'cper-generate',
     libcper_generate_sources,
-    generator_section_sources,
     version: meson.project_version(),
     include_directories: libcper_include_dir,
     dependencies: [json_c_dep],
