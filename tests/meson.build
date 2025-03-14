@@ -59,11 +59,16 @@ cper_tests = executable(
     ],
 )
 test('test-cper-tests', cper_tests)
+
 cxx = meson.get_compiler('cpp')
-if (cxx.get_id() == 'clang') and get_option('fuzz').allowed()
+
+# Fuzzing only works on linux at this moment.  osx clang doesn't have leak detector
+is_darwin = host_machine.system().startswith('darwin')
+if (cxx.get_id() == 'clang') and get_option('fuzz').allowed() and not is_darwin
+    sanitize = ['fuzzer', 'address', 'leak']
     fuzz_args = [
-        '-fsanitize=fuzzer,address,leak',
-        '-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION',
+      '-fsanitize=' + ','.join(sanitize),
+      '-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION',
     ]
 
     foreach fuzzer_test : ['fuzz_cper_buf_to_ir']
