@@ -57,6 +57,13 @@
             "description": "Indicates the size of the actual error record, including the size of the record header, all section descriptors, and section bodies.",
             "minimum": 0
         },
+        "reservedValidationBits": {
+            "type": "array",
+            "description": "Reserved validation bits",
+            "items": {
+                "type": "integer"
+            }
+        },
         "timestamp": {
             "type": "string",
             "description": "The timestamp correlates to the time when the error information was collected by the system software and may not necessarily represent the time of the error event."

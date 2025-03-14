@@ -42,6 +42,7 @@ void ir_to_cper(json_object *ir, FILE *out)
 		cper_print_log("Invalid CPER file: No section descriptors.\n");
 		return;
 	}
+
 	int amt_descriptors = json_object_array_length(section_descriptors);
 	EFI_ERROR_SECTION_DESCRIPTOR *descriptors[amt_descriptors];
 	for (int i = 0; i < amt_descriptors; i++) {
@@ -108,6 +109,22 @@ void ir_header_to_cper(json_object *header_ir,
 
 	//Validation bits.
 	ValidationTypes ui32Type = { UINT_32T, .value.ui32 = 0 };
+
+	json_object *reserved_validation_bits =
+		json_object_object_get(header_ir, "reservedValidationBits");
+	if (reserved_validation_bits != NULL) {
+		int arraylen =
+			json_object_array_length(reserved_validation_bits);
+
+		for (int i = 0; i < arraylen; i++) {
+			json_object *reserved_validation_bit =
+				json_object_array_get_idx(
+					reserved_validation_bits, i);
+			int bit = json_object_get_int(reserved_validation_bit);
+			//printf("reserved validation bit: %d\n", bit);
+			add_to_valid_bitfield(&ui32Type, bit);
+		}
+	}
 	struct json_object *obj = NULL;
 
 	//Record length.
@@ -116,10 +133,9 @@ void ir_header_to_cper(json_object *header_ir,
 
 	//Timestamp, if present.
 	if (json_object_object_get_ex(header_ir, "timestamp", &obj)) {
-		json_object *timestamp = obj;
-		if (timestamp != NULL) {
+		if (obj != NULL) {
 			string_to_timestamp(&header->TimeStamp,
-					    json_object_get_string(timestamp));
+					    json_object_get_string(obj));
 			header->TimeStamp.Flag = json_object_get_boolean(
 				json_object_object_get(header_ir,
 						       "timestampIsPrecise"));
