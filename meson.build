@@ -88,12 +88,12 @@ libcper_include_dir = include_directories(libcper_include, is_system: true)
 
 
 libcper_parse_sources += files(
+    'log.c',
     'base64.c',
     'common-utils.c',
     'cper-parse.c',
     'cper-utils.c',
     'ir-parse.c',
-    'log.c',
 )
 
 subdir('include')
