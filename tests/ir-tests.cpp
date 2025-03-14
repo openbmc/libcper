@@ -194,13 +194,13 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 
 	//Validate against schema.
 	std::string error_message;
-
-	int valid = schema_validate_from_file(LIBCPER_JSON_SPEC, jsonData,
-					      error_message);
+	valijson::Schema schema = load_schema(AddRequiredProps::YES);
+	int valid = schema_validate_from_file(schema, jsonData, error_message);
 	json_object_put(ir);
 	ASSERT_TRUE(valid)
 		<< "IR validation test failed (single section mode = "
-		<< single_section << ") with message: " << error_message;
+		<< single_section << ") with message: " << error_message
+		<< jsonData.dump(4) << "\n";
 }
 
 std::string to_hex(char *input, size_t size)

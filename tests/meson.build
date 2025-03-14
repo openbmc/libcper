@@ -38,13 +38,14 @@ if not valijson_dep.found()
     valijson_dep = valijson_proj.get_variable('valijson_dep')
 endif
 
-sources = ['ir-tests.cpp', 'test-utils.cpp', 'base64_test.cpp']
+test_sources = ['test-utils.cpp', 'base64_test.cpp']
 
 test_include_dirs = ['.', '../include']
 
 cper_tests = executable(
     'cper-tests',
-    sources,
+    'ir-tests.cpp',
+    test_sources,
     implicit_include_directories: false,
     include_directories: include_directories(test_include_dirs),
     cpp_args: '-fpermissive',
@@ -74,7 +75,7 @@ if (cxx.get_id() == 'clang') and get_option('fuzz').allowed() and not is_darwin
     foreach fuzzer_test : ['fuzz_cper_buf_to_ir']
         fuzz_exe = executable(
             fuzzer_test,
-            [fuzzer_test + '.cpp'] + libcper_parse_sources + edk_sources,
+            [fuzzer_test + '.cpp'] + libcper_parse_sources + edk_sources + test_sources+ libcper_generate_sources,
             implicit_include_directories: false,
             include_directories: include_directories(test_include_dirs),
             cpp_args: fuzz_args,
