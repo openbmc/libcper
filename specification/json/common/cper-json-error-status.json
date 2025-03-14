@@ -17,7 +17,7 @@
         "errorType": {
             "type": "object",
             "description": "Encoded value for the Error_Type",
-            "required": ["name", "value", "description"],
+            "required": ["name", "value"],
             "properties": {
                 "name": {
                     "type": "string"
