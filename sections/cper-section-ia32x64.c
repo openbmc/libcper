@@ -130,10 +130,14 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 	void *cur_pos = (void *)current_context_info;
 	json_object *context_info_array = json_object_new_array();
 	for (int i = 0; i < processor_context_info_num; i++) {
-		json_object_array_add(context_info_array,
-				      cper_ia32x64_processor_context_info_to_ir(
-					      current_context_info, &cur_pos,
-					      &remaining_size));
+		json_object *context_info =
+			cper_ia32x64_processor_context_info_to_ir(
+				current_context_info, &cur_pos,
+				&remaining_size);
+		if (context_info == NULL) {
+			context_info = json_object_new_object();
+		}
+		json_object_array_add(context_info_array, context_info);
 		current_context_info =
 			(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *)cur_pos;
 
@@ -466,11 +470,12 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *context_info, void **cur_pos,
 	UINT32 *remaining_size)
 {
+	json_object *context_info_ir = json_object_new_object();
+
 	if (*remaining_size < sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO)) {
-		return NULL;
+		return context_info_ir;
 	}
 	*remaining_size -= sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO);
-	json_object *context_info_ir = json_object_new_object();
 
 	//Register context type.
 	json_object *context_type = integer_to_readable_pair(
@@ -494,8 +499,7 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 	json_object *register_array = NULL;
 	if (context_info->RegisterType == EFI_REG_CONTEXT_TYPE_IA32) {
 		if (*remaining_size < sizeof(EFI_CONTEXT_IA32_REGISTER_STATE)) {
-			json_object_put(context_info_ir);
-			return NULL;
+			return context_info_ir;
 		}
 		EFI_CONTEXT_IA32_REGISTER_STATE *register_state =
 			(EFI_CONTEXT_IA32_REGISTER_STATE *)(context_info + 1);
@@ -505,8 +509,7 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 		*remaining_size -= sizeof(EFI_CONTEXT_IA32_REGISTER_STATE);
 	} else if (context_info->RegisterType == EFI_REG_CONTEXT_TYPE_X64) {
 		if (*remaining_size < sizeof(EFI_CONTEXT_X64_REGISTER_STATE)) {
-			json_object_put(context_info_ir);
-			return NULL;
+			return context_info_ir;
 		}
 		EFI_CONTEXT_X64_REGISTER_STATE *register_state =
 			(EFI_CONTEXT_X64_REGISTER_STATE *)(context_info + 1);
@@ -518,8 +521,7 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 		//No parseable data, just dump as base64 and shift the head to the next item.
 		*cur_pos = (void *)(context_info + 1);
 		if (*remaining_size < context_info->ArraySize) {
-			json_object_put(context_info_ir);
-			return NULL;
+			return context_info_ir;
 		}
 		int32_t encoded_len = 0;
 		char *encoded = base64_encode((UINT8 *)*cur_pos,
