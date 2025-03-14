@@ -53,14 +53,7 @@
         "deviceID": {
             "type": "object",
             "description": "Provides devices specific identifies.",
-            "required": [
-                "vendorID",
-                "deviceID",
-                "subsystemVendorID",
-                "subsystemDeviceID",
-                "classCode",
-                "slotNumber"
-            ],
+            "required": [],
             "properties": {
                 "vendorID": {
                     "type": "integer"

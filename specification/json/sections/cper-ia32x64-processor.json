@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "IA32x64 Processor Error Section",
     "required": ["processorErrorInfoNum", "processorContextInfoNum"],
     "additionalProperties": false,
     "properties": {
