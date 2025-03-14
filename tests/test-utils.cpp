@@ -28,6 +28,11 @@ const static std::map<std::string, std::vector<std::string> >
 		  { "faultReason", "description" } },
 		{ "./sections/cper-cxl-component.json",
 		  { "cxlComponentEventLog" } },
+		{ "./sections/cper-ia32x64-processor.json",
+		  { "addressSpace", "errorType", "participationType",
+		    "timedOut", "level", "operation", "preciseIP",
+		    "restartableIP", "overflow", "uncorrected",
+		    "transactionType" } },
 	};
 
 nlohmann::json loadJson(const char *filePath)
@@ -121,22 +126,26 @@ void iterate_make_required_props(nlohmann::json &jsonSchema,
 }
 
 // Document loader callback function
-const nlohmann::json *documentLoader(const std::string &uri)
+const nlohmann::json *documentLoader(const std::string &uri,
+				     AddRequiredProps add_required_props)
 {
 	// Load the schema from a file
-	nlohmann::json *ref_schema = new nlohmann::json;
+	std::unique_ptr<nlohmann::json> ref_schema =
+		std::make_unique<nlohmann::json>();
 	*ref_schema = loadJson(uri.c_str());
 	if (ref_schema->is_discarded()) {
 		std::cerr << "Could not open schema file: " << uri << std::endl;
 	}
-	std::vector<std::string> opt = {};
-	const auto it_optional_file = optional_properties_map.find(uri);
-	if (it_optional_file != optional_properties_map.end()) {
-		opt = it_optional_file->second;
+	if (add_required_props == AddRequiredProps::YES) {
+		std::vector<std::string> opt = {};
+		const auto it_optional_file = optional_properties_map.find(uri);
+		if (it_optional_file != optional_properties_map.end()) {
+			opt = it_optional_file->second;
+		}
+		iterate_make_required_props(*ref_schema, opt);
 	}
-	iterate_make_required_props(*ref_schema, opt);
 
-	return ref_schema;
+	return ref_schema.release();
 }
 
 // Document release callback function
@@ -145,20 +154,19 @@ void documentRelease(const nlohmann::json *adapter)
 	delete adapter; // Free the adapter memory
 }
 
-int schema_validate_from_file(const char *schema_file_path,
-			      nlohmann::json &jsonData,
-			      std::string &error_message)
+std::unique_ptr<valijson::Schema>
+load_schema(AddRequiredProps add_required_props, int single_section)
 {
 	// Load the schema
-	nlohmann::json schema_root = loadJson(schema_file_path);
-	if (schema_root.is_discarded()) {
-		std::cerr << "Could not open schema file: " << schema_file_path
-			  << std::endl;
-		return 0;
-	}
+	fs::path pathObj(LIBCPER_JSON_SPEC);
 
-	fs::path pathObj(schema_file_path);
-	fs::path base_path = pathObj.parent_path();
+	if (single_section) {
+		pathObj /= "cper-json-section-log.json";
+	} else {
+		pathObj /= "cper-json-full-log.json";
+	}
+	nlohmann::json schema_root = loadJson(pathObj.c_str());
+	fs::path base_path(LIBCPER_JSON_SPEC);
 	try {
 		fs::current_path(base_path);
 		// std::cout << "Changed directory to: " << fs::current_path()
@@ -168,21 +176,31 @@ int schema_validate_from_file(const char *schema_file_path,
 	}
 
 	// Parse the json schema into an internal schema format
-	valijson::Schema schema;
+	std::unique_ptr<valijson::Schema> schema =
+		std::make_unique<valijson::Schema>();
 	valijson::SchemaParser parser;
 	valijson::adapters::NlohmannJsonAdapter schemaDocumentAdapter(
 		schema_root);
 
 	// Set up callbacks for resolving external references
 	try {
-		parser.populateSchema(schemaDocumentAdapter, schema,
-				      documentLoader, documentRelease);
+		parser.populateSchema(
+			schemaDocumentAdapter, *schema,
+			[add_required_props](const std::string &uri) {
+				return documentLoader(uri, add_required_props);
+			},
+			documentRelease);
 	} catch (std::exception &e) {
 		std::cerr << "Failed to parse schema: " << e.what()
 			  << std::endl;
-		return 0;
 	}
+	return schema;
+}
 
+int schema_validate_from_file(const valijson::Schema &schema,
+			      nlohmann::json &jsonData,
+			      std::string &error_message)
+{
 	// Perform validation
 	valijson::Validator validator(valijson::Validator::kStrongTypes);
 	valijson::ValidationResults results;
