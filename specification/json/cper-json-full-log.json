@@ -20,188 +20,65 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "oneOf": [
-                    {
-                        "$id": "cper-json-generic-processor-section",
-                        "type": "object",
-                        "required": ["GenericProcessor"],
-                        "properties": {
-                            "GenericProcessor": {
-                                "$ref": "./sections/cper-generic-processor.json"
-                            }
-                        }
+                "minProperties": 1,
+                "maxProperties": 1,
+                "additionalProperties": false,
+                "properties":{
+                    "GenericProcessor":{
+                        "$ref": "./sections/cper-generic-processor.json"
                     },
-                    {
-                        "$id": "cper-json-ia32x64-processor-section",
-                        "type": "object",
-                        "required": ["Ia32x64Processor"],
-                        "properties": {
-                            "Ia32x64Processor": {
-                                "$ref": "./sections/cper-ia32x64-processor.json"
-                            }
-                        }
+                    "Ia32x64Processor":{
+                        "$ref": "./sections/cper-ia32x64-processor.json"
                     },
-                    {
-                        "$id": "cper-json-arm-processor-section",
-                        "type": "object",
-                        "required": ["ArmProcessor"],
-                        "properties": {
-                            "ArmProcessor": {
-                                "$ref": "./sections/cper-arm-processor.json"
-                            }
-                        }
+                    "ArmProcessor":{
+                        "$ref": "./sections/cper-arm-processor.json"
                     },
-                    {
-                        "$id": "cper-json-memory-section",
-                        "type": "object",
-                        "required": ["Memory"],
-                        "properties": {
-                            "Memory": {
-                                "$ref": "./sections/cper-memory.json"
-                            }
-                        }
+                    "Memory":{
+                        "$ref": "./sections/cper-memory.json"
                     },
-                    {
-                        "$id": "cper-json-memory2-section",
-                        "type": "object",
-                        "required": ["Memory2"],
-                        "properties": {
-                            "Memory2": {
-                                "$ref": "./sections/cper-memory2.json"
-                            }
-                        }
+                    "Memory2":{
+                        "$ref": "./sections/cper-memory2.json"
                     },
-                    {
-                        "$id": "cper-json-pcie-section",
-                        "type": "object",
-                        "required": ["Pcie"],
-                        "properties": {
-                            "Pcie": {
-                                "$ref": "./sections/cper-pcie.json"
-                            }
-                        }
+                    "Pcie":{
+                        "$ref": "./sections/cper-pcie.json"
                     },
-                    {
-                        "$id": "cper-json-pci-bus-section",
-                        "type": "object",
-                        "required": ["PciBus"],
-                        "properties": {
-                            "PciBus": {
-                                "$ref": "./sections/cper-pci-bus.json"
-                            }
-                        }
+                    "PciBus":{
+                        "$ref": "./sections/cper-pci-bus.json"
                     },
-                    {
-                        "$id": "cper-json-pci-component-section",
-                        "type": "object",
-                        "required": ["PciComponent"],
-                        "properties": {
-                            "PciComponent": {
-                                "$ref": "./sections/cper-pci-component.json"
-                            }
-                        }
+                    "PciComponent":{
+                        "$ref": "./sections/cper-pci-component.json"
                     },
-                    {
-                        "$id": "cper-json-firmware-section",
-                        "type": "object",
-                        "required": ["Firmware"],
-                        "properties": {
-                            "Firmware": {
-                                "$ref": "./sections/cper-firmware.json"
-                            }
-                        }
+                    "Firmware":{
+                        "$ref": "./sections/cper-firmware.json"
                     },
-                    {
-                        "$id": "cper-json-generic-dmar-section",
-                        "type": "object",
-                        "required": ["GenericDmar"],
-                        "properties": {
-                            "GenericDmar": {
-                                "$ref": "./sections/cper-generic-dmar.json"
-                            }
-                        }
+                    "GenericDmar":{
+                        "$ref": "./sections/cper-generic-dmar.json"
                     },
-                    {
-                        "$id": "cper-json-vtd-dmar-section",
-                        "type": "object",
-                        "required": ["VtdDmar"],
-                        "properties": {
-                            "VtdDmar": {
-                                "$ref": "./sections/cper-vtd-dmar.json"
-                            }
-                        }
+                    "VtdDmar":{
+                        "$ref": "./sections/cper-vtd-dmar.json"
                     },
-                    {
-                        "$id": "cper-json-iommu-dmar-section",
-                        "type": "object",
-                        "required": ["IommuDmar"],
-                        "properties": {
-                            "IommuDmar": {
-                                "$ref": "./sections/cper-iommu-dmar.json"
-                            }
-                        }
+                    "IommuDmar":{
+                        "$ref": "./sections/cper-iommu-dmar.json"
                     },
-                    {
-                        "$id": "cper-json-ccix-per-section",
-                        "type": "object",
-                        "required": ["CcixPer"],
-                        "properties": {
-                            "CcixPer": {
-                                "$ref": "./sections/cper-ccix-per.json"
-                            }
-                        }
+                    "CcixPer":{
+                        "$ref": "./sections/cper-ccix-per.json"
                     },
-                    {
-                        "$id": "cper-json-cxl-protocol-section",
-                        "type": "object",
-                        "required": ["CxlProtocol"],
-                        "properties": {
-                            "CxlProtocol": {
-                                "$ref": "./sections/cper-cxl-protocol.json"
-                            }
-                        }
+                    "CxlProtocol":{
+                        "$ref": "./sections/cper-cxl-protocol.json"
                     },
-                    {
-                        "$id": "cper-json-cxl-component-section",
-                        "type": "object",
-                        "required": ["CxlComponent"],
-                        "properties": {
-                            "CxlComponent": {
-                                "$ref": "./sections/cper-cxl-component.json"
-                            }
-                        }
+                    "CxlComponent":{
+                        "$ref": "./sections/cper-cxl-component.json"
                     },
-                    {
-                        "$id": "cper-json-nvidia-section",
-                        "type": "object",
-                        "required": ["Nvidia"],
-                        "properties": {
-                            "Nvidia": {
-                                "$ref": "./sections/cper-nvidia.json"
-                            }
-                        }
+                    "Nvidia":{
+                        "$ref": "./sections/cper-nvidia.json"
                     },
-                    {
-                        "$id": "cper-json-ampere-section",
-                        "type": "object",
-                        "required": ["Ampere"],
-                        "properties": {
-                            "Nvidia": {
-                                "$ref": "./sections/cper-ampere.json"
-                            }
-                        }
+                    "Ampere":{
+                        "$ref": "./sections/cper-ampere.json"
                     },
-                    {
-                        "$id": "cper-json-unknown-section",
-                        "type": "object",
-                        "required": ["Unknown"],
-                        "properties": {
-                            "Unknown": {
-                                "$ref": "./sections/cper-unknown.json"
-                            }
-                        }
+                    "Unknown":{
+                        "$ref": "./sections/cper-unknown.json"
                     }
-                ]
+                }
             }
         }
     }
