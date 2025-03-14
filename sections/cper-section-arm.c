@@ -276,8 +276,11 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 			//Unknown/microarch, will not support.
 			break;
 		}
-		json_object_object_add(error_info_ir, "errorInformation",
-				       error_subinfo);
+		if (error_subinfo != NULL) {
+			json_object_object_add(error_info_ir,
+					       "errorInformation",
+					       error_subinfo);
+		}
 	}
 
 	//Virtual fault address, physical fault address.
