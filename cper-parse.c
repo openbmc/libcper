@@ -48,7 +48,12 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 	remaining -= sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
 	if (header->SignatureStart != EFI_ERROR_RECORD_SIGNATURE_START) {
 		cper_print_log(
-			"Invalid CPER file: Invalid header (incorrect signature).\n");
+			"Invalid CPER file: Invalid header (incorrect signature start).\n");
+		goto fail;
+	}
+	if (header->SignatureEnd != EFI_ERROR_RECORD_SIGNATURE_END) {
+		cper_print_log(
+			"Invalid CPER file: Invalid header (incorrect signature end).\n");
 		goto fail;
 	}
 	if (header->SectionCount == 0) {
@@ -158,9 +163,15 @@ json_object *cper_to_ir(FILE *cper_file)
 	//Check if the header contains the magic bytes ("CPER").
 	if (header.SignatureStart != EFI_ERROR_RECORD_SIGNATURE_START) {
 		cper_print_log(
-			"Invalid CPER file: Invalid header (incorrect signature).\n");
+			"Invalid CPER file: Invalid header (incorrect signature start).\n");
 		return NULL;
 	}
+	if (header.SignatureEnd != EFI_ERROR_RECORD_SIGNATURE_END) {
+		cper_print_log(
+			"Invalid CPER file: Invalid header (incorrect signature end).\n");
+		return NULL;
+	}
+
 	fseek(cper_file, -sizeof(EFI_COMMON_ERROR_RECORD_HEADER), SEEK_CUR);
 	unsigned char *cper_buf = malloc(header.RecordLength);
 	int bytes_read = fread(cper_buf, 1, header.RecordLength, cper_file);
