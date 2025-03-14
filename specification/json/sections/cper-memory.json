@@ -1,6 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "description": "Memory Error Section",
     "required": [],
     "additionalProperties": false,
     "properties": {
@@ -45,7 +46,7 @@
         },
         "extended": {
             "type": "object",
-            "required": ["rowBit16", "rowBit17", "chipIdentification"],
+            "required": ["rowBit16", "rowBit17"],
             "properties": {
                 "rowBit16": {
                     "type": "boolean"
