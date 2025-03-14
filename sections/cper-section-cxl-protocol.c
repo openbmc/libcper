@@ -42,46 +42,47 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
 			"Unknown (Reserved)");
 		json_object_object_add(section_ir, "agentType", agent_type);
 	}
-
-	//CXL agent address, depending on the agent type.
-	json_object *agent_address = json_object_new_object();
-	if (cxl_protocol_error->CxlAgentType ==
-	    CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
-		//Address is a CXL1.1 device agent.
-		json_object_object_add(
-			agent_address, "functionNumber",
-			json_object_new_uint64(
-				cxl_protocol_error->CxlAgentAddress
-					.DeviceAddress.FunctionNumber));
-		json_object_object_add(
-			agent_address, "deviceNumber",
-			json_object_new_uint64(
-				cxl_protocol_error->CxlAgentAddress
-					.DeviceAddress.DeviceNumber));
-		json_object_object_add(
-			agent_address, "busNumber",
-			json_object_new_uint64(
-				cxl_protocol_error->CxlAgentAddress
-					.DeviceAddress.BusNumber));
-		json_object_object_add(
-			agent_address, "segmentNumber",
-			json_object_new_uint64(
-				cxl_protocol_error->CxlAgentAddress
-					.DeviceAddress.SegmentNumber));
-	} else if (cxl_protocol_error->CxlAgentType ==
-		   CXL_PROTOCOL_ERROR_HOST_DOWNSTREAM_PORT_AGENT) {
-		//Address is a CXL port RCRB base address.
-		json_object_object_add(
-			agent_address, "value",
-			json_object_new_uint64(
-				cxl_protocol_error->CxlAgentAddress
-					.PortRcrbBaseAddress));
-	}
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
-		json_object_object_add(section_ir, "cxlAgentAddress",
-				       agent_address);
-	} else {
-		json_object_put(agent_address);
+		//CXL agent address, depending on the agent type.
+		json_object *agent_address = NULL;
+		if (cxl_protocol_error->CxlAgentType ==
+		    CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
+			agent_address = json_object_new_object();
+			//Address is a CXL1.1 device agent.
+			json_object_object_add(
+				agent_address, "functionNumber",
+				json_object_new_uint64(
+					cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.FunctionNumber));
+			json_object_object_add(
+				agent_address, "deviceNumber",
+				json_object_new_uint64(
+					cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.DeviceNumber));
+			json_object_object_add(
+				agent_address, "busNumber",
+				json_object_new_uint64(
+					cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.BusNumber));
+			json_object_object_add(
+				agent_address, "segmentNumber",
+				json_object_new_uint64(
+					cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.SegmentNumber));
+		} else if (cxl_protocol_error->CxlAgentType ==
+			   CXL_PROTOCOL_ERROR_HOST_DOWNSTREAM_PORT_AGENT) {
+			agent_address = json_object_new_object();
+			//Address is a CXL port RCRB base address.
+			json_object_object_add(
+				agent_address, "value",
+				json_object_new_uint64(
+					cxl_protocol_error->CxlAgentAddress
+						.PortRcrbBaseAddress));
+		}
+		if (agent_address != NULL) {
+			json_object_object_add(section_ir, "cxlAgentAddress",
+					       agent_address);
+		}
 	}
 
 	json_object *device_id = json_object_new_object();
