@@ -12,14 +12,14 @@
         "sectionDescriptors": {
             "type": "array",
             "items": {
-                "type": "object",
+                "type": ["object", "null"],
                 "$ref": "./cper-json-section-descriptor.json"
             }
         },
         "sections": {
             "type": "array",
             "items": {
-                "type": "object",
+                "type": ["object", "null"],
                 "minProperties": 1,
                 "maxProperties": 1,
                 "additionalProperties": false,

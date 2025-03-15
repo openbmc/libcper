@@ -58,7 +58,7 @@
         "errorInfo": {
             "type": "array",
             "items": {
-                "type": "object",
+                "type": ["object", "null"],
                 "required": [
                     "version",
                     "length",
