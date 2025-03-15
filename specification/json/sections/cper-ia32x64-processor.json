@@ -59,6 +59,7 @@
                     },
                     "checkInfo": {
                         "type": "object",
+                        "required": [],
                         "additionalProperties": false,
                         "properties": {
                             "transactionType": {
@@ -124,7 +125,7 @@
             "type": "array",
             "description": "This is a variable size field providing the information for the processor context state such as MC Bank MSRs and general registers.",
             "items": {
-                "type": "object",
+                "type": ["object", "null"],
                 "required": [
                     "registerContextType",
                     "registerArraySize",
