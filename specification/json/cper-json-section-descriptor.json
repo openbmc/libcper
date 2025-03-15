@@ -25,6 +25,7 @@
             "type": "object",
             "description": "This is a 2-byte field representing a major and minor version number for the error record definition in BCD format.",
             "required": ["major", "minor"],
+            "additionalProperties": false,
             "properties": {
                 "major": {
                     "type": "integer",
@@ -38,6 +39,7 @@
         },
         "flags": {
             "type": "object",
+            "additionalProperties": false,
             "required": [
                 "primary",
                 "containmentWarning",
@@ -87,6 +89,7 @@
             "type": "object",
             "description": "This field holds a pre-assigned GUID value indicating that it is a section of a particular error.",
             "required": ["data", "type"],
+            "additionalProperties": false,
             "properties": {
                 "data": {
                     "type": "string",
@@ -105,6 +108,7 @@
             "type": "object",
             "description": "This field indicates the severity associated with the error section.",
             "required": ["code", "name"],
+            "additionalProperties": false,
             "properties": {
                 "code": {
                     "type": "integer",

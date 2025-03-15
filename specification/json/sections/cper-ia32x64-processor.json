@@ -46,6 +46,7 @@
                 "properties": {
                     "type": {
                         "type": "object",
+                        "additionalProperties": false,
                         "required": ["guid", "name"],
                         "properties": {
                             "guid": {

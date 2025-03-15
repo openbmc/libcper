@@ -20,6 +20,7 @@
             "type": "object",
             "description": "This is a 2-byte field representing a major and minor version number for the error record definition in BCD format. ",
             "required": ["major", "minor"],
+            "additionalProperties": false,
             "properties": {
                 "major": {
                     "type": "integer",
@@ -40,6 +41,7 @@
             "type": "object",
             "description": "Indicates the severity of the error condition. The severity of the error record corresponds to the most severe error section.",
             "required": ["name", "code"],
+            "additionalProperties": false,
             "properties": {
                 "name": {
                     "type": "string"
@@ -79,6 +81,7 @@
             "type": "object",
             "description": "This field holds a pre-assigned GUID value indicating the record association with an error event notification type.",
             "required": ["guid", "type"],
+            "additionalProperties": false,
             "properties": {
                 "guid": {
                     "type": "string",
