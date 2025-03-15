@@ -59,116 +59,52 @@
                     },
                     "checkInfo": {
                         "type": "object",
-                        "oneOf": [
-                            {
-                                "$id": "cper-json-checkinfo0",
+                        "required": [],
+                        "additionalProperties": false,
+                        "properties": {
+                            "transactionType": {
                                 "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "transactionType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "operation": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "level": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                    },
-                                    "processorContextCorrupt": {
-                                        "type": "boolean"
-                                    },
-                                    "uncorrected": {
-                                        "type": "boolean"
-                                    },
-                                    "preciseIP": {
-                                        "type": "boolean"
-                                    },
-                                    "restartableIP": {
-                                        "type": "boolean"
-                                    },
-                                    "overflow": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "./common/cper-json-nvp.json"
                             },
-                            {
-                                "$id": "cper-json-checkinfo1",
+                            "operation": {
                                 "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "transactionType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "operation": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "level": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                    },
-                                    "processorContextCorrupt": {
-                                        "type": "boolean"
-                                    },
-                                    "uncorrected": {
-                                        "type": "boolean"
-                                    },
-                                    "preciseIP": {
-                                        "type": "boolean"
-                                    },
-                                    "restartableIP": {
-                                        "type": "boolean"
-                                    },
-                                    "overflow": {
-                                        "type": "boolean"
-                                    },
-                                    "participationType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "addressSpace": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "timedOut": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "./common/cper-json-nvp.json"
                             },
-                            {
-                                "$id": "cper-json-checkinfo2",
+                            "level": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "processorContextCorrupt": {
+                                "type": "boolean"
+                            },
+                            "uncorrected": {
+                                "type": "boolean"
+                            },
+                            "preciseIP": {
+                                "type": "boolean"
+                            },
+                            "restartableIP": {
+                                "type": "boolean"
+                            },
+                            "overflow": {
+                                "type": "boolean"
+                            },
+                            "participationType": {
                                 "type": "object",
-                                "required": [],
-                                "additionalProperties": false,
-                                "properties": {
-                                    "errorType": {
-                                        "type": "object",
-                                        "$ref": "./common/cper-json-nvp.json"
-                                    },
-                                    "processorContextCorrupt": {
-                                        "type": "boolean"
-                                    },
-                                    "uncorrected": {
-                                        "type": "boolean"
-                                    },
-                                    "preciseIP": {
-                                        "type": "boolean"
-                                    },
-                                    "restartableIP": {
-                                        "type": "boolean"
-                                    },
-                                    "overflow": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "./common/cper-json-nvp.json"
+                            },
+                            "addressSpace": {
+                                "type": "object",
+                                "$ref": "./common/cper-json-nvp.json"
+                            },
+                            "timedOut": {
+                                "type": "boolean"
+                            },
+                            "errorType": {
+                                "type": "object",
+                                "$ref": "./common/cper-json-nvp.json"
                             }
-                        ]
+                        }
                     },
                     "targetAddressID": {
                         "type": "integer"
@@ -189,7 +125,7 @@
             "type": "array",
             "description": "This is a variable size field providing the information for the processor context state such as MC Bank MSRs and general registers.",
             "items": {
-                "type": "object",
+                "type": ["object", "null"],
                 "required": [
                     "registerContextType",
                     "registerArraySize",
