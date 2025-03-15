@@ -134,9 +134,6 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
 			cper_ia32x64_processor_context_info_to_ir(
 				current_context_info, &cur_pos,
 				&remaining_size);
-		if (context_info == NULL) {
-			context_info = json_object_new_object();
-		}
 		json_object_array_add(context_info_array, context_info);
 		current_context_info =
 			(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *)cur_pos;
@@ -221,9 +218,10 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 				"WARN: Invalid/unknown check information GUID found in IA32/x64 CPER section. Ignoring.\n");
 			break;
 		}
-
-		json_object_object_add(error_info_ir, "checkInfo",
-				       check_information);
+		if (check_information != NULL) {
+			json_object_object_add(error_info_ir, "checkInfo",
+					       check_information);
+		}
 	}
 
 	//Target, requestor, and responder identifiers.
@@ -470,12 +468,11 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 	EFI_IA32_X64_PROCESSOR_CONTEXT_INFO *context_info, void **cur_pos,
 	UINT32 *remaining_size)
 {
-	json_object *context_info_ir = json_object_new_object();
-
 	if (*remaining_size < sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO)) {
-		return context_info_ir;
+		return NULL;
 	}
 	*remaining_size -= sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO);
+	json_object *context_info_ir = json_object_new_object();
 
 	//Register context type.
 	json_object *context_type = integer_to_readable_pair(
@@ -542,8 +539,10 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 			(void *)(((char *)*cur_pos) + context_info->ArraySize);
 		*remaining_size -= context_info->ArraySize;
 	}
-	json_object_object_add(context_info_ir, "registerArray",
-			       register_array);
+	if (register_array != NULL) {
+		json_object_object_add(context_info_ir, "registerArray",
+				       register_array);
+	}
 
 	return context_info_ir;
 }

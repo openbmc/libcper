@@ -116,6 +116,7 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 			cper_buf + section_descriptor->SectionOffset;
 		json_object *section_descriptor_ir =
 			cper_section_descriptor_to_ir(section_descriptor);
+
 		json_object_array_add(section_descriptors_ir,
 				      section_descriptor_ir);
 
@@ -123,10 +124,6 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 		json_object *section_ir = cper_buf_section_to_ir(
 			section_begin, section_descriptor->SectionLength,
 			section_descriptor);
-		if (section_ir == NULL) {
-			cper_print_log("Failed to parse section %d\n", i);
-			section_ir = json_object_new_object();
-		}
 		json_object_array_add(sections_ir, section_ir);
 	}
 
