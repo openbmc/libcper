@@ -17,6 +17,7 @@
                 {
                     "$id": "cper-json-bank0",
                     "type": "object",
+                    "additionalProperties": false,
                     "required": ["value"],
                     "properties": {
                         "value": {
@@ -27,6 +28,7 @@
                 {
                     "$id": "cper-json-bank1",
                     "type": "object",
+                    "additionalProperties": false,
                     "required": ["address", "group"],
                     "properties": {
                         "address": {
@@ -46,6 +48,7 @@
         },
         "extended": {
             "type": "object",
+            "additionalProperties": false,
             "required": ["rowBit16", "rowBit17"],
             "properties": {
                 "rowBit16": {

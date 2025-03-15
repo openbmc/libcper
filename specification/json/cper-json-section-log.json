@@ -13,6 +13,7 @@
             "type": "object",
             "minProperties": 1,
             "maxProperties": 1,
+            "additionalProperties": false,
             "properties":{
                 "GenericProcessor":{
                     "$ref": "./sections/cper-generic-processor.json"

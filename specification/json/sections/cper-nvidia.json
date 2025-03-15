@@ -3,7 +3,6 @@
     "type": "object",
     "description": "NVIDIA Processor Error Section",
     "required": [
-        "signature",
         "errorType",
         "errorInstance",
         "severity",
@@ -29,6 +28,7 @@
             "type": "object",
             "description": "Internal severity for firmware tracking. Use CPER section severity.",
             "required": ["code", "name"],
+            "additionalProperties": false,
             "properties": {
                 "code": {
                     "type": "integer",
@@ -56,6 +56,7 @@
             "description": "Address, value pairs for registers dumped during the error detection.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "required": ["address", "value"],
                 "properties": {
                     "address": {
