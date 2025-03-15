@@ -50,7 +50,7 @@
         "errorInfo": {
             "type": "array",
             "items": {
-                "type": "object",
+                "type": ["object", "null"],
                 "required": ["version", "length", "errorType"],
                 "additionalProperties": false,
                 "properties": {
