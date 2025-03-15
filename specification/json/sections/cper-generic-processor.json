@@ -27,6 +27,7 @@
         },
         "flags": {
             "type": "object",
+            "additionalProperties": false,
             "description": "Indicates additional information about the error",
             "required": ["restartable", "preciseIP", "overflow", "corrected"],
             "properties": {

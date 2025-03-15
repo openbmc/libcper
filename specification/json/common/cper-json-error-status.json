@@ -18,6 +18,7 @@
             "type": "object",
             "description": "Encoded value for the Error_Type",
             "required": ["name", "value"],
+            "additionalProperties": false,
             "properties": {
                 "name": {
                     "type": "string"

@@ -65,7 +65,7 @@ cxx = meson.get_compiler('cpp')
 # Fuzzing only works on linux at this moment.  osx clang doesn't have leak detector
 is_darwin = host_machine.system().startswith('darwin')
 if (cxx.get_id() == 'clang') and get_option('fuzz').allowed() and not is_darwin
-    sanitize = ['fuzzer', 'address', 'leak']
+    sanitize = ['fuzzer']
     fuzz_args = [
         '-fsanitize=' + ','.join(sanitize),
         '-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION',

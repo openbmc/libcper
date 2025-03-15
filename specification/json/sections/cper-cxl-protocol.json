@@ -17,6 +17,7 @@
                 {
                     "$id": "cper-json-cxlagentaddress0",
                     "type": "object",
+                    "additionalProperties": false,
                     "required": [
                         "functionNumber",
                         "deviceNumber",
@@ -41,6 +42,7 @@
                 {
                     "$id": "cper-json-cxlagentaddress1",
                     "type": "object",
+                    "additionalProperties": false,
                     "required": ["value"],
                     "properties": {
                         "value": {
@@ -53,6 +55,7 @@
         "deviceID": {
             "type": "object",
             "description": "Provides devices specific identifies.",
+            "additionalProperties": false,
             "required": [],
             "properties": {
                 "vendorID": {

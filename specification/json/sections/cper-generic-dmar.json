@@ -24,6 +24,7 @@
         "faultReason": {
             "type": "object",
             "required": ["value", "name"],
+            "additionalProperties": false,
             "properties": {
                 "value": {
                     "type": "integer"
