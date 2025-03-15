@@ -11,6 +11,7 @@
         "deviceID": {
             "type": "object",
             "description": "Provides devices specific identifies.",
+            "additionalProperties": false,
             "required": [
                 "vendorID",
                 "deviceID",
@@ -49,6 +50,7 @@
         },
         "cxlComponentEventLog": {
             "type": "object",
+            "additionalProperties": false,
             "required": ["data"],
             "properties": {
                 "data": {

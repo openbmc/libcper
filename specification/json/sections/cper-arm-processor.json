@@ -19,6 +19,7 @@
         },
         "errorAffinity": {
             "type": "object",
+            "additionalProperties": false,
             "description": "For errors that can be attributed to a specific affinity level, this field defines the affinity level at which the error was produced, detected, and/or consumed",
             "required": ["value", "type"],
             "properties": {
@@ -78,6 +79,7 @@
                     },
                     "flags": {
                         "type": "object",
+                        "additionalProperties": false,
                         "required": [
                             "firstErrorCaptured",
                             "lastErrorCaptured",
@@ -101,143 +103,119 @@
                     },
                     "errorInformation": {
                         "type": "object",
-                        "oneOf": [
-                            {
-                                "$id": "cper-json-cacheerror-section",
+                        "additionalProperties": false,
+                        "minProperties": 1,
+                        "maxProperties": 1,
+                        "properties": {
+                            "cacheError": {
                                 "type": "object",
-                                "required": ["cacheError"],
+                                "required": [],
+                                "additionalProperties": false,
                                 "properties": {
-                                    "cacheError": {
+                                    "transactionType": {
                                         "type": "object",
-                                        "required": [],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "transactionType": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "operation": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "level": {
-                                                "type": "integer"
-                                            },
-                                            "processorContextCorrupt": {
-                                                "type": "boolean"
-                                            },
-                                            "corrected": {
-                                                "type": "boolean"
-                                            },
-                                            "precisePC": {
-                                                "type": "boolean"
-                                            },
-                                            "restartablePC": {
-                                                "type": "boolean"
-                                            }
-                                        }
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "operation": {
+                                        "type": "object",
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "level": {
+                                        "type": "integer"
+                                    },
+                                    "processorContextCorrupt": {
+                                        "type": "boolean"
+                                    },
+                                    "corrected": {
+                                        "type": "boolean"
+                                    },
+                                    "precisePC": {
+                                        "type": "boolean"
+                                    },
+                                    "restartablePC": {
+                                        "type": "boolean"
                                     }
                                 }
                             },
-                            {
-                                "$id": "cper-json-tlberror-section",
+                            "tlbError": {
                                 "type": "object",
-                                "required": ["tlbError"],
+                                "required": [],
+                                "additionalProperties": false,
                                 "properties": {
-                                    "tlbError": {
+                                    "transactionType": {
                                         "type": "object",
-                                        "required": [],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "transactionType": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "operation": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "level": {
-                                                "type": "integer"
-                                            },
-                                            "processorContextCorrupt": {
-                                                "type": "boolean"
-                                            },
-                                            "corrected": {
-                                                "type": "boolean"
-                                            },
-                                            "precisePC": {
-                                                "type": "boolean"
-                                            },
-                                            "restartablePC": {
-                                                "type": "boolean"
-                                            }
-                                        }
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "operation": {
+                                        "type": "object",
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "level": {
+                                        "type": "integer"
+                                    },
+                                    "processorContextCorrupt": {
+                                        "type": "boolean"
+                                    },
+                                    "corrected": {
+                                        "type": "boolean"
+                                    },
+                                    "precisePC": {
+                                        "type": "boolean"
+                                    },
+                                    "restartablePC": {
+                                        "type": "boolean"
                                     }
                                 }
                             },
-                            {
-                                "$id": "cper-json-buserror-section",
+                            "busError": {
                                 "type": "object",
-                                "required": ["busError"],
+                                "required": [],
+                                "additionalProperties": false,
                                 "properties": {
-                                    "busError": {
+                                    "transactionType": {
                                         "type": "object",
-                                        "required": [
-                                            "timedOut",
-                                            "participationType",
-                                            "addressSpace",
-                                            "memoryAttributes",
-                                            "accessMode"
-                                        ],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "transactionType": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "operation": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "level": {
-                                                "type": "integer"
-                                            },
-                                            "processorContextCorrupt": {
-                                                "type": "boolean"
-                                            },
-                                            "corrected": {
-                                                "type": "boolean"
-                                            },
-                                            "precisePC": {
-                                                "type": "boolean"
-                                            },
-                                            "restartablePC": {
-                                                "type": "boolean"
-                                            },
-                                            "timedOut": {
-                                                "type": "boolean"
-                                            },
-                                            "participationType": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "addressSpace": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "accessMode": {
-                                                "type": "object",
-                                                "$ref": "./common/cper-json-nvp.json"
-                                            },
-                                            "memoryAttributes": {
-                                                "type": "integer"
-                                            }
-                                        }
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "operation": {
+                                        "type": "object",
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "level": {
+                                        "type": "integer"
+                                    },
+                                    "processorContextCorrupt": {
+                                        "type": "boolean"
+                                    },
+                                    "corrected": {
+                                        "type": "boolean"
+                                    },
+                                    "precisePC": {
+                                        "type": "boolean"
+                                    },
+                                    "restartablePC": {
+                                        "type": "boolean"
+                                    },
+                                    "timedOut": {
+                                        "type": "boolean"
+                                    },
+                                    "participationType": {
+                                        "type": "object",
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "addressSpace": {
+                                        "type": "object",
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "accessMode": {
+                                        "type": "object",
+                                        "$ref": "./common/cper-json-nvp.json"
+                                    },
+                                    "memoryAttributes": {
+                                        "type": "integer"
                                     }
                                 }
                             }
-                        ]
+                        }
                     },
                     "virtualFaultAddress": {
                         "type": "integer"
@@ -277,6 +255,7 @@
                             {
                                 "$id": "cper-json-registerarray0",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "r1",
                                     "r2",
@@ -295,27 +274,60 @@
                                     "r15_pc"
                                 ],
                                 "properties": {
-                                    "r0": { "type": "integer" },
-                                    "r1": { "type": "integer" },
-                                    "r2": { "type": "integer" },
-                                    "r3": { "type": "integer" },
-                                    "r4": { "type": "integer" },
-                                    "r5": { "type": "integer" },
-                                    "r6": { "type": "integer" },
-                                    "r7": { "type": "integer" },
-                                    "r8": { "type": "integer" },
-                                    "r9": { "type": "integer" },
-                                    "r10": { "type": "integer" },
-                                    "r11": { "type": "integer" },
-                                    "r12": { "type": "integer" },
-                                    "r13_sp": { "type": "integer" },
-                                    "r14_lr": { "type": "integer" },
-                                    "r15_pc": { "type": "integer" }
+                                    "r0": {
+                                        "type": "integer"
+                                    },
+                                    "r1": {
+                                        "type": "integer"
+                                    },
+                                    "r2": {
+                                        "type": "integer"
+                                    },
+                                    "r3": {
+                                        "type": "integer"
+                                    },
+                                    "r4": {
+                                        "type": "integer"
+                                    },
+                                    "r5": {
+                                        "type": "integer"
+                                    },
+                                    "r6": {
+                                        "type": "integer"
+                                    },
+                                    "r7": {
+                                        "type": "integer"
+                                    },
+                                    "r8": {
+                                        "type": "integer"
+                                    },
+                                    "r9": {
+                                        "type": "integer"
+                                    },
+                                    "r10": {
+                                        "type": "integer"
+                                    },
+                                    "r11": {
+                                        "type": "integer"
+                                    },
+                                    "r12": {
+                                        "type": "integer"
+                                    },
+                                    "r13_sp": {
+                                        "type": "integer"
+                                    },
+                                    "r14_lr": {
+                                        "type": "integer"
+                                    },
+                                    "r15_pc": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray1",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "dfar",
                                     "dfsr",
@@ -343,35 +355,84 @@
                                     "dacr"
                                 ],
                                 "properties": {
-                                    "dfar": { "type": "integer" },
-                                    "dfsr": { "type": "integer" },
-                                    "ifar": { "type": "integer" },
-                                    "isr": { "type": "integer" },
-                                    "mair0": { "type": "integer" },
-                                    "mair1": { "type": "integer" },
-                                    "midr": { "type": "integer" },
-                                    "mpidr": { "type": "integer" },
-                                    "nmrr": { "type": "integer" },
-                                    "prrr": { "type": "integer" },
-                                    "sctlr_ns": { "type": "integer" },
-                                    "spsr": { "type": "integer" },
-                                    "spsr_abt": { "type": "integer" },
-                                    "spsr_fiq": { "type": "integer" },
-                                    "spsr_irq": { "type": "integer" },
-                                    "spsr_svc": { "type": "integer" },
-                                    "spsr_und": { "type": "integer" },
-                                    "tpidrprw": { "type": "integer" },
-                                    "tpidruro": { "type": "integer" },
-                                    "tpidrurw": { "type": "integer" },
-                                    "ttbcr": { "type": "integer" },
-                                    "ttbr0": { "type": "integer" },
-                                    "ttbr1": { "type": "integer" },
-                                    "dacr": { "type": "integer" }
+                                    "dfar": {
+                                        "type": "integer"
+                                    },
+                                    "dfsr": {
+                                        "type": "integer"
+                                    },
+                                    "ifar": {
+                                        "type": "integer"
+                                    },
+                                    "isr": {
+                                        "type": "integer"
+                                    },
+                                    "mair0": {
+                                        "type": "integer"
+                                    },
+                                    "mair1": {
+                                        "type": "integer"
+                                    },
+                                    "midr": {
+                                        "type": "integer"
+                                    },
+                                    "mpidr": {
+                                        "type": "integer"
+                                    },
+                                    "nmrr": {
+                                        "type": "integer"
+                                    },
+                                    "prrr": {
+                                        "type": "integer"
+                                    },
+                                    "sctlr_ns": {
+                                        "type": "integer"
+                                    },
+                                    "spsr": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_abt": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_fiq": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_irq": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_svc": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_und": {
+                                        "type": "integer"
+                                    },
+                                    "tpidrprw": {
+                                        "type": "integer"
+                                    },
+                                    "tpidruro": {
+                                        "type": "integer"
+                                    },
+                                    "tpidrurw": {
+                                        "type": "integer"
+                                    },
+                                    "ttbcr": {
+                                        "type": "integer"
+                                    },
+                                    "ttbr0": {
+                                        "type": "integer"
+                                    },
+                                    "ttbr1": {
+                                        "type": "integer"
+                                    },
+                                    "dacr": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray2",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "elr_hyp",
                                     "hamair0",
@@ -391,36 +452,74 @@
                                     "dacr32_el2"
                                 ],
                                 "properties": {
-                                    "elr_hyp": { "type": "integer" },
-                                    "hamair0": { "type": "integer" },
-                                    "hamair1": { "type": "integer" },
-                                    "hcr": { "type": "integer" },
-                                    "hcr2": { "type": "integer" },
-                                    "hdfar": { "type": "integer" },
-                                    "hifar": { "type": "integer" },
-                                    "hpfar": { "type": "integer" },
-                                    "hsr": { "type": "integer" },
-                                    "htcr": { "type": "integer" },
-                                    "htpidr": { "type": "integer" },
-                                    "httbr": { "type": "integer" },
-                                    "spsr_hyp": { "type": "integer" },
-                                    "vtcr": { "type": "integer" },
-                                    "vttbr": { "type": "integer" },
-                                    "dacr32_el2": { "type": "integer" }
+                                    "elr_hyp": {
+                                        "type": "integer"
+                                    },
+                                    "hamair0": {
+                                        "type": "integer"
+                                    },
+                                    "hamair1": {
+                                        "type": "integer"
+                                    },
+                                    "hcr": {
+                                        "type": "integer"
+                                    },
+                                    "hcr2": {
+                                        "type": "integer"
+                                    },
+                                    "hdfar": {
+                                        "type": "integer"
+                                    },
+                                    "hifar": {
+                                        "type": "integer"
+                                    },
+                                    "hpfar": {
+                                        "type": "integer"
+                                    },
+                                    "hsr": {
+                                        "type": "integer"
+                                    },
+                                    "htcr": {
+                                        "type": "integer"
+                                    },
+                                    "htpidr": {
+                                        "type": "integer"
+                                    },
+                                    "httbr": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_hyp": {
+                                        "type": "integer"
+                                    },
+                                    "vtcr": {
+                                        "type": "integer"
+                                    },
+                                    "vttbr": {
+                                        "type": "integer"
+                                    },
+                                    "dacr32_el2": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray3",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": ["sctlr_s", "spsr_mon"],
                                 "properties": {
-                                    "sctlr_s": { "type": "integer" },
-                                    "spsr_mon": { "type": "integer" }
+                                    "sctlr_s": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_mon": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray4",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "x0",
                                     "x1",
@@ -456,43 +555,108 @@
                                     "sp"
                                 ],
                                 "properties": {
-                                    "x0": { "type": "integer" },
-                                    "x1": { "type": "integer" },
-                                    "x2": { "type": "integer" },
-                                    "x3": { "type": "integer" },
-                                    "x4": { "type": "integer" },
-                                    "x5": { "type": "integer" },
-                                    "x6": { "type": "integer" },
-                                    "x7": { "type": "integer" },
-                                    "x8": { "type": "integer" },
-                                    "x9": { "type": "integer" },
-                                    "x10": { "type": "integer" },
-                                    "x11": { "type": "integer" },
-                                    "x12": { "type": "integer" },
-                                    "x13": { "type": "integer" },
-                                    "x14": { "type": "integer" },
-                                    "x15": { "type": "integer" },
-                                    "x16": { "type": "integer" },
-                                    "x17": { "type": "integer" },
-                                    "x18": { "type": "integer" },
-                                    "x19": { "type": "integer" },
-                                    "x20": { "type": "integer" },
-                                    "x21": { "type": "integer" },
-                                    "x22": { "type": "integer" },
-                                    "x23": { "type": "integer" },
-                                    "x24": { "type": "integer" },
-                                    "x25": { "type": "integer" },
-                                    "x26": { "type": "integer" },
-                                    "x27": { "type": "integer" },
-                                    "x28": { "type": "integer" },
-                                    "x29": { "type": "integer" },
-                                    "x30": { "type": "integer" },
-                                    "sp": { "type": "integer" }
+                                    "x0": {
+                                        "type": "integer"
+                                    },
+                                    "x1": {
+                                        "type": "integer"
+                                    },
+                                    "x2": {
+                                        "type": "integer"
+                                    },
+                                    "x3": {
+                                        "type": "integer"
+                                    },
+                                    "x4": {
+                                        "type": "integer"
+                                    },
+                                    "x5": {
+                                        "type": "integer"
+                                    },
+                                    "x6": {
+                                        "type": "integer"
+                                    },
+                                    "x7": {
+                                        "type": "integer"
+                                    },
+                                    "x8": {
+                                        "type": "integer"
+                                    },
+                                    "x9": {
+                                        "type": "integer"
+                                    },
+                                    "x10": {
+                                        "type": "integer"
+                                    },
+                                    "x11": {
+                                        "type": "integer"
+                                    },
+                                    "x12": {
+                                        "type": "integer"
+                                    },
+                                    "x13": {
+                                        "type": "integer"
+                                    },
+                                    "x14": {
+                                        "type": "integer"
+                                    },
+                                    "x15": {
+                                        "type": "integer"
+                                    },
+                                    "x16": {
+                                        "type": "integer"
+                                    },
+                                    "x17": {
+                                        "type": "integer"
+                                    },
+                                    "x18": {
+                                        "type": "integer"
+                                    },
+                                    "x19": {
+                                        "type": "integer"
+                                    },
+                                    "x20": {
+                                        "type": "integer"
+                                    },
+                                    "x21": {
+                                        "type": "integer"
+                                    },
+                                    "x22": {
+                                        "type": "integer"
+                                    },
+                                    "x23": {
+                                        "type": "integer"
+                                    },
+                                    "x24": {
+                                        "type": "integer"
+                                    },
+                                    "x25": {
+                                        "type": "integer"
+                                    },
+                                    "x26": {
+                                        "type": "integer"
+                                    },
+                                    "x27": {
+                                        "type": "integer"
+                                    },
+                                    "x28": {
+                                        "type": "integer"
+                                    },
+                                    "x29": {
+                                        "type": "integer"
+                                    },
+                                    "x30": {
+                                        "type": "integer"
+                                    },
+                                    "sp": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray5",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "elr_el1",
                                     "esr_el1",
@@ -513,28 +677,63 @@
                                     "ttbr1_el1"
                                 ],
                                 "properties": {
-                                    "elr_el1": { "type": "integer" },
-                                    "esr_el1": { "type": "integer" },
-                                    "far_el1": { "type": "integer" },
-                                    "isr_el1": { "type": "integer" },
-                                    "mair_el1": { "type": "integer" },
-                                    "midr_el1": { "type": "integer" },
-                                    "mpidr_el1": { "type": "integer" },
-                                    "sctlr_el1": { "type": "integer" },
-                                    "sp_el0": { "type": "integer" },
-                                    "sp_el1": { "type": "integer" },
-                                    "spsr_el1": { "type": "integer" },
-                                    "tcr_el1": { "type": "integer" },
-                                    "tpidr_el0": { "type": "integer" },
-                                    "tpidr_el1": { "type": "integer" },
-                                    "tpidrro_el0": { "type": "integer" },
-                                    "ttbr0_el1": { "type": "integer" },
-                                    "ttbr1_el1": { "type": "integer" }
+                                    "elr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "esr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "far_el1": {
+                                        "type": "integer"
+                                    },
+                                    "isr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "mair_el1": {
+                                        "type": "integer"
+                                    },
+                                    "midr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "mpidr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "sctlr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "sp_el0": {
+                                        "type": "integer"
+                                    },
+                                    "sp_el1": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "tcr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "tpidr_el0": {
+                                        "type": "integer"
+                                    },
+                                    "tpidr_el1": {
+                                        "type": "integer"
+                                    },
+                                    "tpidrro_el0": {
+                                        "type": "integer"
+                                    },
+                                    "ttbr0_el1": {
+                                        "type": "integer"
+                                    },
+                                    "ttbr1_el1": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray6",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "elr_el2",
                                     "esr_el2",
@@ -553,26 +752,57 @@
                                     "vttbr_el2"
                                 ],
                                 "properties": {
-                                    "elr_el2": { "type": "integer" },
-                                    "esr_el2": { "type": "integer" },
-                                    "far_el2": { "type": "integer" },
-                                    "hacr_el2": { "type": "integer" },
-                                    "hcr_el2": { "type": "integer" },
-                                    "hpfar_el2": { "type": "integer" },
-                                    "mair_el2": { "type": "integer" },
-                                    "sctlr_el2": { "type": "integer" },
-                                    "sp_el2": { "type": "integer" },
-                                    "spsr_el2": { "type": "integer" },
-                                    "tcr_el2": { "type": "integer" },
-                                    "tpidr_el2": { "type": "integer" },
-                                    "ttbr0_el2": { "type": "integer" },
-                                    "vtcr_el2": { "type": "integer" },
-                                    "vttbr_el2": { "type": "integer" }
+                                    "elr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "esr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "far_el2": {
+                                        "type": "integer"
+                                    },
+                                    "hacr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "hcr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "hpfar_el2": {
+                                        "type": "integer"
+                                    },
+                                    "mair_el2": {
+                                        "type": "integer"
+                                    },
+                                    "sctlr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "sp_el2": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "tcr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "tpidr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "ttbr0_el2": {
+                                        "type": "integer"
+                                    },
+                                    "vtcr_el2": {
+                                        "type": "integer"
+                                    },
+                                    "vttbr_el2": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
                                 "$id": "cper-json-registerarray7",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": [
                                     "elr_el3",
                                     "esr_el3",
@@ -586,16 +816,36 @@
                                     "ttbr0_el3"
                                 ],
                                 "properties": {
-                                    "elr_el3": { "type": "integer" },
-                                    "esr_el3": { "type": "integer" },
-                                    "far_el3": { "type": "integer" },
-                                    "mair_el3": { "type": "integer" },
-                                    "sctlr_el3": { "type": "integer" },
-                                    "sp_el3": { "type": "integer" },
-                                    "spsr_el3": { "type": "integer" },
-                                    "tcr_el3": { "type": "integer" },
-                                    "tpidr_el3": { "type": "integer" },
-                                    "ttbr0_el3": { "type": "integer" }
+                                    "elr_el3": {
+                                        "type": "integer"
+                                    },
+                                    "esr_el3": {
+                                        "type": "integer"
+                                    },
+                                    "far_el3": {
+                                        "type": "integer"
+                                    },
+                                    "mair_el3": {
+                                        "type": "integer"
+                                    },
+                                    "sctlr_el3": {
+                                        "type": "integer"
+                                    },
+                                    "sp_el3": {
+                                        "type": "integer"
+                                    },
+                                    "spsr_el3": {
+                                        "type": "integer"
+                                    },
+                                    "tcr_el3": {
+                                        "type": "integer"
+                                    },
+                                    "tpidr_el3": {
+                                        "type": "integer"
+                                    },
+                                    "ttbr0_el3": {
+                                        "type": "integer"
+                                    }
                                 }
                             },
                             {
@@ -614,11 +864,21 @@
                                             "o0"
                                         ],
                                         "properties": {
-                                            "op2": { "type": "integer" },
-                                            "crm": { "type": "integer" },
-                                            "crn": { "type": "integer" },
-                                            "op1": { "type": "integer" },
-                                            "o0": { "type": "integer" }
+                                            "op2": {
+                                                "type": "integer"
+                                            },
+                                            "crm": {
+                                                "type": "integer"
+                                            },
+                                            "crn": {
+                                                "type": "integer"
+                                            },
+                                            "op1": {
+                                                "type": "integer"
+                                            },
+                                            "o0": {
+                                                "type": "integer"
+                                            }
                                         }
                                     },
                                     "value": {
@@ -629,6 +889,7 @@
                             {
                                 "$id": "cper-json-registerarray9",
                                 "type": "object",
+                                "additionalProperties": false,
                                 "required": ["data"],
                                 "properties": {
                                     "data": {

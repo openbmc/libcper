@@ -69,6 +69,7 @@
                 "addressType",
                 "type"
             ],
+            "additionalProperties": false,
             "properties": {
                 "faultInformation": {
                     "type": "integer"
