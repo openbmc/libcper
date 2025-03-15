@@ -34,6 +34,24 @@
       "parentUuid": "7eac1065_511f9d37",
       "revId": "ae8dc7242c6a9d43239959afa3478b6f22b52f34",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adb9cd92_174fe550",
+        "filename": "examples/pcie.cper",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-15T14:47:50Z",
+      "side": 1,
+      "message": "https://gerrit.openbmc.org/c/openbmc/libcper/+/78688",
+      "parentUuid": "5ab7d0c4_31582994",
+      "revId": "ae8dc7242c6a9d43239959afa3478b6f22b52f34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
