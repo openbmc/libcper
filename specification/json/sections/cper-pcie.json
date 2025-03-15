@@ -25,6 +25,7 @@
         },
         "commandStatus": {
             "type": "object",
+            "additionalProperties": false,
             "required": ["commandRegister", "statusRegister"],
             "properties": {
                 "commandRegister": {
@@ -39,6 +40,7 @@
         },
         "deviceID": {
             "type": "object",
+            "additionalProperties": false,
             "description": "PCIe Root Port PCI/bridge PCI compatible device number and bus number information to uniquely identify the root port or bridge.",
             "required": [
                 "vendorID",
@@ -91,6 +93,7 @@
         },
         "bridgeControlStatus": {
             "type": "object",
+            "additionalProperties": false,
             "required": ["secondaryStatusRegister", "controlRegister"],
             "properties": {
                 "secondaryStatusRegister": {
@@ -105,6 +108,7 @@
         },
         "capabilityStructure": {
             "type": "object",
+            "additionalProperties": false,
             "description": "This feild reports either the PCIe 2.0 Capability structure",
             "required": ["data"],
             "properties": {
@@ -115,6 +119,7 @@
         },
         "aerInfo": {
             "type": "object",
+            "additionalProperties": false,
             "description": "PCIe Advanced Error Reporting Extended Capability Structure.",
             "required": ["data"],
             "properties": {
