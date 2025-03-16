@@ -15,17 +15,14 @@
 
 namespace fs = std::filesystem;
 
+// Objects that have mutually exclusive fields (and thereforce can't have both
+// required at the same time) can be added to this list.
 // Truly optional properties that shouldn't be added to "required" field for
 // validating the entire schema with validationbits=1
 const static std::map<std::string, std::vector<std::string> >
 	optional_properties_map = {
-		{ "./sections/cper-arm-processor.json",
-		  { "vendorSpecificInfo" } },
-		{ "./cper-json-section-log.json", { "header" } },
 		{ "./sections/cper-cxl-protocol.json",
 		  { "capabilityStructure", "deviceSerial" } },
-		{ "./sections/cper-generic-dmar.json",
-		  { "faultReason", "description" } },
 		{ "./sections/cper-cxl-component.json",
 		  { "cxlComponentEventLog" } },
 		{ "./sections/cper-ia32x64-processor.json",
