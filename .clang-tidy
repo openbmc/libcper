@@ -147,7 +147,7 @@ misc-unconventional-assign-operator,
 misc-uniqueptr-reset-release,
 misc-unused-using-decls,
 modernize-avoid-bind,
-modernize-deprecated-headers,
+#modernize-deprecated-headers,
 modernize-deprecated-ios-base-aliases,
 modernize-loop-convert,
 modernize-make-shared,
@@ -214,4 +214,3 @@ CheckOptions:
   - { key: readability-identifier-naming.ParameterCase, value: lower_case }
   - { key: readability-identifier-naming.NamespaceCase, value: lower_case }
   - { key: readability-identifier-naming.StructCase,    value: lower_case  }
-  - { key: cppcoreguidelines-macro-usage.AllowedRegexp, value: DEBUG*|NLOHMANN_JSON_SERIALIZE_ENUM }

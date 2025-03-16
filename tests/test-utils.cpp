@@ -7,11 +7,20 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <map>
 #include <filesystem>
+#include <vector>
+#include <algorithm>
 #include "test-utils.hpp"
 
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
+
+extern "C" {
+#include <jsoncdaccord.h>
+#include <json.h>
+#include <libcper/log.h>
+}
 
 namespace fs = std::filesystem;
 
@@ -19,28 +28,28 @@ namespace fs = std::filesystem;
 // required at the same time) can be added to this list.
 // Truly optional properties that shouldn't be added to "required" field for
 // validating the entire schema with validationbits=1
-const static std::map<std::string, std::vector<std::string> >
-	optional_properties_map = {
-		{ "./sections/cper-cxl-protocol.json",
-		  { "capabilityStructure", "deviceSerial" } },
-		{ "./sections/cper-cxl-component.json",
-		  { "cxlComponentEventLog" } },
-		{ "./sections/cper-ia32x64-processor.json",
-		  { "addressSpace", "errorType", "participationType",
-		    "timedOut", "level", "operation", "preciseIP",
-		    "restartableIP", "overflow", "uncorrected",
-		    "transactionType" } },
-	};
+// In most cases making sure examples set all valid bits is preferable to adding to this list
+const static std::vector<std::string> optional_props = {
+	{ // Some sections don't parse header correctly?
+	  "header",
 
-nlohmann::json loadJson(const char *filePath)
-{
-	std::ifstream file(filePath);
-	if (!file.is_open()) {
-		std::cerr << "Failed to open file: " << filePath << std::endl;
-	}
-	nlohmann::json out = nlohmann::json::parse(file, nullptr, false);
-	return out;
-}
+	  // Each section is optional
+	  "GenericProcessor", "Ia32x64Processor", "ArmProcessor", "Memory",
+	  "Memory2", "Pcie", "PciBus", "PciComponent", "Firmware",
+	  "GenericDmar", "VtdDmar", "IommuDmar", "CcixPer", "CxlProtocol",
+	  "CxlComponent", "Nvidia", "Ampere", "Unknown",
+
+	  // CXL?  might have a bug?
+	  "partitionID",
+
+	  // CXL protocol
+	  "capabilityStructure", "deviceSerial",
+
+	  // CXL component
+	  "cxlComponentEventLog", "addressSpace", "errorType",
+	  "participationType", "timedOut", "level", "operation", "preciseIP",
+	  "restartableIP", "overflow", "uncorrected", "transactionType" }
+};
 
 //Returns a ready-for-use memory stream containing a CPER record with the given sections inside.
 FILE *generate_record_memstream(const char **types, UINT16 num_types,
@@ -65,161 +74,148 @@ FILE *generate_record_memstream(const char **types, UINT16 num_types,
 	return fmemopen(*buf, *buf_size, "r");
 }
 
-void iterate_make_required_props(nlohmann::json &jsonSchema,
-				 std::vector<std::string> &optional_props)
+int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 {
-	//id
-	const auto it_id = jsonSchema.find("$id");
-	if (it_id != jsonSchema.end()) {
-		auto id_strptr = it_id->get_ptr<const std::string *>();
-		std::string id_str = *id_strptr;
-		if (id_str.find("header") != std::string::npos ||
-		    id_str.find("section-descriptor") != std::string::npos) {
-			return;
+	//properties
+	json_object *properties =
+		json_object_object_get(jsonSchema, "properties");
+
+	if (properties != nullptr) {
+		json_object *requrired_arr = json_object_new_array();
+
+		json_object_object_foreach(properties, property_name,
+					   property_value)
+		{
+			bool add_to_required = true;
+			const auto it_find_opt_prop = std::ranges::find(
+				optional_props, property_name);
+			if (it_find_opt_prop != optional_props.end()) {
+				add_to_required = false;
+			}
+
+			if (add_to_required) {
+				//Add to list if property is not optional
+				json_object_array_add(
+					requrired_arr,
+					json_object_new_string(property_name));
+			}
+		}
+
+		json_object_object_foreach(properties, property_name2,
+					   property_value2)
+		{
+			(void)property_name2;
+			if (iterate_make_required_props(property_value2,
+							all_valid_bits) < 0) {
+				return -1;
+			}
+		}
+
+		if (all_valid_bits) {
+			json_object_object_add(jsonSchema, "required",
+					       requrired_arr);
+		}
+		//json_object_put(requrired_arr);
+	}
+
+	// ref
+	json_object *ref = json_object_object_get(jsonSchema, "$ref");
+	if (ref != nullptr) {
+		const char *ref_str = json_object_get_string(ref);
+		if (ref_str != nullptr) {
+			std::string ref_path = LIBCPER_JSON_SPEC;
+			// remove the leading .
+			ref_path += std::string(ref_str).substr(1);
+			json_object *ref_obj =
+				json_object_from_file(ref_path.c_str());
+			if (ref_obj == nullptr) {
+				printf("Failed to parse file: %s\n",
+				       ref_path.c_str());
+				return -1;
+			}
+
+			if (iterate_make_required_props(ref_obj,
+							all_valid_bits) < 0) {
+				json_object_put(ref_obj);
+				return -1;
+			}
+
+			json_object_object_foreach(ref_obj, key, val)
+			{
+				json_object_object_add(jsonSchema, key,
+						       json_object_get(val));
+			}
+			json_object_object_del(jsonSchema, "$ref");
+
+			json_object_put(ref_obj);
 		}
 	}
+
 	//oneOf
-	const auto it_oneof = jsonSchema.find("oneOf");
-	if (it_oneof != jsonSchema.end()) {
-		//Iterate over oneOf properties
-		for (auto &oneOfProp : *it_oneof) {
-			iterate_make_required_props(oneOfProp, optional_props);
+	const json_object *oneOf = json_object_object_get(jsonSchema, "oneOf");
+	if (oneOf != nullptr) {
+		size_t num_elements = json_object_array_length(oneOf);
+
+		for (size_t i = 0; i < num_elements; i++) {
+			json_object *obj = json_object_array_get_idx(oneOf, i);
+			if (iterate_make_required_props(obj, all_valid_bits) <
+			    0) {
+				return -1;
+			}
 		}
 	}
 
 	//items
-	const auto it_items = jsonSchema.find("items");
-	if (it_items != jsonSchema.end()) {
-		iterate_make_required_props(*it_items, optional_props);
-	}
-	//required
-	const auto it_req = jsonSchema.find("required");
-	if (it_req == jsonSchema.end()) {
-		return;
-	}
-
-	//properties
-	const auto it_prop = jsonSchema.find("properties");
-	if (it_prop == jsonSchema.end()) {
-		return;
-	}
-	nlohmann::json &propertyFields = *it_prop;
-	nlohmann::json::array_t property_list;
-	if (propertyFields.is_object()) {
-		for (auto &[key, value] : propertyFields.items()) {
-			const auto it_find_opt_prop =
-				std::find(optional_props.begin(),
-					  optional_props.end(), key);
-			if (it_find_opt_prop == optional_props.end()) {
-				//Add to list if property is not optional
-				property_list.push_back(key);
+	const json_object *items = json_object_object_get(jsonSchema, "items");
+	if (items != nullptr) {
+		json_object_object_foreach(items, key, val)
+		{
+			(void)key;
+			if (iterate_make_required_props(val, all_valid_bits) <
+			    0) {
+				return -1;
 			}
-
-			iterate_make_required_props(value, optional_props);
 		}
 	}
 
-	*it_req = property_list;
+	return 1;
 }
 
-// Document loader callback function
-const nlohmann::json *documentLoader(const std::string &uri,
-				     AddRequiredProps add_required_props)
+int schema_validate_from_file(json_object *to_test, int single_section,
+			      int all_valid_bits)
 {
-	// Load the schema from a file
-	std::unique_ptr<nlohmann::json> ref_schema =
-		std::make_unique<nlohmann::json>();
-	*ref_schema = loadJson(uri.c_str());
-	if (ref_schema->is_discarded()) {
-		std::cerr << "Could not open schema file: " << uri << std::endl;
-	}
-	if (add_required_props == AddRequiredProps::YES) {
-		std::vector<std::string> opt = {};
-		const auto it_optional_file = optional_properties_map.find(uri);
-		if (it_optional_file != optional_properties_map.end()) {
-			opt = it_optional_file->second;
-		}
-		iterate_make_required_props(*ref_schema, opt);
-	}
-
-	return ref_schema.release();
-}
-
-// Document release callback function
-void documentRelease(const nlohmann::json *adapter)
-{
-	delete adapter; // Free the adapter memory
-}
-
-std::unique_ptr<valijson::Schema>
-load_schema(AddRequiredProps add_required_props, int single_section)
-{
-	// Load the schema
-	fs::path pathObj(LIBCPER_JSON_SPEC);
-
+	const char *schema_file;
 	if (single_section) {
-		pathObj /= "cper-json-section-log.json";
+		schema_file = "cper-json-section-log.json";
 	} else {
-		pathObj /= "cper-json-full-log.json";
-	}
-	nlohmann::json schema_root = loadJson(pathObj.c_str());
-	fs::path base_path(LIBCPER_JSON_SPEC);
-	try {
-		fs::current_path(base_path);
-		// std::cout << "Changed directory to: " << fs::current_path()
-		// 	  << std::endl;
-	} catch (const fs::filesystem_error &e) {
-		std::cerr << "Filesystem error: " << e.what() << std::endl;
+		schema_file = "cper-json-full-log.json";
 	}
 
-	// Parse the json schema into an internal schema format
-	std::unique_ptr<valijson::Schema> schema =
-		std::make_unique<valijson::Schema>();
-	valijson::SchemaParser parser;
-	valijson::adapters::NlohmannJsonAdapter schemaDocumentAdapter(
-		schema_root);
+	std::string schema_path = LIBCPER_JSON_SPEC;
+	schema_path += "/";
+	schema_path += schema_file;
 
-	// Set up callbacks for resolving external references
-	try {
-		parser.populateSchema(
-			schemaDocumentAdapter, *schema,
-			[add_required_props](const std::string &uri) {
-				return documentLoader(uri, add_required_props);
-			},
-			documentRelease);
-	} catch (std::exception &e) {
-		std::cerr << "Failed to parse schema: " << e.what()
-			  << std::endl;
-	}
-	return schema;
-}
-
-int schema_validate_from_file(const valijson::Schema &schema,
-			      nlohmann::json &jsonData,
-			      std::string &error_message)
-{
-	// Perform validation
-	valijson::Validator validator(valijson::Validator::kStrongTypes);
-	valijson::ValidationResults results;
-	valijson::adapters::NlohmannJsonAdapter targetDocumentAdapter(jsonData);
-	if (!validator.validate(schema, targetDocumentAdapter, &results)) {
-		std::cerr << "Validation failed." << std::endl;
-		valijson::ValidationResults::Error error;
-		unsigned int errorNum = 1;
-		while (results.popError(error)) {
-			std::string context;
-			for (const std::string &str : error.context) {
-				context += str;
-			}
-
-			std::cout << "Error #" << errorNum << '\n'
-				  << "  context: " << context << '\n'
-				  << "  desc:    " << error.description << '\n';
-			++errorNum;
-		}
+	json_object *schema = json_object_from_file(schema_path.c_str());
+	if (schema == nullptr) {
+		cper_print_log("Could not parse schema file: %s", schema_file);
 		return 0;
 	}
 
-	error_message = "Schema validation successful";
-	return 1;
+	if (iterate_make_required_props(schema, all_valid_bits) < 0) {
+		printf("Failed to make required props\n");
+		return -1;
+	}
+
+	int err = jdac_validate(to_test, schema);
+	if (err == JDAC_ERR_VALID) {
+		printf("validation ok\n");
+		return 1;
+	}
+	printf("validate failed %d: %s\n", err, jdac_errorstr(err));
+
+	printf("schema: \n%s\n",
+	       json_object_to_json_string_ext(schema, JSON_C_TO_STRING_PRETTY));
+	printf("to_test: \n%s\n", json_object_to_json_string_ext(
+					  to_test, JSON_C_TO_STRING_PRETTY));
+	return 0;
 }
