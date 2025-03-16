@@ -21,22 +21,7 @@ if not gtest.found() or not gmock.found()
     endif
 endif
 
-nlohmann_json_dep = dependency(
-    'nlohmann_json',
-    required: false,
-    version: '>=3.11.2',
-    include_type: 'system',
-)
-if not nlohmann_json_dep.found()
-    nlohmann_proj = subproject('nlohmann_json', required: true)
-    nlohmann_json_dep = nlohmann_proj.get_variable('nlohmann_json_dep')
-endif
-
-valijson_dep = dependency('valijson', required: false)
-if not valijson_dep.found()
-    valijson_proj = cmake.subproject('valijson')
-    valijson_dep = valijson_proj.get_variable('valijson_dep')
-endif
+jsonc_daccord = dependency('jsoncdac')
 
 test_sources = ['test-utils.cpp', 'base64_test.cpp']
 
@@ -50,13 +35,12 @@ cper_tests = executable(
     include_directories: include_directories(test_include_dirs),
     cpp_args: '-fpermissive',
     dependencies: [
+        json_c_dep,
+        jsonc_daccord,
         libcper_parse_dep,
         libcper_generate_dep,
-        json_c_dep,
         gtest,
         gmock,
-        nlohmann_json_dep,
-        valijson_dep,
     ],
 )
 test('test-cper-tests', cper_tests)
@@ -81,13 +65,7 @@ if (cxx.get_id() == 'clang') and get_option('fuzz').allowed() and not is_darwin
             cpp_args: fuzz_args,
             c_args: fuzz_args,
             link_args: fuzz_args,
-            dependencies: [
-                json_c_dep,
-                gtest,
-                gmock,
-                nlohmann_json_dep,
-                valijson_dep,
-            ],
+            dependencies: [json_c_dep, jsonc_daccord, gtest, gmock],
         )
         test(
             fuzzer_test,
