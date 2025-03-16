@@ -214,4 +214,3 @@ CheckOptions:
   - { key: readability-identifier-naming.ParameterCase, value: lower_case }
   - { key: readability-identifier-naming.NamespaceCase, value: lower_case }
   - { key: readability-identifier-naming.StructCase,    value: lower_case  }
-  - { key: cppcoreguidelines-macro-usage.AllowedRegexp, value: DEBUG*|NLOHMANN_JSON_SERIALIZE_ENUM }
