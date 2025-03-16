@@ -4,20 +4,19 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
-#include <cctype>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "test-utils.hpp"
-#include <json.h>
+#include <cctype>
 #include <charconv>
-#include <nlohmann/json.hpp>
 #include <filesystem>
-#include <fstream>
-#include <libcper/cper-parse.h>
-#include <libcper/json-schema.h>
-#include <libcper/generator/cper-generate.h>
-#include <libcper/sections/cper-section.h>
-#include <libcper/generator/sections/gen-section.h>
 #include <format>
+#include <fstream>
+#include <json.h>
+#include <libcper/cper-parse.h>
+#include <libcper/generator/cper-generate.h>
+#include <libcper/generator/sections/gen-section.h>
+#include <libcper/json-schema.h>
+#include <libcper/sections/cper-section.h>
 
 namespace fs = std::filesystem;
 
@@ -76,20 +75,13 @@ void cper_create_examples(const char *section_name)
 		FAIL();
 		return;
 	}
-	char *str = strdup(json_object_to_json_string(ir));
-	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, false);
-	if (jsonData.is_discarded()) {
-		std::cerr << "cper_create_examples: JSON parse error:"
-			  << std::endl;
-	}
-	free(str);
-	fclose(record);
-	free(buf);
 
 	//Write json output to disk
-	std::ofstream jsonOutFile(json_out);
-	jsonOutFile << std::setw(4) << jsonData << std::endl;
-	jsonOutFile.close();
+	json_object_to_file_ext(json_out.c_str(), ir, JSON_C_TO_STRING_PRETTY);
+	json_object_put(ir);
+
+	fclose(record);
+	free(buf);
 }
 
 std::vector<unsigned char> string_to_binary(const std::string &source)
@@ -141,28 +133,22 @@ void cper_example_section_ir_test(const char *section_name)
 		FAIL();
 		return;
 	}
-	const char *str = json_object_to_json_string(ir);
-	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, false);
-	if (jsonData.is_discarded()) {
-		std::cerr << "cper_example_section_ir_test: JSON parse error:"
-			  << std::endl;
-		FAIL() << "cper_example_section_ir_test: JSON parse error:";
-		json_object_put(ir);
 
+	json_object *expected = json_object_from_file(json.c_str());
+	ASSERT_NE(expected, nullptr);
+	if (expected == nullptr) {
+		const char *str = json_object_to_json_string(ir);
+
+		const char *expected_str = json_object_to_json_string(expected);
+
+		EXPECT_EQ(str, expected_str);
 		return;
 	}
 
-	//Open json example file
-	nlohmann::json jGolden = loadJson(json.string().c_str());
-	if (jGolden.is_discarded()) {
-		std::cerr << "Could not open JSON example file: " << json
-			  << std::endl;
-		FAIL() << "Could not open JSON example file";
-	}
+	EXPECT_TRUE(json_object_equal(ir, expected));
 
 	json_object_put(ir);
-
-	EXPECT_EQ(jGolden, jsonData);
+	json_object_put(expected);
 }
 
 //Tests a single randomly generated CPER section of the given type to ensure CPER-JSON IR validity.
@@ -183,25 +169,16 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 		ir = cper_to_ir(record);
 	}
 
-	char *str = strdup(json_object_to_json_string(ir));
-	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, false);
-	if (jsonData.is_discarded()) {
-		std::cerr << "Could not parse json output" << std::endl;
-	}
-	free(str);
 	fclose(record);
 	free(buf);
 
 	//Validate against schema.
-	std::string error_message;
-	std::unique_ptr<valijson::Schema> schema =
-		load_schema(AddRequiredProps::YES, single_section);
-	int valid = schema_validate_from_file(*schema, jsonData, error_message);
+	int valid = schema_validate_from_file(ir, single_section,
+					      /*all_valid_bits*/ 1);
 	json_object_put(ir);
-	ASSERT_TRUE(valid)
+	EXPECT_TRUE(valid)
 		<< "IR validation test failed (single section mode = "
-		<< single_section << ") with message: " << error_message
-		<< jsonData.dump(4) << "\n";
+		<< single_section << ")\n";
 }
 
 std::string to_hex(char *input, size_t size)

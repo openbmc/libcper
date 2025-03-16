@@ -73,15 +73,7 @@ libcper_generate_sources = files(
 
 cc = meson.get_compiler('c')
 
-json_c_dep = dependency('json-c', required: false)
-if not json_c_dep.found()
-    json_c = subproject(
-        'json-c',
-        required: true,
-        default_options: ['warning_level=0'],
-    )
-    json_c_dep = json_c.get_variable('json_c_dep')
-endif
+json_c_dep = dependency('json-c')
 
 libcper_include = ['include']
 libcper_include_dir = include_directories(libcper_include, is_system: true)
