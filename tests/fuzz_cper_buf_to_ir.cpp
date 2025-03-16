@@ -1,3 +1,4 @@
+#include <cassert>
 #include "libcper/cper-parse.h"
 #include "test-utils.hpp"
 
@@ -7,19 +8,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	if (ir == NULL) {
 		return 0;
 	}
-	char *str = strdup(json_object_to_json_string(ir));
 
-	nlohmann::json jsonData = nlohmann::json::parse(str, nullptr, false);
-	free(str);
-	assert(jsonData.is_discarded() == false);
-	std::string error_message;
-	static std::unique_ptr<valijson::Schema> schema =
-		load_schema(AddRequiredProps::NO, 0);
-
-	int valid = schema_validate_from_file(*schema, jsonData, error_message);
+	int valid = schema_validate_from_file(ir, 0 /* single_section */,
+					      /*all_valid_bits*/ 0);
 	if (!valid) {
-		std::cout << "JSON: " << jsonData.dump(4) << std::endl;
-		std::cout << "Error: " << error_message << std::endl;
+		printf("JSON: %s\n", json_object_to_json_string(ir));
 	}
 	assert(valid);
 	json_object_put(ir);
