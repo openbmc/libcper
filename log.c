@@ -13,7 +13,7 @@ enum {
 	CPER_LOG_NONE,
 	CPER_LOG_STDIO,
 	MCTP_LOG_CUSTOM,
-} log_type = CPER_LOG_NONE;
+} log_type = CPER_LOG_STDIO;
 
 static void (*log_custom_fn)(const char *, va_list);
 

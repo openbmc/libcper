@@ -33,6 +33,8 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
 		UINT_64T, .value.ui64 = cxl_protocol_error->ValidBits
 	};
 
+	printf("ValidBits: %llx\n", cxl_protocol_error->ValidBits);
+
 	//Type of detecting agent.
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
 		json_object *agent_type = integer_to_readable_pair(
@@ -117,13 +119,10 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
 
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
 		//Device serial & capability structure (if CXL 1.1 device).
-		if (cxl_protocol_error->CxlAgentType ==
-		    CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
-			json_object_object_add(
-				section_ir, "deviceSerial",
-				json_object_new_uint64(
-					cxl_protocol_error->DeviceSerial));
-		}
+		json_object_object_add(
+			section_ir, "deviceSerial",
+			json_object_new_uint64(
+				cxl_protocol_error->DeviceSerial));
 	}
 
 	char *encoded;

@@ -22,7 +22,7 @@ namespace fs = std::filesystem;
 const static std::map<std::string, std::vector<std::string> >
 	optional_properties_map = {
 		{ "./sections/cper-cxl-protocol.json",
-		  { "capabilityStructure", "deviceSerial" } },
+		  { "capabilityStructure" } },
 		{ "./sections/cper-cxl-component.json",
 		  { "cxlComponentEventLog" } },
 		{ "./sections/cper-ia32x64-processor.json",
