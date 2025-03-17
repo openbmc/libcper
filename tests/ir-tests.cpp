@@ -5,7 +5,7 @@
  **/
 
 #include <gtest/gtest.h>
-#include "test-utils.hpp"
+#include "test-utils.h"
 #include <json.h>
 #include <libcper/cper-parse.h>
 #include <libcper/generator/cper-generate.h>
