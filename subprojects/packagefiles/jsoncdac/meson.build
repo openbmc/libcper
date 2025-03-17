@@ -1,4 +1,9 @@
-project('libjsoncdac', ['c'], version: '0.1', meson_version: '>=1.1.1')
+project(
+    'libjsoncdac',
+    ['c'],
+    meson_version: '>=1.1.1',
+    default_options: ['default_library=static', 'c_std=gnu23'],
+)
 conf_data = configuration_data(
     {
         'PROJECT_NAME': 'jsoncdac',
@@ -16,6 +21,7 @@ configure_file(
 deps = []
 
 add_project_arguments('-Wno-unused-parameter', language: 'c')
+add_project_arguments('-Wformat=0', language: 'c')
 
 jsonc = dependency('json-c')
 deps += jsonc

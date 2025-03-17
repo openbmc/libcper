@@ -15,7 +15,7 @@
 #include <libcper/json-schema.h>
 
 void cper_to_json(char *in_file, char *out_file, int is_single_section);
-void json_to_cper(char *in_file, char *out_file);
+void json_to_cper(const char *in_file, const char *out_file);
 void print_help(void);
 
 int main(int argc, char *argv[])
@@ -128,7 +128,7 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 }
 
 //Command for converting a provided CPER-JSON JSON file to CPER binary.
-void json_to_cper(char *in_file, char *out_file)
+void json_to_cper(const char *in_file, const char *out_file)
 {
 	//Verify output file exists.
 	if (out_file == NULL) {
@@ -149,6 +149,7 @@ void json_to_cper(char *in_file, char *out_file)
 	if (cper_file == NULL) {
 		printf("Could not open output file '%s', file handle returned null.\n",
 		       out_file);
+		json_object_put(ir);
 		return;
 	}
 
