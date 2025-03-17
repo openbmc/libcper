@@ -7,16 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "test-utils.hpp"
+#include "test-utils.h"
 
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
 
-extern "C" {
 #include <jsoncdaccord.h>
 #include <json.h>
 #include <libcper/log.h>
-}
 
 // Objects that have mutually exclusive fields (and thereforce can't have both
 // required at the same time) can be added to this list.
