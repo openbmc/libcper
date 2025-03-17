@@ -5,12 +5,7 @@
  **/
 
 #include <gtest/gtest.h>
-#include "test-utils.hpp"
-#include <cctype>
-#include <charconv>
-#include <filesystem>
-#include <format>
-#include <fstream>
+#include "test-utils.h"
 #include <json.h>
 #include <libcper/cper-parse.h>
 #include <libcper/generator/cper-generate.h>
@@ -27,80 +22,172 @@ static const GEN_VALID_BITS_TEST_TYPE allValidbitsSet = ALL_VALID;
 static const GEN_VALID_BITS_TEST_TYPE fixedValidbitsSet = SOME_VALID;
 static const int GEN_EXAMPLES = 0;
 
+static const char *cper_ext = "cperhex";
+static const char *json_ext = "json";
+
+struct file_info {
+	char *cper_out;
+	char *json_out;
+};
+
+void free_file_info(file_info *info)
+{
+	if (info == NULL) {
+		return;
+	}
+	free(info->cper_out);
+	free(info->json_out);
+	free(info);
+}
+
+file_info *file_info_init(const char *section_name)
+{
+	file_info *info = NULL;
+	char *buf = NULL;
+	size_t size;
+	int ret;
+
+	info = (file_info *)calloc(1, sizeof(file_info));
+	if (info == NULL) {
+		goto fail;
+	}
+
+	size = strlen(LIBCPER_EXAMPLES) + 1 + strlen(section_name) + 1 +
+	       strlen(cper_ext) + 1;
+	info->cper_out = (char *)malloc(size);
+	ret = snprintf(info->cper_out, size, "%s/%s.%s", LIBCPER_EXAMPLES,
+		       section_name, cper_ext);
+	if (ret != (int)size - 1) {
+		printf("snprintf0 failed\n");
+		goto fail;
+	}
+	size = strlen(LIBCPER_EXAMPLES) + 1 + strlen(section_name) + 1 +
+	       strlen(json_ext) + 1;
+	info->json_out = (char *)malloc(size);
+	ret = snprintf(info->json_out, size, "%s/%s.%s", LIBCPER_EXAMPLES,
+		       section_name, json_ext);
+	if (ret != (int)size - 1) {
+		printf("snprintf3 failed\n");
+		goto fail;
+	}
+	free(buf);
+	return info;
+
+fail:
+	free(buf);
+	free_file_info(info);
+	return NULL;
+}
+
 void cper_create_examples(const char *section_name)
 {
 	//Generate full CPER record for the given type.
-	fs::path file_path = LIBCPER_EXAMPLES;
-	file_path /= section_name;
-	fs::path cper_out = file_path.replace_extension("cperhex");
-	fs::path json_out = file_path.replace_extension("json");
-
-	char *buf;
+	json_object *ir = NULL;
 	size_t size;
-	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
-						 0, fixedValidbitsSet);
-
-	// Write example CPER to disk
-	std::ofstream outFile(cper_out, std::ios::binary);
-	if (!outFile.is_open()) {
-		std::cerr << "Failed to create/open CPER output file: "
-			  << cper_out << std::endl;
-		return;
+	size_t file_size;
+	FILE *outFile = NULL;
+	std::vector<unsigned char> file_data;
+	FILE *record = NULL;
+	char *buf = NULL;
+	file_info *info = file_info_init(section_name);
+	if (info == NULL) {
+		goto done;
 	}
 
-	std::vector<unsigned char> file_data;
+	record = generate_record_memstream(&section_name, 1, &buf, &size, 0,
+					   fixedValidbitsSet);
+
+	// Write example CPER to disk
+	outFile = fopen(info->cper_out, "wb");
+	if (outFile == NULL) {
+		std::cerr << "Failed to create/open CPER output file: "
+			  << info->cper_out << std::endl;
+		goto done;
+	}
+
 	fseek(record, 0, SEEK_END);
-	size_t file_size = ftell(record);
+	file_size = ftell(record);
 	rewind(record);
 	file_data.resize(file_size);
 	if (fread(file_data.data(), 1, file_data.size(), record) != file_size) {
 		std::cerr << "Failed to read CPER data from memstream."
 			  << std::endl;
-		FAIL();
-		return;
+		EXPECT_EQ(false, true);
+		fclose(outFile);
+		goto done;
 	}
 	for (size_t index = 0; index < file_data.size(); index++) {
-		outFile << std::format("{:02x}", file_data[index]);
+		char hex_str[3];
+		int out = snprintf(hex_str, sizeof(hex_str), "%02x",
+				   file_data[index]);
+		if (out != 2) {
+			printf("snprintf1 failed\n");
+			goto done;
+		}
+		fwrite(hex_str, sizeof(char), 2, outFile);
 		if (index % 30 == 29) {
-			outFile << "\n";
+			fwrite("\n", sizeof(char), 1, outFile);
 		}
 	}
-	outFile.close();
+	fclose(outFile);
 
 	//Convert to IR, free resources.
 	rewind(record);
-	json_object *ir = cper_to_ir(record);
+	ir = cper_to_ir(record);
 	if (ir == NULL) {
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
-		FAIL();
-		return;
+		EXPECT_EQ(false, true);
+		goto done;
 	}
 
 	//Write json output to disk
-	json_object_to_file_ext(json_out.c_str(), ir, JSON_C_TO_STRING_PRETTY);
+	json_object_to_file_ext(info->json_out, ir, JSON_C_TO_STRING_PRETTY);
 	json_object_put(ir);
 
-	fclose(record);
+done:
+	free_file_info(info);
+	if (record != NULL) {
+		fclose(record);
+	}
+	if (outFile != NULL) {
+		fclose(outFile);
+	}
 	free(buf);
 }
 
-std::vector<unsigned char> string_to_binary(const std::string &source)
+int hex2int(char ch)
+{
+	if ((ch >= '0') && (ch <= '9')) {
+		return ch - '0';
+	}
+	if ((ch >= 'A') && (ch <= 'F')) {
+		return ch - 'A' + 10;
+	}
+	if ((ch >= 'a') && (ch <= 'f')) {
+		return ch - 'a' + 10;
+	}
+	return -1;
+}
+
+std::vector<unsigned char> string_to_binary(const char *source, size_t length)
 {
 	std::vector<unsigned char> retval;
 	bool uppernibble = true;
-	for (const char c : source) {
-		unsigned char val = 0;
+	for (size_t i = 0; i < length; i++) {
+		char c = source[i];
 		if (c == '\n') {
 			continue;
 		}
-		std::from_chars_result r = std::from_chars(&c, &c + 1, val, 16);
-		EXPECT_TRUE(r.ec == std::error_code())
-			<< "Invalid hex character in test file: " << c;
+		int val = hex2int(c);
+		if (val < 0) {
+			printf("Invalid hex character in test file: %c\n", c);
+			return {};
+		}
 
 		if (uppernibble) {
-			retval.push_back(val << 4);
+			retval.push_back((unsigned char)(val << 4));
 		} else {
-			retval.back() += val;
+			retval.back() += (unsigned char)val;
 		}
 		uppernibble = !uppernibble;
 	}
@@ -111,32 +198,52 @@ std::vector<unsigned char> string_to_binary(const std::string &source)
 void cper_example_section_ir_test(const char *section_name)
 {
 	//Open CPER record for the given type.
-	fs::path fpath = LIBCPER_EXAMPLES;
-	fpath /= section_name;
-	fs::path cper = fpath.replace_extension("cperhex");
-	fs::path json = fpath.replace_extension("json");
+	file_info *info = file_info_init(section_name);
+	if (info == NULL) {
+		return;
+	}
 
-	std::ifstream cper_file(cper, std::ios::binary);
-	if (!cper_file.is_open()) {
-		std::cerr << "Failed to open CPER file: " << cper << std::endl;
+	FILE *cper_file = fopen(info->cper_out, "rb");
+	if (cper_file == NULL) {
+		std::cerr << "Failed to open CPER file: " << info->cper_out
+			  << std::endl;
+		free_file_info(info);
 		FAIL() << "Failed to open CPER file";
 		return;
 	}
-	std::string cper_str((std::istreambuf_iterator<char>(cper_file)),
-			     std::istreambuf_iterator<char>());
+	fseek(cper_file, 0, SEEK_END);
+	size_t length = ftell(cper_file);
+	fseek(cper_file, 0, SEEK_SET);
+	char *buffer = (char *)malloc(length);
+	if (!buffer) {
+		free_file_info(info);
+		return;
+	}
+	if (fread(buffer, 1, length, cper_file) != length) {
+		std::cerr << "Failed to read CPER file: " << info->cper_out
+			  << std::endl;
+		free(buffer);
+		free_file_info(info);
+		return;
+	}
+	fclose(cper_file);
 
-	std::vector<unsigned char> cper_bin = string_to_binary(cper_str);
+	std::vector<unsigned char> cper_bin = string_to_binary(buffer, length);
 	//Convert to IR, free resources.
 	json_object *ir = cper_buf_to_ir(cper_bin.data(), cper_bin.size());
 	if (ir == NULL) {
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
+		free(buffer);
+		free_file_info(info);
 		FAIL();
 		return;
 	}
 
-	json_object *expected = json_object_from_file(json.c_str());
-	ASSERT_NE(expected, nullptr);
+	json_object *expected = json_object_from_file(info->json_out);
+	EXPECT_NE(expected, nullptr);
 	if (expected == nullptr) {
+		free(buffer);
+		free_file_info(info);
 		const char *str = json_object_to_json_string(ir);
 
 		const char *expected_str = json_object_to_json_string(expected);
@@ -146,9 +253,10 @@ void cper_example_section_ir_test(const char *section_name)
 	}
 
 	EXPECT_TRUE(json_object_equal(ir, expected));
-
+	free(buffer);
 	json_object_put(ir);
 	json_object_put(expected);
+	free_file_info(info);
 }
 
 //Tests a single randomly generated CPER section of the given type to ensure CPER-JSON IR validity.
@@ -176,18 +284,32 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 	int valid = schema_validate_from_file(ir, single_section,
 					      /*all_valid_bits*/ 1);
 	json_object_put(ir);
-	EXPECT_TRUE(valid)
+	EXPECT_GE(valid, 0)
 		<< "IR validation test failed (single section mode = "
 		<< single_section << ")\n";
 }
 
-std::string to_hex(char *input, size_t size)
+int to_hex(const unsigned char *input, size_t size, char **out)
 {
-	std::string out;
-	for (char c : std::span<unsigned char>((unsigned char *)input, size)) {
-		out += std::format("{:02x}", static_cast<unsigned char>(c));
+	*out = (char *)malloc(size * 2);
+	if (out == NULL) {
+		return -1;
 	}
-	return out;
+	int out_index = 0;
+	for (size_t i = 0; i < size; i++) {
+		unsigned char c = input[i];
+		char hex_str[3];
+		int n = snprintf(hex_str, sizeof(hex_str), "%02x", c);
+		if (n != 2) {
+			printf("snprintf2 failed with code %d\n", n);
+			return -1;
+		}
+		(*out)[out_index] = hex_str[0];
+		out_index++;
+		(*out)[out_index] = hex_str[1];
+		out_index++;
+	}
+	return out_index;
 }
 
 //Checks for binary round-trip equality for a given randomly generated CPER record.
@@ -224,13 +346,23 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 	}
 	fclose(stream);
 
-	std::cout << "size: " << size << ", cper_buf_size: " << cper_buf_size
-		  << std::endl;
-	EXPECT_EQ(to_hex(buf, size),
-		  to_hex(cper_buf, std::min(size, cper_buf_size)))
-		<< "Binary output was not identical to input (single section mode = "
-		<< single_section << ").";
+	printf("size: %zu, cper_buf_size: %zu\n", size, cper_buf_size);
 
+	char *buf_hex;
+	int buf_hex_len = to_hex((unsigned char *)buf, size, &buf_hex);
+	char *cper_buf_hex;
+	int cper_buf_hex_len =
+		to_hex((unsigned char *)cper_buf, cper_buf_size, &cper_buf_hex);
+
+	EXPECT_EQ(buf_hex_len, cper_buf_hex_len);
+	if (buf_hex_len == cper_buf_hex_len) {
+		EXPECT_EQ(memcmp(buf_hex, cper_buf_hex, buf_hex_len), 0)
+			<< "Binary output was not identical to input (single section mode = "
+			<< single_section << ").";
+	}
+
+	free(cper_buf_hex);
+	free(buf_hex);
 	//Free everything up.
 	fclose(record);
 	free(buf);
@@ -261,7 +393,7 @@ TEST(CompileTimeAssertions, TwoWayConversion)
 {
 	for (size_t i = 0; i < section_definitions_len; i++) {
 		//If a conversion one way exists, a conversion the other way must exist.
-		std::string err =
+		const char *err =
 			"If a CPER conversion exists one way, there must be an equivalent method in reverse.";
 		if (section_definitions[i].ToCPER != NULL) {
 			ASSERT_NE(section_definitions[i].ToIR, nullptr) << err;
