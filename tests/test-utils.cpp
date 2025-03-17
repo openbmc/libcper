@@ -9,8 +9,8 @@
 #include <fstream>
 #include <map>
 #include <filesystem>
-#include <vector>
 #include <algorithm>
+#include <string.h>
 #include "test-utils.hpp"
 
 #include <libcper/BaseTypes.h>
@@ -29,26 +29,26 @@ namespace fs = std::filesystem;
 // Truly optional properties that shouldn't be added to "required" field for
 // validating the entire schema with validationbits=1
 // In most cases making sure examples set all valid bits is preferable to adding to this list
-const static std::vector<std::string> optional_props = {
-	{ // Some sections don't parse header correctly?
-	  "header",
+const static char *optional_props[] = {
+	// Some sections don't parse header correctly?
+	"header",
 
-	  // Each section is optional
-	  "GenericProcessor", "Ia32x64Processor", "ArmProcessor", "Memory",
-	  "Memory2", "Pcie", "PciBus", "PciComponent", "Firmware",
-	  "GenericDmar", "VtdDmar", "IommuDmar", "CcixPer", "CxlProtocol",
-	  "CxlComponent", "Nvidia", "Ampere", "Unknown",
+	// Each section is optional
+	"GenericProcessor", "Ia32x64Processor", "ArmProcessor", "Memory",
+	"Memory2", "Pcie", "PciBus", "PciComponent", "Firmware", "GenericDmar",
+	"VtdDmar", "IommuDmar", "CcixPer", "CxlProtocol", "CxlComponent",
+	"Nvidia", "Ampere", "Unknown",
 
-	  // CXL?  might have a bug?
-	  "partitionID",
+	// CXL?  might have a bug?
+	"partitionID",
 
-	  // CXL protocol
-	  "capabilityStructure", "deviceSerial",
+	// CXL protocol
+	"capabilityStructure", "deviceSerial",
 
-	  // CXL component
-	  "cxlComponentEventLog", "addressSpace", "errorType",
-	  "participationType", "timedOut", "level", "operation", "preciseIP",
-	  "restartableIP", "overflow", "uncorrected", "transactionType" }
+	// CXL component
+	"cxlComponentEventLog", "addressSpace", "errorType",
+	"participationType", "timedOut", "level", "operation", "preciseIP",
+	"restartableIP", "overflow", "uncorrected", "transactionType"
 };
 
 //Returns a ready-for-use memory stream containing a CPER record with the given sections inside.
@@ -87,10 +87,11 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 					   property_value)
 		{
 			bool add_to_required = true;
-			const auto it_find_opt_prop = std::ranges::find(
-				optional_props, property_name);
-			if (it_find_opt_prop != optional_props.end()) {
-				add_to_required = false;
+			for (const char *opt_prop : optional_props) {
+				if (strcmp(opt_prop, property_name) == 0) {
+					add_to_required = false;
+					break;
+				}
 			}
 
 			if (add_to_required) {
@@ -123,14 +124,23 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 	if (ref != nullptr) {
 		const char *ref_str = json_object_get_string(ref);
 		if (ref_str != nullptr) {
-			std::string ref_path = LIBCPER_JSON_SPEC;
-			// remove the leading .
-			ref_path += std::string(ref_str).substr(1);
-			json_object *ref_obj =
-				json_object_from_file(ref_path.c_str());
+			if (strlen(ref_str) < 1) {
+				printf("Failed to parse file: %s\n", ref_str);
+				return -1;
+			}
+			size_t size =
+				strlen(LIBCPER_JSON_SPEC) + strlen(ref_str);
+			char *path = (char *)malloc(size);
+			int n = snprintf(path, size, "%s%s", LIBCPER_JSON_SPEC,
+					 ref_str + 1);
+			if (n != (int)size) {
+				printf("Failed to parse file: %s\n", ref_str);
+				return -1;
+			}
+			json_object *ref_obj = json_object_from_file(path);
+			free(path);
 			if (ref_obj == nullptr) {
-				printf("Failed to parse file: %s\n",
-				       ref_path.c_str());
+				printf("Failed to parse file: %s\n", ref_str);
 				return -1;
 			}
 
