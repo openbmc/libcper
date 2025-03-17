@@ -7,16 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "test-utils.hpp"
+#include "test-utils.h"
 
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
 
-extern "C" {
 #include <jsoncdaccord.h>
 #include <json.h>
 #include <libcper/log.h>
-}
 
 // Objects that have mutually exclusive fields (and thereforce can't have both
 // required at the same time) can be added to this list.
@@ -125,8 +123,14 @@ int iterate_make_required_props(json_object *jsonSchema, int all_valid_bits)
 		const char *ref_str = json_object_get_string(ref);
 		if (ref_str != NULL) {
 			if (strlen(ref_str) < 1) {
+<<<<<<< HEAD
 				cper_print_log("Failed seek filepath: %s\n",
 					       ref_str);
+||||||| parent of 992071d (Rename to c files)
+				printf("Failed to parse file: %s\n", ref_str);
+=======
+				cper_print_log("Failed seek filepath: %s\n", ref_str);
+>>>>>>> 992071d (Rename to c files)
 				return -1;
 			}
 			size_t size =
@@ -134,17 +138,34 @@ int iterate_make_required_props(json_object *jsonSchema, int all_valid_bits)
 			char *path = (char *)malloc(size);
 			int n = snprintf(path, size, "%s%s", LIBCPER_JSON_SPEC,
 					 ref_str + 1);
+<<<<<<< HEAD
 			if (n != (int)size - 1) {
 				cper_print_log("Failed concat filepath: %s\n",
 					       ref_str);
 				free(path);
+||||||| parent of 992071d (Rename to c files)
+			if (n != (int)size) {
+				printf("Failed to parse file: %s\n", ref_str);
+=======
+			if (n != (int)size - 1) {
+				cper_print_log("Failed concat filepath: %s\n", ref_str);
+				free(path);
+>>>>>>> 992071d (Rename to c files)
 				return -1;
 			}
 			json_object *ref_obj = json_object_from_file(path);
 			free(path);
+<<<<<<< HEAD
 			if (ref_obj == NULL) {
 				cper_print_log("Failed to parse file: %s\n",
 					       ref_str);
+||||||| parent of 992071d (Rename to c files)
+			if (ref_obj == nullptr) {
+				printf("Failed to parse file: %s\n", ref_str);
+=======
+			if (ref_obj == NULL) {
+				cper_print_log("Failed to parse file: %s\n", ref_str);
+>>>>>>> 992071d (Rename to c files)
 				return -1;
 			}
 
@@ -204,6 +225,7 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 	} else {
 		schema_file = "cper-json-full-log.json";
 	}
+<<<<<<< HEAD
 	size_t size = strlen(LIBCPER_JSON_SPEC) + 1 + strlen(schema_file) + 1;
 	char *schema_path = (char *)malloc(size);
 	if (schema_path == NULL) {
@@ -219,6 +241,23 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 		free(schema_path);
 		return -1;
 	}
+||||||| parent of 992071d (Rename to c files)
+=======
+	size_t size = strlen(LIBCPER_JSON_SPEC) + 1 + strlen(schema_file) + 1;
+	char *schema_path = (char *)malloc(size);
+	if (schema_path == NULL) {
+		cper_print_log("Failed to allocate memory for schema path\n");
+		return -1;
+	}
+	int n = snprintf(schema_path, size, "%s/%s", LIBCPER_JSON_SPEC,
+			 schema_file);
+	if (n != (int)size - 1) {
+		cper_print_log("Failed to format schema path n=%d size=%zu\n", n, size);
+		cper_print_log("str=%s\n", schema_path);
+		free(schema_path);
+		return -1;
+	}
+>>>>>>> 992071d (Rename to c files)
 
 	json_object *schema = json_object_from_file(schema_path);
 
@@ -241,6 +280,7 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 		json_object_put(schema);
 		free(schema_path);
 		return 1;
+<<<<<<< HEAD
 	}
 
 	cper_print_log("validate failed %d: %s\n", err, jdac_errorstr(err));
@@ -254,4 +294,29 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 	json_object_put(schema);
 	free(schema_path);
 	return 0;
+||||||| parent of 992071d (Rename to c files)
+	} else {
+		printf("validate failed %d: %s\n", err, jdac_errorstr(err));
+
+		printf("schema: \n%s\n",
+		       json_object_to_json_string_ext(schema,
+						      JSON_C_TO_STRING_PRETTY));
+		printf("to_test: \n%s\n",
+		       json_object_to_json_string_ext(to_test,
+						      JSON_C_TO_STRING_PRETTY));
+		return 0;
+	}
+=======
+	}
+
+	cper_print_log("validate failed %d: %s\n", err, jdac_errorstr(err));
+
+	cper_print_log("schema: \n%s\n",
+	       json_object_to_json_string_ext(schema, JSON_C_TO_STRING_PRETTY));
+	cper_print_log("to_test: \n%s\n", json_object_to_json_string_ext(
+					  to_test, JSON_C_TO_STRING_PRETTY));
+	json_object_put(schema);
+	free(schema_path);
+	return 0;
+>>>>>>> 992071d (Rename to c files)
 }
