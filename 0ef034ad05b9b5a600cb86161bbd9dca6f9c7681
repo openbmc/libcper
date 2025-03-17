@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe446b9f_2ca64380",
+        "filename": "subprojects/nlohmann_json.wrap",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-17T20:24:52Z",
+      "side": 1,
+      "message": "Every project other than bmcweb uses HEAD.  Can we just use HEAD here too?",
+      "revId": "0ef034ad05b9b5a600cb86161bbd9dca6f9c7681",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
