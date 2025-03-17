@@ -7,16 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "test-utils.hpp"
+#include "test-utils.h"
 
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
 
-extern "C" {
 #include <jsoncdaccord.h>
 #include <json.h>
 #include <libcper/log.h>
-}
 
 // Objects that have mutually exclusive fields (and thereforce can't have both
 // required at the same time) can be added to this list.
@@ -204,21 +202,9 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 	} else {
 		schema_file = "cper-json-full-log.json";
 	}
-	size_t size = strlen(LIBCPER_JSON_SPEC) + 1 + strlen(schema_file) + 1;
-	char *schema_path = (char *)malloc(size);
-	if (schema_path == NULL) {
-		cper_print_log("Failed to allocate memory for schema path\n");
-		return -1;
-	}
-	int n = snprintf(schema_path, size, "%s/%s", LIBCPER_JSON_SPEC,
-			 schema_file);
-	if (n != (int)size - 1) {
-		cper_print_log("Failed to format schema path n=%d size=%zu\n",
-			       n, size);
-		cper_print_log("str=%s\n", schema_path);
-		free(schema_path);
-		return -1;
-	}
+	int size = strlen(schema_file) + 1 + strlen(LIBCPER_JSON_SPEC) + 1;
+	char *schema_path = malloc(size);
+	snprintf(schema_path, size, "%s/%s", LIBCPER_JSON_SPEC, schema_file);
 
 	json_object *schema = json_object_from_file(schema_path);
 
