@@ -1,8 +1,8 @@
-#include <cassert>
+#include <assert.h>
 #include "libcper/cper-parse.h"
-#include "test-utils.hpp"
+#include "test-utils.h"
 
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
 	json_object *ir = cper_buf_to_ir(data, size);
 	if (ir == NULL) {
