@@ -7,8 +7,9 @@ project(
         'c_std=c18',
         'cpp_std=c++23',
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
-        'warning_level=2',
+        'warning_level=0',
         'werror=true',
+        'default_library=static',
     ],
 )
 
@@ -20,6 +21,8 @@ add_project_arguments(
 
 add_project_arguments('-DLIBCPER_EXAMPLES="'
     + meson.current_source_dir() + '/examples"', language: ['c', 'cpp'])
+
+add_project_arguments('-Wno-unused-function', language: ['c', 'cpp'])
 
 library_is_share = get_option('default_library') == 'shared'
 add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
@@ -77,7 +80,6 @@ json_c_dep = dependency('json-c')
 
 libcper_include = ['include']
 libcper_include_dir = include_directories(libcper_include, is_system: true)
-
 
 libcper_parse_sources += files(
     'base64.c',
