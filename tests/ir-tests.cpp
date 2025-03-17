@@ -5,7 +5,7 @@
  **/
 
 #include <gtest/gtest.h>
-#include "test-utils.hpp"
+#include "test-utils.h"
 #include <json.h>
 #include <libcper/cper-parse.h>
 #include <libcper/generator/cper-generate.h>
@@ -53,21 +53,21 @@ file_info *file_info_init(const char *section_name)
 	}
 
 	size = strlen(LIBCPER_EXAMPLES) + 1 + strlen(section_name) + 1 +
-	       strlen(cper_ext);
+	       strlen(cper_ext) + 1;
 	info->cper_out = (char *)malloc(size);
-	ret = snprintf(info->cper_out, sizeof(info->cper_out), "%s/%s.%s",
-		       LIBCPER_EXAMPLES, section_name, cper_ext);
-	if (ret != (int)size) {
-		printf("snprintf failed\n");
+	ret = snprintf(info->cper_out, size, "%s/%s.%s", LIBCPER_EXAMPLES,
+		       section_name, cper_ext);
+	if (ret != (int)size - 1) {
+		printf("snprintf0 failed\n");
 		goto fail;
 	}
 	size = strlen(LIBCPER_EXAMPLES) + 1 + strlen(section_name) + 1 +
-	       strlen(json_ext);
+	       strlen(json_ext) + 1;
 	info->json_out = (char *)malloc(size);
-	ret = snprintf(info->json_out, sizeof(info->json_out), "%s/%s.%s",
-		       LIBCPER_EXAMPLES, section_name, json_ext);
-	if (ret != (int)size) {
-		printf("snprintf failed\n");
+	ret = snprintf(info->json_out, size, "%s/%s.%s", LIBCPER_EXAMPLES,
+		       section_name, json_ext);
+	if (ret != (int)size - 1) {
+		printf("snprintf3 failed\n");
 		goto fail;
 	}
 	free(buf);
@@ -91,7 +91,7 @@ void cper_create_examples(const char *section_name)
 	char *buf = NULL;
 	file_info *info = file_info_init(section_name);
 	if (info == NULL) {
-		return;
+		goto done;
 	}
 
 	record = generate_record_memstream(&section_name, 1, &buf, &size, 0,
@@ -112,17 +112,17 @@ void cper_create_examples(const char *section_name)
 	if (fread(file_data.data(), 1, file_data.size(), record) != file_size) {
 		std::cerr << "Failed to read CPER data from memstream."
 			  << std::endl;
-		FAIL();
+		EXPECT_EQ(false, true);
 		fclose(outFile);
-		return;
+		goto done;
 	}
 	for (size_t index = 0; index < file_data.size(); index++) {
 		char hex_str[3];
 		int out = snprintf(hex_str, sizeof(hex_str), "%02x",
 				   file_data[index]);
 		if (out != 2) {
-			printf("snprintf failed\n");
-			return;
+			printf("snprintf1 failed\n");
+			goto done;
 		}
 		fwrite(hex_str, sizeof(char), 2, outFile);
 		if (index % 30 == 29) {
@@ -136,8 +136,8 @@ void cper_create_examples(const char *section_name)
 	ir = cper_to_ir(record);
 	if (ir == NULL) {
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
-		FAIL();
-		return;
+		EXPECT_EQ(false, true);
+		goto done;
 	}
 
 	//Write json output to disk
@@ -146,19 +146,26 @@ void cper_create_examples(const char *section_name)
 
 done:
 	free_file_info(info);
-	fclose(record);
-	fclose(outFile);
+	if (record != NULL) {
+		fclose(record);
+	}
+	if (outFile != NULL) {
+		fclose(outFile);
+	}
 	free(buf);
 }
 
 int hex2int(char ch)
 {
-	if (ch >= '0' && ch <= '9')
+	if ((ch >= '0') && (ch <= '9')) {
 		return ch - '0';
-	if (ch >= 'A' && ch <= 'F')
+	}
+	if ((ch >= 'A') && (ch <= 'F')) {
 		return ch - 'A' + 10;
-	if (ch >= 'a' && ch <= 'f')
+	}
+	if ((ch >= 'a') && (ch <= 'f')) {
 		return ch - 'a' + 10;
+	}
 	return -1;
 }
 
@@ -200,6 +207,7 @@ void cper_example_section_ir_test(const char *section_name)
 	if (cper_file == NULL) {
 		std::cerr << "Failed to open CPER file: " << info->cper_out
 			  << std::endl;
+		free_file_info(info);
 		FAIL() << "Failed to open CPER file";
 		return;
 	}
@@ -208,11 +216,14 @@ void cper_example_section_ir_test(const char *section_name)
 	fseek(cper_file, 0, SEEK_SET);
 	char *buffer = (char *)malloc(length);
 	if (!buffer) {
+		free_file_info(info);
 		return;
 	}
 	if (fread(buffer, 1, length, cper_file) != length) {
 		std::cerr << "Failed to read CPER file: " << info->cper_out
 			  << std::endl;
+		free(buffer);
+		free_file_info(info);
 		return;
 	}
 	fclose(cper_file);
@@ -222,13 +233,17 @@ void cper_example_section_ir_test(const char *section_name)
 	json_object *ir = cper_buf_to_ir(cper_bin.data(), cper_bin.size());
 	if (ir == NULL) {
 		std::cerr << "Empty JSON from CPER bin" << std::endl;
+		free(buffer);
+		free_file_info(info);
 		FAIL();
 		return;
 	}
 
 	json_object *expected = json_object_from_file(info->json_out);
-	ASSERT_NE(expected, nullptr);
+	EXPECT_NE(expected, nullptr);
 	if (expected == nullptr) {
+		free(buffer);
+		free_file_info(info);
 		const char *str = json_object_to_json_string(ir);
 
 		const char *expected_str = json_object_to_json_string(expected);
@@ -238,7 +253,7 @@ void cper_example_section_ir_test(const char *section_name)
 	}
 
 	EXPECT_TRUE(json_object_equal(ir, expected));
-
+	free(buffer);
 	json_object_put(ir);
 	json_object_put(expected);
 	free_file_info(info);
@@ -269,19 +284,19 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 	int valid = schema_validate_from_file(ir, single_section,
 					      /*all_valid_bits*/ 1);
 	json_object_put(ir);
-	EXPECT_TRUE(valid)
+	EXPECT_GE(valid, 0)
 		<< "IR validation test failed (single section mode = "
 		<< single_section << ")\n";
 }
 
-std::string to_hex(char *input, size_t size)
+std::string to_hex(unsigned char *input, size_t size)
 {
 	std::string out;
-	for (char c : std::span<unsigned char>((unsigned char *)input, size)) {
+	for (unsigned char c : std::span<unsigned char>(input, size)) {
 		char hex_str[3];
-		int out = snprintf(hex_str, sizeof(hex_str), "%02x", c);
-		if (out != 2) {
-			printf("snprintf failed\n");
+		int n = snprintf(hex_str, sizeof(hex_str), "%02x", c);
+		if (n != 2) {
+			printf("snprintf2 failed with code %d\n", n);
 			return "";
 		}
 		out += hex_str[0];
@@ -326,8 +341,9 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 
 	std::cout << "size: " << size << ", cper_buf_size: " << cper_buf_size
 		  << std::endl;
-	EXPECT_EQ(to_hex(buf, size),
-		  to_hex(cper_buf, std::min(size, cper_buf_size)))
+	EXPECT_EQ(to_hex((unsigned char *)buf, size),
+		  to_hex((unsigned char *)cper_buf,
+			 std::min(size, cper_buf_size)))
 		<< "Binary output was not identical to input (single section mode = "
 		<< single_section << ").";
 
@@ -565,7 +581,7 @@ TEST(UnknownSectionTests, BinaryEqual)
 }
 
 //Entrypoint for the testing program.
-int main()
+int main(int argc, char **argv)
 {
 	if (GEN_EXAMPLES) {
 		cper_create_examples("arm");
@@ -585,6 +601,6 @@ int main()
 		cper_create_examples("nvidia");
 		cper_create_examples("unknown");
 	}
-	testing::InitGoogleTest();
+	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

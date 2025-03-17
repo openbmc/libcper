@@ -12,7 +12,7 @@
 enum {
 	CPER_LOG_NONE,
 	CPER_LOG_STDIO,
-	MCTP_LOG_CUSTOM,
+	CPER_LOG_CUSTOM,
 } log_type = CPER_LOG_NONE;
 
 static void (*log_custom_fn)(const char *, va_list);
@@ -32,7 +32,7 @@ void cper_print_log(const char *fmt, ...)
 		fputs("\n", stderr);
 #endif
 		break;
-	case MCTP_LOG_CUSTOM:
+	case CPER_LOG_CUSTOM:
 		log_custom_fn(fmt, ap);
 		break;
 	}
@@ -47,7 +47,7 @@ void cper_set_log_stdio()
 
 void cper_set_log_custom(void (*fn)(const char *, va_list))
 {
-	log_type = MCTP_LOG_CUSTOM;
+	log_type = CPER_LOG_CUSTOM;
 	log_custom_fn = fn;
 }
 
