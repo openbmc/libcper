@@ -4,25 +4,17 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
-#include <cstdio>
-#include <cstdlib>
-#include <fstream>
-#include <map>
-#include <filesystem>
-#include <algorithm>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include "test-utils.hpp"
+#include "test-utils.h"
 
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
 
-extern "C" {
 #include <jsoncdaccord.h>
 #include <json.h>
 #include <libcper/log.h>
-}
-
-namespace fs = std::filesystem;
 
 // Objects that have mutually exclusive fields (and thereforce can't have both
 // required at the same time) can be added to this list.
@@ -62,11 +54,11 @@ FILE *generate_record_memstream(const char **types, UINT16 num_types,
 
 	//Generate a section to the stream, close & return.
 	if (!single_section) {
-		generate_cper_record(const_cast<char **>(types), num_types,
-				     stream, validBitsType);
+		generate_cper_record((char **)(types), num_types, stream,
+				     validBitsType);
 	} else {
-		generate_single_section_record(const_cast<char *>(types[0]),
-					       stream, validBitsType);
+		generate_single_section_record((char *)(types[0]), stream,
+					       validBitsType);
 	}
 	fclose(stream);
 
@@ -74,22 +66,26 @@ FILE *generate_record_memstream(const char **types, UINT16 num_types,
 	return fmemopen(*buf, *buf_size, "r");
 }
 
-int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
+int iterate_make_required_props(json_object *jsonSchema, int all_valid_bits)
 {
 	//properties
 	json_object *properties =
 		json_object_object_get(jsonSchema, "properties");
 
-	if (properties != nullptr) {
+	if (properties != NULL) {
 		json_object *requrired_arr = json_object_new_array();
 
 		json_object_object_foreach(properties, property_name,
 					   property_value)
 		{
-			bool add_to_required = true;
-			for (const char *opt_prop : optional_props) {
-				if (strcmp(opt_prop, property_name) == 0) {
-					add_to_required = false;
+			(void)property_value;
+			int add_to_required = 1;
+			size_t num = sizeof(optional_props) /
+				     sizeof(optional_props[0]);
+			for (size_t i = 0; i < num; i++) {
+				if (strcmp(optional_props[i], property_name) ==
+				    0) {
+					add_to_required = 0;
 					break;
 				}
 			}
@@ -108,6 +104,7 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 			(void)property_name2;
 			if (iterate_make_required_props(property_value2,
 							all_valid_bits) < 0) {
+				json_object_put(requrired_arr);
 				return -1;
 			}
 		}
@@ -115,17 +112,19 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 		if (all_valid_bits) {
 			json_object_object_add(jsonSchema, "required",
 					       requrired_arr);
+		} else {
+			json_object_put(requrired_arr);
 		}
-		//json_object_put(requrired_arr);
 	}
 
 	// ref
 	json_object *ref = json_object_object_get(jsonSchema, "$ref");
-	if (ref != nullptr) {
+	if (ref != NULL) {
 		const char *ref_str = json_object_get_string(ref);
-		if (ref_str != nullptr) {
+		if (ref_str != NULL) {
 			if (strlen(ref_str) < 1) {
-				printf("Failed to parse file: %s\n", ref_str);
+				cper_print_log("Failed seek filepath: %s\n",
+					       ref_str);
 				return -1;
 			}
 			size_t size =
@@ -133,15 +132,17 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 			char *path = (char *)malloc(size);
 			int n = snprintf(path, size, "%s%s", LIBCPER_JSON_SPEC,
 					 ref_str + 1);
-			if (n != (int)size) {
-				printf("Failed to parse file: %s\n", ref_str);
+			if (n != (int)size - 1) {
+				cper_print_log("Failed concat filepath: %s\n",
+					       ref_str);
 				free(path);
 				return -1;
 			}
 			json_object *ref_obj = json_object_from_file(path);
 			free(path);
-			if (ref_obj == nullptr) {
-				printf("Failed to parse file: %s\n", ref_str);
+			if (ref_obj == NULL) {
+				cper_print_log("Failed to parse file: %s\n",
+					       ref_str);
 				return -1;
 			}
 
@@ -164,7 +165,7 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 
 	//oneOf
 	const json_object *oneOf = json_object_object_get(jsonSchema, "oneOf");
-	if (oneOf != nullptr) {
+	if (oneOf != NULL) {
 		size_t num_elements = json_object_array_length(oneOf);
 
 		for (size_t i = 0; i < num_elements; i++) {
@@ -178,7 +179,7 @@ int iterate_make_required_props(json_object *jsonSchema, bool all_valid_bits)
 
 	//items
 	const json_object *items = json_object_object_get(jsonSchema, "items");
-	if (items != nullptr) {
+	if (items != NULL) {
 		json_object_object_foreach(items, key, val)
 		{
 			(void)key;
