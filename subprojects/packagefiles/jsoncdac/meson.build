@@ -1,24 +1,27 @@
 project(
     'libjsoncdac',
     ['c'],
-    version: '0.1',
     meson_version: '>=1.1.1',
+    default_options: ['default_library=static', 'c_std=gnu23'],
 )
-conf_data = configuration_data({
-    'PROJECT_NAME': 'jsoncdac',
-    'PROJECT_VERSION': '0.1',
-    'PROJECT_VERSION_MAJOR': '0',
-    'PROJECT_VERSION_MINOR': '1',
-    'PROJECT_VERSION_PATCH': '0',
-})
+conf_data = configuration_data(
+    {
+        'PROJECT_NAME': 'jsoncdac',
+        'PROJECT_VERSION': '0.1',
+        'PROJECT_VERSION_MAJOR': '0',
+        'PROJECT_VERSION_MINOR': '1',
+        'PROJECT_VERSION_PATCH': '0',
+    },
+)
 configure_file(
     input: 'config.h.in',
     output: 'version_config.h',
-    configuration : conf_data,
- )
+    configuration: conf_data,
+)
 deps = []
 
-add_project_arguments('-Wno-unused-parameter', language : 'c')
+add_project_arguments('-Wno-unused-parameter', language: 'c')
+add_project_arguments('-Wformat=0', language: 'c')
 
 jsonc = dependency('json-c')
 deps += jsonc
@@ -40,20 +43,14 @@ jsoncdac_sources = files(
     'libjsoncdac/validate.c',
 )
 
-jsoncdac_deps = [
-    dependency('json-c'),
-]
+jsoncdac_deps = [dependency('json-c')]
 cc = meson.get_compiler('c')
-m_dep = cc.find_library('m', required : false)
+m_dep = cc.find_library('m', required: false)
 if m_dep.found()
     deps += m_dep
 endif
 
-jsoncdac = library(
-    'jsoncdac',
-    jsoncdac_sources,
-    dependencies: deps,
-)
+jsoncdac = library('jsoncdac', jsoncdac_sources, dependencies: deps)
 
 jsoncdac_dep = declare_dependency(
     link_with: jsoncdac,

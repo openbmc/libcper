@@ -9,6 +9,7 @@ project(
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
         'warning_level=2',
         'werror=true',
+        'default_library=static',
     ],
 )
 
@@ -20,6 +21,8 @@ add_project_arguments(
 
 add_project_arguments('-DLIBCPER_EXAMPLES="'
     + meson.current_source_dir() + '/examples"', language: ['c', 'cpp'])
+
+add_project_arguments('-Wno-unused-function', language: ['c', 'cpp'])
 
 library_is_share = get_option('default_library') == 'shared'
 add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
@@ -73,19 +76,18 @@ libcper_generate_sources = files(
 
 cc = meson.get_compiler('c')
 
-json_c_dep = dependency('json-c', required: false)
-if not json_c_dep.found()
-    json_c = subproject(
-        'json-c',
-        required: true,
-        default_options: ['warning_level=0'],
-    )
-    json_c_dep = json_c.get_variable('json_c_dep')
-endif
+json_c_dep = dependency('json-c')
+#if not json_c_dep.found()
+#    json_c = subproject(
+#        'json-c',
+#        required: true,
+#        default_options: ['warning_level=0', 'default_library=static', 'b_sanitize=' + get_option('b_sanitize')],
+#    )
+#    json_c_dep = json_c.get_variable('json_c_dep')
+#endif
 
 libcper_include = ['include']
 libcper_include_dir = include_directories(libcper_include, is_system: true)
-
 
 libcper_parse_sources += files(
     'base64.c',
