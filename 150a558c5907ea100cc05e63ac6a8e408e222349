@@ -16,6 +16,24 @@
       "message": "Why? This is only a dependency for tests and is the same approach we have for most of our C-libraries. What environment does this actually provide a benefit?",
       "revId": "150a558c5907ea100cc05e63ac6a8e408e222349",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a437fa2c_52b7f780",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-18T15:45:29Z",
+      "side": 1,
+      "message": "FWIW, I did this on a plane to see how hard it would be.\n\n\nIt reduces:\nDependencies Which makes the library itself easier to use in more environments.\nCompiles/lint times\nIncreases the speed at which we can fuzz (really the prior commit does that)\n\n\nlibmctp Is a library that doesn\u0027t take a dependency on gtest.\nlibpldm Is an example that does.\n\nFWIW, I did speak with andrew a little.",
+      "parentUuid": "3d9368bc_183eea4f",
+      "revId": "150a558c5907ea100cc05e63ac6a8e408e222349",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
