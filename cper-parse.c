@@ -26,6 +26,41 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor);
 json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 				    EFI_ERROR_SECTION_DESCRIPTOR *descriptor);
 
+static int header_signature_valid(EFI_COMMON_ERROR_RECORD_HEADER *header)
+{
+	if (header->SignatureStart != EFI_ERROR_RECORD_SIGNATURE_START) {
+		cper_print_log(
+			"Invalid CPER file: Invalid header (incorrect signature). %x\n",
+			header->SignatureStart);
+		return 0;
+	}
+	if (header->SignatureEnd != EFI_ERROR_RECORD_SIGNATURE_END) {
+		cper_print_log(
+			"Invalid CPER file: Invalid header (incorrect signature end). %x\n",
+			header->SignatureEnd);
+		return 0;
+	}
+	if (header->SectionCount == 0) {
+		cper_print_log(
+			"Invalid CPER file: Invalid section count (0).\n");
+		return 0;
+	}
+	return 1;
+}
+
+int header_valid(const char *cper_buf, size_t size)
+{
+	if (size < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
+		return 0;
+	}
+	EFI_COMMON_ERROR_RECORD_HEADER *header =
+		(EFI_COMMON_ERROR_RECORD_HEADER *)cper_buf;
+	if (!header_signature_valid(header)) {
+		return 0;
+	}
+	return header_signature_valid(header);
+}
+
 json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 {
 	json_object *parent = NULL;
@@ -35,28 +70,17 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 
 	const unsigned char *pos = cper_buf;
 	unsigned int remaining = size;
-
-	if (remaining < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
-		cper_print_log(
-			"Invalid CPER file: Invalid header (not enough bytes).\n");
+	if (size < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
 		goto fail;
 	}
-
-	EFI_COMMON_ERROR_RECORD_HEADER *header = NULL;
-	header = (EFI_COMMON_ERROR_RECORD_HEADER *)cper_buf;
+	EFI_COMMON_ERROR_RECORD_HEADER *header =
+		(EFI_COMMON_ERROR_RECORD_HEADER *)cper_buf;
+	if (!header_signature_valid(header)) {
+		goto fail;
+	}
 	pos += sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
 	remaining -= sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
-	if (header->SignatureStart != EFI_ERROR_RECORD_SIGNATURE_START) {
-		cper_print_log(
-			"Invalid CPER file: Invalid header (incorrect signature). %x\n",
-			header->SignatureStart);
-		goto fail;
-	}
-	if (header->SectionCount == 0) {
-		cper_print_log(
-			"Invalid CPER file: Invalid section count (0).\n");
-		goto fail;
-	}
+
 	if (remaining < sizeof(EFI_ERROR_SECTION_DESCRIPTOR)) {
 		cper_print_log(
 			"Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
