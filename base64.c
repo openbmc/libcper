@@ -95,59 +95,70 @@ UINT8 decode_table[256] =
  */
 UINT8 *base64_decode(const CHAR8 *src, INT32 len, INT32 *out_len)
 {
-	UINT8 *out;
-	UINT8 *pos;
+	UINT8 *out = NULL;
+	UINT8 *pos = NULL;
 	UINT8 block[4];
-	UINT8 tmp;
-	INT32 block_index;
-	INT32 src_index;
-	UINT32 pad_count = 0;
+	INT32 block_index = 0;
+	INT32 src_index = 0;
 
 	if (!out_len) {
-		return NULL;
+		goto error;
 	}
 
 	// Malloc might be up to 2 larger dependent on padding
-	*out_len = len / 4 * 3;
+	*out_len = len / 4 * 3 + 2;
 	pos = out = malloc(*out_len);
 	if (out == NULL) {
-		return NULL;
+		goto error;
 	}
 
 	block_index = 0;
 	for (src_index = 0; src_index < len; src_index++) {
-		tmp = decode_table[(UINT8)src[src_index]];
-		if (tmp == 0x80) {
-			free(out);
-			return NULL;
+		char current_char = src[src_index];
+		if (current_char == '=') {
+			break;
+		}
+		// If the final character is a newline, as can occur in many editors
+		// then ignore it.
+		if (src_index + 1 == len && current_char == '\n') {
+			printf("Ignoring trailing newline.\n");
+			break;
 		}
 
-		if (src[src_index] == '=') {
-			pad_count++;
+		block[block_index] = decode_table[(UINT8)current_char];
+		if (block[block_index] == 0x80) {
+			printf("Invalid character \"%c\".\n", current_char);
+			goto error;
 		}
 
-		block[block_index] = tmp;
 		block_index++;
 		if (block_index == 4) {
 			*pos++ = (block[0] << 2) | (block[1] >> 4);
 			*pos++ = (block[1] << 4) | (block[2] >> 2);
 			*pos++ = (block[2] << 6) | block[3];
-			if (pad_count > 0) {
-				if (pad_count == 1) {
-					pos--;
-				} else if (pad_count == 2) {
-					pos -= 2;
-				} else {
-					/* Invalid pad_counting */
-					free(out);
-					return NULL;
-				}
-				break;
-			}
 			block_index = 0;
 		}
+	}
+	if (block_index == 0) {
+		// mod 4 Even number of characters, no padding.
+	} else if (block_index == 1) {
+		printf("Invalid base64 input length.  Last character truncated.\n");
+		goto error;
+	} else if (block_index == 2) {
+		*pos++ = (block[0] << 2) | (block[1] >> 4);
+	} else if (block_index == 3) {
+		*pos++ = (block[0] << 2) | (block[1] >> 4);
+		*pos++ = (block[1] << 4) | (block[2] >> 2);
+	} else {
+		/* Invalid pad_counting */
+		printf("Invalid base64 input length %d.\n", block_index);
+		goto error;
 	}
 
 	*out_len = pos - out;
 	return out;
+
+error:
+	free(out);
+	return NULL;
 }
