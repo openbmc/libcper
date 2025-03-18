@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b92f051_e847aab8",
+        "filename": "tests/test-utils.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-18T23:12:50Z",
+      "side": 1,
+      "message": "This list is for when fields are mutually exclusive.  In unit tests, we should be generating records with every field set.",
+      "revId": "2d74ccf7e30e331ff7c58de04cee88df1708f24a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
