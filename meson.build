@@ -1,6 +1,6 @@
 project(
     'libcper',
-    ['c', 'cpp'],
+    'c',
     version: '0.1',
     meson_version: '>=1.1.1',
     default_options: [
@@ -16,19 +16,19 @@ project(
 add_project_arguments(
     '-DLIBCPER_JSON_SPEC="'
     + meson.current_source_dir() + '/specification/json"',
-    language: ['c', 'cpp'],
+    language: 'c',
 )
 
 add_project_arguments('-DLIBCPER_EXAMPLES="'
-    + meson.current_source_dir() + '/examples"', language: ['c', 'cpp'])
+    + meson.current_source_dir() + '/examples"', language: 'c')
 
-add_project_arguments('-Wno-unused-function', language: ['c', 'cpp'])
+add_project_arguments('-Wno-unused-function', language: 'c')
 
 library_is_share = get_option('default_library') == 'shared'
 add_project_arguments('-D_POSIX_C_SOURCE=200809L', language: 'c')
 
 if get_option('output-all-properties').enabled()
-    add_project_arguments('-DOUTPUT_ALL_PROPERTIES', language: ['c', 'cpp'])
+    add_project_arguments('-DOUTPUT_ALL_PROPERTIES', language: 'c')
 endif
 
 project_description = 'libcper library'
