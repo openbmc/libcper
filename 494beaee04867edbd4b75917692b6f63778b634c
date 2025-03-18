@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8f49db59_2b2421ab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-18T21:14:30Z",
+      "side": 1,
+      "message": "the project name doesn\u0027t match the lib name, it shortens daccor to dac.  Kind of annoying... but it is what it is.",
+      "parentUuid": "a09ab4f3_44618ffd",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "494beaee04867edbd4b75917692b6f63778b634c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ee515b27_4f3bf562",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -37,6 +61,30 @@
       "writtenOn": "2025-03-18T16:13:13Z",
       "side": 1,
       "message": "I guess we don\u0027t have a need for the bitbake recipe though, right?  We currently have `json-c` in the openbmc-build-scripts also, so we can add this too.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "494beaee04867edbd4b75917692b6f63778b634c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ae6103f_7ab3cd81",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-18T21:14:30Z",
+      "side": 1,
+      "message": "Correct, bitbake wouldn\u0027t change.",
+      "parentUuid": "ee515b27_4f3bf562",
       "range": {
         "startLine": 12,
         "startChar": 0,
