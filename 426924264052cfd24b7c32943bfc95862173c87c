@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e278e36_6f608b16",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-18T15:37:37Z",
+      "side": 1,
+      "message": "Answered in commit message.  Meant for this to be WIP.",
+      "parentUuid": "ed750a70_14c96db1",
+      "revId": "426924264052cfd24b7c32943bfc95862173c87c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d850560_59892539",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-03-18T12:24:00Z",
       "side": 1,
       "message": "Can we get some “why”?  I don’t understand the motivation to use yet-another-json-library to change test cases from C++ to C. Why bother here?  Most of our C libraries use C++ for test cases. I’m not understanding the benefit specifically for libcper.",
+      "revId": "426924264052cfd24b7c32943bfc95862173c87c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4535fd7a_d236a0f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-18T15:37:37Z",
+      "side": 1,
+      "message": "Answered in commit message.",
+      "parentUuid": "6d850560_59892539",
       "revId": "426924264052cfd24b7c32943bfc95862173c87c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
