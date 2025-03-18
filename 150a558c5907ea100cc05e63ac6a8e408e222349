@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d9368bc_183eea4f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-18T12:25:06Z",
+      "side": 1,
+      "message": "Why? This is only a dependency for tests and is the same approach we have for most of our C-libraries. What environment does this actually provide a benefit?",
+      "revId": "150a558c5907ea100cc05e63ac6a8e408e222349",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
