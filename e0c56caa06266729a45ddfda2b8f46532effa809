@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8ff44e1_dced1c0f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-18T16:15:10Z",
+      "side": 1,
+      "message": "To be fair, `libmctp` isn\u0027t _really_ an openbmc repository anymore even though we host it.  It\u0027s deprecated for all openbmc use cases.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 59
+      },
+      "revId": "e0c56caa06266729a45ddfda2b8f46532effa809",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
