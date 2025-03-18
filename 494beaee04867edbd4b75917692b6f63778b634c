@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a09ab4f3_44618ffd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-18T16:13:13Z",
+      "side": 1,
+      "message": "Is this a typo?  You\u0027ve used it twice but then the subproject wrap file uses \"libjsoncdac\".  I guess the project just uses a weird naming scheme.",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "494beaee04867edbd4b75917692b6f63778b634c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee515b27_4f3bf562",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-18T16:13:13Z",
+      "side": 1,
+      "message": "I guess we don\u0027t have a need for the bitbake recipe though, right?  We currently have `json-c` in the openbmc-build-scripts also, so we can add this too.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "494beaee04867edbd4b75917692b6f63778b634c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
