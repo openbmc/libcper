@@ -13,6 +13,8 @@
 #include <libcper/log.h>
 #include <libcper/cper-parse.h>
 #include <libcper/json-schema.h>
+#include <libcper/Cper.h>
+#include <libcper/base64.h>
 
 void cper_to_json(char *in_file, char *out_file, int is_single_section);
 void json_to_cper(const char *in_file, const char *out_file);
@@ -92,6 +94,40 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 		printf("Could not open provided CPER file '%s', file handle returned null.\n",
 		       in_file);
 		return;
+	}
+
+	fseek(cper_file, 0, SEEK_END);
+	long fsize = ftell(cper_file);
+	fseek(cper_file, 0, SEEK_SET);
+
+	char *fbuff = malloc(fsize);
+	size_t sz = fread(fbuff, 1, (long)fsize, cper_file);
+	if (sz != (size_t)fsize) {
+		printf("Could not read CPER file '%s', read returned %ld bytes.\n",
+		       in_file, sz);
+		return;
+	}
+
+	if (!header_valid(fbuff, sz)) {
+		// Check if it's base64 encoded
+		int32_t decoded_len = 0;
+		UINT8 *decoded = base64_decode(fbuff, sz, &decoded_len);
+		if (decoded == NULL) {
+			printf("Invalid CPER file '%s'.\n", in_file);
+			free(fbuff);
+			free(decoded);
+			return;
+		}
+		if (!header_valid((const char *)decoded, decoded_len)) {
+			printf("Invalid CPER file '%s'.\n", in_file);
+			free(decoded);
+			free(fbuff);
+			return;
+		}
+		fbuff = (char *)decoded;
+		free(fbuff);
+		sz = decoded_len;
+		decoded = NULL;
 	}
 
 	//Convert.
