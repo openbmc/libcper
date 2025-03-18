@@ -28,6 +28,8 @@ extern "C" {
 			  "HW_ERROR_FLAGS_PREVERR",                            \
 			  "HW_ERROR_FLAGS_SIMULATED" }
 
+int header_valid(const char *cper_buf, size_t size);
+
 json_object *cper_to_ir(FILE *cper_file);
 json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size);
 json_object *cper_single_section_to_ir(FILE *cper_section_file);
