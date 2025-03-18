@@ -2,7 +2,7 @@ project(
     'libjsoncdac',
     ['c'],
     meson_version: '>=1.1.1',
-    default_options: ['default_library=static', 'c_std=gnu23'],
+    default_options: ['default_library=static', 'c_std=gnu18'],
 )
 conf_data = configuration_data(
     {
