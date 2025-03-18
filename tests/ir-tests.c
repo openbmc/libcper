@@ -4,8 +4,10 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
-#include <gtest/gtest.h>
 #include "test-utils.h"
+#include "string.h"
+#include "assert.h"
+#include <ctype.h>
 #include <json.h>
 #include <libcper/cper-parse.h>
 #include <libcper/generator/cper-generate.h>
@@ -13,7 +15,7 @@
 #include <libcper/json-schema.h>
 #include <libcper/sections/cper-section.h>
 
-namespace fs = std::filesystem;
+#include "base64_test.h"
 
 /*
 * Test templates.
@@ -30,7 +32,7 @@ struct file_info {
 	char *json_out;
 };
 
-void free_file_info(file_info *info)
+void free_file_info(struct file_info *info)
 {
 	if (info == NULL) {
 		return;
@@ -40,14 +42,14 @@ void free_file_info(file_info *info)
 	free(info);
 }
 
-file_info *file_info_init(const char *section_name)
+struct file_info *file_info_init(const char *section_name)
 {
-	file_info *info = NULL;
+	struct file_info *info = NULL;
 	char *buf = NULL;
 	size_t size;
 	int ret;
 
-	info = (file_info *)calloc(1, sizeof(file_info));
+	info = (struct file_info *)calloc(1, sizeof(struct file_info));
 	if (info == NULL) {
 		goto fail;
 	}
@@ -86,10 +88,10 @@ void cper_create_examples(const char *section_name)
 	size_t size;
 	size_t file_size;
 	FILE *outFile = NULL;
-	std::vector<unsigned char> file_data;
+	unsigned char *file_data;
 	FILE *record = NULL;
 	char *buf = NULL;
-	file_info *info = file_info_init(section_name);
+	struct file_info *info = file_info_init(section_name);
 	if (info == NULL) {
 		goto done;
 	}
@@ -100,23 +102,23 @@ void cper_create_examples(const char *section_name)
 	// Write example CPER to disk
 	outFile = fopen(info->cper_out, "wb");
 	if (outFile == NULL) {
-		std::cerr << "Failed to create/open CPER output file: "
-			  << info->cper_out << std::endl;
+		printf("Failed to create/open CPER output file: %s\n",
+		       info->cper_out);
 		goto done;
 	}
 
 	fseek(record, 0, SEEK_END);
 	file_size = ftell(record);
 	rewind(record);
-	file_data.resize(file_size);
-	if (fread(file_data.data(), 1, file_data.size(), record) != file_size) {
-		std::cerr << "Failed to read CPER data from memstream."
-			  << std::endl;
-		EXPECT_EQ(false, true);
+	file_data = malloc(file_size);
+	if (fread(file_data, 1, file_size, record) != file_size) {
+		printf("Failed to read CPER data from memstream.");
 		fclose(outFile);
+		assert(0);
+
 		goto done;
 	}
-	for (size_t index = 0; index < file_data.size(); index++) {
+	for (size_t index = 0; index < file_size; index++) {
 		char hex_str[3];
 		int out = snprintf(hex_str, sizeof(hex_str), "%02x",
 				   file_data[index]);
@@ -135,8 +137,8 @@ void cper_create_examples(const char *section_name)
 	rewind(record);
 	ir = cper_to_ir(record);
 	if (ir == NULL) {
-		std::cerr << "Empty JSON from CPER bin" << std::endl;
-		EXPECT_EQ(false, true);
+		printf("Empty JSON from CPER bin2\n");
+		assert(0);
 		goto done;
 	}
 
@@ -169,10 +171,14 @@ int hex2int(char ch)
 	return -1;
 }
 
-std::vector<unsigned char> string_to_binary(const char *source, size_t length)
+int string_to_binary(const char *source, size_t length, unsigned char **retval)
 {
-	std::vector<unsigned char> retval;
-	bool uppernibble = true;
+	size_t retval_size = length * 2;
+	*retval = malloc(retval_size);
+	int uppernibble = 1;
+
+	size_t ret_index = 0;
+
 	for (size_t i = 0; i < length; i++) {
 		char c = source[i];
 		if (c == '\n') {
@@ -181,34 +187,34 @@ std::vector<unsigned char> string_to_binary(const char *source, size_t length)
 		int val = hex2int(c);
 		if (val < 0) {
 			printf("Invalid hex character in test file: %c\n", c);
-			return {};
+			return -1;
 		}
 
 		if (uppernibble) {
-			retval.push_back((unsigned char)(val << 4));
+			(*retval)[ret_index] = (unsigned char)(val << 4);
 		} else {
-			retval.back() += (unsigned char)val;
+			(*retval)[ret_index] += (unsigned char)val;
+			ret_index++;
 		}
 		uppernibble = !uppernibble;
 	}
-	return retval;
+	return ret_index;
 }
 
 //Tests fixed CPER sections for IR validity with an example set.
 void cper_example_section_ir_test(const char *section_name)
 {
 	//Open CPER record for the given type.
-	file_info *info = file_info_init(section_name);
+	struct file_info *info = file_info_init(section_name);
 	if (info == NULL) {
 		return;
 	}
 
 	FILE *cper_file = fopen(info->cper_out, "rb");
 	if (cper_file == NULL) {
-		std::cerr << "Failed to open CPER file: " << info->cper_out
-			  << std::endl;
+		printf("Failed to open CPER file: %s\n", info->cper_out);
 		free_file_info(info);
-		FAIL() << "Failed to open CPER file";
+		assert(0);
 		return;
 	}
 	fseek(cper_file, 0, SEEK_END);
@@ -220,40 +226,51 @@ void cper_example_section_ir_test(const char *section_name)
 		return;
 	}
 	if (fread(buffer, 1, length, cper_file) != length) {
-		std::cerr << "Failed to read CPER file: " << info->cper_out
-			  << std::endl;
+		printf("Failed to read CPER file: %s\n", info->cper_out);
 		free(buffer);
 		free_file_info(info);
 		return;
 	}
 	fclose(cper_file);
 
-	std::vector<unsigned char> cper_bin = string_to_binary(buffer, length);
-	//Convert to IR, free resources.
-	json_object *ir = cper_buf_to_ir(cper_bin.data(), cper_bin.size());
-	if (ir == NULL) {
-		std::cerr << "Empty JSON from CPER bin" << std::endl;
+	unsigned char *cper_bin;
+	int cper_bin_len = string_to_binary(buffer, length, &cper_bin);
+	if (cper_bin_len <= 0) {
 		free(buffer);
 		free_file_info(info);
-		FAIL();
+		assert(0);
+		return;
+	}
+	printf("cper_bin: %s\n", cper_bin);
+	printf("cper_bin_len: %d\n", cper_bin_len);
+
+	//Convert to IR, free resources.
+	json_object *ir = cper_buf_to_ir(cper_bin, cper_bin_len);
+	if (ir == NULL) {
+		printf("Empty JSON from CPER bin3\n");
+		free(cper_bin);
+		free(buffer);
+		free_file_info(info);
+		assert(0);
 		return;
 	}
 
 	json_object *expected = json_object_from_file(info->json_out);
-	EXPECT_NE(expected, nullptr);
-	if (expected == nullptr) {
+	assert(expected != NULL);
+	if (expected == NULL) {
 		free(buffer);
+		free(cper_bin);
 		free_file_info(info);
 		const char *str = json_object_to_json_string(ir);
 
 		const char *expected_str = json_object_to_json_string(expected);
-
-		EXPECT_EQ(str, expected_str);
+		assert(strcmp(str, expected_str) == 0);
 		return;
 	}
 
-	EXPECT_TRUE(json_object_equal(ir, expected));
+	assert(json_object_equal(ir, expected));
 	free(buffer);
+	free(cper_bin);
 	json_object_put(ir);
 	json_object_put(expected);
 	free_file_info(info);
@@ -284,25 +301,35 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 	int valid = schema_validate_from_file(ir, single_section,
 					      /*all_valid_bits*/ 1);
 	json_object_put(ir);
-	EXPECT_GE(valid, 0)
-		<< "IR validation test failed (single section mode = "
-		<< single_section << ")\n";
+
+	if (valid < 0) {
+		printf("IR validation test failed (single section mode = %d)\n",
+		       single_section);
+		assert(0);
+	}
 }
 
-std::string to_hex(unsigned char *input, size_t size)
+int to_hex(unsigned char *input, size_t size, char **out)
 {
-	std::string out;
-	for (unsigned char c : std::span<unsigned char>(input, size)) {
+	*out = malloc(size * 2);
+	if (out == NULL) {
+		return -1;
+	}
+	int out_index = 0;
+	for (size_t i = 0; i < size; i++) {
+		unsigned char c = input[i];
 		char hex_str[3];
 		int n = snprintf(hex_str, sizeof(hex_str), "%02x", c);
 		if (n != 2) {
 			printf("snprintf2 failed with code %d\n", n);
-			return "";
+			return -1;
 		}
-		out += hex_str[0];
-		out += hex_str[1];
+		(*out)[out_index] = hex_str[0];
+		out_index++;
+		(*out)[out_index] = hex_str[1];
+		out_index++;
 	}
-	return out;
+	return out_index;
 }
 
 //Checks for binary round-trip equality for a given randomly generated CPER record.
@@ -315,8 +342,7 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
 						 single_section, validBitsType);
 	if (record == NULL) {
-		std::cerr << "Could not generate memstream for binary test"
-			  << std::endl;
+		printf("Could not generate memstream for binary test");
 		return;
 	}
 
@@ -339,13 +365,19 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 	}
 	fclose(stream);
 
-	std::cout << "size: " << size << ", cper_buf_size: " << cper_buf_size
-		  << std::endl;
-	EXPECT_EQ(to_hex((unsigned char *)buf, size),
-		  to_hex((unsigned char *)cper_buf,
-			 std::min(size, cper_buf_size)))
-		<< "Binary output was not identical to input (single section mode = "
-		<< single_section << ").";
+	printf("size: %zu, cper_buf_size: %zu\n", size, cper_buf_size);
+
+	char *buf_hex;
+	int buf_hex_len = to_hex((unsigned char *)buf, size, &buf_hex);
+	char *cper_buf_hex;
+	int cper_buf_hex_len =
+		to_hex((unsigned char *)cper_buf, cper_buf_size, &cper_buf_hex);
+
+	assert(buf_hex_len == cper_buf_hex_len);
+	assert(memcmp(buf_hex, cper_buf_hex, buf_hex_len) == 0);
+
+	free(buf_hex);
+	free(cper_buf_hex);
 
 	//Free everything up.
 	fclose(record);
@@ -373,31 +405,26 @@ void cper_log_section_dual_binary_test(const char *section_name)
 /*
 * Non-single section assertions.
 */
-TEST(CompileTimeAssertions, TwoWayConversion)
+void CompileTimeAssertions_TwoWayConversion()
 {
 	for (size_t i = 0; i < section_definitions_len; i++) {
 		//If a conversion one way exists, a conversion the other way must exist.
-		const char *err =
-			"If a CPER conversion exists one way, there must be an equivalent method in reverse.";
 		if (section_definitions[i].ToCPER != NULL) {
-			ASSERT_NE(section_definitions[i].ToIR, nullptr) << err;
+			assert(section_definitions[i].ToIR != NULL);
 		}
 		if (section_definitions[i].ToIR != NULL) {
-			ASSERT_NE(section_definitions[i].ToCPER, nullptr)
-				<< err;
+			assert(section_definitions[i].ToCPER != NULL);
 		}
 	}
 }
 
-TEST(CompileTimeAssertions, ShortcodeNoSpaces)
+void CompileTimeAssertions_ShortcodeNoSpaces()
 {
 	for (size_t i = 0; i < generator_definitions_len; i++) {
 		for (int j = 0;
 		     generator_definitions[i].ShortName[j + 1] != '\0'; j++) {
-			ASSERT_FALSE(
-				isspace(generator_definitions[i].ShortName[j]))
-				<< "Illegal space character detected in shortcode '"
-				<< generator_definitions[i].ShortName << "'.";
+			assert(isspace(generator_definitions[i].ShortName[j]) ==
+			       0);
 		}
 	}
 }
@@ -407,181 +434,181 @@ TEST(CompileTimeAssertions, ShortcodeNoSpaces)
 */
 
 //Generic processor tests.
-TEST(GenericProcessorTests, IRValid)
+void GenericProcessorTests_IRValid()
 {
 	cper_log_section_dual_ir_test("generic");
 }
-TEST(GenericProcessorTests, BinaryEqual)
+void GenericProcessorTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("generic");
 }
 
 //IA32/x64 tests.
-TEST(IA32x64Tests, IRValid)
+void IA32x64Tests_IRValid()
 {
 	cper_log_section_dual_ir_test("ia32x64");
 }
-TEST(IA32x64Tests, BinaryEqual)
+void IA32x64Tests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("ia32x64");
 }
 
-// TEST(IPFTests, IRValid) {
+// void IPFTests_IRValid() {
 //     cper_log_section_dual_ir_test("ipf");
 // }
 
 //ARM tests.
-TEST(ArmTests, IRValid)
+void ArmTests_IRValid()
 {
 	cper_log_section_dual_ir_test("arm");
 }
-TEST(ArmTests, BinaryEqual)
+void ArmTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("arm");
 }
 
 //Memory tests.
-TEST(MemoryTests, IRValid)
+void MemoryTests_IRValid()
 {
 	cper_log_section_dual_ir_test("memory");
 }
-TEST(MemoryTests, BinaryEqual)
+void MemoryTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("memory");
 }
 
 //Memory 2 tests.
-TEST(Memory2Tests, IRValid)
+void Memory2Tests_IRValid()
 {
 	cper_log_section_dual_ir_test("memory2");
 }
-TEST(Memory2Tests, BinaryEqual)
+void Memory2Tests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("memory2");
 }
 
 //PCIe tests.
-TEST(PCIeTests, IRValid)
+void PCIeTests_IRValid()
 {
 	cper_log_section_dual_ir_test("pcie");
 }
-TEST(PCIeTests, BinaryEqual)
+void PCIeTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("pcie");
 }
 
 //Firmware tests.
-TEST(FirmwareTests, IRValid)
+void FirmwareTests_IRValid()
 {
 	cper_log_section_dual_ir_test("firmware");
 }
-TEST(FirmwareTests, BinaryEqual)
+void FirmwareTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("firmware");
 }
 
 //PCI Bus tests.
-TEST(PCIBusTests, IRValid)
+void PCIBusTests_IRValid()
 {
 	cper_log_section_dual_ir_test("pcibus");
 }
-TEST(PCIBusTests, BinaryEqual)
+void PCIBusTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("pcibus");
 }
 
 //PCI Device tests.
-TEST(PCIDevTests, IRValid)
+void PCIDevTests_IRValid()
 {
 	cper_log_section_dual_ir_test("pcidev");
 }
-TEST(PCIDevTests, BinaryEqual)
+void PCIDevTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("pcidev");
 }
 
 //Generic DMAr tests.
-TEST(DMArGenericTests, IRValid)
+void DMArGenericTests_IRValid()
 {
 	cper_log_section_dual_ir_test("dmargeneric");
 }
-TEST(DMArGenericTests, BinaryEqual)
+void DMArGenericTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("dmargeneric");
 }
 
 //VT-d DMAr tests.
-TEST(DMArVtdTests, IRValid)
+void DMArVtdTests_IRValid()
 {
 	cper_log_section_dual_ir_test("dmarvtd");
 }
-TEST(DMArVtdTests, BinaryEqual)
+void DMArVtdTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("dmarvtd");
 }
 
 //IOMMU DMAr tests.
-TEST(DMArIOMMUTests, IRValid)
+void DMArIOMMUTests_IRValid()
 {
 	cper_log_section_dual_ir_test("dmariommu");
 }
-TEST(DMArIOMMUTests, BinaryEqual)
+void DMArIOMMUTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("dmariommu");
 }
 
 //CCIX PER tests.
-TEST(CCIXPERTests, IRValid)
+void CCIXPERTests_IRValid()
 {
 	cper_log_section_dual_ir_test("ccixper");
 }
-TEST(CCIXPERTests, BinaryEqual)
+void CCIXPERTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("ccixper");
 }
 
 //CXL Protocol tests.
-TEST(CXLProtocolTests, IRValid)
+void CXLProtocolTests_IRValid()
 {
 	cper_log_section_dual_ir_test("cxlprotocol");
 }
-TEST(CXLProtocolTests, BinaryEqual)
+void CXLProtocolTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("cxlprotocol");
 }
 
 //CXL Component tests.
-TEST(CXLComponentTests, IRValid)
+void CXLComponentTests_IRValid()
 {
 	cper_log_section_dual_ir_test("cxlcomponent-media");
 }
-TEST(CXLComponentTests, BinaryEqual)
+void CXLComponentTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("cxlcomponent-media");
 }
 
 //NVIDIA section tests.
-TEST(NVIDIASectionTests, IRValid)
+void NVIDIASectionTests_IRValid()
 {
 	cper_log_section_dual_ir_test("nvidia");
 }
-TEST(NVIDIASectionTests, BinaryEqual)
+void NVIDIASectionTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("nvidia");
 }
 
 //Unknown section tests.
-TEST(UnknownSectionTests, IRValid)
+void UnknownSectionTests_IRValid()
 {
 	cper_log_section_dual_ir_test("unknown");
 }
-TEST(UnknownSectionTests, BinaryEqual)
+void UnknownSectionTests_BinaryEqual()
 {
 	cper_log_section_dual_binary_test("unknown");
 }
 
 //Entrypoint for the testing program.
-int main(int argc, char **argv)
+int main(int /*argc*/, char ** /*argv*/)
 {
 	if (GEN_EXAMPLES) {
 		cper_create_examples("arm");
@@ -601,6 +628,46 @@ int main(int argc, char **argv)
 		cper_create_examples("nvidia");
 		cper_create_examples("unknown");
 	}
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	test_base64_encode_good();
+	test_base64_decode_good();
+	GenericProcessorTests_IRValid();
+	GenericProcessorTests_BinaryEqual();
+	IA32x64Tests_IRValid();
+	IA32x64Tests_BinaryEqual();
+	ArmTests_IRValid();
+	ArmTests_BinaryEqual();
+	MemoryTests_IRValid();
+	MemoryTests_BinaryEqual();
+	Memory2Tests_IRValid();
+	Memory2Tests_BinaryEqual();
+	PCIeTests_IRValid();
+	PCIeTests_BinaryEqual();
+	FirmwareTests_IRValid();
+	FirmwareTests_BinaryEqual();
+	PCIBusTests_IRValid();
+	PCIBusTests_BinaryEqual();
+	PCIDevTests_IRValid();
+	PCIDevTests_BinaryEqual();
+	DMArGenericTests_IRValid();
+	DMArGenericTests_BinaryEqual();
+	DMArVtdTests_IRValid();
+	DMArVtdTests_BinaryEqual();
+	DMArIOMMUTests_IRValid();
+	DMArIOMMUTests_BinaryEqual();
+	CCIXPERTests_IRValid();
+	CCIXPERTests_BinaryEqual();
+	CXLProtocolTests_IRValid();
+	CXLProtocolTests_BinaryEqual();
+	CXLComponentTests_IRValid();
+	CXLComponentTests_BinaryEqual();
+	NVIDIASectionTests_IRValid();
+	NVIDIASectionTests_BinaryEqual();
+	UnknownSectionTests_IRValid();
+	UnknownSectionTests_BinaryEqual();
+	CompileTimeAssertions_TwoWayConversion();
+	CompileTimeAssertions_ShortcodeNoSpaces();
+
+	printf("\n\nTest completed successfully.\n");
+
+	return 0;
 }
