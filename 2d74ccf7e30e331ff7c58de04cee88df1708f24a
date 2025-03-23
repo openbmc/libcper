@@ -16,6 +16,24 @@
       "message": "This list is for when fields are mutually exclusive.  In unit tests, we should be generating records with every field set.",
       "revId": "2d74ccf7e30e331ff7c58de04cee88df1708f24a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c1b89ab_d8c569a1",
+        "filename": "tests/test-utils.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "I think that\u0027s smart.  We would need to update the unit test to generate and test different data.  Gen-section-pcie.c would need to make sure to set certain bits to trigger the mutual exclusive data.\n\npcie_capabilities.capability_version \nadvanced_error_capabilities_and_control.logged_tlp_was_flit_mode\n\nthis push won\u0027t add this tough as it\u0027s already getting really long.\nPlus for this push I\u0027ve not added things like TLP Header.",
+      "parentUuid": "0b92f051_e847aab8",
+      "revId": "2d74ccf7e30e331ff7c58de04cee88df1708f24a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

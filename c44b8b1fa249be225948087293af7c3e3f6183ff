@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a10e089e_83149423",
+        "filename": "examples/pcie.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "I don\u0027t get this comment which field?  The recordlength did pretty much double because I added hex for everything.",
+      "parentUuid": "60036907_1e868c67",
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78f948bb_16ca2a81",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-03-05T17:00:49Z",
       "side": 1,
       "message": "The device capabilities register breaks down into smaller fields than this.  Lets decode these into as close to human readable fields as possible.\n\nFor example, this field would be\n\ndevice_capabilies: {\n   maximum_payload_size: 1,\n   extended_tags_supported: true,\n   acceptable_los_latency: 3\n   ....\n}\n\nI suspect that will remove the need to have both hex and int decodes for a lot of the fields.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 2
+      },
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65bcdea4_42b4bfab",
+        "filename": "examples/pcie.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "latest push does this.  All registers has been decoded.\nThat about 300+ registers/fields.\nI\u0027ve purposely left blank fields of length 1, because we needed to go through each of them to determine if they are boolean or require some sort of dictionary/decode.\n\nfields like aer error severity, a boolean of True/False doesn\u0027t make sense as a simple example.",
+      "parentUuid": "78f948bb_16ca2a81",
       "range": {
         "startLine": 65,
         "startChar": 0,
@@ -64,6 +106,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "02e0f257_16adf39e",
+        "filename": "examples/pcie.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "postfix changed from \"_2\" to just \"2\", no more hex fields.",
+      "parentUuid": "f4a39392_4f7c1c07",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 55
+      },
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1064976_e764b06f",
@@ -77,6 +143,30 @@
       "writtenOn": "2025-03-05T17:10:07Z",
       "side": 1,
       "message": "I suspect when you add more structure to this, this list will drop considerably.",
+      "range": {
+        "startLine": 35,
+        "startChar": 6,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "c44b8b1fa249be225948087293af7c3e3f6183ff",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f317f62b_d174cd68",
+        "filename": "tests/test-utils.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "It\u0027ll drop exactly in half for the PCIe capabilities.  More registers will need to be added for the AER section, once we decide what to do with the TLP Header Registers.",
+      "parentUuid": "e1064976_e764b06f",
       "range": {
         "startLine": 35,
         "startChar": 6,

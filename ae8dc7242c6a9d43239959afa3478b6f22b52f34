@@ -52,6 +52,24 @@
       "parentUuid": "5ab7d0c4_31582994",
       "revId": "ae8dc7242c6a9d43239959afa3478b6f22b52f34",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff192042_e73a1f95",
+        "filename": "examples/pcie.cper",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "I think it\u0027s a good idea.  I\u0027ve been using XXD for debugging in this project to manually check the CPER extraction and diffs.",
+      "parentUuid": "5ab7d0c4_31582994",
+      "revId": "ae8dc7242c6a9d43239959afa3478b6f22b52f34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

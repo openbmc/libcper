@@ -22,6 +22,30 @@
       },
       "revId": "e7d37f6a6d696a6fff22690b6010e906425a4c8b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c8189c4_3f7b2aa5",
+        "filename": "include/libcper/sections/cper-section-pcie.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-03-23T05:50:31Z",
+      "side": 1,
+      "message": "copied from IM discussion.\nTreat the .h file like a structured spec for other people and scripts to use.  We\u0027re following the rules IP vs what makes more sense for coding.\n\nThe UINT16 is because this is a UINT16 register (size 2).  A strict PCIe implementation would return an error if you tried to do a size 1 read to this size 2 register.",
+      "parentUuid": "0a914ffc_19ce750a",
+      "range": {
+        "startLine": 43,
+        "startChar": 1,
+        "endLine": 43,
+        "endChar": 27
+      },
+      "revId": "e7d37f6a6d696a6fff22690b6010e906425a4c8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
