@@ -34,6 +34,24 @@
       "parentUuid": "55a508a2_31f2e3bc",
       "revId": "4bdb2261d1299129c046dfb6c4c546fa30224023",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70397e2a_cf020688",
+        "filename": "cli-app/cper-convert.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-03-25T23:44:21Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "51e49ec0_1280b174",
+      "revId": "4bdb2261d1299129c046dfb6c4c546fa30224023",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
