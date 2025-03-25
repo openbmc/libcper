@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55a508a2_31f2e3bc",
+        "filename": "cli-app/cper-convert.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-03-25T21:24:04Z",
+      "side": 1,
+      "message": "This argument becomes redundant now?",
+      "revId": "4bdb2261d1299129c046dfb6c4c546fa30224023",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
