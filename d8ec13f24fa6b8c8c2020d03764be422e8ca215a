@@ -16,6 +16,24 @@
       "message": "Something bad happening here when CI tries to bring this dependency in. It just completely hangs the job here:\n\nRun-time dependency \u001b[1mGMock\u001b[0m found: \u001b[1;32mYES\u001b[0m \u001b[36m1.15.2\u001b[0m\nFound CMake: \u001b[1m/usr/bin/cmake\u001b[0m (3.30.3)\nRun-time dependency \u001b[1mjsoncdac\u001b[0m found: \u001b[1;31mNO\u001b[0m (tried pkgconfig and cmake)\nLooking for a fallback subproject for the dependency \u001b[1mjsoncdac\u001b[0m\nCloning into \u0027jsoncdac\u0027..",
       "revId": "d8ec13f24fa6b8c8c2020d03764be422e8ca215a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f579f77_fef9d1ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-03-26T03:15:41Z",
+      "side": 1,
+      "message": "thanks for letting me know.  will look at it.",
+      "parentUuid": "d1ecabd1_e0e93348",
+      "revId": "d8ec13f24fa6b8c8c2020d03764be422e8ca215a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
