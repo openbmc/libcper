@@ -85,9 +85,9 @@ size_t generate_section_arm(void **location,
 
 	//vendor specific
 	for (size_t i = 0; i < vendor_info_len; i++) {
-		//Ensure only ascii is used so we don't
+		//Ensure only printable ascii is used so we don't
 		// fail base64E
-		*cur_pos = cper_rand() % 127 + 1;
+		*cur_pos = cper_rand() % (0x7f - 0x20) + 0x20;
 		cur_pos += 1;
 	}
 

@@ -4,6 +4,7 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
+#include <ctype.h>
 #include <stdio.h>
 #include <json.h>
 #include <string.h>
@@ -464,11 +465,11 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 	int fru_text_len = 0;
 	for (; fru_text_len < len; fru_text_len++) {
 		char c = str[fru_text_len];
-		if (c < 0) {
-			fru_text_len = -1;
+		if (c == '\0') {
 			break;
 		}
-		if (c == '\0') {
+		if (!isprint(c)) {
+			fru_text_len = -1;
 			break;
 		}
 	}

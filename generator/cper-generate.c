@@ -148,8 +148,8 @@ EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 
 	//Ensure the FRU text is not null terminated early.
 	for (int i = 0; i < 20; i++) {
-		// FRU string can only be ASCII
-		descriptor->FruString[i] = rand() % 127 + 1;
+		// FRU string can only be printable ASCII
+		descriptor->FruString[i] = rand() % (0x7f - 0x20) + 0x20;
 
 		//Null terminate last byte.
 		if (i == 19) {
