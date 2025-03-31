@@ -350,27 +350,9 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 
 	//If validation bits indicate it exists, add FRU text.
 	if ((section_descriptor->SecValidMask & 0x2) >> 1) {
-		int fru_text_len = 0;
-		for (;
-		     fru_text_len < (int)sizeof(section_descriptor->FruString);
-		     fru_text_len++) {
-			char c = section_descriptor->FruString[fru_text_len];
-			if (c < 0) {
-				//cper_print_log("Fru text contains non-ASCII character\n");
-				fru_text_len = -1;
-				break;
-			}
-			if (c == '\0') {
-				break;
-			}
-		}
-		if (fru_text_len >= 0) {
-			json_object_object_add(
-				section_descriptor_ir, "fruText",
-				json_object_new_string_len(
-					section_descriptor->FruString,
-					fru_text_len));
-		}
+		add_untrusted_string(section_descriptor_ir, "fruText",
+				     section_descriptor->FruString,
+				     sizeof(section_descriptor->FruString));
 	}
 
 	//Section severity.
