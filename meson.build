@@ -28,6 +28,8 @@ if get_option('output-all-properties').enabled()
     add_project_arguments('-DOUTPUT_ALL_PROPERTIES', language: ['c', 'cpp'])
 endif
 
+add_project_arguments('-fsigned-char', language: 'c')
+
 project_description = 'libcper library'
 
 libcper_parse_sources = files(
