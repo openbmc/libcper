@@ -16,6 +16,24 @@
       "message": "Hi Ed, current CI failure is apparently due to all the non-printable ASCII strings in the examples:\n\n```\n            \"fruText\": \"\\u0015\\b2)u\\u0005\u003e4oT8Vo\\u0015\u0027 \\u0004#4\",\n```\n\nShould the examples be fixed?",
       "revId": "edf1bdc12a742ceaa9584b31b1bac2e481231d57",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba0c3572_38f367a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-04-01T04:54:02Z",
+      "side": 1,
+      "message": "(I accidentally marked this comment as resolved. Marking as unresolved)",
+      "parentUuid": "81339b3b_a8ed6039",
+      "revId": "edf1bdc12a742ceaa9584b31b1bac2e481231d57",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
