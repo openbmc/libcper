@@ -52,6 +52,24 @@
       "parentUuid": "ba0c3572_38f367a5",
       "revId": "edf1bdc12a742ceaa9584b31b1bac2e481231d57",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09b43e99_ba91826d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-04-01T18:25:25Z",
+      "side": 1,
+      "message": "Unless I am missing something obvious, I am not picking up what you mean by \"input\"... Do you mean fixing those blobs under `examples/` (and/or the generator)? Something along the lines of\n\n```diff\n \t//Ensure the FRU text is not null terminated early.\n \tfor (int i \u003d 0; i \u003c 20; i++) {\n \t\t// FRU string can only be ASCII\n-\t\tdescriptor-\u003eFruString[i] \u003d rand() % 127 + 1;\n+\t\tdescriptor-\u003eFruString[i] \u003d rand() % (0x80 - 0x20) + 0x20;\n```\n\n(and everywhere ASCII is mentioned) and rerun the tests with `GEN_EXAMPLES \u003d 1`? Or do you mean, replacing all the non-printable characters in the output json with another replacement characters?\n\nEither way, I tried stuff but roundtrip tests don\u0027t seem to be happy with what I am trying to do. It\u0027s late here so I will try again some time later.",
+      "parentUuid": "49efff56_93640be4",
+      "revId": "edf1bdc12a742ceaa9584b31b1bac2e481231d57",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
