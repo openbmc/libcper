@@ -16,6 +16,24 @@
       "message": "Ah sorry, this is backwards. Just a thought before I fix this: should there be some tests for this case?...",
       "revId": "d67799df03bb5dbcca78194fbbb9f50d57048a73",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc7c35cc_636c5381",
+        "filename": "cper-utils.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-04-01T04:38:30Z",
+      "side": 1,
+      "message": "My bad, the tests did fail right as I typed this comment :)",
+      "parentUuid": "1b5d1b80_306fb24f",
+      "revId": "d67799df03bb5dbcca78194fbbb9f50d57048a73",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
