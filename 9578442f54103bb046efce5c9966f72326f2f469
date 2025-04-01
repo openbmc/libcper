@@ -16,6 +16,24 @@
       "message": "Is it possible to make this code correct regardless of the compiler mode?  I assume comparing against something in limits.h or ifdefing in the check would work?\n\nFWIW, this check could also be improved to check for true ascii characters, rather than just checking for \u003e 0\n\nI would prefer to avoid enforcing certain compiler flags if possible.  If not, this patch is probably fine",
       "revId": "9578442f54103bb046efce5c9966f72326f2f469",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c77d388_433d3bf0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-04-01T03:30:20Z",
+      "side": 1,
+      "message": "We could probably cast any `char` that involves in athrimetics or comparisons into `unsigned char` first. Like so\n\n```\nunsigned char c \u003d (unsigned char)str[fru_text_len];\n```\n\nThen we need to check for `c \u003c 128` (and if true ascii characters I guess you mean `isprint(c) \u0026\u0026 isspace(c)`?)\n\nAnother way would be to use `uint8_t*` where raw bytes / unknown string encodings are used, and `char*` only for string literals (guaranteed to be ASCII). For example, in `include/libcper/Cper.h`:\n\n```\ntypedef struct {\n...\n\tCHAR8 BrandString[128];\n...\n} EFI_PROCESSOR_GENERIC_ERROR_DATA;\n```\n\nCould those be `UINT8` instead?\n\nStill, as someone who is unfamiliar with the codebase, aligning the author assumption with the compiler assumption seems to be the better bet for me, because that would eliminate this whole class of UB / wrong assumption bugs in one fell swoop. But if not and we are willing to do a sweeping change, I would say I am leaning towards eliminating using `char` for unknown encoding strings.",
+      "parentUuid": "5bee8449_a773040f",
+      "revId": "9578442f54103bb046efce5c9966f72326f2f469",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
