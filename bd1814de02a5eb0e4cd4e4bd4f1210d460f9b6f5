@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13a69d20_f3705ca5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-04-04T05:16:53Z",
+      "side": 1,
+      "message": "I managed to fix",
+      "revId": "bd1814de02a5eb0e4cd4e4bd4f1210d460f9b6f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "639199d0_46620726",
+        "filename": "cper-utils.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-04-04T05:16:53Z",
+      "side": 1,
+      "message": "I missed this in the previous changesets. `\\0` is non-printable so it has to be checked first.",
+      "range": {
+        "startLine": 467,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 3
+      },
+      "revId": "bd1814de02a5eb0e4cd4e4bd4f1210d460f9b6f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
