@@ -20,11 +20,6 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 	}
 
 	EFI_NVIDIA_ERROR_DATA *nvidia_error = (EFI_NVIDIA_ERROR_DATA *)section;
-	if (size < sizeof(EFI_NVIDIA_ERROR_DATA) +
-			   nvidia_error->NumberRegs *
-				   sizeof(EFI_NVIDIA_REGISTER_DATA)) {
-		return NULL;
-	}
 
 	json_object *section_ir = json_object_new_object();
 
@@ -56,11 +51,21 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 	json_object *regarr = json_object_new_array();
 	EFI_NVIDIA_REGISTER_DATA *regPtr = nvidia_error->Register;
 	for (int i = 0; i < nvidia_error->NumberRegs; i++, regPtr++) {
-		json_object *reg = json_object_new_object();
-		json_object_object_add(reg, "address",
-				       json_object_new_uint64(regPtr->Address));
-		json_object_object_add(reg, "value",
-				       json_object_new_uint64(regPtr->Value));
+		json_object *reg = NULL;
+		if (sizeof(EFI_NVIDIA_ERROR_DATA) +
+			    i * sizeof(EFI_NVIDIA_REGISTER_DATA) <
+		    size) {
+			reg = json_object_new_object();
+			json_object_object_add(
+				reg, "address",
+				json_object_new_uint64(regPtr->Address));
+			json_object_object_add(
+				reg, "value",
+				json_object_new_uint64(regPtr->Value));
+		} else {
+			reg = json_object_new_null();
+		}
+
 		json_object_array_add(regarr, reg);
 	}
 	json_object_object_add(section_ir, "registers", regarr);
