@@ -36,8 +36,6 @@ owners:
 
 reviewers:
 - patrick@stwcx.xyz
-- aadriance@nvidia.com
-- krajagopalan@nvidia.com
 - anagarkatti@nvidia.com
 
 openbmc:
@@ -47,9 +45,5 @@ openbmc:
 - name: Patrick Williams
   email: patrick@stwcx.xyz
   discord: stwcx
-- name: Andrew Adriance
-  email: aadriance@nvidia.com
-- name: Karthik Rajagopalan
-  email: krajagopalan@nvidia.com
 - name: Aushim Nagarkatti
   email: anagarkatti@nvidia.com
