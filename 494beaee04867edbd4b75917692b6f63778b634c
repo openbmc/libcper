@@ -48,6 +48,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e38a4e5e_f7dc2499",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-04-11T20:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f49db59_2b2421ab",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "494beaee04867edbd4b75917692b6f63778b634c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee515b27_4f3bf562",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Correct, bitbake wouldn\u0027t change.",
       "parentUuid": "ee515b27_4f3bf562",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "494beaee04867edbd4b75917692b6f63778b634c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc921051_b8bb00df",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-04-11T20:43:16Z",
+      "side": 1,
+      "message": "Talked with Patrick offline.",
+      "parentUuid": "7ae6103f_7ab3cd81",
       "range": {
         "startLine": 12,
         "startChar": 0,
