@@ -38,7 +38,7 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 
 	if (remaining < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
 		cper_print_log(
-			"Invalid CPER file: Invalid header (incorrect signature).\n");
+			"Invalid CPER file: Invalid header (not enough bytes).\n");
 		goto fail;
 	}
 
@@ -48,7 +48,8 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 	remaining -= sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
 	if (header->SignatureStart != EFI_ERROR_RECORD_SIGNATURE_START) {
 		cper_print_log(
-			"Invalid CPER file: Invalid header (incorrect signature).\n");
+			"Invalid CPER file: Invalid header (incorrect signature). %x\n",
+			header->SignatureStart);
 		goto fail;
 	}
 	if (header->SectionCount == 0) {
