@@ -149,6 +149,7 @@ void json_to_cper(char *in_file, char *out_file)
 	if (cper_file == NULL) {
 		printf("Could not open output file '%s', file handle returned null.\n",
 		       out_file);
+		json_object_put(ir);
 		return;
 	}
 
