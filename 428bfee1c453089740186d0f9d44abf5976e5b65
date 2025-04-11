@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a42b3c8_373390aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 36
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-04-11T18:36:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0bcf0ac_9d3d3759",
+      "revId": "428bfee1c453089740186d0f9d44abf5976e5b65",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "102a38f6_ab486561",
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "cper-utils.h/c",
       "parentUuid": "102a38f6_ab486561",
+      "revId": "428bfee1c453089740186d0f9d44abf5976e5b65",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a72aaf7_cacca4de",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 36
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-04-11T18:36:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5944c13e_0b555f7e",
       "revId": "428bfee1c453089740186d0f9d44abf5976e5b65",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
