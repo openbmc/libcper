@@ -2,10 +2,9 @@ project(
     'libcper',
     'c',
     version: '0.1',
-    meson_version: '>=1.1.1',
+    meson_version: '>=1.2.0',
     default_options: [
         'c_std=c18',
-        'cpp_std=c++23',
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
         'warning_level=2',
         'werror=true',
@@ -74,7 +73,11 @@ libcper_generate_sources = files(
 
 cc = meson.get_compiler('c')
 
-json_c_dep = dependency('json-c')
+json_c = dependency('json-c', default_options: {'warning_level': '0'})
+json_c_dep = declare_dependency(
+    include_directories: include_directories('subprojects'),
+    dependencies: json_c,
+)
 libcper_include = ['include']
 libcper_include_dir = include_directories(libcper_include, is_system: true)
 
@@ -89,6 +92,8 @@ libcper_parse_sources += files(
 
 subdir('include')
 
+install = get_option('install').allowed()
+
 libcper_parse = library(
     'cper-parse',
     libcper_parse_sources,
@@ -97,8 +102,7 @@ libcper_parse = library(
     include_directories: libcper_include_dir,
     c_args: '-Wno-address-of-packed-member',
     dependencies: [json_c_dep],
-    install: true,
-    install_dir: get_option('libdir'),
+    install: install,
 )
 libcper_parse_dep = declare_dependency(
     include_directories: libcper_include_dir,
@@ -117,20 +121,21 @@ libcper_generate = library(
     include_directories: libcper_include_dir,
     dependencies: [json_c_dep],
     link_with: [libcper_parse],
-    install: true,
-    install_dir: get_option('libdir'),
+    install: install,
 )
 libcper_generate_dep = declare_dependency(
     include_directories: libcper_include_dir,
     link_with: libcper_generate,
 )
 
-import('pkgconfig').generate(
-    libcper_parse,
-    name: meson.project_name(),
-    version: meson.project_version(),
-    description: 'C bindings for parsing CPER',
-)
+if get_option('pkgconfig').allowed()
+    import('pkgconfig').generate(
+        libcper_parse,
+        name: meson.project_name(),
+        version: meson.project_version(),
+        description: 'C bindings for parsing CPER',
+    )
+endif
 
 if get_option('utility').allowed()
     executable(
@@ -139,7 +144,7 @@ if get_option('utility').allowed()
         include_directories: libcper_include_dir,
         dependencies: [json_c_dep],
         link_with: [libcper_parse, libcper_generate],
-        install: true,
+        install: install,
         install_dir: get_option('bindir'),
     )
 
@@ -149,7 +154,7 @@ if get_option('utility').allowed()
         edk_sources,
         include_directories: libcper_include_dir,
         link_with: [libcper_parse, libcper_generate],
-        install: true,
+        install: install,
         install_dir: get_option('bindir'),
     )
 endif
@@ -160,4 +165,15 @@ if get_option('output-all-properties').disabled()
     if get_option('tests').allowed()
         subdir('tests')
     endif
+endif
+
+if get_option('python').allowed()
+    py = import('python').find_installation(pure: false)
+    py.extension_module(
+        'cper',
+        'pycper.c',
+        c_args: ['-DLIBCPER_PYTHON'],
+        dependencies: [libcper_parse_dep, json_c_dep],
+        install: true,
+    )
 endif

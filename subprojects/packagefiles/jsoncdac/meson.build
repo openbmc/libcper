@@ -23,7 +23,7 @@ deps = []
 add_project_arguments('-Wno-unused-parameter', language: 'c')
 add_project_arguments('-Wformat=0', language: 'c')
 
-jsonc = dependency('json-c')
+jsonc = dependency('json-c', static: true)
 deps += jsonc
 
 jsoncdac_sources = files(
@@ -50,10 +50,15 @@ if m_dep.found()
     deps += m_dep
 endif
 
-jsoncdac = library('jsoncdac', jsoncdac_sources, dependencies: deps)
+jsoncdac = library(
+    'jsoncdac',
+    jsoncdac_sources,
+    dependencies: deps,
+    include_directories: include_directories('..'),
+)
 
 jsoncdac_dep = declare_dependency(
     link_with: jsoncdac,
     dependencies: deps,
-    include_directories: include_directories('include'),
+    include_directories: include_directories('include', '..'),
 )
