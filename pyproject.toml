@@ -1,0 +1,35 @@
+[build-system]
+build-backend = 'mesonpy'
+requires = ['meson-python']
+
+[project]
+name = 'cper'
+version = '0.0.4'
+description = 'Package for decoding CPER values'
+license = {file = 'LICENSE'}
+authors = [
+  {name = 'Ed Tanous', email = 'ed@tanous.net'},
+]
+requires-python = ">3.10"
+
+[tool.meson-python.args]
+setup = [
+  '-Ddefault_library=static',
+  '-Dinstall=disabled',
+  '-Dpkgconfig=disabled',
+  '-Dpython=enabled',
+  '-Dtests=disabled',
+  '-Dtests=disabled',
+  '-Dutility=disabled',
+]
+install = ['--skip-subprojects']
+
+[tool.cibuildwheel]
+archs = "auto"
+skip = "*pp*"
+manylinux-x86_64-image = "musllinux_1_2"
+manylinux-i686-image = "musllinux_1_2"
+manylinux-aarch64-image = "musllinux_1_2"
+manylinux-ppc64le-image = "musllinux_1_2"
+manylinux-s390x-image = "musllinux_1_2"
+manylinux-armv7l-image = "musllinux_1_2"
