@@ -1,7 +1,8 @@
 [wrap-git]
-revision = json-c-0.18-20240915
+revision = HEAD
 url = https://github.com/json-c/json-c.git
 patch_directory = json-c
 
 [provide]
 json-c = json_c_dep
+
