@@ -1,0 +1,25 @@
+[build-system]
+build-backend = 'mesonpy'
+requires = ['meson-python']
+
+[project]
+name = 'cper'
+version = '0.0.1'
+description = 'Package for decoding CPER values'
+license = {file = 'LICENSE'}
+authors = [
+  {name = 'Ed Tanous', email = 'ed@tanous.net'},
+]
+
+[tool.meson-python.args]
+setup = [
+  '-Dtests=disabled',
+  '-Dutility=disabled',
+  '-Dtests=disabled',
+  '-Dpkgconfig=disabled',
+  '-Dpython=enabled',
+  '-Dinstall=disabled',
+  '-Ddefault_library=static',
+]
+dist = ['--include-subprojects']
+install = ['--include-subprojects']
