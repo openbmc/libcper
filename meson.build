@@ -89,6 +89,8 @@ libcper_parse_sources += files(
 
 subdir('include')
 
+install = get_option('install').allowed()
+
 libcper_parse = library(
     'cper-parse',
     libcper_parse_sources,
@@ -97,8 +99,7 @@ libcper_parse = library(
     include_directories: libcper_include_dir,
     c_args: '-Wno-address-of-packed-member',
     dependencies: [json_c_dep],
-    install: true,
-    install_dir: get_option('libdir'),
+    install: install,
 )
 libcper_parse_dep = declare_dependency(
     include_directories: libcper_include_dir,
@@ -117,20 +118,21 @@ libcper_generate = library(
     include_directories: libcper_include_dir,
     dependencies: [json_c_dep],
     link_with: [libcper_parse],
-    install: true,
-    install_dir: get_option('libdir'),
+    install: install,
 )
 libcper_generate_dep = declare_dependency(
     include_directories: libcper_include_dir,
     link_with: libcper_generate,
 )
 
-import('pkgconfig').generate(
-    libcper_parse,
-    name: meson.project_name(),
-    version: meson.project_version(),
-    description: 'C bindings for parsing CPER',
-)
+if get_option('pkgconfig').allowed()
+    import('pkgconfig').generate(
+        libcper_parse,
+        name: meson.project_name(),
+        version: meson.project_version(),
+        description: 'C bindings for parsing CPER',
+    )
+endif
 
 if get_option('utility').allowed()
     executable(
@@ -139,7 +141,7 @@ if get_option('utility').allowed()
         include_directories: libcper_include_dir,
         dependencies: [json_c_dep],
         link_with: [libcper_parse, libcper_generate],
-        install: true,
+        install: install,
         install_dir: get_option('bindir'),
     )
 
@@ -149,7 +151,7 @@ if get_option('utility').allowed()
         edk_sources,
         include_directories: libcper_include_dir,
         link_with: [libcper_parse, libcper_generate],
-        install: true,
+        install: install,
         install_dir: get_option('bindir'),
     )
 endif
@@ -160,4 +162,14 @@ if get_option('output-all-properties').disabled()
     if get_option('tests').allowed()
         subdir('tests')
     endif
+endif
+
+if get_option('python').allowed()
+    py = import('python').find_installation(pure: false)
+    py.extension_module(
+        'cper',
+        'pycper.c',
+        dependencies: [libcper_parse_dep, json_c_dep],
+        install: true,
+    )
 endif
