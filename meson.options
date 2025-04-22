@@ -5,7 +5,25 @@ option(
     description: 'Build fuzz targets',
 )
 option('tests', type: 'feature', value: 'enabled', description: 'Build tests')
-option('utility', type: 'feature', value: 'enabled', description: 'Utility')
+option(
+    'utility',
+    type: 'feature',
+    value: 'enabled',
+    description: 'Compile CLI utilities',
+)
+option(
+    'python',
+    type: 'feature',
+    value: 'disabled',
+    description: 'Build python extensions',
+)
+option('install', type: 'feature', value: 'enabled', description: 'Install')
+option(
+    'pkgconfig',
+    type: 'feature',
+    value: 'enabled',
+    description: 'Install pkgconfig',
+)
 option(
     'output-all-properties',
     type: 'feature',
