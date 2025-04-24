@@ -373,6 +373,8 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 	int cper_buf_hex_len =
 		to_hex((unsigned char *)cper_buf, cper_buf_size, &cper_buf_hex);
 
+	printf("%.*s\n", cper_buf_hex_len, cper_buf_hex);
+	printf("%.*s\n", buf_hex_len, buf_hex);
 	assert(buf_hex_len == cper_buf_hex_len);
 	assert(memcmp(buf_hex, cper_buf_hex, buf_hex_len) == 0);
 
