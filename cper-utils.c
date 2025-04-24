@@ -498,6 +498,40 @@ void add_int(json_object *register_ir, const char *field_name, int value)
 			       json_object_new_uint64(value));
 }
 
+static void add_int_hex_common(json_object *register_ir, const char *field_name,
+			       UINT64 value, int len)
+{
+	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
+	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%0*llX", len,
+		 value);
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_string(hexstring_buf));
+}
+
+void add_int_hex_8(json_object *register_ir, const char *field_name,
+		   UINT8 value)
+{
+	add_int_hex_common(register_ir, field_name, value, 2);
+}
+
+void add_int_hex_16(json_object *register_ir, const char *field_name,
+		    UINT16 value)
+{
+	add_int_hex_common(register_ir, field_name, value, 4);
+}
+
+void add_int_hex_24(json_object *register_ir, const char *field_name,
+		    UINT64 value)
+{
+	add_int_hex_common(register_ir, field_name, value, 6);
+}
+
+void add_int_hex_64(json_object *register_ir, const char *field_name,
+		    UINT64 value)
+{
+	add_int_hex_common(register_ir, field_name, value, 8);
+}
+
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value)
 {
 	json_object_object_add(register_ir, field_name,
