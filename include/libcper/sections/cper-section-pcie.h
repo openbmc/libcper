@@ -30,6 +30,13 @@ extern "C" {
 			  "Root Complex Integrated Endpoint Device",           \
 			  "Root Complex Event Collector" }
 
+struct class_code {
+	UINT8 base;
+	UINT8 sub;
+	UINT8 programming;
+	const char *name;
+};
+
 json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size);
 void ir_section_pcie_to_cper(json_object *section, FILE *out);
 
