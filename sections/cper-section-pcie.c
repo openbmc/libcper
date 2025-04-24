@@ -16,6 +16,282 @@
 json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error);
 json_object *pcie_aer_to_ir(EFI_PCIE_ERROR_DATA *pcie_error);
 
+#define ANYP 0xFF
+
+struct class_code pci_class_codes[] = {
+	// Base Class 00h - Legacy devices
+	{ 0x00, 0x00, 0x00,
+	  "All currently implemented devices except VGA-compatible devices" },
+	{ 0x00, 0x01, 0x00, "VGA-compatible device" },
+
+	// Base Class 01h - Mass storage controllers
+	{ 0x01, 0x00, 0x00, "SCSI controller - vendor-specific interface" },
+	{ 0x01, 0x00, 0x11,
+	  "SCSI storage device - SCSI over PCI Express (SOP) with PQI" },
+	{ 0x01, 0x00, 0x12,
+	  "SCSI controller - SCSI over PCI Express (SOP) with PQI" },
+	{ 0x01, 0x00, 0x13,
+	  "SCSI storage device and SCSI controller - SOP with PQI" },
+	{ 0x01, 0x00, 0x21,
+	  "SCSI storage device - SOP with NVM Express interface" },
+	{ 0x01, 0x01, ANYP, "IDE controller" },
+	{ 0x01, 0x02, 0x00,
+	  "Floppy disk controller - vendor-specific interface" },
+	{ 0x01, 0x03, 0x00, "IPI bus controller - vendor-specific interface" },
+	{ 0x01, 0x04, 0x00, "RAID controller - vendor-specific interface" },
+	{ 0x01, 0x05, 0x20,
+	  "ATA controller with ADMA interface - single stepping" },
+	{ 0x01, 0x05, 0x30,
+	  "ATA controller with ADMA interface - continuous operation" },
+	{ 0x01, 0x06, 0x00,
+	  "Serial ATA controller - vendor-specific interface" },
+	{ 0x01, 0x06, 0x01, "Serial ATA controller - AHCI interface" },
+	{ 0x01, 0x06, 0x02, "Serial Storage Bus Interface" },
+	{ 0x01, 0x07, 0x00,
+	  "Serial Attached SCSI (SAS) controller - vendor specific interface" },
+	{ 0x01, 0x08, 0x00,
+	  "Non-volatile memory subsystem - vendor-specific interface" },
+	{ 0x01, 0x08, 0x01,
+	  "Non-volatile memory subsystem - NVMHCI interface" },
+	{ 0x01, 0x08, 0x02, "NVM Express (NVMe) I/O controller" },
+	{ 0x01, 0x08, 0x03, "NVM Express (NVMe) administrative controller" },
+	{ 0x01, 0x09, 0x00,
+	  "Universal Flash Storage (UFS) controller - vendor specific interface" },
+	{ 0x01, 0x09, 0x01,
+	  "Universal Flash Storage (UFS) controller - UFSHCI" },
+	{ 0x01, 0x80, 0x00,
+	  "Other mass storage controller - vendor-specific interface" },
+
+	// Base Class 02h - Network controllers
+	{ 0x02, 0x00, 0x00, "Ethernet controller" },
+	{ 0x02, 0x00, 0x01,
+	  "Ethernet Controller with IDPF compliant Interface" },
+	{ 0x02, 0x01, 0x00, "Token Ring controller" },
+	{ 0x02, 0x02, 0x00, "FDDI controller" },
+	{ 0x02, 0x03, 0x00, "ATM controller" },
+	{ 0x02, 0x04, 0x00, "ISDN controller" },
+	{ 0x02, 0x05, 0x00, "WorldFip controller" },
+	{ 0x02, 0x06, ANYP, "PICMG 2.14 Multi Computing" },
+	{ 0x02, 0x07, 0x00, "InfiniBand Controller" },
+	{ 0x02, 0x08, 0x00, "Host fabric controller - vendor-specific" },
+	{ 0x02, 0x80, 0x00, "Other network controller" },
+
+	// Base Class 03h - Display controllers
+	{ 0x03, 0x00, 0x00, "VGA-compatible controller" },
+	{ 0x03, 0x00, 0x01, "8514-compatible controller" },
+	{ 0x03, 0x01, 0x00, "XGA controller" },
+	{ 0x03, 0x02, 0x00, "3D controller" },
+	{ 0x03, 0x80, 0x00, "Other display controller" },
+
+	// Base Class 04h - Multimedia devices
+	{ 0x04, 0x00, 0x00, "Video device - vendor specific interface" },
+	{ 0x04, 0x01, 0x00, "Audio device - vendor specific interface" },
+	{ 0x04, 0x02, 0x00,
+	  "Computer telephony device - vendor specific interface" },
+	{ 0x04, 0x03, 0x00, "High Definition Audio (HD-A) 1.0 compatible" },
+	{ 0x04, 0x03, 0x80,
+	  "High Definition Audio (HD-A) 1.0 compatible with vendor extensions" },
+	{ 0x04, 0x80, 0x00,
+	  "Other multimedia device - vendor specific interface" },
+	// Base Class 05h - Memory controllers
+	{ 0x05, 0x00, 0x00, "RAM" },
+	{ 0x05, 0x01, 0x00, "Flash" },
+	{ 0x05, 0x02, 0x00, "CXL Memory Device - vendor specific interface" },
+	{ 0x05, 0x02, 0x10,
+	  "CXL Memory Device following CXL 2.0 or later specification" },
+	{ 0x05, 0x80, 0x00, "Other memory controller" },
+
+	// Base Class 06h - Bridge devices
+	{ 0x06, 0x00, 0x00, "Host bridge" },
+	{ 0x06, 0x01, 0x00, "ISA bridge" },
+	{ 0x06, 0x02, 0x00, "EISA bridge" },
+	{ 0x06, 0x03, 0x00, "MCA bridge" },
+	{ 0x06, 0x04, 0x00, "PCI-to-PCI bridge" },
+	{ 0x06, 0x04, 0x01, "Subtractive Decode PCI-to-PCI bridge" },
+	{ 0x06, 0x05, 0x00, "PCMCIA bridge" },
+	{ 0x06, 0x06, 0x00, "NuBus bridge" },
+	{ 0x06, 0x07, 0x00, "CardBus bridge" },
+	{ 0x06, 0x08, ANYP, "RACEway bridge" },
+	{ 0x06, 0x09, 0x40,
+	  "Semi-transparent PCI-to-PCI bridge - primary bus towards host" },
+	{ 0x06, 0x09, 0x80,
+	  "Semi-transparent PCI-to-PCI bridge - secondary bus towards host" },
+	{ 0x06, 0x0A, 0x00, "InfiniBand-to-PCI host bridge" },
+	{ 0x06, 0x0B, 0x00,
+	  "Advanced Switching to PCI host bridge - Custom Interface" },
+	{ 0x06, 0x0B, 0x01,
+	  "Advanced Switching to PCI host bridge - ASI-SIG Defined Portal Interface" },
+	{ 0x06, 0x80, 0x00, "Other bridge device" },
+
+	// Base Class 07h - Simple communication controllers
+	{ 0x07, 0x00, 0x00, "Generic XT-compatible serial controller" },
+	{ 0x07, 0x00, 0x01, "16450-compatible serial controller" },
+	{ 0x07, 0x00, 0x02, "16550-compatible serial controller" },
+	{ 0x07, 0x00, 0x03, "16650-compatible serial controller" },
+	{ 0x07, 0x00, 0x04, "16750-compatible serial controller" },
+	{ 0x07, 0x00, 0x05, "16850-compatible serial controller" },
+	{ 0x07, 0x00, 0x06, "16950-compatible serial controller" },
+	{ 0x07, 0x01, 0x00, "Parallel port" },
+	{ 0x07, 0x01, 0x01, "Bi-directional parallel port" },
+	{ 0x07, 0x01, 0x02, "ECP 1.X compliant parallel port" },
+	{ 0x07, 0x01, 0x03, "IEEE1284 controller" },
+	{ 0x07, 0x01, 0xFE, "IEEE1284 target device" },
+	{ 0x07, 0x02, 0x00, "Multiport serial controller" },
+	{ 0x07, 0x03, 0x00, "Generic modem" },
+	{ 0x07, 0x03, 0x01,
+	  "Hayes compatible modem - 16450-compatible interface" },
+	{ 0x07, 0x03, 0x02,
+	  "Hayes compatible modem - 16550-compatible interface" },
+	{ 0x07, 0x03, 0x03,
+	  "Hayes compatible modem - 16650-compatible interface" },
+	{ 0x07, 0x03, 0x04,
+	  "Hayes compatible modem - 16750-compatible interface" },
+	{ 0x07, 0x04, 0x00, "GPIB (IEEE 488.1/2) controller" },
+	{ 0x07, 0x05, 0x00, "Smart Card" },
+	{ 0x07, 0x80, 0x00, "Other communications device" },
+
+	// Base Class 08h - Base system peripherals
+	{ 0x08, 0x00, 0x00, "Generic 8259 PIC" },
+	{ 0x08, 0x00, 0x01, "ISA PIC" },
+	{ 0x08, 0x00, 0x02, "EISA PIC" },
+	{ 0x08, 0x00, 0x10, "I/O APIC interrupt controller" },
+	{ 0x08, 0x00, 0x20, "I/O(x) APIC interrupt controller" },
+	{ 0x08, 0x01, 0x00, "Generic 8237 DMA controller" },
+	{ 0x08, 0x01, 0x01, "ISA DMA controller" },
+	{ 0x08, 0x01, 0x02, "EISA DMA controller" },
+	{ 0x08, 0x02, 0x00, "Generic 8254 system timer" },
+	{ 0x08, 0x02, 0x01, "ISA system timer" },
+	{ 0x08, 0x02, 0x02, "EISA system timers" },
+	{ 0x08, 0x02, 0x03, "High Performance Event Timer" },
+	{ 0x08, 0x03, 0x00, "Generic RTC controller" },
+	{ 0x08, 0x03, 0x01, "ISA RTC controller" },
+	{ 0x08, 0x04, 0x00, "Generic PCI Hot-Plug controller" },
+	{ 0x08, 0x05, 0x00, "SD Host controller" },
+	{ 0x08, 0x06, 0x00, "IOMMU" },
+	{ 0x08, 0x07, 0x00, "Root Complex Event Collector" },
+	{ 0x08, 0x08, 0x00, "Time Card - vendor-specific interface" },
+	{ 0x08, 0x08, 0x01, "Time Card - OCP TAP interface" },
+	{ 0x08, 0x80, 0x00, "Other system peripheral" },
+
+	// Base Class 09h - Input devices
+	{ 0x09, 0x00, 0x00, "Keyboard controller" },
+	{ 0x09, 0x01, 0x00, "Digitizer (pen)" },
+	{ 0x09, 0x02, 0x00, "Mouse controller" },
+	{ 0x09, 0x03, 0x00, "Scanner controller" },
+	{ 0x09, 0x04, 0x00, "Gameport controller (generic)" },
+	{ 0x09, 0x04, 0x10, "Gameport controller - legacy ports" },
+	{ 0x09, 0x80, 0x00, "Other input controller" },
+
+	// Base Class 0Ah - Docking stations
+	{ 0x0A, 0x00, 0x00, "Generic docking station" },
+	{ 0x0A, 0x80, 0x00, "Other type of docking station" },
+
+	// Base Class 0Bh - Processors
+	{ 0x0B, 0x00, 0x00, "386" },
+	{ 0x0B, 0x01, 0x00, "486" },
+	{ 0x0B, 0x02, 0x00, "Pentium" },
+	{ 0x0B, 0x10, 0x00, "Alpha" },
+	{ 0x0B, 0x20, 0x00, "PowerPC" },
+	{ 0x0B, 0x30, 0x00, "MIPS" },
+	{ 0x0B, 0x40, 0x00, "Co-processor" },
+	{ 0x0B, 0x80, 0x00, "Other processors" },
+
+	// Base Class 0Ch - Serial bus controllers
+	{ 0x0C, 0x00, 0x00, "IEEE 1394 (FireWire)" },
+	{ 0x0C, 0x00, 0x10, "IEEE 1394 following 1394 OpenHCI specification" },
+	{ 0x0C, 0x01, 0x00, "ACCESS.bus" },
+	{ 0x0C, 0x02, 0x00, "SSA" },
+	{ 0x0C, 0x03, 0x00, "USB - Universal Host Controller Specification" },
+	{ 0x0C, 0x03, 0x10, "USB - Open Host Controller Specification" },
+	{ 0x0C, 0x03, 0x20, "USB2 host controller - Intel EHCI" },
+	{ 0x0C, 0x03, 0x30, "USB3 host controller - Intel xHCI" },
+	{ 0x0C, 0x03, 0x40, "USB4 Host Interface" },
+	{ 0x0C, 0x03, 0x80, "USB - no specific Programming Interface" },
+	{ 0x0C, 0x03, 0xFE, "USB device (not host controller)" },
+	{ 0x0C, 0x04, 0x00, "Fibre Channel" },
+	{ 0x0C, 0x05, 0x00, "SMBus (System Management Bus)" },
+	{ 0x0C, 0x07, 0x00, "IPMI SMIC Interface" },
+	{ 0x0C, 0x07, 0x01, "IPMI Keyboard Controller Style Interface" },
+	{ 0x0C, 0x07, 0x02, "IPMI Block Transfer Interface" },
+	{ 0x0C, 0x08, 0x00, "SERCOS Interface Standard" },
+	{ 0x0C, 0x09, 0x00, "CANbus" },
+	{ 0x0C, 0x0A, 0x00, "MIPI I3C Host Controller Interface" },
+	{ 0x0C, 0x0B, 0x00, "CXL Fabric Management Host Interface controller" },
+	{ 0x0C, 0x0C, 0x00, "Memory Mapped Buffer Interface (MMBI) endpoint" },
+	{ 0x0C, 0x80, 0x00, "Other Serial Bus Controllers" },
+
+	// Base Class 0Dh - Wireless controllers
+	{ 0x0D, 0x00, 0x00, "iRDA compatible controller" },
+	{ 0x0D, 0x01, 0x00, "Consumer IR controller" },
+	{ 0x0D, 0x01, 0x10, "UWB Radio controller" },
+	{ 0x0D, 0x10, 0x00, "RF controller" },
+	{ 0x0D, 0x11, 0x00, "Bluetooth" },
+	{ 0x0D, 0x12, 0x00, "Broadband" },
+	{ 0x0D, 0x20, 0x00, "Ethernet (802.11a - 5 GHz)" },
+	{ 0x0D, 0x21, 0x00, "Ethernet (802.11b - 2.4 GHz)" },
+	{ 0x0D, 0x40, 0x00, "Cellular controller/modem" },
+	{ 0x0D, 0x41, 0x00,
+	  "Cellular controller/modem plus Ethernet (802.11)" },
+	{ 0x0D, 0x80, 0x00, "Other type of wireless controller" },
+
+	// Base Class 0Eh - Intelligent I/O controllers
+	{ 0x0E, 0x00, 0x00,
+	  "I2O Architecture Specification 1.0 Message FIFO at offset 040h" },
+	{ 0x0E, 0x00, ANYP, "Message FIFO at offset 040h" },
+
+	// Base Class 0Fh - Satellite communication controllers
+	{ 0x0F, 0x01, 0x00, "TV" },
+	{ 0x0F, 0x02, 0x00, "Audio" },
+	{ 0x0F, 0x03, 0x00, "Voice" },
+	{ 0x0F, 0x04, 0x00, "Data" },
+	{ 0x0F, 0x80, 0x00, "Other satellite communication controller" },
+
+	// Base Class 10h - Encryption/Decryption controllers
+	{ 0x10, 0x00, 0x00,
+	  "Network and computing encryption and decryption controller" },
+	{ 0x10, 0x10, 0x00,
+	  "Entertainment encryption and decryption controller" },
+	{ 0x10, 0x20, 0x00, "Trusted Platform Module (TPM)" },
+	{ 0x10, 0x80, 0x00, "Other encryption and decryption controller" },
+
+	// Base Class 11h - Data acquisition and signal processing controllers
+	{ 0x11, 0x00, 0x00, "DPIO modules" },
+	{ 0x11, 0x01, 0x00, "Performance counters" },
+	{ 0x11, 0x10, 0x00,
+	  "Communications synchronization plus time and frequency test/measurement" },
+	{ 0x11, 0x20, 0x00, "Management card" },
+	{ 0x11, 0x80, 0x00,
+	  "Other data acquisition/signal processing controllers" },
+
+	// Base Class 12h - Processing accelerators
+	{ 0x12, 0x00, 0x00,
+	  "Processing Accelerator - vendor-specific interface" },
+	{ 0x12, 0x01, 0x00,
+	  "SNIA Smart Data Accelerator Interface (SDXI) controller" },
+
+	// Base Class 13h - Non-Essential Instrumentation
+	{ 0x13, 0x00, 0x00,
+	  "Non-Essential Instrumentation Function - Vendor specific interface" },
+
+	// Base Class FFh - Device does not fit in any defined classes
+	{ 0xFF, 0x00, 0x00, "Device does not fit in any defined classes" }
+};
+
+const char *get_class_code_name(UINT8 base, UINT8 sub, UINT8 programming)
+{
+	for (size_t i = 0;
+	     i < sizeof(pci_class_codes) / sizeof(pci_class_codes[0]); i++) {
+		if (pci_class_codes[i].base == base &&
+		    pci_class_codes[i].sub == sub) {
+			if (pci_class_codes[i].programming == programming ||
+			    pci_class_codes[i].programming == ANYP) {
+				return pci_class_codes[i].name;
+			}
+		}
+	}
+	return NULL;
+}
+
 //Converts a single PCIe CPER section into JSON IR.
 json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size)
 {
@@ -66,47 +342,62 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size)
 	}
 
 	//PCIe Device ID.
-	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
 		json_object *device_id = json_object_new_object();
-		UINT64 class_id = (pcie_error->DevBridge.ClassCode[0] << 16) +
+
+		UINT64 class_id = (pcie_error->DevBridge.ClassCode[2] << 16) +
 				  (pcie_error->DevBridge.ClassCode[1] << 8) +
-				  pcie_error->DevBridge.ClassCode[2];
-		json_object_object_add(
-			device_id, "vendorID",
-			json_object_new_uint64(pcie_error->DevBridge.VendorId));
-		json_object_object_add(
-			device_id, "deviceID",
-			json_object_new_uint64(pcie_error->DevBridge.DeviceId));
+				  pcie_error->DevBridge.ClassCode[0];
+		const char *class_name =
+			get_class_code_name(pcie_error->DevBridge.ClassCode[2],
+					    pcie_error->DevBridge.ClassCode[1],
+					    pcie_error->DevBridge.ClassCode[0]);
+		if (class_name != NULL) {
+			json_object_object_add(
+				device_id, "class",
+				json_object_new_string(class_name));
+		}
+		add_int_hex_16(device_id, "deviceID_Hex",
+			       pcie_error->DevBridge.DeviceId);
+		add_int_hex_16(device_id, "vendorID_Hex",
+			       pcie_error->DevBridge.VendorId);
+		add_int_hex_24(device_id, "classCode_Hex", class_id);
+		add_int_hex_8(device_id, "functionNumber_Hex",
+			      pcie_error->DevBridge.Function);
+		add_int_hex_8(device_id, "deviceNumber_Hex",
+			      pcie_error->DevBridge.Device);
+		add_int_hex_8(device_id, "segmentNumber_Hex",
+			      pcie_error->DevBridge.Segment);
+		add_int_hex_8(device_id, "primaryOrDeviceBusNumber_Hex",
+			      pcie_error->DevBridge.PrimaryOrDeviceBus);
+		add_int_hex_8(device_id, "secondaryBusNumber_Hex",
+			      pcie_error->DevBridge.SecondaryBus);
+		add_int_hex_8(device_id, "slotNumber_Hex",
+			      pcie_error->DevBridge.Slot.Number);
+		add_int(device_id, "deviceID", pcie_error->DevBridge.DeviceId);
 
-		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%0X",
-			 pcie_error->DevBridge.DeviceId);
-		json_object_object_add(device_id, "deviceIDHex",
-				       json_object_new_string(hexstring_buf));
+		add_int(device_id, "vendorID", pcie_error->DevBridge.VendorId);
 
-		json_object_object_add(device_id, "classCode",
-				       json_object_new_uint64(class_id));
-		json_object_object_add(
-			device_id, "functionNumber",
-			json_object_new_uint64(pcie_error->DevBridge.Function));
-		json_object_object_add(
-			device_id, "deviceNumber",
-			json_object_new_uint64(pcie_error->DevBridge.Device));
-		json_object_object_add(
-			device_id, "segmentNumber",
-			json_object_new_uint64(pcie_error->DevBridge.Segment));
-		json_object_object_add(
-			device_id, "primaryOrDeviceBusNumber",
-			json_object_new_uint64(
-				pcie_error->DevBridge.PrimaryOrDeviceBus));
-		json_object_object_add(
-			device_id, "secondaryBusNumber",
-			json_object_new_uint64(
-				pcie_error->DevBridge.SecondaryBus));
-		json_object_object_add(
-			device_id, "slotNumber",
-			json_object_new_uint64(
-				pcie_error->DevBridge.Slot.Number));
+		add_int(device_id, "classCode", class_id);
+
+		add_int(device_id, "functionNumber",
+			pcie_error->DevBridge.Function);
+
+		add_int(device_id, "deviceNumber",
+			pcie_error->DevBridge.Device);
+
+		add_int(device_id, "segmentNumber",
+			pcie_error->DevBridge.Segment);
+
+		add_int(device_id, "primaryOrDeviceBusNumber",
+			pcie_error->DevBridge.PrimaryOrDeviceBus);
+
+		add_int(device_id, "secondaryBusNumber",
+			pcie_error->DevBridge.SecondaryBus);
+
+		add_int(device_id, "slotNumber",
+			pcie_error->DevBridge.Slot.Number);
+
 		json_object_object_add(section_ir, "deviceID", device_id);
 	}
 
@@ -1254,9 +1545,9 @@ void ir_section_pcie_to_cper(json_object *section, FILE *out)
 		section_cper->DevBridge.DeviceId =
 			(UINT16)json_object_get_uint64(
 				json_object_object_get(device_id, "deviceID"));
-		section_cper->DevBridge.ClassCode[0] = class_id >> 16;
+		section_cper->DevBridge.ClassCode[2] = class_id >> 16;
 		section_cper->DevBridge.ClassCode[1] = (class_id >> 8) & 0xFF;
-		section_cper->DevBridge.ClassCode[2] = class_id & 0xFF;
+		section_cper->DevBridge.ClassCode[0] = class_id & 0xFF;
 		section_cper->DevBridge.Function =
 			(UINT8)json_object_get_uint64(json_object_object_get(
 				device_id, "functionNumber"));
