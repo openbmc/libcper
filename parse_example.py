@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import cper
 import json
+
+import cper
 
 
 def main():

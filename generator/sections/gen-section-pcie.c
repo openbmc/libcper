@@ -9,7 +9,11 @@
 #include <libcper/generator/gen-utils.h>
 #include <libcper/generator/sections/gen-section.h>
 
-#define PCIE_PORT_TYPES (int[]){ 0, 1, 4, 5, 6, 7, 8, 9, 10 }
+#define PCIE_PORT_TYPES                                                        \
+	(int[])                                                                \
+	{                                                                      \
+		0, 1, 4, 5, 6, 7, 8, 9, 10                                     \
+	}
 
 //Generates a single pseudo-random PCIe error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
