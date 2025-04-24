@@ -69,6 +69,15 @@ void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid);
 
 void add_int(json_object *register_ir, const char *field_name, int value);
 
+void add_int_hex(json_object *register_ir, const char *field_name,
+		 UINT64 value);
+void add_int_hex_8(json_object *register_ir, const char *field_name,
+		   UINT8 value);
+void add_int_hex_16(json_object *register_ir, const char *field_name,
+		    UINT16 value);
+void add_int_hex_24(json_object *register_ir, const char *field_name,
+		    UINT64 value);
+
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value);
 
 void add_bool_enum(json_object *register_ir, const char *field_name,

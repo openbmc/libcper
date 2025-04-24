@@ -10,9 +10,11 @@ extern "C" {
 #include <libcper/Cper.h>
 
 #define PCI_DEV_ERROR_VALID_BITFIELD_NAMES                                     \
-	(const char *[]){ "errorStatusValid", "idInfoValid",                   \
-			  "memoryNumberValid", "ioNumberValid",                \
-			  "registerDataPairsValid" }
+	(const char *[])                                                       \
+	{                                                                      \
+		"errorStatusValid", "idInfoValid", "memoryNumberValid",        \
+			"ioNumberValid", "registerDataPairsValid"              \
+	}
 
 ///
 /// PCI/PCI-X Device Error Section
