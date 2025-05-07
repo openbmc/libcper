@@ -24,6 +24,7 @@ size_t generate_section_nvidia(void **location,
 		"SOCHUB",    "CCPLEXSCF",     "CMET-NULL",     "CMET-SHA256",
 		"CMET-FULL", "DRAM-CHANNELS", "PAGES-RETIRED", "CCPLEXGIC",
 		"MCF",	     "GPU-STATUS",    "GPU-CONTNMT",   "SMMU",
+		"CMET-INFO",
 	};
 
 	//Create random bytes.
