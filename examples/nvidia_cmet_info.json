@@ -1,0 +1,434 @@
+{
+    "header": {
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "recordLength": 808,
+        "timestamp": "2025-03-21T23:50:19+00:00",
+        "timestampIsPrecise": false,
+        "creatorID": "a901e478-1173-11ef-96a8-5fa6bef5eea4",
+        "notificationType": {
+            "guid": "09a9d5ac-5204-4214-96e5-94992e752bcd",
+            "type": "PEI"
+        },
+        "recordID": 4,
+        "flags": {
+            "value": 0,
+            "name": "Unknown"
+        },
+        "persistenceInfo": 0
+    },
+    "sectionDescriptors": [
+        {
+            "sectionOffset": 200,
+            "sectionLength": 608,
+            "revision": {
+                "major": 0,
+                "minor": 0
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": false,
+                "overflow": false
+            },
+            "sectionType": {
+                "data": "6d5244f2-2712-11ec-bea7-cb3fdb95c786",
+                "type": "NVIDIA"
+            },
+            "fruID": "cc4f334a-c563-11eb-8f88-9f7ac76c6f0c",
+            "severity": {
+                "code": 3,
+                "name": "Informational"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "Nvidia": {
+                "signature": "CMET-INFO",
+                "severity": {
+                    "code": 3,
+                    "name": "Informational"
+                },
+                "errorType": 0,
+                "errorInstance": 0,
+                "socket": 0,
+                "registerCount": 36,
+                "instanceBase": 0,
+                "CMETInfo": [
+                    {
+                        "ChannelAddress": "0x8000000100000000",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": false,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000001",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000002",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000003",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000004",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000005",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000006",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000007",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000008",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000009",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000000A",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000000B",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000000C",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000000D",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000000E",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000000F",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000010",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000011",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000012",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000013",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000014",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000015",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000016",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000017",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000018",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000100000019",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000001A",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000001B",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000001C",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000001D",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000001E",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x800000010000001F",
+                        "ErrorCount": 0,
+                        "ChannelEnabled": true,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000200000000",
+                        "ErrorCount": 52420167,
+                        "ChannelEnabled": false,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000200000001",
+                        "ErrorCount": 52420167,
+                        "ChannelEnabled": false,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000200000002",
+                        "ErrorCount": 52420167,
+                        "ChannelEnabled": false,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    },
+                    {
+                        "ChannelAddress": "0x8000000200000003",
+                        "ErrorCount": 52420167,
+                        "ChannelEnabled": false,
+                        "ChannelIsSpare": false,
+                        "DisabledReason": {
+                            "raw": 0,
+                            "value": "Alias Checker Failed"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

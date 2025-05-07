@@ -12,6 +12,103 @@
 #include <libcper/sections/cper-section-nvidia.h>
 #include <libcper/log.h>
 
+void parse_cmet_info(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
+		     size_t size, json_object *section_ir)
+{
+	json_object *regarr = json_object_new_array();
+	for (int i = 0; i < NumberRegs; i++, regPtr++) {
+		json_object *reg = NULL;
+		if (sizeof(EFI_NVIDIA_ERROR_DATA) +
+			    i * sizeof(EFI_NVIDIA_REGISTER_DATA) <
+		    size) {
+			reg = json_object_new_object();
+			add_int_hex_64(reg, "ChannelAddress", regPtr->Address);
+			add_int(reg, "ErrorCount", regPtr->CmetInfo.ErrorCount);
+			add_bool(reg, "ChannelEnabled",
+				 regPtr->CmetInfo.ChannelEnabled);
+			add_bool(reg, "ChannelIsSpare",
+				 regPtr->CmetInfo.ChannelIsSpare);
+			add_dict(reg, "DisabledReason",
+				 regPtr->CmetInfo.DisabledReason,
+				 channel_disable_reason_dict,
+				 channel_disable_reason_dict_size);
+		} else {
+			reg = json_object_new_null();
+		}
+
+		json_object_array_add(regarr, reg);
+	}
+
+	json_object_object_add(section_ir, "CMETInfo", regarr);
+}
+
+void parse_fwerror(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
+		   size_t size, json_object *section_ir)
+{
+	(void)NumberRegs;
+	json_object *fwinfo;
+	if (sizeof(EFI_NVIDIA_ERROR_DATA) + sizeof(EFI_NVIDIA_FWERROR) > size) {
+		fwinfo = json_object_new_null();
+	} else {
+		fwinfo = json_object_new_object();
+		EFI_NVIDIA_FWERROR *fwerror = (EFI_NVIDIA_FWERROR *)regPtr;
+		add_untrusted_string(fwinfo, "initiating_firmware",
+				     fwerror->initiating_firmware,
+				     sizeof(fwerror->initiating_firmware));
+		add_int_hex_64(fwinfo, "task_checkpoint",
+			       fwerror->task_checkpoint);
+		add_int_hex_64(fwinfo, "mb1_error_code",
+			       fwerror->mb1_error_code);
+		add_untrusted_string(fwinfo, "mb1_version_string",
+				     fwerror->mb1_version_string,
+				     sizeof(fwerror->mb1_version_string));
+		add_int_hex_64(fwinfo, "bad_pages_retired_mask",
+			       fwerror->bad_pages_retired_mask);
+		add_int_hex_64(fwinfo, "training_or_alias_check_retired_mask",
+			       fwerror->training_or_alias_check_retired_mask);
+	}
+
+	json_object_object_add(section_ir, "FWErrorInfo", fwinfo);
+}
+
+void parse_registers(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
+		     size_t size, json_object *section_ir)
+{
+	// Registers (Address Value pairs).
+	json_object *regarr = json_object_new_array();
+	for (int i = 0; i < NumberRegs; i++, regPtr++) {
+		json_object *reg = NULL;
+		if (sizeof(EFI_NVIDIA_ERROR_DATA) +
+			    i * sizeof(EFI_NVIDIA_REGISTER_DATA) <
+		    size) {
+			reg = json_object_new_object();
+			json_object_object_add(
+				reg, "address",
+				json_object_new_uint64(regPtr->Address));
+			json_object_object_add(
+				reg, "value",
+				json_object_new_uint64(regPtr->Value));
+		} else {
+			reg = json_object_new_null();
+		}
+
+		json_object_array_add(regarr, reg);
+	}
+	json_object_object_add(section_ir, "registers", regarr);
+}
+
+typedef struct {
+	const char *ip_signature;
+	void (*callback)(EFI_NVIDIA_REGISTER_DATA *, UINT8, size_t,
+			 json_object *);
+} NV_SECTION_CALLBACKS;
+
+NV_SECTION_CALLBACKS section_handlers[] = {
+	{ "CMET-INFO\0", &parse_cmet_info },
+	{ "FWERROR\0", &parse_fwerror },
+	{ "", &parse_registers },
+};
+
 //Converts a single NVIDIA CPER section into JSON IR.
 json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 {
@@ -47,29 +144,17 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 		section_ir, "instanceBase",
 		json_object_new_uint64(nvidia_error->InstanceBase));
 
-	// Registers (Address Value pairs).
-	json_object *regarr = json_object_new_array();
-	EFI_NVIDIA_REGISTER_DATA *regPtr = nvidia_error->Register;
-	for (int i = 0; i < nvidia_error->NumberRegs; i++, regPtr++) {
-		json_object *reg = NULL;
-		if (sizeof(EFI_NVIDIA_ERROR_DATA) +
-			    i * sizeof(EFI_NVIDIA_REGISTER_DATA) <
-		    size) {
-			reg = json_object_new_object();
-			json_object_object_add(
-				reg, "address",
-				json_object_new_uint64(regPtr->Address));
-			json_object_object_add(
-				reg, "value",
-				json_object_new_uint64(regPtr->Value));
-		} else {
-			reg = json_object_new_null();
+	for (long unsigned int i = 0;
+	     i < sizeof(section_handlers) / sizeof(section_handlers[0]); i++) {
+		const char *ip_signature = section_handlers[i].ip_signature;
+		if (strncmp(nvidia_error->Signature, ip_signature,
+			    strlen(ip_signature)) == 0) {
+			section_handlers[i].callback(&nvidia_error->Register[0],
+						     nvidia_error->NumberRegs,
+						     size, section_ir);
+			break;
 		}
-
-		json_object_array_add(regarr, reg);
 	}
-	json_object_object_add(section_ir, "registers", regarr);
-
 	return section_ir;
 }
 

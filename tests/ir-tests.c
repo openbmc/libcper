@@ -599,6 +599,11 @@ void NVIDIASectionTests_BinaryEqual()
 	cper_log_section_dual_binary_test("nvidia");
 }
 
+void NVIDIACMETSectionTests_IRValid()
+{
+	cper_example_section_ir_test("nvidia_cmet_info");
+}
+
 //Unknown section tests.
 void UnknownSectionTests_IRValid()
 {
@@ -664,6 +669,7 @@ int main()
 	CXLComponentTests_BinaryEqual();
 	NVIDIASectionTests_IRValid();
 	NVIDIASectionTests_BinaryEqual();
+	NVIDIACMETSectionTests_IRValid();
 	UnknownSectionTests_IRValid();
 	UnknownSectionTests_BinaryEqual();
 	CompileTimeAssertions_TwoWayConversion();

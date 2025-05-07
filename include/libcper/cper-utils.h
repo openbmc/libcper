@@ -77,6 +77,8 @@ void add_int_hex_16(json_object *register_ir, const char *field_name,
 		    UINT16 value);
 void add_int_hex_24(json_object *register_ir, const char *field_name,
 		    UINT64 value);
+void add_int_hex_64(json_object *register_ir, const char *field_name,
+		    UINT64 value);
 
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value);
 
