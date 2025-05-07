@@ -1344,8 +1344,37 @@ extern EFI_GUID gEfiIa32X64ErrorTypeMsCheckGuid;
 /// NVIDIA Error Record Section
 ///
 typedef struct {
+	UINT32 ErrorCount;
+	UINT32 ChannelEnabled : 1;
+	UINT32 ChannelIsSpare : 1;
+	UINT32 ChannelPermanentlyDisabled : 1;
+	UINT32 DisabledReason : 2;
+	UINT32 Reserved : 27;
+} EFI_NVIDIA_CMET_CHANNEL_INFO;
+
+typedef struct {
+	CHAR8 initiating_firmware[8];
+	UINT64 task_checkpoint;
+	UINT64 mb1_error_code;
+	CHAR8 mb1_version_string[8];
+	UINT64 bad_pages_retired_mask;
+	UINT64 training_or_alias_check_retired_mask;
+	UINT32 worst_bad_pages_channel_number;
+	UINT32 worst_bad_pages_bad_page_count;
+	UINT32 second_worst_bad_pages_channel_number;
+	UINT32 second_worst_bad_pages_bad_page_count;
+	UINT32 third_worst_bad_pages_channel_number;
+	UINT32 third_worst_bad_pages_bad_page_count;
+	UINT64 mss_aon_cfg_scratch_register_0;
+	UINT64 scratch_dram_disable;
+} EFI_NVIDIA_FWERROR;
+
+typedef struct {
 	UINT64 Address;
-	UINT64 Value;
+	union {
+		UINT64 Value;
+		EFI_NVIDIA_CMET_CHANNEL_INFO CmetInfo;
+	};
 } EFI_NVIDIA_REGISTER_DATA;
 
 typedef struct {
