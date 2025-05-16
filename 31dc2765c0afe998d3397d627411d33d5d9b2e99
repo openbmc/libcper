@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b95393d3_74e261ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-05-16T21:32:23Z",
+      "side": 1,
+      "message": "Looks good. Why are the meson.build files under packagefiles necessary? Are we changing configs for those subprojects?",
+      "revId": "31dc2765c0afe998d3397d627411d33d5d9b2e99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
