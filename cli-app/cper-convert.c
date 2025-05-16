@@ -103,7 +103,7 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 	char *fbuff = malloc(fsize);
 	size_t readsize = fread(fbuff, 1, (long)fsize, cper_file);
 	if (readsize != (size_t)fsize) {
-		printf("Could not read CPER file '%s', read returned %ld bytes.\n",
+		printf("Could not read CPER file '%s', read returned %zu bytes.\n",
 		       in_file, readsize);
 		return;
 	}
