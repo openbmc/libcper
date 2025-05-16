@@ -16,6 +16,24 @@
       "message": "Looks good. Why are the meson.build files under packagefiles necessary? Are we changing configs for those subprojects?",
       "revId": "31dc2765c0afe998d3397d627411d33d5d9b2e99",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "302dcdc2_c23c21e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-05-16T22:27:19Z",
+      "side": 1,
+      "message": "The default packageconfigs install their binaries and enable a bunch of features we don\u0027t need in libcper.\n\nWhen those binaries get installed, meson-python fails which I then duked it out with those maintainers:\nhttps://github.com/mesonbuild/meson-python/pull/732\n\nIn the end, having a very targeted meson file for json-daccor and json-c lets us have all the weird stuff we need to make a single static library for the python build.",
+      "parentUuid": "b95393d3_74e261ee",
+      "revId": "31dc2765c0afe998d3397d627411d33d5d9b2e99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
