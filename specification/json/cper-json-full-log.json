@@ -22,6 +22,7 @@
                 "type": ["object", "null"],
                 "minProperties": 1,
                 "maxProperties": 1,
+                "required": [],
                 "additionalProperties": false,
                 "properties": {
                     "GenericProcessor": {
