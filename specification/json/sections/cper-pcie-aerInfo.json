@@ -49,33 +49,23 @@
         },
         "uncorrectable_error_status": {
             "type": "object",
-            "description": "Uncorrectable Error Status Register (Offset: 0x4)",
-            "required": [],
-            "properties": {}
+            "description": "Uncorrectable Error Status Register (Offset: 0x4)"
         },
         "uncorrectable_error_mask": {
             "type": "object",
-            "description": "Uncorrectable Error Mask Register (Offset: 0x8)",
-            "required": [],
-            "properties": {}
+            "description": "Uncorrectable Error Mask Register (Offset: 0x8)"
         },
         "uncorrectable_error_severity": {
             "type": "object",
-            "description": "Uncorrectable Error Severity Register (Offset: 0xC)",
-            "required": [],
-            "properties": {}
+            "description": "Uncorrectable Error Severity Register (Offset: 0xC)"
         },
         "correctable_error_status": {
             "type": "object",
-            "description": "Correctable Error Status Register (Offset: 0x10)",
-            "required": [],
-            "properties": {}
+            "description": "Correctable Error Status Register (Offset: 0x10)"
         },
         "correctable_error_mask": {
             "type": "object",
-            "description": "Correctable Error Mask Register (Offset: 0x14)",
-            "required": [],
-            "properties": {}
+            "description": "Correctable Error Mask Register (Offset: 0x14)"
         },
         "advanced_error_capabilities_and_control": {
             "type": "object",
@@ -105,9 +95,7 @@
         },
         "root_error_command": {
             "type": "object",
-            "description": "Root Error Command Register (Offset: 0x2C)",
-            "required": [],
-            "properties": {}
+            "description": "Root Error Command Register (Offset: 0x2C)"
         },
         "root_error_status": {
             "type": "object",

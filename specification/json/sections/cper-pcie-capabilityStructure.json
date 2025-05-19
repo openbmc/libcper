@@ -392,21 +392,15 @@
         },
         "slot_status": {
             "type": "object",
-            "description": "Slot Status Register (Offset: 0x1A)",
-            "required": [],
-            "properties": {}
+            "description": "Slot Status Register (Offset: 0x1A)"
         },
         "root_control": {
             "type": "object",
-            "description": "Root Control Register (Offset: 0x1C)",
-            "required": [],
-            "properties": {}
+            "description": "Root Control Register (Offset: 0x1C)"
         },
         "root_capabilities": {
             "type": "object",
-            "description": "Root Capabilities Register (Offset: 0x1E)",
-            "required": [],
-            "properties": {}
+            "description": "Root Capabilities Register (Offset: 0x1E)"
         },
         "root_status": {
             "type": "object",
@@ -450,6 +444,8 @@
                     "type": "boolean"
                 },
                 "max_end_end_tlp_prefixes": {
+                    "type": "object",
+                    "required": ["raw"],
                     "properties": {
                         "raw": {
                             "type": "integer",
@@ -493,9 +489,7 @@
         },
         "device_status2": {
             "type": "object",
-            "description": "Device Status 2 Register (Offset: 0x2A)",
-            "required": [],
-            "properties": {}
+            "description": "Device Status 2 Register (Offset: 0x2A)"
         },
         "link_capabilities2": {
             "type": "object",
@@ -631,21 +625,15 @@
         },
         "slot_capabilities2": {
             "type": "object",
-            "description": "Slot Capabilities 2 Register (Offset: 0x34)",
-            "required": [],
-            "properties": {}
+            "description": "Slot Capabilities 2 Register (Offset: 0x34)"
         },
         "slot_control2": {
             "type": "object",
-            "description": "Slot Control 2 Register (Offset: 0x38)",
-            "required": [],
-            "properties": {}
+            "description": "Slot Control 2 Register (Offset: 0x38)"
         },
         "slot_status2": {
             "type": "object",
-            "description": "Slot Status 2 Register (Offset: 0x3A)",
-            "required": [],
-            "properties": {}
+            "description": "Slot Status 2 Register (Offset: 0x3A)"
         }
     }
 }
