@@ -111,8 +111,7 @@
             "description": "PCIe Capabilities structure"
         },
         "aerInfo": {
-            "type": "object",
-            "description": "PCIe Advanced Error Reporting Information"
+            "$ref": "./sections/cper-pcie-aerInfo.json"
         }
     }
 }
