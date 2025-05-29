@@ -4,648 +4,549 @@
     "type": "object",
     "description": "PCIe 1.0 or PCIe 2.0 Capability structure",
     "additionalProperties": false,
-    "required": [
-        "data",
-        "pcie_capability_header",
-        "pcie_capabilities",
-        "device_capabilities",
-        "device_control",
-        "device_status",
-        "link_capabilities",
-        "link_control",
-        "link_status",
-        "slot_capabilities",
-        "slot_control",
-        "slot_status",
-        "root_control",
-        "root_capabilities",
-        "root_status"
-    ],
     "properties": {
         "data": {
             "type": "string"
         },
-        "pcie_capability_header": {
-            "type": "object",
-            "description": "The templat of each register is: ()",
-            "required": ["capability_id", "next_capability_pointer"],
-            "properties": {
-                "capability_id": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
-                        }
-                    }
-                },
-                "next_capability_pointer": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
-                        }
-                    }
-                }
-            }
-        },
-        "pcie_capabilities": {
-            "type": "object",
-            "description": "PCI Express Capabilities Register (Offset: 0x2)",
-            "required": [
-                "capability_version",
-                "device_port_type",
-                "interrupt_message_number"
-            ],
-            "properties": {
-                "capability_version": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 15
-                        }
-                    }
-                },
-                "device_port_type": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 15
-                        }
-                    }
-                },
-                "interrupt_message_number": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 31
-                        }
-                    }
-                }
-            }
-        },
         "device_capabilities": {
             "type": "object",
-            "description": "/* (PCI Express Capability Structure)",
-            "required": [
-                "max_payload_size_supported",
-                "phantom_functions_supported",
-                "endpoint_l0s_acceptable_latency",
-                "endpoint_l1_acceptable_latency",
-                "captured_slot_power_limit_value",
-                "captured_slot_power_limit_scale"
-            ],
             "properties": {
-                "max_payload_size_supported": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 7
+                "captured_slot_power_limit_scale": {
+                    "type": "integer"
                 },
-                "phantom_functions_supported": {
-                    "type": "boolean"
+                "captured_slot_power_limit_value": {
+                    "type": "integer"
                 },
                 "endpoint_l0s_acceptable_latency": {
                     "type": "object",
-                    "required": ["raw"],
                     "properties": {
                         "raw": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
+                            "type": "integer"
                         }
-                    }
+                    },
+                    "required": []
                 },
                 "endpoint_l1_acceptable_latency": {
                     "type": "object",
-                    "required": ["raw"],
                     "properties": {
                         "raw": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
+                            "type": "integer"
                         }
-                    }
+                    },
+                    "required": []
                 },
-                "captured_slot_power_limit_value": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 255
+                "err_cor_subclass_capable": {
+                    "type": "boolean"
                 },
-                "captured_slot_power_limit_scale": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 3
+                "extended_tag_field_supported": {
+                    "type": "string"
+                },
+                "function_level_reset_capability_supported": {
+                    "type": "string"
+                },
+                "max_payload_size_supported": {
+                    "type": "integer"
+                },
+                "mixed_mps_supported": {
+                    "type": "string"
+                },
+                "phantom_functions_supported": {
+                    "type": "string"
+                },
+                "role_based_error_reporting": {
+                    "type": "boolean"
+                },
+                "rx_mps_fixed": {
+                    "type": "integer"
+                },
+                "tee_io_supported": {
+                    "type": "string"
                 }
-            }
-        },
-        "device_control": {
-            "type": "object",
-            "description": "Device Control Register (Offset: 0x8)",
-            "required": ["max_payload_size", "max_read_request_size"],
-            "properties": {
-                "max_payload_size": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 7
-                },
-                "max_read_request_size": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 7
-                }
-            }
-        },
-        "device_status": {
-            "type": "object",
-            "description": "Device Status Register (Offset: 0xA)",
-            "required": ["emergency_power_reduction"],
-            "properties": {
-                "emergency_power_reduction": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                }
-            }
-        },
-        "link_capabilities": {
-            "type": "object",
-            "description": "Link Capabilities Register (Offset: 0xC)",
-            "required": [
-                "max_link_speed",
-                "maximum_link_width",
-                "aspm_support",
-                "l0s_exit_latency",
-                "l1_exit_latency",
-                "port_number"
-            ],
-            "properties": {
-                "max_link_speed": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 15
-                        }
-                    }
-                },
-                "maximum_link_width": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 63
-                        }
-                    }
-                },
-                "aspm_support": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                },
-                "l0s_exit_latency": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 7
-                        }
-                    }
-                },
-                "l1_exit_latency": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 7
-                        }
-                    }
-                },
-                "port_number": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
-                        }
-                    }
-                }
-            }
-        },
-        "link_control": {
-            "type": "object",
-            "description": "Link Control Register (Offset: 0x10)",
-            "required": ["aspm_control"],
-            "properties": {
-                "aspm_control": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                }
-            }
-        },
-        "link_status": {
-            "type": "object",
-            "description": "Link Status Register (Offset: 0x12)",
-            "required": ["current_link_speed", "negotiated_link_width"],
-            "properties": {
-                "current_link_speed": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 15
-                        }
-                    }
-                },
-                "negotiated_link_width": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 63
-                        }
-                    }
-                }
-            }
-        },
-        "slot_capabilities": {
-            "type": "object",
-            "description": "Slot Capabilities Register (Offset: 0x14)",
-            "required": [
-                "slot_power_limit_value",
-                "slot_power_limit_scale",
-                "physical_slot_number"
-            ],
-            "properties": {
-                "slot_power_limit_value": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
-                        }
-                    }
-                },
-                "slot_power_limit_scale": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                },
-                "physical_slot_number": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 8191
-                        }
-                    }
-                }
-            }
-        },
-        "slot_control": {
-            "type": "object",
-            "description": "Slot Control Register (Offset: 0x18)",
-            "required": [
-                "attention_indicator_control",
-                "power_indicator_control"
-            ],
-            "properties": {
-                "attention_indicator_control": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                },
-                "power_indicator_control": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                }
-            }
-        },
-        "slot_status": {
-            "type": "object",
-            "description": "Slot Status Register (Offset: 0x1A)",
-            "required": [],
-            "properties": {}
-        },
-        "root_control": {
-            "type": "object",
-            "description": "Root Control Register (Offset: 0x1C)",
-            "required": [],
-            "properties": {}
-        },
-        "root_capabilities": {
-            "type": "object",
-            "description": "Root Capabilities Register (Offset: 0x1E)",
-            "required": [],
-            "properties": {}
-        },
-        "root_status": {
-            "type": "object",
-            "description": "Root Status Register (Offset: 0x20)",
-            "required": ["pme_requester_id"],
-            "properties": {
-                "pme_requester_id": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 65535
-                        }
-                    }
-                }
-            }
+            },
+            "required": []
         },
         "device_capabilities2": {
             "type": "object",
-            "description": "Device Capabilities 2 Register (Offset: 0x24)",
-            "required": [
-                "completion_timeout_ranges_supported",
-                "tph_completer_supported",
-                "obff_supported",
-                "max_end_end_tlp_prefixes",
-                "emergency_power_reduction_supported",
-                "dmwr_lengths_supported"
-            ],
             "properties": {
+                "_128_bit_cas_completer_supported": {
+                    "type": "string"
+                },
+                "_32_bit_atomicop_completer_supported": {
+                    "type": "string"
+                },
+                "_64_bit_atomicop_completer_supported": {
+                    "type": "string"
+                },
+                "ari_forwarding_supported": {
+                    "type": "string"
+                },
+                "atomic_op_routing_supported": {
+                    "type": "string"
+                },
+                "completion_timeout_disable_supported": {
+                    "type": "string"
+                },
                 "completion_timeout_ranges_supported": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 15
-                },
-                "tph_completer_supported": {
-                    "type": "boolean"
-                },
-                "obff_supported": {
-                    "type": "boolean"
-                },
-                "max_end_end_tlp_prefixes": {
-                    "properties": {
-                        "raw": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
-                },
-                "emergency_power_reduction_supported": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "dmwr_lengths_supported": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 3
+                    "type": "integer"
+                },
+                "emergency_power_reduction_supported": {
+                    "type": "string"
+                },
+                "ltr_mechanism_supported": {
+                    "type": "string"
+                },
+                "max_end_end_tlp_prefixes": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": []
+                },
+                "no_ro_enabled_pr_pr_passing": {
+                    "type": "string"
+                },
+                "obff_supported": {
+                    "type": "string"
+                },
+                "tph_completer_supported": {
+                    "type": "string"
                 }
-            }
+            },
+            "required": []
+        },
+        "device_control": {
+            "type": "object",
+            "properties": {
+                "aux_power_pm_enable": {
+                    "type": "string"
+                },
+                "correctable_error_reporting_enable": {
+                    "type": "string"
+                },
+                "enable_no_snoop": {
+                    "type": "integer"
+                },
+                "extended_tag_field_enable": {
+                    "type": "string"
+                },
+                "fatal_error_reporting_enable": {
+                    "type": "string"
+                },
+                "function_level_reset": {
+                    "type": "boolean"
+                },
+                "max_payload_size": {
+                    "type": "integer"
+                },
+                "max_read_request_size": {
+                    "type": "integer"
+                },
+                "non_fatal_error_reporting_enable": {
+                    "type": "string"
+                },
+                "phantom_functions_enable": {
+                    "type": "string"
+                },
+                "relaxed_ordering_enable": {
+                    "type": "string"
+                },
+                "unsupported_request_reporting_enabled": {
+                    "type": "string"
+                }
+            },
+            "required": []
         },
         "device_control2": {
             "type": "object",
-            "description": "Device Control 2 Register (Offset: 0x28)",
-            "required": ["completion_timeout_value", "obff_enable"],
             "properties": {
+                "10_bit_tag_requester_enable": {
+                    "type": "boolean"
+                },
+                "ari_forwarding_enable": {
+                    "type": "boolean"
+                },
+                "atomicop_egress_blocking": {
+                    "type": "boolean"
+                },
+                "atomicop_requester_enable": {
+                    "type": "boolean"
+                },
                 "completion_timeout_value": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 15
+                    "type": "integer"
+                },
+                "emergency_power_reduction_request": {
+                    "type": "boolean"
+                },
+                "ido_completion_enable": {
+                    "type": "boolean"
+                },
+                "ido_request_enable": {
+                    "type": "boolean"
+                },
+                "ltr_mechanism_enable": {
+                    "type": "boolean"
                 },
                 "obff_enable": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
+                    "type": "integer"
                 }
-            }
+            },
+            "required": []
         },
-        "device_status2": {
+        "device_status": {
             "type": "object",
-            "description": "Device Status 2 Register (Offset: 0x2A)",
-            "required": [],
-            "properties": {}
+            "properties": {
+                "aux_power_detected": {
+                    "type": "boolean"
+                },
+                "correctable_error_detected": {
+                    "type": "boolean"
+                },
+                "emergency_power_reduction": {
+                    "type": "integer"
+                },
+                "fatal_error_detected": {
+                    "type": "boolean"
+                },
+                "non_fatal_error_detected": {
+                    "type": "boolean"
+                },
+                "transactions_pending": {
+                    "type": "boolean"
+                },
+                "unsupported_request_detected": {
+                    "type": "boolean"
+                }
+            },
+            "required": []
+        },
+        "link_capabilities": {
+            "type": "object",
+            "properties": {
+                "aspm_optionality_compliance": {
+                    "type": "boolean"
+                },
+                "aspm_support": {
+                    "type": "integer"
+                },
+                "clock_power_management": {
+                    "type": "boolean"
+                },
+                "data_link_layer_link_active_reporting_capable": {
+                    "type": "boolean"
+                },
+                "l0s_exit_latency": {
+                    "type": "integer"
+                },
+                "l1_exit_latency": {
+                    "type": "integer"
+                },
+                "link_bandwidth_notification_capability": {
+                    "type": "boolean"
+                },
+                "max_link_speed": {
+                    "type": "integer"
+                },
+                "maximum_link_width": {
+                    "type": "integer"
+                },
+                "port_number": {
+                    "type": "integer"
+                },
+                "surprise_down_error_reporting_capable": {
+                    "type": "boolean"
+                }
+            },
+            "required": []
         },
         "link_capabilities2": {
             "type": "object",
-            "description": "Link Capabilities 2 Register (Offset: 0x2C)",
-            "required": [
-                "supported_link_speeds",
-                "lower_skp_os_generation_supported",
-                "lower_skp_os_reception_supported",
-                "reserved"
-            ],
             "properties": {
-                "supported_link_speeds": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 127
-                        }
-                    }
+                "crosslink_supported": {
+                    "type": "string"
+                },
+                "drs_supported": {
+                    "type": "string"
                 },
                 "lower_skp_os_generation_supported": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 127
-                        }
-                    }
+                    "type": "integer"
                 },
                 "lower_skp_os_reception_supported": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 127
-                        }
-                    }
+                    "type": "integer"
                 },
-                "reserved": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 63
-                        }
-                    }
+                "retimer_presence_detect_supported": {
+                    "type": "string"
+                },
+                "supported_link_speeds": {
+                    "type": "integer"
+                },
+                "two_retimers_presence_detect_supported": {
+                    "type": "string"
                 }
-            }
+            },
+            "required": []
+        },
+        "link_control": {
+            "type": "object",
+            "properties": {
+                "aspm_control": {
+                    "type": "integer"
+                },
+                "extended_synch": {
+                    "type": "integer"
+                },
+                "flit_mode_disable": {
+                    "type": "integer"
+                },
+                "link_disable": {
+                    "type": "integer"
+                },
+                "ptm_prop_delay_adaptation_interpretation": {
+                    "type": "boolean"
+                },
+                "retrain_link": {
+                    "type": "integer"
+                },
+                "sris_clocking": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "aspm_control",
+                "extended_synch",
+                "flit_mode_disable",
+                "link_disable",
+                "ptm_prop_delay_adaptation_interpretation",
+                "retrain_link",
+                "sris_clocking"
+            ]
         },
         "link_control2": {
             "type": "object",
-            "description": "Link Control 2 Register (Offset: 0x30)",
-            "required": [
-                "target_link_speed",
-                "transmit_margin",
-                "compliance_preset_de_emphasis"
-            ],
             "properties": {
+                "compliance_preset_de_emphasis": {
+                    "type": "integer"
+                },
+                "compliance_sos": {
+                    "type": "boolean"
+                },
+                "enter_compliance": {
+                    "type": "string"
+                },
+                "enter_modified_compliance": {
+                    "type": "boolean"
+                },
+                "hardware_autonomous_speed_disable": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["raw"]
+                },
+                "selectable_de_emphasis": {
+                    "type": "boolean"
+                },
                 "target_link_speed": {
                     "type": "object",
-                    "required": ["value"],
                     "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 15
+                        "raw": {
+                            "type": "integer"
                         }
-                    }
+                    },
+                    "required": ["raw"]
                 },
                 "transmit_margin": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 7
-                        }
-                    }
-                },
-                "compliance_preset_de_emphasis": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 15
-                        }
-                    }
+                    "type": "integer"
                 }
-            }
+            },
+            "required": [
+                "compliance_preset_de_emphasis",
+                "compliance_sos",
+                "enter_compliance",
+                "enter_modified_compliance",
+                "hardware_autonomous_speed_disable",
+                "selectable_de_emphasis",
+                "target_link_speed",
+                "transmit_margin"
+            ]
+        },
+        "link_status": {
+            "type": "object",
+            "properties": {
+                "current_link_speed": {
+                    "type": "integer"
+                },
+                "link_training": {
+                    "type": "integer"
+                },
+                "negotiated_link_width": {
+                    "type": "integer"
+                }
+            },
+            "required": []
         },
         "link_status2": {
             "type": "object",
-            "description": "Link Status 2 Register (Offset: 0x32)",
-            "required": [
-                "crosslink_resolution",
-                "downstream_component_presence"
-            ],
             "properties": {
                 "crosslink_resolution": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 3
-                        }
-                    }
+                    "type": "integer"
+                },
+                "current_de_emphasis_level": {
+                    "type": "integer"
                 },
                 "downstream_component_presence": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                        "value": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 7
-                        }
-                    }
+                    "type": "integer"
+                },
+                "drs_message_received": {
+                    "type": "boolean"
+                },
+                "equalization_8gts_complete": {
+                    "type": "boolean"
+                },
+                "equalization_8gts_phase1_successful": {
+                    "type": "boolean"
+                },
+                "equalization_8gts_phase2_successful": {
+                    "type": "boolean"
+                },
+                "equalization_8gts_phase3_successful": {
+                    "type": "boolean"
+                },
+                "flit_mode_status": {
+                    "type": "integer"
+                },
+                "link_equalization_request_8gts": {
+                    "type": "boolean"
+                },
+                "retimer_presence_detected": {
+                    "type": "boolean"
+                },
+                "two_retimers_presence_detected": {
+                    "type": "boolean"
                 }
-            }
+            },
+            "required": []
         },
-        "slot_capabilities2": {
+        "pcie_capabilities": {
             "type": "object",
-            "description": "Slot Capabilities 2 Register (Offset: 0x34)",
-            "required": [],
-            "properties": {}
+            "properties": {
+                "capability_version": {
+                    "type": "integer"
+                },
+                "device_port_type": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "integer"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    },
+                    "required": []
+                },
+                "flit_mode_supported": {
+                    "type": "string"
+                },
+                "interrupt_message_number": {
+                    "type": "integer"
+                },
+                "slot_implemented": {
+                    "type": "boolean"
+                }
+            },
+            "required": []
         },
-        "slot_control2": {
+        "pcie_capability_header": {
             "type": "object",
-            "description": "Slot Control 2 Register (Offset: 0x38)",
-            "required": [],
-            "properties": {}
+            "properties": {
+                "capability_id": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": []
+                },
+                "next_capability_pointer": {
+                    "type": "integer"
+                }
+            },
+            "required": []
         },
-        "slot_status2": {
+        "root_status": {
             "type": "object",
-            "description": "Slot Status 2 Register (Offset: 0x3A)",
-            "required": [],
-            "properties": {}
+            "properties": {
+                "pme_pending": {
+                    "type": "integer"
+                },
+                "pme_requester_id": {
+                    "type": "integer"
+                },
+                "pme_status": {
+                    "type": "integer"
+                }
+            },
+            "required": []
+        },
+        "slot_capabilities": {
+            "type": "object",
+            "properties": {
+                "physical_slot_number": {
+                    "type": "integer"
+                },
+                "slot_power_limit_scale": {
+                    "type": "integer"
+                },
+                "slot_power_limit_value": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": []
+                }
+            },
+            "required": []
+        },
+        "slot_control": {
+            "type": "object",
+            "properties": {
+                "attention_indicator_control": {
+                    "type": "integer"
+                },
+                "power_indicator_control": {
+                    "type": "integer"
+                },
+                "rsvdp": {
+                    "type": "integer"
+                }
+            },
+            "required": []
+        },
+        "slot_status": {
+            "type": "object",
+            "properties": {
+                "command_completed": {
+                    "type": "integer"
+                },
+                "mrl_sensor_changed": {
+                    "type": "integer"
+                },
+                "mrl_sensor_state": {
+                    "type": "integer"
+                }
+            },
+            "required": []
         }
-    }
+    },
+    "required": []
 }
