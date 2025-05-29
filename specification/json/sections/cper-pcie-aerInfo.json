@@ -4,150 +4,345 @@
     "type": "object",
     "description": "PCIe Advanced Error Reporting Extended Capability Structure",
     "additionalProperties": false,
-    "required": [
-        "data",
-        "capability_header",
-        "uncorrectable_error_status",
-        "uncorrectable_error_mask",
-        "uncorrectable_error_severity",
-        "correctable_error_status",
-        "correctable_error_mask",
-        "advanced_error_capabilities_and_control",
-        "root_error_command",
-        "root_error_status",
-        "error_source_id"
-    ],
     "properties": {
-        "data": {
-            "type": "string"
+        "advanced_error_capabilities_and_control": {
+            "type": "object",
+            "properties": {
+                "first_error_pointer": {
+                    "type": "integer"
+                },
+                "header_log_size": {
+                    "type": "integer"
+                },
+                "logged_tlp_size": {
+                    "type": "integer"
+                }
+            },
+            "required": []
         },
         "capability_header": {
             "type": "object",
-            "description": "AER Capability Header (Offset: 0x0)",
-            "required": [
-                "capability_id",
-                "capability_version",
-                "next_capability_offset"
-            ],
             "properties": {
                 "capability_id": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 65535
+                    "type": "integer"
                 },
                 "capability_version": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 15
+                    "type": "integer"
                 },
                 "next_capability_offset": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 4095
+                    "type": "integer"
                 }
-            }
-        },
-        "uncorrectable_error_status": {
-            "type": "object",
-            "description": "Uncorrectable Error Status Register (Offset: 0x4)",
-            "required": [],
-            "properties": {}
-        },
-        "uncorrectable_error_mask": {
-            "type": "object",
-            "description": "Uncorrectable Error Mask Register (Offset: 0x8)",
-            "required": [],
-            "properties": {}
-        },
-        "uncorrectable_error_severity": {
-            "type": "object",
-            "description": "Uncorrectable Error Severity Register (Offset: 0xC)",
-            "required": [],
-            "properties": {}
-        },
-        "correctable_error_status": {
-            "type": "object",
-            "description": "Correctable Error Status Register (Offset: 0x10)",
-            "required": [],
-            "properties": {}
+            },
+            "required": []
         },
         "correctable_error_mask": {
             "type": "object",
-            "description": "Correctable Error Mask Register (Offset: 0x14)",
-            "required": [],
-            "properties": {}
-        },
-        "advanced_error_capabilities_and_control": {
-            "type": "object",
-            "description": "Advanced Error Capabilities and Control Register (Offset: 0x18)",
-            "required": [
-                "first_error_pointer",
-                "header_log_size",
-                "logged_tlp_size"
-            ],
             "properties": {
-                "first_error_pointer": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 31
+                "advisory_non_fatal_error_mask": {
+                    "type": "integer"
                 },
-                "header_log_size": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 31
+                "bad_dllp_mask": {
+                    "type": "integer"
                 },
-                "logged_tlp_size": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 31
+                "bad_tlp_mask": {
+                    "type": "integer"
+                },
+                "corrected_internal_error_mask": {
+                    "type": "integer"
+                },
+                "header_log_overflow_mask": {
+                    "type": "integer"
+                },
+                "receiver_error_mask": {
+                    "type": "integer"
+                },
+                "replay_num_rollover_mask": {
+                    "type": "integer"
+                },
+                "replay_timer_timeout_mask": {
+                    "type": "integer"
                 }
-            }
+            },
+            "required": []
         },
-        "root_error_command": {
+        "correctable_error_status": {
             "type": "object",
-            "description": "Root Error Command Register (Offset: 0x2C)",
-            "required": [],
-            "properties": {}
-        },
-        "root_error_status": {
-            "type": "object",
-            "description": "Root Error Status Register (Offset: 0x30)",
-            "required": [
-                "err_cor_subclass",
-                "advanced_error_interrupt_message_number"
-            ],
             "properties": {
-                "err_cor_subclass": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 3
+                "advisory_non_fatal_error_status": {
+                    "type": "boolean"
                 },
-                "advanced_error_interrupt_message_number": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 31
+                "bad_dllp_status": {
+                    "type": "boolean"
+                },
+                "bad_tlp_status": {
+                    "type": "boolean"
+                },
+                "corrected_internal_error_status": {
+                    "type": "boolean"
+                },
+                "header_log_overflow_status": {
+                    "type": "boolean"
+                },
+                "receiver_error_status": {
+                    "type": "boolean"
+                },
+                "replay_num_rollover_status": {
+                    "type": "boolean"
+                },
+                "replay_timer_timeout_status": {
+                    "type": "boolean"
                 }
-            }
+            },
+            "required": []
+        },
+        "data": {
+            "type": "string"
         },
         "error_source_id": {
             "type": "object",
-            "description": "Error Source Identification Register (Offset: 0x34)",
-            "required": [
-                "err_cor_source_identification",
-                "err_fatal_nonfatal_source_identification"
-            ],
             "properties": {
                 "err_cor_source_identification": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 65535
+                    "type": "integer"
                 },
                 "err_fatal_nonfatal_source_identification": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 65535
+                    "type": "integer"
                 }
-            }
+            },
+            "required": []
+        },
+        "root_error_command": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        },
+        "root_error_status": {
+            "type": "object",
+            "properties": {
+                "advanced_error_interrupt_message_number": {
+                    "type": "integer"
+                },
+                "err_cor_subclass": {
+                    "type": "integer"
+                }
+            },
+            "required": []
+        },
+        "uncorrectable_error_mask": {
+            "type": "object",
+            "properties": {
+                "acs_violation_mask": {
+                    "type": "integer"
+                },
+                "atomicop_egress_blocked_mask": {
+                    "type": "integer"
+                },
+                "completer_abort_mask": {
+                    "type": "integer"
+                },
+                "completion_timeout_mask": {
+                    "type": "integer"
+                },
+                "data_link_protocol_error_mask": {
+                    "type": "integer"
+                },
+                "dmwr_request_egress_blocked_mask": {
+                    "type": "integer"
+                },
+                "ecrc_error_mask": {
+                    "type": "integer"
+                },
+                "flow_control_protocol_error_mask": {
+                    "type": "integer"
+                },
+                "ide_check_failed_mask": {
+                    "type": "integer"
+                },
+                "malformed_tlp_mask": {
+                    "type": "integer"
+                },
+                "mc_blocked_tlp_mask": {
+                    "type": "integer"
+                },
+                "misrouted_ide_tlp_mask": {
+                    "type": "integer"
+                },
+                "pcrc_check_failed_mask": {
+                    "type": "integer"
+                },
+                "poisoned_tlp_egress_blocked_mask": {
+                    "type": "integer"
+                },
+                "poisoned_tlp_received_mask": {
+                    "type": "integer"
+                },
+                "receiver_overflow_mask": {
+                    "type": "integer"
+                },
+                "surprise_down_error_mask": {
+                    "type": "integer"
+                },
+                "tlp_prefix_blocked_error_mask": {
+                    "type": "integer"
+                },
+                "tlp_translation_egress_blocked_mask": {
+                    "type": "integer"
+                },
+                "uncorrectable_internal_error_mask": {
+                    "type": "integer"
+                },
+                "unexpected_completion_mask": {
+                    "type": "integer"
+                },
+                "unsupported_request_error_mask": {
+                    "type": "integer"
+                }
+            },
+            "required": []
+        },
+        "uncorrectable_error_severity": {
+            "type": "object",
+            "properties": {
+                "acs_violation_severity": {
+                    "type": "string"
+                },
+                "atomicop_egress_blocked_severity": {
+                    "type": "string"
+                },
+                "completer_abort_severity": {
+                    "type": "string"
+                },
+                "completion_timeout_severity": {
+                    "type": "string"
+                },
+                "data_link_protocol_error_severity": {
+                    "type": "string"
+                },
+                "dmwr_request_egress_blocked_severity": {
+                    "type": "string"
+                },
+                "ecrc_error_severity": {
+                    "type": "string"
+                },
+                "flow_control_protocol_error_severity": {
+                    "type": "string"
+                },
+                "ide_check_failed_severity": {
+                    "type": "string"
+                },
+                "malformed_tlp_severity": {
+                    "type": "string"
+                },
+                "mc_blocked_tlp_severity": {
+                    "type": "string"
+                },
+                "misrouted_ide_tlp_severity": {
+                    "type": "string"
+                },
+                "pcrc_check_failed_severity": {
+                    "type": "string"
+                },
+                "poisoned_tlp_egress_blocked_severity": {
+                    "type": "string"
+                },
+                "poisoned_tlp_received_severity": {
+                    "type": "string"
+                },
+                "receiver_overflow_severity": {
+                    "type": "string"
+                },
+                "surprise_down_error_severity": {
+                    "type": "string"
+                },
+                "tlp_prefix_blocked_error_severity": {
+                    "type": "string"
+                },
+                "tlp_translation_egress_blocked_severity": {
+                    "type": "string"
+                },
+                "uncorrectable_internal_error_severity": {
+                    "type": "string"
+                },
+                "unexpected_completion_severity": {
+                    "type": "string"
+                },
+                "unsupported_request_error_severity": {
+                    "type": "string"
+                }
+            },
+            "required": []
+        },
+        "uncorrectable_error_status": {
+            "type": "object",
+            "properties": {
+                "acs_violation_status": {
+                    "type": "boolean"
+                },
+                "atomicop_egress_blocked_status": {
+                    "type": "boolean"
+                },
+                "completer_abort_status": {
+                    "type": "boolean"
+                },
+                "completion_timeout_status": {
+                    "type": "boolean"
+                },
+                "data_link_protocol_error_status": {
+                    "type": "boolean"
+                },
+                "dmwr_request_egress_blocked_status": {
+                    "type": "boolean"
+                },
+                "ecrc_error_status": {
+                    "type": "boolean"
+                },
+                "flow_control_protocol_error_status": {
+                    "type": "boolean"
+                },
+                "ide_check_failed_status": {
+                    "type": "boolean"
+                },
+                "malformed_tlp_status": {
+                    "type": "boolean"
+                },
+                "mc_blocked_tlp_status": {
+                    "type": "boolean"
+                },
+                "misrouted_ide_tlp_status": {
+                    "type": "boolean"
+                },
+                "pcrc_check_failed_status": {
+                    "type": "boolean"
+                },
+                "poisoned_tlp_egress_blocked_status": {
+                    "type": "boolean"
+                },
+                "poisoned_tlp_received": {
+                    "type": "boolean"
+                },
+                "receiver_overflow_status": {
+                    "type": "boolean"
+                },
+                "surprise_down_error_status": {
+                    "type": "boolean"
+                },
+                "tlp_prefix_blocked_error_status": {
+                    "type": "boolean"
+                },
+                "tlp_translation_egress_blocked_status": {
+                    "type": "boolean"
+                },
+                "uncorrectable_internal_error_status": {
+                    "type": "boolean"
+                },
+                "unexpected_completion_status": {
+                    "type": "boolean"
+                },
+                "unsupported_request_error_status": {
+                    "type": "boolean"
+                }
+            },
+            "required": []
         }
-    }
+    },
+    "required": []
 }
