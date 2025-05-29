@@ -787,7 +787,7 @@ json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	 * Root Control Register
 	 * Offset: 0x1C
 	 */
-	fields_ir = json_object_new_object();
+	//fields_ir = json_object_new_object();
 	//add_bool(fields_ir, "system_error_on_correctable_error_enable",
 	//	 cap_decode->root_control
 	//		 .system_error_on_correctable_error_enable);
@@ -804,19 +804,19 @@ json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	//add_bool(fields_ir, "no_nfm_subtree_below_this_root_port",
 	//	 cap_decode->root_control.no_nfm_subtree_below_this_root_port);
 	//add_int(fields_ir, "rsvdp", cap_decode->root_control.rsvdp);
-	json_object_object_add(pcie_capability_ir, "root_control", fields_ir);
+	//json_object_object_add(pcie_capability_ir, "root_control", fields_ir);
 
 	/*
 	 * Root Capabilities Register
 	 * Offset: 0x1E
 	 */
-	fields_ir = json_object_new_object();
+	//fields_ir = json_object_new_object();
 	//add_bool(fields_ir, "configuraton_rrs_software_visibility",
 	//	 cap_decode->root_capabilities
 	//		 .configuraton_rrs_software_visibility);
 	//add_int(fields_ir, "rsvdp", cap_decode->root_capabilities.rsvdp);
-	json_object_object_add(pcie_capability_ir, "root_capabilities",
-			       fields_ir);
+	//json_object_object_add(pcie_capability_ir, "root_capabilities",
+	//		       fields_ir);
 
 	/*
 	 * Root Status Register
@@ -1034,26 +1034,26 @@ json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	 * Slot Capabilities 2 Register
 	 * Offset: 0x34
 	 */
-	fields_ir = json_object_new_object();
+	//fields_ir = json_object_new_object();
 	//add_int(fields_ir, "rsvdp", cap_decode->slot_capabilities2.rsvdp);
-	json_object_object_add(pcie_capability_ir, "slot_capabilities2",
-			       fields_ir);
+	//json_object_object_add(pcie_capability_ir, "slot_capabilities2",
+	//		       fields_ir);
 
 	/*
 	 * Slot Control 2 Register
 	 * Offset: 0x38
 	 */
-	fields_ir = json_object_new_object();
+	//fields_ir = json_object_new_object();
 	//add_int(fields_ir, "rsvdp", cap_decode->slot_control2.rsvdp);
-	json_object_object_add(pcie_capability_ir, "slot_control2", fields_ir);
+	//json_object_object_add(pcie_capability_ir, "slot_control2", fields_ir);
 
 	/*
 	 * Slot Status 2 Register
 	 * Offset: 0x3A
 	 */
-	fields_ir = json_object_new_object();
+	//fields_ir = json_object_new_object();
 	//add_int(fields_ir, "rsvdp", cap_decode->slot_status2.rsvdp);
-	json_object_object_add(pcie_capability_ir, "slot_status2", fields_ir);
+	//json_object_object_add(pcie_capability_ir, "slot_status2", fields_ir);
 
 	return pcie_capability_ir;
 }
@@ -1442,7 +1442,7 @@ json_object *pcie_aer_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	 * Root Error Command Register
 	 * Offset: 0x2C
 	 */
-	fields_ir = json_object_new_object();
+	//fields_ir = json_object_new_object();
 	//add_bool(fields_ir, "correctable_error_reporting_enable",
 	//	 aer_decode->root_error_command
 	//		 .correctable_error_reporting_enable);
@@ -1452,8 +1452,8 @@ json_object *pcie_aer_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	//add_bool(fields_ir, "fatal_error_reporting_enable",
 	//	 aer_decode->root_error_command.fatal_error_reporting_enable);
 	//add_int(fields_ir, "rsvdp", aer_decode->root_error_command.rsvdp);
-	json_object_object_add(aer_capability_ir, "root_error_command",
-			       fields_ir);
+	///json_object_object_add(aer_capability_ir, "root_error_command",
+	//		       fields_ir);
 
 	/*
 	 * Root Error Status Register
