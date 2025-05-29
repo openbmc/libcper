@@ -107,12 +107,10 @@
             }
         },
         "capabilityStructure": {
-            "type": "object",
-            "description": "PCIe Capabilities structure"
+            "$ref": "./sections/cper-pcie-capabilityStructure.json"
         },
         "aerInfo": {
-            "type": "object",
-            "description": "PCIe Advanced Error Reporting Information"
+            "$ref": "./sections/cper-pcie-aerInfo.json"
         }
     }
 }

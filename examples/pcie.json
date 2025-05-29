@@ -93,7 +93,6 @@
                         "err_cor_source_identification": 40465,
                         "err_fatal_nonfatal_source_identification": 56329
                     },
-                    "root_error_command": {},
                     "root_error_status": {
                         "advanced_error_interrupt_message_number": 18,
                         "err_cor_subclass": 0
@@ -245,7 +244,6 @@
                         "transactions_pending": false,
                         "unsupported_request_detected": true
                     },
-                    "device_status2": {},
                     "link_capabilities": {
                         "aspm_optionality_compliance": false,
                         "aspm_support": 2,
@@ -326,8 +324,6 @@
                         },
                         "next_capability_pointer": 180
                     },
-                    "root_capabilities": {},
-                    "root_control": {},
                     "root_status": {
                         "pme_pending": 1,
                         "pme_requester_id": 45292,
@@ -340,19 +336,16 @@
                             "raw": 2
                         }
                     },
-                    "slot_capabilities2": {},
                     "slot_control": {
                         "attention_indicator_control": 3,
                         "power_indicator_control": 0,
                         "rsvdp": 1
                     },
-                    "slot_control2": {},
                     "slot_status": {
                         "command_completed": 0,
                         "mrl_sensor_changed": 0,
                         "mrl_sensor_state": 1
-                    },
-                    "slot_status2": {}
+                    }
                 },
                 "commandStatus": {
                     "commandRegister": 49788,
