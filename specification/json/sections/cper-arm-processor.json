@@ -106,6 +106,7 @@
                         "additionalProperties": false,
                         "minProperties": 1,
                         "maxProperties": 1,
+                        "required": [],
                         "properties": {
                             "cacheError": {
                                 "type": "object",
