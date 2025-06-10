@@ -109,6 +109,7 @@
                         "required": [],
                         "properties": {
                             "cacheError": {
+                                "$id": "cper-json-cacheerror",
                                 "type": "object",
                                 "required": [],
                                 "additionalProperties": false,
@@ -139,6 +140,7 @@
                                 }
                             },
                             "tlbError": {
+                                "$id": "cper-json-tlberror",
                                 "type": "object",
                                 "required": [],
                                 "additionalProperties": false,
@@ -169,6 +171,7 @@
                                 }
                             },
                             "busError": {
+                                "$id": "cper-json-buserror",
                                 "type": "object",
                                 "required": [],
                                 "additionalProperties": false,
