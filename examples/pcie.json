@@ -224,7 +224,7 @@
                         "unsupported_request_reporting_enabled": "Disabled"
                     },
                     "device_control2": {
-                        "10_bit_tag_requester_enable": true,
+                        "bit_tag_requester_10_enable": true,
                         "ari_forwarding_enable": true,
                         "atomicop_egress_blocking": true,
                         "atomicop_requester_enable": true,

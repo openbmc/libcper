@@ -928,8 +928,8 @@ json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 		 cap_decode->device_control2.ltr_mechanism_enable);
 	add_bool(fields_ir, "emergency_power_reduction_request",
 		 cap_decode->device_control2.emergency_power_reduction_request);
-	add_bool(fields_ir, "10_bit_tag_requester_enable",
-		 cap_decode->device_control2._10_bit_tag_requester_enable);
+	add_bool(fields_ir, "bit_tag_requester_10_enable",
+		 cap_decode->device_control2.bit_tag_requester_10_enable);
 	add_int(fields_ir, "obff_enable",
 		cap_decode->device_control2.obff_enable);
 	//add_bool(fields_ir, "end_end_tlp_prefix_blocking",
