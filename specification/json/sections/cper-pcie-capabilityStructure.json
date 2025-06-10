@@ -164,7 +164,7 @@
         "device_control2": {
             "type": "object",
             "properties": {
-                "10_bit_tag_requester_enable": {
+                "bit_tag_requester_10_enable": {
                     "type": "boolean"
                 },
                 "ari_forwarding_enable": {

@@ -378,7 +378,7 @@ typedef struct {
 	UINT16 ido_completion_enable : 1;	      // bit [9]
 	UINT16 ltr_mechanism_enable : 1;	      // bit [10]
 	UINT16 emergency_power_reduction_request : 1; // bit [11]
-	UINT16 _10_bit_tag_requester_enable : 1;      // bit [12]
+	UINT16 bit_tag_requester_10_enable : 1;      // bit [12]
 	UINT16 obff_enable : 2;			      // bits [14:13]
 	UINT16 end_end_tlp_prefix_blocking : 1;	      // bit [15]
 } __attribute__((packed)) device_control2_t;
