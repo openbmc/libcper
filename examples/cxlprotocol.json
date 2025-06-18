@@ -1,79 +1,81 @@
 {
-    "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 611702976,
-        "recordLength": 392,
-        "revision": {
-            "major": 0,
-            "minor": 0
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 0,
-            "name": "Recoverable"
-        },
-        "timestamp": "5891-09-02T05:00:32+00:00",
-        "timestampIsPrecise": false
+  "header":{
+    "revision":{
+      "major":0,
+      "minor":0
     },
-    "sectionDescriptors": [
-        {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": true,
-                "latentError": false,
-                "overflow": false,
-                "primary": true,
-                "propagated": true,
-                "reset": false,
-                "resourceNotAccessible": false
-            },
-            "fruID": "812742df-6564-fe37-3d33-86899e72aa45",
-            "revision": {
-                "major": 216,
-                "minor": 154
-            },
-            "sectionLength": 192,
-            "sectionOffset": 200,
-            "sectionType": {
-                "data": "80b9efb4-52b5-4de3-a777-68784b771048",
-                "type": "CXL Protocol Error"
-            },
-            "severity": {
-                "code": 0,
-                "name": "Recoverable"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "CxlProtocol": {
-                "agentType": {
-                    "name": "CXL 1.1 Device",
-                    "value": 0
-                },
-                "capabilityStructure": "b2Nwsc2mD083GA2qk6btbnFWI93ZkCworsxoyOc3w1abMwho2he3ES/Eu8JqqDDb/1S42OTkAJOwaVuX",
-                "cxlDVSEC": "DVo9PB74/4ihL2Oggxx4aAB4+7HhVkiCdTa9yCxh9Dm7MnbaKnViy6TGayji45DiXA==",
-                "deviceID": {
-                    "classCode": 52187,
-                    "deviceID": 48649,
-                    "slotNumber": 5805,
-                    "subsystemDeviceID": 17305,
-                    "subsystemVendorID": 31347,
-                    "vendorID": 36994
-                },
-                "deviceSerial": 18144751223266352719,
-                "dvsecLength": 49
-            }
-        }
-    ]
+    "sectionCount":1,
+    "severity":{
+      "code":0,
+      "name":"Recoverable"
+    },
+    "recordLength":355,
+    "timestamp":"4279-05-11T14:00:41+00:00",
+    "timestampIsPrecise":false,
+    "platformID":"00000000-0000-0000-0000-000000000000",
+    "creatorID":"00000000-0000-0000-0000-000000000000",
+    "notificationType":{
+      "guid":"00000000-0000-0000-0000-000000000000",
+      "type":"Unknown"
+    },
+    "recordID":246247255,
+    "flags":{
+      "value":4,
+      "name":"HW_ERROR_FLAGS_SIMULATED"
+    },
+    "persistenceInfo":0
+  },
+  "sectionDescriptors":[
+    {
+      "sectionOffset":200,
+      "sectionLength":155,
+      "revision":{
+        "major":97,
+        "minor":33
+      },
+      "flags":{
+        "primary":false,
+        "containmentWarning":true,
+        "reset":false,
+        "errorThresholdExceeded":true,
+        "resourceNotAccessible":true,
+        "latentError":true,
+        "propagated":true,
+        "overflow":true
+      },
+      "sectionType":{
+        "data":"80b9efb4-52b5-4de3-a777-68784b771048",
+        "type":"CXL Protocol Error"
+      },
+      "fruID":"3c9608be-7855-d07f-a6f2-888993c63224",
+      "fruText":"$({GDB)|Oq~5|FALE(2",
+      "severity":{
+        "code":3,
+        "name":"Informational"
+      }
+    }
+  ],
+  "sections":[
+    {
+      "message":"A CXL Protocol Error occurred",
+      "CxlProtocol":{
+        "agentType":{
+          "value":0,
+          "name":"CXL 1.1 Device"
+        },
+        "deviceID":{
+          "vendorID":29110,
+          "deviceID":10621,
+          "subsystemVendorID":26016,
+          "subsystemDeviceID":23223,
+          "classCode":16818,
+          "slotNumber":2564
+        },
+        "deviceSerial":443063695851738305,
+        "capabilityStructure":"OOlgkEKU3M\/\/t1ccRXyPiriiGKISxLgY2P\/ds8kGuCyYl012kO2U9yz8gk1qylKMugEUfKwYyIoHeNAO",
+        "dvsecLength":1,
+        "cxlDVSEC":"lQ=="
+      }
+    }
+  ]
 }

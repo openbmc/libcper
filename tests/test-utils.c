@@ -159,8 +159,10 @@ int iterate_make_required_props(json_object *jsonSchema, int all_valid_bits)
 
 			json_object_object_foreach(ref_obj, key, val)
 			{
+				// Use json_object_get to increment ref count properly
+				json_object *val_copy = json_object_get(val);
 				json_object_object_add(jsonSchema, key,
-						       json_object_get(val));
+						       val_copy);
 			}
 			json_object_object_del(jsonSchema, "$ref");
 
@@ -207,6 +209,7 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 	} else {
 		schema_file = "cper-json-full-log.json";
 	}
+	printf("start schema_validate_from_file\n");
 	int size = strlen(schema_file) + 1 + strlen(LIBCPER_JSON_SPEC) + 1;
 	char *schema_path = malloc(size);
 	snprintf(schema_path, size, "%s/%s", LIBCPER_JSON_SPEC, schema_file);
@@ -218,14 +221,14 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 		free(schema_path);
 		return 0;
 	}
-
+	printf("end iterate_make_required_props\n");
 	if (iterate_make_required_props(schema, all_valid_bits) < 0) {
 		cper_print_log("Failed to make required props\n");
 		json_object_put(schema);
 		free(schema_path);
 		return -1;
 	}
-
+	printf("start jdac_validate\n");
 	int err = jdac_validate(to_test, schema);
 	if (err == JDAC_ERR_VALID) {
 		cper_print_log("validation ok\n");
@@ -233,15 +236,15 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 		free(schema_path);
 		return 1;
 	}
-
+	printf("end jdac_validate\n");
 	cper_print_log("validate failed %d: %s\n", err, jdac_errorstr(err));
 
-	cper_print_log("schema: \n%s\n",
-		       json_object_to_json_string_ext(schema,
-						      JSON_C_TO_STRING_PRETTY));
-	cper_print_log("to_test: \n%s\n",
-		       json_object_to_json_string_ext(to_test,
-						      JSON_C_TO_STRING_PRETTY));
+	// cper_print_log("schema: \n%s\n",
+	// 	       json_object_to_json_string_ext(schema,
+	// 					      JSON_C_TO_STRING_PRETTY));
+	// cper_print_log("to_test: \n%s\n",
+	// 	       json_object_to_json_string_ext(to_test,
+	// 					      JSON_C_TO_STRING_PRETTY));
 	json_object_put(schema);
 	free(schema_path);
 	return 0;
