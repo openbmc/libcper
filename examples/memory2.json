@@ -1,93 +1,94 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 953791316,
-        "recordLength": 296,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 0,
-            "name": "Recoverable"
+            "code": 1,
+            "name": "Fatal"
         },
-        "timestamp": "9228-09-30T04:00:32+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 296,
+        "timestamp": "4419-05-30T16:00:37+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1194953865,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": true,
-                "latentError": false,
-                "overflow": false,
-                "primary": false,
-                "propagated": true,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "75824856-bd36-2cc8-61f4-39bb3276da2a",
-            "fruText": "^vS>ko]Y1oN",
-            "revision": {
-                "major": 163,
-                "minor": 246
-            },
-            "sectionLength": 96,
             "sectionOffset": 200,
+            "sectionLength": 96,
+            "revision": {
+                "major": 100,
+                "minor": 3
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": true,
+                "overflow": true
+            },
             "sectionType": {
                 "data": "61ec04fc-48e6-d813-25c9-8daa44750b12",
                 "type": "Platform Memory 2"
             },
+            "fruID": "f8e0ac4b-d630-5b07-2e4c-8262eaf7f4aa",
+            "fruText": "5v*$wh5h-+p]A.Vx+h`",
             "severity": {
-                "code": 3,
-                "name": "Informational"
+                "code": 1,
+                "name": "Fatal"
             }
         }
     ],
     "sections": [
         {
+            "message": "An Unknown Memory Error occurred at address 0x8CCA3D6506B3101B",
             "Memory2": {
-                "bank": {
-                    "value": 33388
-                },
-                "card": 52187,
-                "cardSmbiosHandle": 3291419063,
-                "chipID": 13,
                 "errorStatus": {
+                    "errorType": {
+                        "value": 19,
+                        "description": "Access to a memory address which is not mapped to any component.",
+                        "name": "ERR_UNIMPL"
+                    },
                     "addressSignal": false,
                     "controlSignal": true,
-                    "dataSignal": false,
-                    "detectedByRequester": false,
+                    "dataSignal": true,
                     "detectedByResponder": false,
-                    "errorType": {
-                        "description": "Detection of a PATH_ERROR.",
-                        "name": "ERR_ERROR",
-                        "value": 24
-                    },
-                    "firstError": true,
+                    "detectedByRequester": true,
+                    "firstError": false,
                     "overflowDroppedLogs": true
                 },
-                "physicalAddress": 7584754002385014651,
-                "physicalAddressHex": "0x6942759454E18F7B",
-                "physicalAddressMask": 8823605043237379382,
-                "rank": 2798498160,
-                "responderID": 4028408744142317612,
-                "row": 454705312,
+                "bank": {
+                    "value": 37435
+                },
                 "status": {
-                    "state": "Uncorrected",
-                    "value": 1
-                }
+                    "value": 1,
+                    "state": "Uncorrected"
+                },
+                "physicalAddress": 10144988614718853147,
+                "physicalAddressHex": "0x8CCA3D6506B3101B",
+                "physicalAddressMask": 11184253056638554426,
+                "card": 59165,
+                "row": 805005788,
+                "rank": 390551744,
+                "chipID": 125,
+                "responderID": 9346766373033023486,
+                "cardSmbiosHandle": 2010085974
             }
         }
     ]

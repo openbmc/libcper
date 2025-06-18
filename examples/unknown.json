@@ -1,64 +1,64 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 692848722,
-        "recordLength": 313,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 2,
-            "name": "Corrected"
+            "code": 3,
+            "name": "Informational"
         },
-        "timestamp": "4700-02-05T06:00:52+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 202,
+        "timestamp": "3534-08-16T16:00:27+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1387036159,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": false,
-                "latentError": false,
-                "overflow": false,
-                "primary": false,
-                "propagated": false,
-                "reset": false,
-                "resourceNotAccessible": false
-            },
-            "fruID": "cb62752a-c6a4-286b-e2e3-90e25c8b933d",
-            "fruText": "oNsvr<ME-) 2)",
-            "revision": {
-                "major": 28,
-                "minor": 131
-            },
-            "sectionLength": 113,
             "sectionOffset": 200,
+            "sectionLength": 2,
+            "revision": {
+                "major": 242,
+                "minor": 182
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": false,
+                "reset": true,
+                "errorThresholdExceeded": true,
+                "resourceNotAccessible": true,
+                "latentError": true,
+                "propagated": false,
+                "overflow": true
+            },
             "sectionType": {
-                "data": "824856e1-3675-c8bd-2c61-f439bb3276da",
+                "data": "82c26470-d9a3-379d-acc0-2c9ce424d4ea",
                 "type": "Unknown"
             },
+            "fruID": "9651f8d6-1f78-81e9-6eba-e1f3239cf1a1",
+            "fruText": "8t.HB(R'MxDV`6xc\\dt",
             "severity": {
-                "code": 2,
-                "name": "Corrected"
+                "code": 0,
+                "name": "Recoverable"
             }
         }
     ],
     "sections": [
         {
             "Unknown": {
-                "data": "29BgMiXaoRm34s2xUfD8e4/hVJR1Qmk2XYKQCb5zeplD28tptWyCbU5PHqBAGhvP+29jcLHNpg9PNxgNqpOm7W5xViPd2ZAsKK7MaMjnN8NWmzMIaNoXtxEvxLvCaqgw2/9UuNjk5ACTsGlbl6Af7js="
+                "data": "hDU="
             }
         }
     ]

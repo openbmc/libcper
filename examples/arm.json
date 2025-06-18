@@ -1,208 +1,184 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 136680837,
-        "recordLength": 468,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 3,
-            "name": "Informational"
+            "code": 1,
+            "name": "Fatal"
         },
-        "timestamp": "9355-06-10T18:00:53+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 523,
+        "timestamp": "0222-07-28T16:00:13+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 468703135,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": true,
-                "latentError": true,
-                "overflow": false,
-                "primary": false,
-                "propagated": true,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "9f68aa9b-b3f4-3bc8-e10e-045a48a46ee9",
-            "fruText": "I]sit9'f:wJ;",
-            "revision": {
-                "major": 46,
-                "minor": 70
-            },
-            "sectionLength": 268,
             "sectionOffset": 200,
+            "sectionLength": 323,
+            "revision": {
+                "major": 138,
+                "minor": 130
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": true,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": false,
+                "overflow": true
+            },
             "sectionType": {
                 "data": "e19e3d16-bc11-11e4-9caa-c2051d5d46b0",
                 "type": "ARM"
             },
+            "fruID": "9463862f-9ce7-6032-299a-5d7e32b261a7",
+            "fruText": "S|3AIG[\"<)Czi:N%!UT",
             "severity": {
-                "code": 3,
-                "name": "Informational"
+                "code": 0,
+                "name": "Recoverable"
             }
         }
     ],
     "sections": [
         {
+            "message": "An ARM Processor Error occurred; Error Type(s): {Bus Error Physical Addr=0x56B4ECD1926987, TLB Error Physical Addr=0x1924E7B2AD2885}",
             "ArmProcessor": {
-                "contextInfo": [
-                    {
-                        "registerArray": {
-                            "dacr": 4058308074,
-                            "dfar": 2525196125,
-                            "dfsr": 4222076846,
-                            "ifar": 842240806,
-                            "isr": 955228180,
-                            "mair0": 3936368270,
-                            "mair1": 1106632640,
-                            "midr": 1403917678,
-                            "mpidr": 2261840425,
-                            "nmrr": 253514593,
-                            "prrr": 1074512922,
-                            "sctlr_ns": 1802714711,
-                            "spsr": 1822712542,
-                            "spsr_abt": 1498825880,
-                            "spsr_fiq": 2442808099,
-                            "spsr_irq": 2330216801,
-                            "spsr_svc": 2618340411,
-                            "spsr_und": 581709063,
-                            "tpidrprw": 1214429169,
-                            "tpidruro": 3551778293,
-                            "tpidrurw": 3493812023,
-                            "ttbcr": 3207173788,
-                            "ttbr0": 1112654817,
-                            "ttbr1": 1204565260
-                        },
-                        "registerArraySize": 96,
-                        "registerContextType": {
-                            "name": "AArch32 EL1 Context Registers",
-                            "value": 1
-                        },
-                        "version": 36737
-                    },
-                    {
-                        "registerArray": {
-                            "mrsEncoding": {
-                                "crm": 14,
-                                "crn": 15,
-                                "o0": 0,
-                                "op1": 1,
-                                "op2": 6
-                            },
-                            "value": 12212887984593063555
-                        },
-                        "registerArraySize": 10,
-                        "registerContextType": {
-                            "name": "Miscellaneous System Register Structure",
-                            "value": 8
-                        },
-                        "version": 5008
-                    }
-                ],
+                "errorInfoNum": 2,
                 "contextInfoNum": 2,
+                "sectionLength": 323,
                 "errorAffinity": {
-                    "type": "Vendor Defined",
-                    "value": 2
+                    "value": 2,
+                    "type": "Vendor Defined"
                 },
+                "midrEl1": 16186631622361702307,
+                "psciState": 2553131417,
                 "errorInfo": [
                     {
+                        "version": 0,
+                        "length": 32,
+                        "errorType": {
+                            "value": 2,
+                            "name": "Bus Error"
+                        },
+                        "multipleError": {
+                            "value": 516,
+                            "type": "Multiple Errors"
+                        },
                         "errorInformation": {
                             "busError": {
-                                "accessMode": {
-                                    "name": "Secure",
-                                    "value": 0
+                                "transactionType": {
+                                    "value": 0,
+                                    "name": "Instruction"
                                 },
-                                "corrected": false,
-                                "level": 5,
-                                "memoryAttributes": 349,
+                                "level": 7,
+                                "corrected": true,
                                 "restartablePC": false,
                                 "timedOut": true,
-                                "transactionType": {
-                                    "name": "Instruction",
-                                    "value": 0
+                                "memoryAttributes": 223,
+                                "accessMode": {
+                                    "value": 0,
+                                    "name": "Secure"
                                 }
                             }
                         },
-                        "errorType": {
-                            "name": "Bus Error",
-                            "value": 2
-                        },
-                        "length": 32,
-                        "multipleError": {
-                            "type": "Multiple Errors",
-                            "value": 22513
-                        },
-                        "physicalFaultAddress": 5479757370912725761,
-                        "version": 0
+                        "physicalFaultAddress": 6247878967918430158
                     },
                     {
+                        "version": 0,
+                        "length": 32,
+                        "errorType": {
+                            "value": 1,
+                            "name": "TLB Error"
+                        },
+                        "multipleError": {
+                            "value": 3932,
+                            "type": "Multiple Errors"
+                        },
                         "errorInformation": {
                             "tlbError": {
-                                "corrected": false,
-                                "level": 3,
-                                "restartablePC": false,
                                 "transactionType": {
-                                    "name": "Data Access",
-                                    "value": 1
-                                }
+                                    "value": 2,
+                                    "name": "Generic"
+                                },
+                                "level": 7,
+                                "corrected": false,
+                                "restartablePC": false
                             }
                         },
-                        "errorType": {
-                            "name": "TLB Error",
-                            "value": 1
-                        },
-                        "length": 32,
-                        "multipleError": {
-                            "type": "Multiple Errors",
-                            "value": 31412
-                        },
-                        "physicalFaultAddress": 4939183952082867886,
-                        "version": 0
-                    },
-                    {
-                        "errorInformation": {
-                            "tlbError": {
-                                "corrected": false,
-                                "level": 2,
-                                "restartablePC": false,
-                                "transactionType": {
-                                    "name": "Instruction",
-                                    "value": 0
-                                }
-                            }
-                        },
-                        "errorType": {
-                            "name": "TLB Error",
-                            "value": 1
-                        },
-                        "length": 32,
-                        "multipleError": {
-                            "type": "Multiple Errors",
-                            "value": 60437
-                        },
-                        "physicalFaultAddress": 9969676858262076525,
-                        "version": 0
+                        "physicalFaultAddress": 1811827704705090828
                     }
                 ],
-                "errorInfoNum": 3,
-                "midrEl1": 8255892182538958568,
-                "psciState": 571887984,
-                "sectionLength": 268,
+                "contextInfo": [
+                    {
+                        "version": 41522,
+                        "registerContextType": {
+                            "value": 6,
+                            "name": "AArch64 EL2 Context Registers"
+                        },
+                        "registerArraySize": 120,
+                        "registerArray": {
+                            "elr_el2": 13049749995993523529,
+                            "esr_el2": 11118887861619029372,
+                            "far_el2": 7212589857892307171,
+                            "hacr_el2": 12847606100887087387,
+                            "hcr_el2": 14496328792146101538,
+                            "hpfar_el2": 16583757111034089442,
+                            "mair_el2": 8647365056814043634,
+                            "sctlr_el2": 7746679135416749380,
+                            "sp_el2": 3232977446290074154,
+                            "spsr_el2": 11231049777532730701,
+                            "tcr_el2": 11157225179124600694,
+                            "tpidr_el2": 15238202059363704478,
+                            "ttbr0_el2": 8718568123219243676,
+                            "vtcr_el2": 6736659039993645977,
+                            "vttbr_el2": 10435888409383244655
+                        }
+                    },
+                    {
+                        "version": 19245,
+                        "registerContextType": {
+                            "value": 2,
+                            "name": "AArch32 EL2 Context Registers"
+                        },
+                        "registerArraySize": 64,
+                        "registerArray": {
+                            "elr_hyp": 1903886792,
+                            "hamair0": 525468592,
+                            "hamair1": 2485477354,
+                            "hcr": 455195322,
+                            "hcr2": 508669792,
+                            "hdfar": 707991081,
+                            "hifar": 3752677912,
+                            "hpfar": 3701720970,
+                            "hsr": 1425146656,
+                            "htcr": 1390313253,
+                            "htpidr": 4294753040,
+                            "httbr": 3510004756,
+                            "spsr_hyp": 4046976641,
+                            "vtcr": 3502620861,
+                            "vttbr": 2685563892,
+                            "dacr32_el2": 3855352312
+                        }
+                    }
+                ],
                 "vendorSpecificInfo": {
-                    "data": "HWAcMzgSOwYZGA=="
+                    "data": "VlQ7PlYpOV4idVUpdCY9WFpRNQ=="
                 }
             }
         }

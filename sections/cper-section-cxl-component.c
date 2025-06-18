@@ -11,10 +11,16 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-cxl-component.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single CXL component error CPER section into JSON IR.
-json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
+					      char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+		 "A CXL Component Error occurred");
+
 	if (size < sizeof(EFI_CXL_COMPONENT_EVENT_HEADER)) {
 		return NULL;
 	}

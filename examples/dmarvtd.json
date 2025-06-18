@@ -1,93 +1,94 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 360136125,
-        "recordLength": 344,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 0,
-            "name": "Recoverable"
+            "code": 1,
+            "name": "Fatal"
         },
-        "timestamp": "5673-01-15T12:00:58+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 344,
+        "timestamp": "1368-03-23T15:00:26+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 260152959,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": false,
-                "latentError": false,
-                "overflow": true,
-                "primary": false,
-                "propagated": false,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "d6637073-083b-a79c-307e-8ac060e64bf4",
-            "fruText": " #4I\"W]cL#uB$tk",
+            "sectionOffset": 200,
+            "sectionLength": 144,
             "revision": {
                 "major": 40,
-                "minor": 107
+                "minor": 127
             },
-            "sectionLength": 144,
-            "sectionOffset": 200,
+            "flags": {
+                "primary": false,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": true,
+                "overflow": false
+            },
             "sectionType": {
                 "data": "71761d37-32b2-45cd-a7d0-b0fedd93e8cf",
-                "type": "Intel VT for Directed I/O Specific DMAr"
+                "type": "Intel VT for Directed I\/O Specific DMAr"
             },
+            "fruID": "c1feb066-5781-db6a-70eb-504094d2671f",
+            "fruText": "HRtq,l6 v)2,r2\"QtD9",
             "severity": {
-                "code": 3,
-                "name": "Informational"
+                "code": 0,
+                "name": "Recoverable"
             }
         }
     ],
     "sections": [
         {
+            "message": "A VT-d DMAr Error occurred",
             "VtdDmar": {
-                "capabilityRegister": 18226157516073645849,
-                "contextEntry": "w1abMwho2he3ES/Eu8JqqA==",
-                "extendedCapabilityRegister": 7584754002385014651,
+                "version": 239,
+                "revision": 89,
+                "oemID": 117215729794016,
+                "capabilityRegister": 3940572565915059456,
+                "extendedCapabilityRegister": 12601839455985371979,
+                "globalCommandRegister": 1162652124,
+                "globalStatusRegister": 225447057,
+                "faultStatusRegister": 885024238,
                 "faultRecord": {
-                    "addressType": 0,
+                    "faultInformation": 206451584006422,
+                    "sourceIdentifier": 16936,
+                    "privelegeModeRequested": true,
                     "executePermissionRequested": false,
-                    "faultInformation": 2934438007027455,
-                    "faultReason": 13,
                     "pasidPresent": false,
-                    "pasidValue": 431018,
-                    "privelegeModeRequested": false,
-                    "sourceIdentifier": 20239,
+                    "faultReason": 195,
+                    "pasidValue": 159873,
+                    "addressType": 0,
                     "type": {
-                        "name": "Write Request",
-                        "value": 0
+                        "value": 0,
+                        "name": "Write Request"
                     }
                 },
-                "faultStatusRegister": 3420144537,
-                "globalCommandRegister": 2424462646,
-                "globalStatusRegister": 2054405641,
-                "oemID": 177958299001040,
-                "pageTableEntry_Level1": 3924185897530143227,
-                "pageTableEntry_Level2": 8647026149635104867,
-                "pageTableEntry_Level3": 3432175023993797693,
-                "pageTableEntry_Level4": 6488891720834628590,
-                "pageTableEntry_Level5": 2278987830320468736,
-                "pageTableEntry_Level6": 16493546021549234992,
-                "revision": 219,
-                "rootEntry": "7W5xViPd2ZAsKK7MaMjnNw==",
-                "version": 113
+                "rootEntry": "J0xGf4BaiJweZp6vQxqNjQ==",
+                "contextEntry": "ox5FZP4fKnUOObPoSWIk6w==",
+                "pageTableEntry_Level6": 3872595756914346519,
+                "pageTableEntry_Level5": 3781395800809177499,
+                "pageTableEntry_Level4": 13517769401254793407,
+                "pageTableEntry_Level3": 15512481388714690491,
+                "pageTableEntry_Level2": 3264981915918250441,
+                "pageTableEntry_Level1": 13000931170008304901
             }
         }
     ]

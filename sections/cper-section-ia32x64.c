@@ -12,6 +12,7 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ia32x64.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Private pre-definitions.
 json_object *cper_ia32x64_processor_error_info_to_ir(
@@ -45,8 +46,13 @@ void ir_ia32x64_x64_registers_to_cper(json_object *registers, FILE *out);
 //////////////////
 
 //Converts the IA32/x64 error section described in the given descriptor into intermediate format.
-json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
+					char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+		 "An IA32/x64 Processor Error occurred");
+
 	if (size < sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD)) {
 		return NULL;
 	}

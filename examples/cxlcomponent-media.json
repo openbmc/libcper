@@ -1,54 +1,54 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1782998683,
-        "recordLength": 281,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 3,
-            "name": "Informational"
+            "code": 0,
+            "name": "Recoverable"
         },
-        "timestamp": "0824-03-07T08:00:57+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 251,
+        "timestamp": "5348-04-04T14:00:08+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 653448036,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": false,
-                "latentError": true,
-                "overflow": true,
-                "primary": false,
-                "propagated": true,
-                "reset": true,
-                "resourceNotAccessible": false
-            },
-            "fruID": "88fff81e-2fa1-a063-831c-78680078fbb1",
-            "fruText": "3kgwZANc\"\\[g^",
-            "revision": {
-                "major": 84,
-                "minor": 255
-            },
-            "sectionLength": 81,
             "sectionOffset": 200,
+            "sectionLength": 51,
+            "revision": {
+                "major": 207,
+                "minor": 65
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": true,
+                "reset": true,
+                "errorThresholdExceeded": true,
+                "resourceNotAccessible": true,
+                "latentError": true,
+                "propagated": true,
+                "overflow": false
+            },
             "sectionType": {
                 "data": "fbcd0a77-c260-417f-85a9-088b1621eba6",
                 "type": "CXL General Media Component Error"
             },
+            "fruID": "af251022-6d46-42ce-d961-a16eab413385",
+            "fruText": ".Jv7G>XiEV97UK1xm]>",
             "severity": {
                 "code": 2,
                 "name": "Corrected"
@@ -57,20 +57,21 @@
     ],
     "sections": [
         {
+            "message": "A CXL Component Error occurred",
             "CxlComponent": {
-                "cxlComponentEventLog": {
-                    "data": "Q9vLabVsgm1OTx6gQBobz/tvY3CxzaYPTzcYDaqTpu1ucVYj3dmQLCiuzGjI5zfDVg=="
-                },
+                "length": 51,
                 "deviceID": {
-                    "busNumber": 84,
-                    "deviceID": 31740,
-                    "deviceNumber": 225,
-                    "functionNumber": 143,
-                    "segmentNumber": 30100,
-                    "slotNumber": 3368,
-                    "vendorID": 61521
+                    "vendorID": 54846,
+                    "deviceID": 8598,
+                    "functionNumber": 241,
+                    "deviceNumber": 15,
+                    "busNumber": 158,
+                    "segmentNumber": 4013,
+                    "slotNumber": 7269
                 },
-                "length": 81
+                "cxlComponentEventLog": {
+                    "data": "DnWUkgiT4jFubS6rEJWJ\/z4UAQ=="
+                }
             }
         }
     ]
