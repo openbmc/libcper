@@ -10,11 +10,13 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-memory.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single memory error CPER section into JSON IR.
 json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
-						UINT32 size)
+						UINT32 size, char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
 	if (size < sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA)) {
 		return NULL;
 	}
@@ -52,12 +54,22 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 	json_object_object_add(section_ir, "bank", bank);
 
 	//Memory error type.
+	const char *mem_type_str = NULL;
 	if (isvalid_prop_to_ir(&ui64Type, 14)) {
 		json_object *memory_error_type = integer_to_readable_pair(
 			memory_error->ErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
 			MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
 		json_object_object_add(section_ir, "memoryErrorType",
 				       memory_error_type);
+		mem_type_str = json_object_get_string(
+			json_object_object_get(memory_error_type, "name"));
+	}
+	if (mem_type_str != NULL) {
+		snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			 "A %s Memory Error occurred", mem_type_str);
+	} else {
+		snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			 "An Unknown Memory Error occurred");
 	}
 
 	//"Extended" row/column indication field + misc.
@@ -105,6 +117,13 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 			 memory_error->PhysicalAddress);
 		json_object_object_add(section_ir, "physicalAddressHex",
 				       json_object_new_string(hexstring_buf));
+		char physical_address_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		snprintf(physical_address_desc,
+			 EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " at address 0x%016llX",
+			 memory_error->PhysicalAddress);
+		strncat(*desc_string, physical_address_desc,
+			EFI_ERROR_DESCRIPTION_STRING_LEN);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		json_object_object_add(
@@ -116,7 +135,13 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 		json_object_object_add(
 			section_ir, "node",
 			json_object_new_uint64(memory_error->Node));
+		char node_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		snprintf(node_desc, EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " at node %d", memory_error->Node);
+		strncat(*desc_string, node_desc,
+			EFI_ERROR_DESCRIPTION_STRING_LEN);
 	}
+
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
 		json_object_object_add(
 			section_ir, "card",
@@ -173,8 +198,11 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 
 //Converts a single memory error 2 CPER section into JSON IR.
 json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
-						 UINT32 size)
+						 UINT32 size,
+						 char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+
 	if (size < sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA)) {
 		return NULL;
 	}
@@ -212,14 +240,23 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 	json_object_object_add(section_ir, "bank", bank);
 
 	//Memory error type.
+	const char *mem_type_str = NULL;
 	if (isvalid_prop_to_ir(&ui64Type, 13)) {
 		json_object *memory_error_type = integer_to_readable_pair(
 			memory_error->MemErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
 			MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
 		json_object_object_add(section_ir, "memoryErrorType",
 				       memory_error_type);
+		mem_type_str = json_object_get_string(
+			json_object_object_get(memory_error_type, "name"));
 	}
-
+	if (mem_type_str != NULL) {
+		snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			 "A %s Memory Error occurred", mem_type_str);
+	} else {
+		snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			 "An Unknown Memory Error occurred");
+	}
 	//Status.
 	if (isvalid_prop_to_ir(&ui64Type, 14)) {
 		json_object *status = json_object_new_object();
@@ -240,6 +277,13 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 		json_object_object_add(
 			section_ir, "physicalAddress",
 			json_object_new_uint64(memory_error->PhysicalAddress));
+		char physical_address_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		snprintf(physical_address_desc,
+			 EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " at address 0x%016llX",
+			 memory_error->PhysicalAddress);
+		strncat(*desc_string, physical_address_desc,
+			EFI_ERROR_DESCRIPTION_STRING_LEN);
 	}
 
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
@@ -258,6 +302,11 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 		json_object_object_add(
 			section_ir, "node",
 			json_object_new_uint64(memory_error->Node));
+		char node_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		snprintf(node_desc, EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " on node %d", memory_error->Node);
+		strncat(*desc_string, node_desc,
+			EFI_ERROR_DESCRIPTION_STRING_LEN);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
 		json_object_object_add(

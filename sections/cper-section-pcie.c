@@ -12,6 +12,7 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-pcie.h>
 #include <libcper/log.h>
+#include <string.h>
 
 json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error);
 json_object *pcie_aer_to_ir(EFI_PCIE_ERROR_DATA *pcie_error);
@@ -293,8 +294,13 @@ const char *get_class_code_name(UINT8 base, UINT8 sub, UINT8 programming)
 }
 
 //Converts a single PCIe CPER section into JSON IR.
-json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
+				     char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	strncpy(*desc_string, "A PCIe Error occurred",
+		SECTION_DESC_STRING_SIZE);
+
 	if (size < sizeof(EFI_PCIE_ERROR_DATA)) {
 		return NULL;
 	}
