@@ -1,71 +1,72 @@
 {
-    "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 831413059,
-        "recordLength": 232,
-        "revision": {
-            "major": 0,
-            "minor": 0
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 3,
-            "name": "Informational"
-        },
-        "timestamp": "0341-06-30T11:00:13+00:00",
-        "timestampIsPrecise": false
+  "header":{
+    "revision":{
+      "major":0,
+      "minor":0
     },
-    "sectionDescriptors": [
-        {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": false,
-                "latentError": true,
-                "overflow": true,
-                "primary": true,
-                "propagated": false,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "68ccae28-e7c8-c337-569b-330868da17b7",
-            "fruText": "`%*mwS0^lzn",
-            "revision": {
-                "major": 111,
-                "minor": 251
-            },
-            "sectionLength": 32,
-            "sectionOffset": 200,
-            "sectionType": {
-                "data": "81212a96-09ed-4996-9471-8d729c8e69ed",
-                "type": "Firmware Error Record Reference"
-            },
-            "severity": {
-                "code": 3,
-                "name": "Informational"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "Firmware": {
-                "errorRecordType": {
-                    "name": "SOC Firmware Error Record (Type2)",
-                    "value": 2
-                },
-                "recordID": 0,
-                "recordIDGUID": "54e18f7b-7594-6942-365d-829009be737a",
-                "revision": 2
-            }
-        }
-    ]
+    "sectionCount":1,
+    "severity":{
+      "code":3,
+      "name":"Informational"
+    },
+    "recordLength":232,
+    "timestamp":"2765-04-09T17:00:11+00:00",
+    "timestampIsPrecise":false,
+    "platformID":"00000000-0000-0000-0000-000000000000",
+    "creatorID":"00000000-0000-0000-0000-000000000000",
+    "notificationType":{
+      "guid":"00000000-0000-0000-0000-000000000000",
+      "type":"Unknown"
+    },
+    "recordID":1275373743,
+    "flags":{
+      "value":4,
+      "name":"HW_ERROR_FLAGS_SIMULATED"
+    },
+    "persistenceInfo":0
+  },
+  "sectionDescriptors":[
+    {
+      "sectionOffset":200,
+      "sectionLength":32,
+      "revision":{
+        "major":66,
+        "minor":183
+      },
+      "flags":{
+        "primary":false,
+        "containmentWarning":false,
+        "reset":false,
+        "errorThresholdExceeded":false,
+        "resourceNotAccessible":true,
+        "latentError":false,
+        "propagated":false,
+        "overflow":false
+      },
+      "sectionType":{
+        "data":"81212a96-09ed-4996-9471-8d729c8e69ed",
+        "type":"Firmware Error Record Reference"
+      },
+      "fruID":"e19da9e6-23cb-bfac-66e7-dac1e23305a6",
+      "fruText":"2Rct!UaQ@47ns(028]$",
+      "severity":{
+        "code":1,
+        "name":"Fatal"
+      }
+    }
+  ],
+  "sections":[
+    {
+      "message":"A Firmware Error occurred",
+      "Firmware":{
+        "errorRecordType":{
+          "value":0,
+          "name":"IPF SAL Error Record"
+        },
+        "revision":2,
+        "recordID":0,
+        "recordIDGUID":"ed782c67-8094-48bd-bfca-5dc5a0619384"
+      }
+    }
+  ]
 }

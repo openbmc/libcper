@@ -1,97 +1,98 @@
 {
-    "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1782998683,
-        "recordLength": 280,
-        "revision": {
-            "major": 0,
-            "minor": 0
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 3,
-            "name": "Informational"
-        },
-        "timestamp": "0824-03-07T08:00:57+00:00",
-        "timestampIsPrecise": false
+  "header":{
+    "revision":{
+      "major":0,
+      "minor":0
     },
-    "sectionDescriptors": [
-        {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": false,
-                "latentError": true,
-                "overflow": true,
-                "primary": false,
-                "propagated": true,
-                "reset": true,
-                "resourceNotAccessible": false
-            },
-            "fruID": "88fff81e-2fa1-a063-831c-78680078fbb1",
-            "fruText": "3kgwZANc\"\\[g^",
-            "revision": {
-                "major": 84,
-                "minor": 255
-            },
-            "sectionLength": 80,
-            "sectionOffset": 200,
-            "sectionType": {
-                "data": "a5bc1114-6f64-4ede-b863-3e83ed7c83b1",
-                "type": "Platform Memory"
-            },
-            "severity": {
-                "code": 2,
-                "name": "Corrected"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "Memory": {
-                "bank": {
-                    "value": 33388
-                },
-                "bitPosition": 6938,
-                "card": 52187,
-                "cardSmbiosHandle": 51304,
-                "errorStatus": {
-                    "addressSignal": false,
-                    "controlSignal": true,
-                    "dataSignal": false,
-                    "detectedByRequester": false,
-                    "detectedByResponder": false,
-                    "errorType": {
-                        "description": "Access to a memory address which is not mapped to any component.",
-                        "name": "ERR_UNIMPL",
-                        "value": 19
-                    },
-                    "firstError": true,
-                    "overflowDroppedLogs": true
-                },
-                "extended": {
-                    "chipIdentification": 1,
-                    "rowBit16": false,
-                    "rowBit17": false
-                },
-                "memoryErrorType": {
-                    "name": "Multi-bit ECC",
-                    "value": 3
-                },
-                "moduleSmbiosHandle": 14311,
-                "physicalAddressMask": 8823605043237379382,
-                "responderID": 12003124405090078479,
-                "row": 7759
-            }
-        }
-    ]
+    "sectionCount":1,
+    "severity":{
+      "code":2,
+      "name":"Corrected"
+    },
+    "recordLength":280,
+    "timestamp":"9932-01-17T01:00:19+00:00",
+    "timestampIsPrecise":false,
+    "platformID":"00000000-0000-0000-0000-000000000000",
+    "creatorID":"00000000-0000-0000-0000-000000000000",
+    "notificationType":{
+      "guid":"00000000-0000-0000-0000-000000000000",
+      "type":"Unknown"
+    },
+    "recordID":1918502651,
+    "flags":{
+      "value":4,
+      "name":"HW_ERROR_FLAGS_SIMULATED"
+    },
+    "persistenceInfo":0
+  },
+  "sectionDescriptors":[
+    {
+      "sectionOffset":200,
+      "sectionLength":80,
+      "revision":{
+        "major":114,
+        "minor":169
+      },
+      "flags":{
+        "primary":true,
+        "containmentWarning":true,
+        "reset":false,
+        "errorThresholdExceeded":true,
+        "resourceNotAccessible":false,
+        "latentError":false,
+        "propagated":false,
+        "overflow":false
+      },
+      "sectionType":{
+        "data":"a5bc1114-6f64-4ede-b863-3e83ed7c83b1",
+        "type":"Platform Memory"
+      },
+      "fruID":"4c476e7d-44b9-3eab-6f24-1438848ed43c",
+      "fruText":"+q$`4pGx'S6@wY|5gp!",
+      "severity":{
+        "code":0,
+        "name":"Recoverable"
+      }
+    }
+  ],
+  "sections":[
+    {
+      "message":"A Unknown Memory Error occurred",
+      "Memory":{
+        "errorStatus":{
+          "errorType":{
+            "value":16,
+            "description":"Error detected in the bus.",
+            "name":"ERR_BUS"
+          },
+          "addressSignal":true,
+          "controlSignal":true,
+          "dataSignal":false,
+          "detectedByResponder":true,
+          "detectedByRequester":false,
+          "firstError":true,
+          "overflowDroppedLogs":true
+        },
+        "bank":{
+          "value":52608
+        },
+        "memoryErrorType":{
+          "value":0,
+          "name":"Unknown"
+        },
+        "extended":{
+          "rowBit16":false,
+          "rowBit17":false,
+          "chipIdentification":6
+        },
+        "cardSmbiosHandle":5005,
+        "moduleSmbiosHandle":21116,
+        "physicalAddressMask":10899239918570409638,
+        "card":55781,
+        "row":24942,
+        "bitPosition":1470,
+        "responderID":4951761760294835334
+      }
+    }
+  ]
 }

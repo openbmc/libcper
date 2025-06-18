@@ -1,67 +1,68 @@
 {
-    "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1573690056,
-        "recordLength": 344,
-        "revision": {
-            "major": 0,
-            "minor": 0
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 0,
-            "name": "Recoverable"
-        },
-        "timestamp": "7308-10-07T11:00:02+00:00",
-        "timestampIsPrecise": false
+  "header":{
+    "revision":{
+      "major":0,
+      "minor":0
     },
-    "sectionDescriptors": [
-        {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": false,
-                "latentError": true,
-                "overflow": true,
-                "primary": false,
-                "propagated": true,
-                "reset": false,
-                "resourceNotAccessible": false
-            },
-            "fruID": "3bd66370-9c08-30a7-7e8a-c060e64bf424",
-            "fruText": "#4I\"W]cL#uB$tkE",
-            "revision": {
-                "major": 226,
-                "minor": 40
-            },
-            "sectionLength": 144,
-            "sectionOffset": 200,
-            "sectionType": {
-                "data": "91335ef6-ebfb-4478-a6a6-88b728cf75d7",
-                "type": "CCIX PER Log Error"
-            },
-            "severity": {
-                "code": 0,
-                "name": "Recoverable"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "CcixPer": {
-                "ccixPERLog": "j+FUlHVCaTZdgpAJvnN6mUPby2m1bIJtTk8eoEAaG8/7b2Nwsc2mD083GA2qk6btbnFWI93ZkCworsxoyOc3w1abMwho2he3ES/Eu8JqqDDb/1S42OTkAJOwaVuXoB/uO1L2oywNWj08Hvj/iKEvY6CDHHhoAHj7seFWSIJ1Nr0=",
-                "ccixSourceID": 81,
-                "length": 144
-            }
-        }
-    ]
+    "sectionCount":1,
+    "severity":{
+      "code":0,
+      "name":"Recoverable"
+    },
+    "recordLength":312,
+    "timestamp":"7250-02-15T15:00:19+00:00",
+    "timestampIsPrecise":false,
+    "platformID":"00000000-0000-0000-0000-000000000000",
+    "creatorID":"00000000-0000-0000-0000-000000000000",
+    "notificationType":{
+      "guid":"00000000-0000-0000-0000-000000000000",
+      "type":"Unknown"
+    },
+    "recordID":917679292,
+    "flags":{
+      "value":4,
+      "name":"HW_ERROR_FLAGS_SIMULATED"
+    },
+    "persistenceInfo":0
+  },
+  "sectionDescriptors":[
+    {
+      "sectionOffset":200,
+      "sectionLength":112,
+      "revision":{
+        "major":24,
+        "minor":33
+      },
+      "flags":{
+        "primary":false,
+        "containmentWarning":false,
+        "reset":false,
+        "errorThresholdExceeded":false,
+        "resourceNotAccessible":true,
+        "latentError":false,
+        "propagated":false,
+        "overflow":true
+      },
+      "sectionType":{
+        "data":"91335ef6-ebfb-4478-a6a6-88b728cf75d7",
+        "type":"CCIX PER Log Error"
+      },
+      "fruID":"1dbe265c-bc46-ef61-2f70-71e2d13a961a",
+      "fruText":"OF<Fa[\/j!e+J\/Q~eei?",
+      "severity":{
+        "code":0,
+        "name":"Recoverable"
+      }
+    }
+  ],
+  "sections":[
+    {
+      "message":"A CCIX PER Log Error occurred",
+      "CcixPer":{
+        "length":112,
+        "ccixSourceID":177,
+        "ccixPERLog":"f1aw3PlWNA7HykqMNBJSEZx8SSYrEbBQjtlPByAaEG7reudDaH1kHqIu5OLRq0jZQDN9j1E\/f+PM2GJ09ZFEgp\/6qcxi4+NC75PpB7fQHJ0\/qEw++ZVZyMnLrE+XVHte"
+      }
+    }
+  ]
 }

@@ -1,84 +1,85 @@
 {
-    "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 565307241,
-        "recordLength": 232,
-        "revision": {
-            "major": 0,
-            "minor": 0
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 1,
-            "name": "Fatal"
-        },
-        "timestamp": "5630-02-09T08:00:14+00:00",
-        "timestampIsPrecise": false
+  "header":{
+    "revision":{
+      "major":0,
+      "minor":0
     },
-    "sectionDescriptors": [
-        {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": true,
-                "latentError": false,
-                "overflow": false,
-                "primary": true,
-                "propagated": false,
-                "reset": true,
-                "resourceNotAccessible": false
-            },
-            "fruID": "37e7c868-56c3-339b-0868-da17b7112fc4",
-            "fruText": "*mwS0^lznJIU",
-            "revision": {
-                "major": 177,
-                "minor": 112
-            },
-            "sectionLength": 32,
-            "sectionOffset": 200,
-            "sectionType": {
-                "data": "5b51fef7-c79d-4434-8f1b-aa62de3e2c64",
-                "type": "DMAr Generic"
-            },
-            "severity": {
-                "code": 3,
-                "name": "Informational"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "GenericDmar": {
-                "accessType": {
-                    "name": "DMA Read",
-                    "value": 1
-                },
-                "addressType": {
-                    "name": "Translation Request",
-                    "value": 1
-                },
-                "architectureType": {
-                    "name": "Unknown (Reserved)",
-                    "value": 2
-                },
-                "deviceAddress": 18226157516073645849,
-                "faultReason": {
-                    "description": "DMA request to access an address beyond the device address width.",
-                    "name": "DMA Address Out of Bounds",
-                    "value": 5
-                },
-                "requesterID": 56177,
-                "segmentNumber": 24784
-            }
-        }
-    ]
+    "sectionCount":1,
+    "severity":{
+      "code":0,
+      "name":"Recoverable"
+    },
+    "recordLength":232,
+    "timestamp":"1682-03-07T22:00:42+00:00",
+    "timestampIsPrecise":false,
+    "platformID":"00000000-0000-0000-0000-000000000000",
+    "creatorID":"00000000-0000-0000-0000-000000000000",
+    "notificationType":{
+      "guid":"00000000-0000-0000-0000-000000000000",
+      "type":"Unknown"
+    },
+    "recordID":1470503465,
+    "flags":{
+      "value":4,
+      "name":"HW_ERROR_FLAGS_SIMULATED"
+    },
+    "persistenceInfo":0
+  },
+  "sectionDescriptors":[
+    {
+      "sectionOffset":200,
+      "sectionLength":32,
+      "revision":{
+        "major":248,
+        "minor":37
+      },
+      "flags":{
+        "primary":true,
+        "containmentWarning":false,
+        "reset":false,
+        "errorThresholdExceeded":true,
+        "resourceNotAccessible":true,
+        "latentError":true,
+        "propagated":true,
+        "overflow":false
+      },
+      "sectionType":{
+        "data":"5b51fef7-c79d-4434-8f1b-aa62de3e2c64",
+        "type":"DMAr Generic"
+      },
+      "fruID":"f985b052-ef91-eee5-3c14-f2fb97a3e24e",
+      "fruText":"kIYyGu-q25l x`aAj&G",
+      "severity":{
+        "code":0,
+        "name":"Recoverable"
+      }
+    }
+  ],
+  "sections":[
+    {
+      "message":"A DMAr Generic Error occurred",
+      "GenericDmar":{
+        "requesterID":49001,
+        "segmentNumber":52187,
+        "faultReason":{
+          "value":6,
+          "description":"Invalid read or write access.",
+          "name":"Invalid Read\/Write"
+        },
+        "accessType":{
+          "value":0,
+          "name":"DMA Write"
+        },
+        "addressType":{
+          "value":0,
+          "name":"Untranslated Request"
+        },
+        "architectureType":{
+          "value":1,
+          "name":"IOMMU"
+        },
+        "deviceAddress":14267036294098112665
+      }
+    }
+  ]
 }
