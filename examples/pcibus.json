@@ -1,86 +1,87 @@
 {
-    "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1452247726,
-        "recordLength": 272,
-        "revision": {
-            "major": 0,
-            "minor": 0
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 0,
-            "name": "Recoverable"
-        },
-        "timestamp": "7692-08-16T04:00:10+00:00",
-        "timestampIsPrecise": false
+  "header":{
+    "revision":{
+      "major":0,
+      "minor":0
     },
-    "sectionDescriptors": [
-        {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": true,
-                "latentError": true,
-                "overflow": false,
-                "primary": false,
-                "propagated": true,
-                "reset": false,
-                "resourceNotAccessible": false
-            },
-            "fruID": "2ca3f652-5a0d-3c3d-1ef8-ff88a12f63a0",
-            "fruText": "H VQj3kgwZAN",
-            "revision": {
-                "major": 196,
-                "minor": 47
-            },
-            "sectionLength": 72,
-            "sectionOffset": 200,
-            "sectionType": {
-                "data": "c5753963-3b84-4095-bf78-eddad3f9c9dd",
-                "type": "PCI/PCI-X Bus"
-            },
-            "severity": {
-                "code": 2,
-                "name": "Corrected"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "PciBus": {
-                "busData": 9398085988411720601,
-                "busID": {
-                    "busNumber": 225,
-                    "segmentNumber": 84
-                },
-                "busRequestorID": 12019458076784458703,
-                "busRequestorIDHex": "0xA6CDB170636FFBCF",
-                "errorStatus": {
-                    "addressSignal": false,
-                    "controlSignal": true,
-                    "dataSignal": false,
-                    "detectedByRequester": false,
-                    "detectedByResponder": false,
-                    "errorType": {
-                        "description": "Virtual address not found on IO-TLB or IO-PDIR.",
-                        "name": "ERR_MAP",
-                        "value": 17
-                    },
-                    "firstError": true,
-                    "overflowDroppedLogs": true
-                },
-                "targetID": 10437616755251703533
-            }
-        }
-    ]
+    "sectionCount":1,
+    "severity":{
+      "code":1,
+      "name":"Fatal"
+    },
+    "recordLength":272,
+    "timestamp":"3806-05-27T11:00:48+00:00",
+    "timestampIsPrecise":false,
+    "platformID":"00000000-0000-0000-0000-000000000000",
+    "creatorID":"00000000-0000-0000-0000-000000000000",
+    "notificationType":{
+      "guid":"00000000-0000-0000-0000-000000000000",
+      "type":"Unknown"
+    },
+    "recordID":2112255763,
+    "flags":{
+      "value":4,
+      "name":"HW_ERROR_FLAGS_SIMULATED"
+    },
+    "persistenceInfo":0
+  },
+  "sectionDescriptors":[
+    {
+      "sectionOffset":200,
+      "sectionLength":72,
+      "revision":{
+        "major":201,
+        "minor":49
+      },
+      "flags":{
+        "primary":false,
+        "containmentWarning":true,
+        "reset":true,
+        "errorThresholdExceeded":false,
+        "resourceNotAccessible":false,
+        "latentError":false,
+        "propagated":false,
+        "overflow":true
+      },
+      "sectionType":{
+        "data":"c5753963-3b84-4095-bf78-eddad3f9c9dd",
+        "type":"PCI\/PCI-X Bus"
+      },
+      "fruID":"d310906a-0b8e-8ad9-3441-ef3c7c1268b1",
+      "fruText":"~;'N~xMUW~rk3a\\8olQ",
+      "severity":{
+        "code":0,
+        "name":"Recoverable"
+      }
+    }
+  ],
+  "sections":[
+    {
+      "message":"A PCI\/PCI-X Bus Error occurred",
+      "PciBus":{
+        "errorStatus":{
+          "errorType":{
+            "value":19,
+            "description":"Access to a memory address which is not mapped to any component.",
+            "name":"ERR_UNIMPL"
+          },
+          "addressSignal":true,
+          "controlSignal":false,
+          "dataSignal":false,
+          "detectedByResponder":true,
+          "detectedByRequester":false,
+          "firstError":true,
+          "overflowDroppedLogs":false
+        },
+        "busID":{
+          "busNumber":239,
+          "segmentNumber":59
+        },
+        "busData":6059318220605820359,
+        "busRequestorID":15209357871141998460,
+        "busRequestorIDHex":"0xD3127E66B335CF7C",
+        "targetID":6286024340899243424
+      }
+    }
+  ]
 }

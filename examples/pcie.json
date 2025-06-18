@@ -56,6 +56,7 @@
     ],
     "sections": [
         {
+            "message": "A PCIe Error occurred",
             "Pcie": {
                 "aerInfo": {
                     "advanced_error_capabilities_and_control": {

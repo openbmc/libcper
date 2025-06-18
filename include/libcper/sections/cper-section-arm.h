@@ -133,7 +133,8 @@ extern "C" {
 			  "sctlr_el3", "sp_el3",   "spsr_el3", "tcr_el3",      \
 			  "tpidr_el3", "ttbr0_el3" }
 
-json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size);
+json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
+				    char **desc_string);
 void ir_section_arm_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
