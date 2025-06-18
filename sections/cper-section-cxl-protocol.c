@@ -11,10 +11,16 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-cxl-protocol.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single CXL protocol error CPER section into JSON IR.
-json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
+					     char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	strncpy(*desc_string, "A CXL Protocol Error occurred",
+		SECTION_DESC_STRING_SIZE);
+
 	if (size < sizeof(EFI_CXL_PROTOCOL_ERROR_DATA)) {
 		return NULL;
 	}
