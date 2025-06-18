@@ -13,10 +13,12 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-arm.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Private pre-definitions.
 json_object *
-cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info);
+cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
+			  char **err_info_desc_i);
 json_object *
 cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 				 const UINT8 **cur_pos, UINT32 *remaining_size);
@@ -45,8 +47,13 @@ void ir_arm_misc_registers_to_cper(json_object *registers, FILE *out);
 void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out);
 
 //Converts the given processor-generic CPER section into JSON IR.
-json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
+				    char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+		 "An ARM Processor Error occurred");
+
 	const UINT8 *cur_pos = section;
 	UINT32 remaining_size = size;
 
@@ -96,6 +103,11 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 		sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
 		json_object_object_add(section_ir, "affinity3",
 				       json_object_new_uint64(sock));
+		char *node_desc_str = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+		snprintf(node_desc_str, EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " on CPU %ld", sock);
+		strncat(*desc_string, node_desc_str, strlen(node_desc_str));
+		free(node_desc_str);
 	}
 
 	json_object_object_add(section_ir, "midrEl1",
@@ -128,11 +140,22 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 			"Invalid CPER file: Invalid processor error info num.\n");
 		return NULL;
 	}
+	strncat(*desc_string, "; Error Type(s): {",
+		EFI_ERROR_DESCRIPTION_STRING_LEN);
+	char *err_info_desc_i = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN * 2);
 	for (int i = 0; i < record->ErrInfoNum; i++) {
-		json_object_array_add(error_info_array,
-				      cper_arm_error_info_to_ir(cur_error));
+		json_object_array_add(
+			error_info_array,
+			cper_arm_error_info_to_ir(cur_error, &err_info_desc_i));
+		strncat(*desc_string, err_info_desc_i, strlen(err_info_desc_i));
 		cur_error++;
+		if (i == record->ErrInfoNum - 1) {
+			strncat(*desc_string, "}", 2);
+			break;
+		}
+		strncat(*desc_string, ", ", 3);
 	}
+	free(err_info_desc_i);
 
 	cur_pos += (UINT32)(record->ErrInfoNum *
 			    sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY));
@@ -213,7 +236,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 
 //Converts a single ARM Process Error Information structure into JSON IR.
 json_object *
-cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
+cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
+			  char **err_info_desc_i)
 {
 	json_object *error_info_ir = json_object_new_object();
 
@@ -260,16 +284,27 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 		json_object *error_subinfo = NULL;
 		switch (error_info->Type) {
 		case ARM_ERROR_INFORMATION_TYPE_CACHE: //Cache
-		case ARM_ERROR_INFORMATION_TYPE_TLB:   //TLB
 			error_subinfo = cper_arm_cache_tlb_error_to_ir(
 				(EFI_ARM_CACHE_ERROR_STRUCTURE *)&error_info
 					->ErrorInformation,
 				error_info);
+			strncpy(*err_info_desc_i, "Cache Error",
+				EFI_ERROR_DESCRIPTION_STRING_LEN);
+			break;
+		case ARM_ERROR_INFORMATION_TYPE_TLB: //TLB
+			error_subinfo = cper_arm_cache_tlb_error_to_ir(
+				(EFI_ARM_CACHE_ERROR_STRUCTURE *)&error_info
+					->ErrorInformation,
+				error_info);
+			strncpy(*err_info_desc_i, "TLB Error",
+				EFI_ERROR_DESCRIPTION_STRING_LEN);
 			break;
 		case ARM_ERROR_INFORMATION_TYPE_BUS: //Bus
 			error_subinfo = cper_arm_bus_error_to_ir(
 				(EFI_ARM_BUS_ERROR_STRUCTURE *)&error_info
 					->ErrorInformation);
+			strncpy(*err_info_desc_i, "Bus Error",
+				EFI_ERROR_DESCRIPTION_STRING_LEN);
 			break;
 
 		default:
@@ -284,18 +319,30 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 	}
 
 	//Virtual fault address, physical fault address.
+	char *fault_address_desc = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
 	if (isvalid_prop_to_ir(&ui16Type, 3)) {
+		snprintf(fault_address_desc, EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " at Virtual Addr=0x%llX",
+			 error_info->VirtualFaultAddress);
+		strncat(*err_info_desc_i, fault_address_desc,
+			strlen(fault_address_desc));
 		json_object_object_add(
 			error_info_ir, "virtualFaultAddress",
 			json_object_new_uint64(
 				error_info->VirtualFaultAddress));
 	}
 	if (isvalid_prop_to_ir(&ui16Type, 4)) {
+		snprintf(fault_address_desc, EFI_ERROR_DESCRIPTION_STRING_LEN,
+			 " Physical Addr=0x%llX",
+			 error_info->PhysicalFaultAddress);
+		strncat(*err_info_desc_i, fault_address_desc,
+			strlen(fault_address_desc));
 		json_object_object_add(
 			error_info_ir, "physicalFaultAddress",
 			json_object_new_uint64(
 				error_info->PhysicalFaultAddress));
 	}
+	free(fault_address_desc);
 
 	return error_info_ir;
 }

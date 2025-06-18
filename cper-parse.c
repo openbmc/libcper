@@ -409,11 +409,19 @@ json_object *read_section(const unsigned char *cper_section_buf, size_t size,
 	if (definition->ToIR == NULL) {
 		return NULL;
 	}
-	json_object *section_ir = definition->ToIR(cper_section_buf, size);
+	char *desc_string = NULL;
+
+	json_object *section_ir =
+		definition->ToIR(cper_section_buf, size, &desc_string);
 	if (section_ir == NULL) {
 		return NULL;
 	}
 	json_object *result = json_object_new_object();
+	if (desc_string != NULL) {
+		json_object_object_add(result, "message",
+				       json_object_new_string(desc_string));
+		free(desc_string);
+	}
 	json_object_object_add(result, definition->ShortName, section_ir);
 	return result;
 }
