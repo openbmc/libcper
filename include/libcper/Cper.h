@@ -58,6 +58,16 @@ extern "C" {
 #define EFI_UINT64_HEX_STRING_LEN 19
 
 ///
+/// Single line description per section error type.
+///
+#define SECTION_DESC_STRING_SIZE 512
+
+///
+/// Description of fields within the section description string
+///
+#define EFI_ERROR_DESCRIPTION_STRING_LEN 32
+
+///
 /// The timestamp correlates to the time when the error information was collected
 /// by the system software and may not necessarily represent the time of the error
 /// event. The timestamp contains the local time in BCD format.

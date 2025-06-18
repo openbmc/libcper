@@ -47,7 +47,8 @@ typedef struct {
 
 } __attribute__((packed, aligned(1))) EFI_PCI_PCIX_DEVICE_ERROR_DATA;
 
-json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size);
+json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
+					char **desc_string);
 void ir_section_pci_dev_to_cper(json_object *section, FILE *out);
 
 #ifdef __cplusplus
