@@ -12,10 +12,24 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-dmar-iommu.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single IOMMU specific DMAr CPER section into JSON IR.
-json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
+					   char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "A IOMMU Specific DMAr Error occurred");
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to IOMMU Specific DMAr description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log(
+			"Error: IOMMU Specific DMAr description string truncated\n");
+	}
+
 	if (size < sizeof(EFI_IOMMU_DMAR_ERROR_DATA)) {
 		return NULL;
 	}

@@ -4,10 +4,23 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ampere.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts the given processor-generic CPER section into JSON IR.
-json_object *cper_section_ampere_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_ampere_to_ir(const UINT8 *section, UINT32 size,
+				       char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "An Ampere Error occurred");
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to Ampere description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log("Error: Ampere description string truncated\n");
+	}
+
 	if (size < sizeof(EFI_AMPERE_ERROR_DATA)) {
 		return NULL;
 	}

@@ -620,6 +620,7 @@ void UnknownSectionTests_BinaryEqual()
 int main()
 {
 	if (GEN_EXAMPLES) {
+		cper_create_examples("generic");
 		cper_create_examples("arm");
 		cper_create_examples("ia32x64");
 		cper_create_examples("memory");

@@ -55,6 +55,7 @@
     ],
     "sections": [
         {
+            "message": "A Informational CMET-INFO NVIDIA Error occurred on CPU 0",
             "Nvidia": {
                 "signature": "CMET-INFO",
                 "severity": {

@@ -10,10 +10,24 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-pci-dev.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single PCI/PCI-X device CPER section into JSON IR.
-json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
+					char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "A PCI/PCI-X Device Error occurred");
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to PCI/PCI-X Device description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log(
+			"Error: PCI/PCI-X Device description string truncated\n");
+	}
+
 	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA)) {
 		return NULL;
 	}

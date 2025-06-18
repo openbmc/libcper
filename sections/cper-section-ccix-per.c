@@ -12,10 +12,24 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ccix-per.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single CCIX PER log CPER section into JSON IR.
-json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size,
+					 char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "A CCIX PER Log Error occurred");
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to CCIX PER Log description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log(
+			"Error: CCIX PER Log description string truncated\n");
+	}
+
 	if (size < sizeof(EFI_CCIX_PER_LOG_DATA)) {
 		return NULL;
 	}

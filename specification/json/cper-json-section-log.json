@@ -11,10 +11,15 @@
         },
         "section": {
             "type": "object",
-            "minProperties": 1,
-            "maxProperties": 1,
+            "minProperties": 2,
+            "maxProperties": 2,
+            "required": ["message"],
             "additionalProperties": false,
             "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "A human readable message describing the error. This is not stable between versions."
+                },
                 "GenericProcessor": {
                     "$ref": "./sections/cper-generic-processor.json"
                 },

@@ -10,14 +10,27 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-ipf.h>
 #include <libcper/log.h>
+#include <string.h>
 
 json_object *cper_ipf_mod_error_read_array(EFI_IPF_MOD_ERROR_INFO **cur_error,
 					   int num_to_read);
 json_object *cper_ipf_mod_error_to_ir(EFI_IPF_MOD_ERROR_INFO *mod_error);
 
 //Converts a single Intel IPF error CPER section into JSON IR.
-json_object *cper_section_ipf_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_ipf_to_ir(const UINT8 *section, UINT32 size,
+				    char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "An IPF Error occurred");
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to IPF description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log("Error: IPF description string truncated\n");
+	}
+
 	if (size < sizeof(EFI_IPF_ERROR_INFO_HEADER)) {
 		return NULL;
 	}

@@ -1,54 +1,54 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 360136125,
-        "recordLength": 344,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 0,
-            "name": "Recoverable"
+            "code": 2,
+            "name": "Corrected"
         },
-        "timestamp": "5673-01-15T12:00:58+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 344,
+        "timestamp": "0113-01-25T08:00:59+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1057467587,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": false,
-                "latentError": false,
-                "overflow": true,
-                "primary": false,
-                "propagated": false,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "d6637073-083b-a79c-307e-8ac060e64bf4",
-            "fruText": " #4I\"W]cL#uB$tk",
-            "revision": {
-                "major": 40,
-                "minor": 107
-            },
-            "sectionLength": 144,
             "sectionOffset": 200,
+            "sectionLength": 144,
+            "revision": {
+                "major": 233,
+                "minor": 55
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": true,
+                "reset": true,
+                "errorThresholdExceeded": true,
+                "resourceNotAccessible": true,
+                "latentError": true,
+                "propagated": false,
+                "overflow": true
+            },
             "sectionType": {
                 "data": "036f84e1-7f37-428c-a79e-575fdfaa84ec",
                 "type": "IOMMU Specific DMAr"
             },
+            "fruID": "a406de9b-731e-ee36-e754-d70609c1edf3",
+            "fruText": "ly=?k,HU@HLFWV6jXg\\",
             "severity": {
                 "code": 3,
                 "name": "Informational"
@@ -57,18 +57,19 @@
     ],
     "sections": [
         {
+            "message": "A IOMMU Specific DMAr Error occurred",
             "IommuDmar": {
-                "controlRegister": 18226157516073645849,
-                "deviceTableEntry": "7W5xViPd2ZAsKK7MaMjnN8NWmzMIaNoXtxEvxLvCaqg=",
-                "eventLogEntry": "mUPby2m1bIJtTk8eoEAaGw==",
-                "pageTableEntry_Level1": 3924185897530143227,
-                "pageTableEntry_Level2": 8647026149635104867,
-                "pageTableEntry_Level3": 3432175023993797693,
-                "pageTableEntry_Level4": 6488891720834628590,
-                "pageTableEntry_Level5": 2278987830320468736,
-                "pageTableEntry_Level6": 16493546021549234992,
-                "revision": 113,
-                "statusRegister": 7584754002385014651
+                "revision": 64,
+                "controlRegister": 9030158918527202780,
+                "statusRegister": 976153290216017817,
+                "eventLogEntry": "eb5JY\/GTGKFY9Ixd5VGeXw==",
+                "deviceTableEntry": "sr0XvxOOsxH5+C2EvBhrS+2X4aodXchoIqlpD3MvdtU=",
+                "pageTableEntry_Level6": 17258238092076835909,
+                "pageTableEntry_Level5": 13989128545705743414,
+                "pageTableEntry_Level4": 6559895098564484433,
+                "pageTableEntry_Level3": 5387343278272261370,
+                "pageTableEntry_Level2": 7507370731725185293,
+                "pageTableEntry_Level1": 1489201232748559868
             }
         }
     ]

@@ -1,81 +1,82 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 489736647,
-        "recordLength": 392,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 1,
-            "name": "Fatal"
+            "code": 2,
+            "name": "Corrected"
         },
-        "timestamp": "1651-05-29T10:00:06+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 392,
+        "timestamp": "7715-06-19T11:00:12+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1804289383,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": true,
-                "latentError": true,
-                "overflow": false,
-                "primary": false,
-                "propagated": false,
-                "reset": true,
-                "resourceNotAccessible": true
-            },
-            "fruID": "02bb313f-0044-ce35-1072-b64c16442050",
-            "fruText": "L LI2!3y|ZEm8///\"",
-            "revision": {
-                "major": 16,
-                "minor": 137
-            },
-            "sectionLength": 192,
             "sectionOffset": 200,
+            "sectionLength": 192,
+            "revision": {
+                "major": 222,
+                "minor": 167
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": true,
+                "reset": false,
+                "errorThresholdExceeded": true,
+                "resourceNotAccessible": true,
+                "latentError": true,
+                "propagated": true,
+                "overflow": false
+            },
             "sectionType": {
                 "data": "9876ccad-47b4-4bdb-b65e-16f193c4f3db",
                 "type": "Processor Generic"
             },
+            "fruID": "a241a04a-cf1e-8dbf-a311-61de0165ab04",
+            "fruText": ":mO4=ZvMD^bvU;e'Rrs",
             "severity": {
-                "code": 2,
-                "name": "Corrected"
+                "code": 1,
+                "name": "Fatal"
             }
         }
     ],
     "sections": [
         {
+            "message": "A Generic Processor Error occurred",
             "GenericProcessor": {
-                "cpuVersionInfo": 12299535236598946534,
+                "processorType": {
+                    "value": 232,
+                    "name": "Unknown (Reserved)"
+                },
                 "errorType": {
-                    "name": "Unknown (Reserved)",
-                    "value": 43
+                    "value": 183,
+                    "name": "Unknown (Reserved)"
                 },
                 "flags": {
-                    "corrected": false,
-                    "overflow": false,
+                    "restartable": true,
                     "preciseIP": false,
-                    "restartable": true
+                    "overflow": true,
+                    "corrected": false
                 },
-                "instructionIP": 8454082074797475192,
-                "processorID": 6386339027110679327,
-                "processorType": {
-                    "name": "Unknown (Reserved)",
-                    "value": 192
-                },
-                "requestorID": 18419392081603081474
+                "cpuVersionInfo": 5008881393156084321,
+                "processorID": 15978513557986590873,
+                "requestorID": 10202110294826993335,
+                "instructionIP": 16390103128374526526
             }
         }
     ]
