@@ -1,18 +1,5 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 786448348,
-        "recordLength": 1104,
         "revision": {
             "major": 0,
             "minor": 0
@@ -22,253 +9,175 @@
             "code": 1,
             "name": "Fatal"
         },
-        "timestamp": "2619-06-03T08:00:12+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 924,
+        "timestamp": "0525-09-05T09:00:05+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 982906996,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": true,
-                "latentError": false,
-                "overflow": true,
-                "primary": false,
-                "propagated": false,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "f6b8bec3-041f-e303-5510-75ef5b8618ca",
-            "fruText": "e>nCv]:vvf1\\d",
-            "revision": {
-                "major": 80,
-                "minor": 195
-            },
-            "sectionLength": 904,
             "sectionOffset": 200,
+            "sectionLength": 724,
+            "revision": {
+                "major": 79,
+                "minor": 77
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": true,
+                "propagated": true,
+                "overflow": true
+            },
             "sectionType": {
                 "data": "dc3ea0b0-a144-4797-b95b-53fa242b6e1d",
-                "type": "IA32/X64"
+                "type": "IA32\/X64"
             },
+            "fruID": "4bb0fd6e-efe9-3e5d-5619-b5a9bd70fe32",
+            "fruText": "tUEofc9.@8GF\\@-vn2t",
             "severity": {
-                "code": 0,
-                "name": "Recoverable"
+                "code": 2,
+                "name": "Corrected"
             }
         }
     ],
     "sections": [
         {
+            "message": "An IA32\/x64 Processor Error occurred",
             "Ia32x64Processor": {
-                "cpuidInfo": {
-                    "eax": 4231444471107743989,
-                    "ebx": 10167219783498343976,
-                    "ecx": 1714069713835722061,
-                    "edx": 14839358401423126020
-                },
-                "processorContextInfo": [
-                    {
-                        "mmRegisterAddress": 6666866091276449041,
-                        "msrAddress": 2939603056,
-                        "registerArray": {
-                            "cr0": 7791031151369926778,
-                            "cr1": 10732389205399861516,
-                            "cr2": 2836532369435396567,
-                            "cr3": 4870874757794637042,
-                            "cr4": 6486333890149941258,
-                            "cr8": 1027645587920329871,
-                            "cs": 54915,
-                            "ds": 54057,
-                            "eip": 10740702556876934910,
-                            "es": 27877,
-                            "fs": 48862,
-                            "gdtr_0": 12702330997818022903,
-                            "gdtr_1": 16784718855480282082,
-                            "gs": 44121,
-                            "idtr_0": 10157170755079562829,
-                            "idtr_1": 15557259267923440288,
-                            "ldtr": 18135,
-                            "r10": 4468763883724922505,
-                            "r11": 2467901310026306489,
-                            "r12": 1309530785698021588,
-                            "r13": 6290641158500092211,
-                            "r14": 14341921984101339319,
-                            "r15": 8276916407946698385,
-                            "r8": 8388605095910118647,
-                            "r9": 6845265527609086147,
-                            "rax": 10422244326495467491,
-                            "rbp": 11725461212100511140,
-                            "rbx": 18412280258920628917,
-                            "rcx": 10616554985453631797,
-                            "rdi": 4172560882286818449,
-                            "rdx": 5803249228583204553,
-                            "rflags": 813779868244819062,
-                            "rsi": 10704721925255176447,
-                            "rsp": 14116911004563438379,
-                            "ss": 21817,
-                            "tr": 38647
-                        },
-                        "registerArraySize": 244,
-                        "registerContextType": {
-                            "name": "64-bit Mode Execution Context",
-                            "value": 3
-                        }
-                    },
-                    {
-                        "mmRegisterAddress": 2600094515342054416,
-                        "msrAddress": 2168924306,
-                        "registerArray": {
-                            "data": "8LYWKo32pnPNfrrEFL4CWqVMVTh0nLmFMCEWX4Urg3XhmZ9vj0XiXMOcINdbIjIAb4c44yPyaFMTfrKYqjUNiw=="
-                        },
-                        "registerArraySize": 64,
-                        "registerContextType": {
-                            "name": "FXSave Context",
-                            "value": 4
-                        }
-                    },
-                    {
-                        "mmRegisterAddress": 956287962150851724,
-                        "msrAddress": 3648632249,
-                        "registerArray": {
-                            "data": "Tmj/trsSNW2q36K3anBjZc1VQoYKu1+WkFtVZcWachM="
-                        },
-                        "registerArraySize": 32,
-                        "registerContextType": {
-                            "name": "64-bit Mode Debug Registers",
-                            "value": 6
-                        }
-                    },
-                    {
-                        "mmRegisterAddress": 11460725686151997134,
-                        "msrAddress": 3727633663,
-                        "registerArray": {
-                            "cr0": 1947282579428145807,
-                            "cr1": 7466137369906051102,
-                            "cr2": 12011769093482747751,
-                            "cr3": 18020662887638316710,
-                            "cr4": 8540893454640756028,
-                            "cr8": 9086721535022402385,
-                            "cs": 23129,
-                            "ds": 14968,
-                            "eip": 16465782059164780109,
-                            "es": 44548,
-                            "fs": 64491,
-                            "gdtr_0": 3430518648344946844,
-                            "gdtr_1": 15582867698774793180,
-                            "gs": 27122,
-                            "idtr_0": 4502416471326233772,
-                            "idtr_1": 9542015900777013974,
-                            "ldtr": 24628,
-                            "r10": 8854643612808807329,
-                            "r11": 7588777686466853387,
-                            "r12": 14608954679185970332,
-                            "r13": 2267377137222137318,
-                            "r14": 12378060701444513242,
-                            "r15": 7543887594505112366,
-                            "r8": 12521358763183299408,
-                            "r9": 3702179196210542825,
-                            "rax": 5565112076041032687,
-                            "rbp": 3449176849503214038,
-                            "rbx": 9525718021383102612,
-                            "rcx": 16991298666059395312,
-                            "rdi": 3733736168285740089,
-                            "rdx": 12900339870520186398,
-                            "rflags": 4346608121544333830,
-                            "rsi": 9514304947028406473,
-                            "rsp": 539762622390077190,
-                            "ss": 13768,
-                            "tr": 48505
-                        },
-                        "registerArraySize": 244,
-                        "registerContextType": {
-                            "name": "64-bit Mode Execution Context",
-                            "value": 3
-                        }
-                    }
-                ],
+                "processorErrorInfoNum": 1,
                 "processorContextInfoNum": 4,
+                "cpuidInfo": {
+                    "eax": 8222237338122160866,
+                    "ebx": 18148198842485040157,
+                    "ecx": 13493578957230145717,
+                    "edx": 12844844764822907593
+                },
                 "processorErrorInfo": [
                     {
-                        "checkInfo": {
-                            "level": 7,
-                            "operation": {
-                                "name": "Eviction",
-                                "value": 7
-                            },
-                            "overflow": true,
-                            "preciseIP": true,
-                            "processorContextCorrupt": true,
-                            "restartableIP": true,
-                            "transactionType": {
-                                "name": "Unknown (Reserved)",
-                                "value": 3
-                            },
-                            "uncorrected": true
-                        },
-                        "instructionPointer": 745435648286231437,
-                        "requestorID": 16343007456147047644,
-                        "type": {
-                            "guid": "a55701f5-e3ef-43de-ac72-249b573fad2c",
-                            "name": "Cache Check Error"
-                        }
-                    },
-                    {
-                        "checkInfo": {
-                            "addressSpace": {
-                                "name": "Other Transaction",
-                                "value": 3
-                            },
-                            "level": 7,
-                            "operation": {
-                                "name": "Eviction",
-                                "value": 7
-                            },
-                            "overflow": true,
-                            "participationType": {
-                                "name": "Generic",
-                                "value": 3
-                            },
-                            "preciseIP": true,
-                            "processorContextCorrupt": true,
-                            "restartableIP": true,
-                            "timedOut": true,
-                            "transactionType": {
-                                "name": "Unknown (Reserved)",
-                                "value": 3
-                            },
-                            "uncorrected": true
-                        },
-                        "instructionPointer": 9646768970891130615,
-                        "requestorID": 405788493636504313,
-                        "type": {
-                            "guid": "1cf3f8b3-c5b1-49a2-aa59-5eef92ffa63c",
-                            "name": "Bus Check Error"
-                        }
-                    },
-                    {
-                        "checkInfo": {
-                            "level": 7,
-                            "operation": {
-                                "name": "Eviction",
-                                "value": 7
-                            },
-                            "overflow": true,
-                            "preciseIP": true,
-                            "processorContextCorrupt": true,
-                            "restartableIP": true,
-                            "transactionType": {
-                                "name": "Unknown (Reserved)",
-                                "value": 3
-                            },
-                            "uncorrected": true
-                        },
-                        "instructionPointer": 10744557499837433896,
-                        "requestorID": 3323359649482135700,
                         "type": {
                             "guid": "fc06b535-5e1f-4562-9f25-0a3b9adb63c3",
                             "name": "TLB Check Error"
-                        }
+                        },
+                        "checkInfo": {
+                            "transactionType": {
+                                "value": 3,
+                                "name": "Unknown (Reserved)"
+                            },
+                            "operation": {
+                                "value": 7,
+                                "name": "Eviction"
+                            },
+                            "level": 7,
+                            "processorContextCorrupt": true,
+                            "uncorrected": true,
+                            "preciseIP": true,
+                            "restartableIP": true,
+                            "overflow": true
+                        },
+                        "requestorID": 9254433568748822516,
+                        "instructionPointer": 12167231194572331088
                     }
                 ],
-                "processorErrorInfoNum": 3
+                "processorContextInfo": [
+                    {
+                        "registerContextType": {
+                            "value": 0,
+                            "name": "Unclassified Data"
+                        },
+                        "registerArraySize": 64,
+                        "msrAddress": 3295317151,
+                        "mmRegisterAddress": 16811525809593490861,
+                        "registerArray": {
+                            "data": "AzHpVE6k49q4RS3Wopu7v7keoy\/qPBKtbIZgnilKdxTliGYLHTmR67lyzyGHeYvPj\/ppiSW9xQiLPd6D0C4l1g=="
+                        }
+                    },
+                    {
+                        "registerContextType": {
+                            "value": 0,
+                            "name": "Unclassified Data"
+                        },
+                        "registerArraySize": 160,
+                        "msrAddress": 3516620450,
+                        "mmRegisterAddress": 7720870685723250929,
+                        "registerArray": {
+                            "data": "qBIdYuH34rLXudO5GpXs9iposS9cRat4ycrKdbbA0LIGg9QbrMvT6YNWtJ924UaMAhXO2r0M3y5KPMDnvvKN4\/kqRepmMuc2dpbfENxFBq9e\/d\/EIwTPA\/yKE4xJ5lN\/4MGvlVlqWUb7ejw0cyntoP8iN74YtQXMWVjEuj3K4maIxWe0uBmUYiwTtWmMuzZCkSJ6AhWdfmxwyu2z47KGAA=="
+                        }
+                    },
+                    {
+                        "registerContextType": {
+                            "value": 1,
+                            "name": "MSR Registers"
+                        },
+                        "registerArraySize": 64,
+                        "msrAddress": 3203378266,
+                        "mmRegisterAddress": 3428108381568043000,
+                        "registerArray": {
+                            "data": "35tplXBwFw7stT2MJvykVjrbNXxnWU7eN2xQjy8YySQj\/TpxatgDdIcedfW+Z5sW8ajnulKfmpkzQzrW\/hIc0Q=="
+                        }
+                    },
+                    {
+                        "registerContextType": {
+                            "value": 3,
+                            "name": "64-bit Mode Execution Context"
+                        },
+                        "registerArraySize": 244,
+                        "msrAddress": 4102382359,
+                        "mmRegisterAddress": 3234131391039715673,
+                        "registerArray": {
+                            "rax": 15479758182028395498,
+                            "rbx": 1874686791808745760,
+                            "rcx": 10172088013009644695,
+                            "rdx": 7420739330752567280,
+                            "rsi": 7635570582978682052,
+                            "rdi": 1273333999633118435,
+                            "rbp": 16491335997133279882,
+                            "rsp": 11906157482669782535,
+                            "r8": 6537777635043468407,
+                            "r9": 7121652422525127647,
+                            "r10": 3032736194212030921,
+                            "r11": 4607858186015970980,
+                            "r12": 16690077858839347378,
+                            "r13": 9904904303440763327,
+                            "r14": 13051218176022856589,
+                            "r15": 13731629562638046557,
+                            "cs": 3947,
+                            "ds": 21306,
+                            "ss": 10930,
+                            "es": 11221,
+                            "fs": 61528,
+                            "gs": 34302,
+                            "rflags": 13300422837648411735,
+                            "eip": 17139711588125397277,
+                            "cr0": 8640511536805871494,
+                            "cr1": 9668975147024588496,
+                            "cr2": 259977116627466639,
+                            "cr3": 6356628090976137730,
+                            "cr4": 9323506531456948440,
+                            "cr8": 12934126023774581311,
+                            "gdtr_0": 6171200792786982966,
+                            "gdtr_1": 9554350576455961178,
+                            "idtr_0": 6463084586460836077,
+                            "idtr_1": 231717354960194715,
+                            "ldtr": 41467,
+                            "tr": 49511
+                        }
+                    }
+                ]
             }
         }
     ]

@@ -10,11 +10,14 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-memory.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single memory error CPER section into JSON IR.
 json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
-						UINT32 size)
+						UINT32 size, char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
 	if (size < sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA)) {
 		return NULL;
 	}
@@ -52,14 +55,32 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 	json_object_object_add(section_ir, "bank", bank);
 
 	//Memory error type.
+	const char *mem_type_str = NULL;
 	if (isvalid_prop_to_ir(&ui64Type, 14)) {
 		json_object *memory_error_type = integer_to_readable_pair(
 			memory_error->ErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
 			MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
 		json_object_object_add(section_ir, "memoryErrorType",
 				       memory_error_type);
+		mem_type_str = json_object_get_string(
+			json_object_object_get(memory_error_type, "name"));
 	}
-
+	if (mem_type_str != NULL) {
+		outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+				      "A %s Memory Error occurred",
+				      mem_type_str);
+	} else {
+		outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+				      "An Unknown Memory Error occurred");
+	}
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to Memory description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log(
+			"Error: Memory description string truncated: %s\n",
+			*desc_string);
+	}
 	//"Extended" row/column indication field + misc.
 	// Review this
 	if (isvalid_prop_to_ir(&ui64Type, 18)) {
@@ -105,6 +126,30 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 			 memory_error->PhysicalAddress);
 		json_object_object_add(section_ir, "physicalAddressHex",
 				       json_object_new_string(hexstring_buf));
+		char physical_address_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		outstr_len = snprintf(physical_address_desc,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " at address 0x%016llX",
+				      memory_error->PhysicalAddress);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to physical address description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Physical address description string truncated: %s\n",
+				physical_address_desc);
+		} else {
+			if (strlen(physical_address_desc) +
+				    strlen(*desc_string) <
+			    SECTION_DESC_STRING_SIZE) {
+				strncat(*desc_string, physical_address_desc,
+					outstr_len);
+			} else {
+				cper_print_log(
+					"Error: Memory description string too long, not added to description string: %s\n",
+					physical_address_desc);
+			}
+		}
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		json_object_object_add(
@@ -116,7 +161,29 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 		json_object_object_add(
 			section_ir, "node",
 			json_object_new_uint64(memory_error->Node));
+		char node_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		outstr_len = snprintf(node_desc,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " at node %d", memory_error->Node);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to node description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Node description string truncated: %s\n",
+				node_desc);
+		} else {
+			if (strlen(node_desc) + strlen(*desc_string) <
+			    SECTION_DESC_STRING_SIZE) {
+				strncat(*desc_string, node_desc, outstr_len);
+			} else {
+				cper_print_log(
+					"Error: Memory description string too long, not added to description string: %s\n",
+					node_desc);
+			}
+		}
 	}
+
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
 		json_object_object_add(
 			section_ir, "card",
@@ -173,8 +240,12 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 
 //Converts a single memory error 2 CPER section into JSON IR.
 json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
-						 UINT32 size)
+						 UINT32 size,
+						 char **desc_string)
 {
+	int outstr_len = 0;
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+
 	if (size < sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA)) {
 		return NULL;
 	}
@@ -212,14 +283,32 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 	json_object_object_add(section_ir, "bank", bank);
 
 	//Memory error type.
+	const char *mem_type_str = NULL;
 	if (isvalid_prop_to_ir(&ui64Type, 13)) {
 		json_object *memory_error_type = integer_to_readable_pair(
 			memory_error->MemErrorType, 16, MEMORY_ERROR_TYPES_KEYS,
 			MEMORY_ERROR_TYPES_VALUES, "Unknown (Reserved)");
 		json_object_object_add(section_ir, "memoryErrorType",
 				       memory_error_type);
+		mem_type_str = json_object_get_string(
+			json_object_object_get(memory_error_type, "name"));
 	}
-
+	if (mem_type_str != NULL) {
+		outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+				      "A %s Memory Error occurred",
+				      mem_type_str);
+	} else {
+		outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+				      "An Unknown Memory Error occurred");
+	}
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to Memory2 description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log(
+			"Error: Memory2 description string truncated: %s\n",
+			*desc_string);
+	}
 	//Status.
 	if (isvalid_prop_to_ir(&ui64Type, 14)) {
 		json_object *status = json_object_new_object();
@@ -240,6 +329,30 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 		json_object_object_add(
 			section_ir, "physicalAddress",
 			json_object_new_uint64(memory_error->PhysicalAddress));
+		char physical_address_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		outstr_len = snprintf(physical_address_desc,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " at address 0x%016llX",
+				      memory_error->PhysicalAddress);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to physical address description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Physical address description string truncated: %s\n",
+				physical_address_desc);
+		} else {
+			if (strlen(physical_address_desc) +
+				    strlen(*desc_string) <
+			    SECTION_DESC_STRING_SIZE) {
+				strncat(*desc_string, physical_address_desc,
+					outstr_len);
+			} else {
+				cper_print_log(
+					"Error: Memory2 description string too long, not added to description string: %s\n",
+					physical_address_desc);
+			}
+		}
 	}
 
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
@@ -258,6 +371,27 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 		json_object_object_add(
 			section_ir, "node",
 			json_object_new_uint64(memory_error->Node));
+		char node_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
+		outstr_len = snprintf(node_desc,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " on node %d", memory_error->Node);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to node description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Node description string truncated: %s\n",
+				node_desc);
+		} else {
+			if (strlen(node_desc) + strlen(*desc_string) <
+			    SECTION_DESC_STRING_SIZE) {
+				strncat(*desc_string, node_desc, outstr_len);
+			} else {
+				cper_print_log(
+					"Error: Memory2 description string too long, not added to description string: %s\n",
+					node_desc);
+			}
+		}
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
 		json_object_object_add(

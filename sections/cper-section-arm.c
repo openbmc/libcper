@@ -13,10 +13,12 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-arm.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Private pre-definitions.
 json_object *
-cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info);
+cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
+			  char **err_info_desc_i);
 json_object *
 cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 				 const UINT8 **cur_pos, UINT32 *remaining_size);
@@ -45,8 +47,21 @@ void ir_arm_misc_registers_to_cper(json_object *registers, FILE *out);
 void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out);
 
 //Converts the given processor-generic CPER section into JSON IR.
-json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
+				    char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	int outstr_len = 0;
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "An ARM Processor Error occurred");
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to ARM description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log("Error: ARM description string truncated: %s\n",
+			       *desc_string);
+	}
+
 	const UINT8 *cur_pos = section;
 	UINT32 remaining_size = size;
 
@@ -96,6 +111,29 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 		sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
 		json_object_object_add(section_ir, "affinity3",
 				       json_object_new_uint64(sock));
+		char *node_desc_str = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+		outstr_len = snprintf(node_desc_str,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " on CPU %ld", sock);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to node description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Node description string truncated: %s\n",
+				node_desc_str);
+		} else {
+			if (strlen(node_desc_str) + strlen(*desc_string) <
+			    SECTION_DESC_STRING_SIZE) {
+				strncat(*desc_string, node_desc_str,
+					outstr_len);
+			} else {
+				cper_print_log(
+					"Error: Node description string too long, not added to description string: %s\n",
+					node_desc_str);
+			}
+		}
+		free(node_desc_str);
 	}
 
 	json_object_object_add(section_ir, "midrEl1",
@@ -128,11 +166,47 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 			"Invalid CPER file: Invalid processor error info num.\n");
 		return NULL;
 	}
+	strncat(*desc_string, "; Error Type(s): {",
+		EFI_ERROR_DESCRIPTION_STRING_LEN);
+	char *err_info_desc_i =
+		malloc(EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN);
+	size_t err_info_desc_i_len = 0;
 	for (int i = 0; i < record->ErrInfoNum; i++) {
-		json_object_array_add(error_info_array,
-				      cper_arm_error_info_to_ir(cur_error));
+		json_object_array_add(
+			error_info_array,
+			cper_arm_error_info_to_ir(cur_error, &err_info_desc_i));
+		err_info_desc_i_len = strlen(err_info_desc_i);
+		if (err_info_desc_i_len > 0 &&
+		    strlen(*desc_string) + err_info_desc_i_len <
+			    SECTION_DESC_STRING_SIZE) {
+			strncat(*desc_string, err_info_desc_i,
+				err_info_desc_i_len);
+		} else {
+			cper_print_log(
+				"Error: Error info description string too long, not added to description string: %s\n",
+				err_info_desc_i);
+		}
 		cur_error++;
+		if (i == record->ErrInfoNum - 1) {
+			if (strlen(*desc_string) + 2 <
+			    SECTION_DESC_STRING_SIZE) {
+				strncat(*desc_string, "}", 2);
+			} else {
+				cper_print_log(
+					"Error: Description string too long, not added '}'to description string: %s\n",
+					*desc_string);
+			}
+			break;
+		}
+		if (strlen(*desc_string) + 3 < SECTION_DESC_STRING_SIZE) {
+			strncat(*desc_string, ", ", 3);
+		} else {
+			cper_print_log(
+				"Error: Description string too long, not added ',' to description string: %s\n",
+				*desc_string);
+		}
 	}
+	free(err_info_desc_i);
 
 	cur_pos += (UINT32)(record->ErrInfoNum *
 			    sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY));
@@ -213,9 +287,11 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size)
 
 //Converts a single ARM Process Error Information structure into JSON IR.
 json_object *
-cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
+cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
+			  char **err_info_desc_i)
 {
 	json_object *error_info_ir = json_object_new_object();
+	int outstr_len = 0;
 
 	//Version, length.
 	json_object_object_add(error_info_ir, "version",
@@ -260,16 +336,51 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 		json_object *error_subinfo = NULL;
 		switch (error_info->Type) {
 		case ARM_ERROR_INFORMATION_TYPE_CACHE: //Cache
-		case ARM_ERROR_INFORMATION_TYPE_TLB:   //TLB
 			error_subinfo = cper_arm_cache_tlb_error_to_ir(
 				(EFI_ARM_CACHE_ERROR_STRUCTURE *)&error_info
 					->ErrorInformation,
 				error_info);
+			const char *cache_error_desc = "Cache Error";
+			if (strlen(cache_error_desc) >=
+			    EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN) {
+				cper_print_log(
+					"Error: Cache Error Description too long %s\n",
+					cache_error_desc);
+			} else {
+				strncpy(*err_info_desc_i, cache_error_desc,
+					strlen(cache_error_desc) + 1);
+			}
+			break;
+		case ARM_ERROR_INFORMATION_TYPE_TLB: //TLB
+			error_subinfo = cper_arm_cache_tlb_error_to_ir(
+				(EFI_ARM_CACHE_ERROR_STRUCTURE *)&error_info
+					->ErrorInformation,
+				error_info);
+			const char *tlb_error_desc = "TLB Error";
+			if (strlen(tlb_error_desc) >=
+			    EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN) {
+				cper_print_log(
+					"Error: TLB Error Description too long %s\n",
+					tlb_error_desc);
+			} else {
+				strncpy(*err_info_desc_i, tlb_error_desc,
+					strlen(tlb_error_desc) + 1);
+			}
 			break;
 		case ARM_ERROR_INFORMATION_TYPE_BUS: //Bus
 			error_subinfo = cper_arm_bus_error_to_ir(
 				(EFI_ARM_BUS_ERROR_STRUCTURE *)&error_info
 					->ErrorInformation);
+			const char *bus_error_desc = "Bus Error";
+			if (strlen(bus_error_desc) >=
+			    EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN) {
+				cper_print_log(
+					"Error: Bus Error Description too long %s\n",
+					bus_error_desc);
+			} else {
+				strncpy(*err_info_desc_i, bus_error_desc,
+					strlen(bus_error_desc) + 1);
+			}
 			break;
 
 		default:
@@ -284,18 +395,67 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info)
 	}
 
 	//Virtual fault address, physical fault address.
+	char *fault_address_desc = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
 	if (isvalid_prop_to_ir(&ui16Type, 3)) {
+		outstr_len = snprintf(fault_address_desc,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " at Virtual Addr=0x%llX",
+				      error_info->VirtualFaultAddress);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to fault address description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Virtual fault address description string truncated: %s\n",
+				fault_address_desc);
+		} else {
+			if (strlen(fault_address_desc) +
+				    strlen(*err_info_desc_i) <
+			    EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN) {
+				strncat(*err_info_desc_i, fault_address_desc,
+					outstr_len);
+			} else {
+				cper_print_log(
+					"Error: Virtual fault address description string too long, not added to description string: %s\n",
+					fault_address_desc);
+			}
+		}
 		json_object_object_add(
 			error_info_ir, "virtualFaultAddress",
 			json_object_new_uint64(
 				error_info->VirtualFaultAddress));
 	}
 	if (isvalid_prop_to_ir(&ui16Type, 4)) {
+		outstr_len = snprintf(fault_address_desc,
+				      EFI_ERROR_DESCRIPTION_STRING_LEN,
+				      " Physical Addr=0x%llX",
+				      error_info->PhysicalFaultAddress);
+		if (outstr_len < 0) {
+			cper_print_log(
+				"Error: Could not write to physical fault address description string\n");
+		} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+			cper_print_log(
+				"Error: Physical fault address description string truncated: %s\n",
+				fault_address_desc);
+		} else {
+			if (strlen(fault_address_desc) +
+				    strlen(*err_info_desc_i) <
+			    EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN) {
+				strncat(*err_info_desc_i, fault_address_desc,
+					outstr_len);
+			} else {
+				cper_print_log(
+					"Error:Physical fault address description string too long, not added to description string: %s\n",
+					fault_address_desc);
+			}
+		}
 		json_object_object_add(
 			error_info_ir, "physicalFaultAddress",
 			json_object_new_uint64(
 				error_info->PhysicalFaultAddress));
 	}
+
+	free(fault_address_desc);
 
 	return error_info_ir;
 }

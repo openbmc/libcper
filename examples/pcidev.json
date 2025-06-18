@@ -1,53 +1,54 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 138475881,
-        "recordLength": 304,
         "revision": {
             "major": 0,
             "minor": 0
         },
         "sectionCount": 1,
         "severity": {
-            "code": 3,
-            "name": "Informational"
+            "code": 0,
+            "name": "Recoverable"
         },
-        "timestamp": "5136-04-27T20:00:42+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 320,
+        "timestamp": "9707-04-22T21:00:11+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 722308542,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": true,
-                "errorThresholdExceeded": true,
-                "latentError": true,
-                "overflow": false,
-                "primary": true,
-                "propagated": false,
-                "reset": true,
-                "resourceNotAccessible": false
-            },
-            "fruID": "bb39f461-7632-2ada-7562-cba4c66b28e2",
-            "revision": {
-                "major": 255,
-                "minor": 248
-            },
-            "sectionLength": 104,
             "sectionOffset": 200,
+            "sectionLength": 120,
+            "revision": {
+                "major": 70,
+                "minor": 12
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": true,
+                "reset": true,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": true,
+                "latentError": true,
+                "propagated": true,
+                "overflow": true
+            },
             "sectionType": {
                 "data": "eb5e4685-ca66-4769-b6a2-26068b001326",
-                "type": "PCI Component/Device"
+                "type": "PCI Component\/Device"
             },
+            "fruID": "af892af5-b614-0ecb-826a-37a2e235cdd0",
+            "fruText": "#.}?2M;+zpbvaK*C&B0",
             "severity": {
                 "code": 2,
                 "name": "Corrected"
@@ -56,38 +57,43 @@
     ],
     "sections": [
         {
+            "message": "A PCI\/PCI-X Device Error occurred",
             "PciComponent": {
                 "errorStatus": {
-                    "addressSignal": true,
-                    "controlSignal": false,
-                    "dataSignal": false,
-                    "detectedByRequester": true,
-                    "detectedByResponder": false,
                     "errorType": {
-                        "description": "Detection of a protocol error.",
-                        "name": "ERR_PROTOCOL",
-                        "value": 23
+                        "value": 9,
+                        "description": "Overflow or underflow of internal queue.",
+                        "name": "ERR_FLOW"
                     },
+                    "addressSignal": false,
+                    "controlSignal": false,
+                    "dataSignal": true,
+                    "detectedByResponder": false,
+                    "detectedByRequester": true,
                     "firstError": true,
-                    "overflowDroppedLogs": false
+                    "overflowDroppedLogs": true
                 },
-                "memoryNumber": 1,
+                "memoryNumber": 2,
                 "registerDataPairs": [
                     {
-                        "firstHalf": 18144751223266352719,
-                        "secondHalf": 5696955456022405999
+                        "firstHalf": 18382986505221715575,
+                        "secondHalf": 16983268706008349791
                     },
                     {
-                        "firstHalf": 7993228066795886647,
-                        "secondHalf": 2894847925884769905
+                        "firstHalf": 1795325037084700673,
+                        "secondHalf": 11779075357450541334
                     },
                     {
-                        "firstHalf": 6251902176359664814,
-                        "secondHalf": 1276515246198502299
+                        "firstHalf": 13127595726405273887,
+                        "secondHalf": 18428738423932819329
                     },
                     {
-                        "firstHalf": 15794309069675414575,
-                        "secondHalf": 10592717995115042047
+                        "firstHalf": 1296722787968484018,
+                        "secondHalf": 2010466974215343862
+                    },
+                    {
+                        "firstHalf": 885844574751927713,
+                        "secondHalf": 11608792315963218900
                     }
                 ]
             }

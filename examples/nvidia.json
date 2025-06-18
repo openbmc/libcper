@@ -1,18 +1,5 @@
 {
     "header": {
-        "creatorID": "00000000-0000-0000-0000-000000000000",
-        "flags": {
-            "name": "HW_ERROR_FLAGS_SIMULATED",
-            "value": 4
-        },
-        "notificationType": {
-            "guid": "00000000-0000-0000-0000-000000000000",
-            "type": "Unknown"
-        },
-        "persistenceInfo": 0,
-        "platformID": "00000000-0000-0000-0000-000000000000",
-        "recordID": 1422495136,
-        "recordLength": 328,
         "revision": {
             "major": 0,
             "minor": 0
@@ -22,78 +9,92 @@
             "code": 3,
             "name": "Informational"
         },
-        "timestamp": "4828-09-03T01:00:15+00:00",
-        "timestampIsPrecise": false
+        "recordLength": 328,
+        "timestamp": "8857-10-12T13:00:14+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 474613996,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
     },
     "sectionDescriptors": [
         {
-            "flags": {
-                "containmentWarning": false,
-                "errorThresholdExceeded": true,
-                "latentError": true,
-                "overflow": false,
-                "primary": true,
-                "propagated": false,
-                "reset": false,
-                "resourceNotAccessible": true
-            },
-            "fruID": "bfdce13d-1257-1f7d-3fde-13789945ee73",
-            "fruText": "2)u>4oT8Vo' #4",
-            "revision": {
-                "major": 44,
-                "minor": 200
-            },
-            "sectionLength": 128,
             "sectionOffset": 200,
+            "sectionLength": 128,
+            "revision": {
+                "major": 28,
+                "minor": 130
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": true,
+                "reset": true,
+                "errorThresholdExceeded": true,
+                "resourceNotAccessible": true,
+                "latentError": false,
+                "propagated": false,
+                "overflow": true
+            },
             "sectionType": {
                 "data": "6d5244f2-2712-11ec-bea7-cb3fdb95c786",
                 "type": "NVIDIA"
             },
+            "fruID": "e85bc1ab-d880-3bf3-28c1-1246ed4db969",
+            "fruText": "R3P|*dDE=,jsB\"Fn4?Y",
             "severity": {
-                "code": 2,
-                "name": "Corrected"
+                "code": 1,
+                "name": "Fatal"
             }
         }
     ],
     "sections": [
         {
+            "message": "A Informational HSS-BUSY NVIDIA Error occurred on CPU 214",
             "Nvidia": {
-                "errorInstance": 21729,
-                "errorType": 36731,
-                "instanceBase": 8823605043237379382,
+                "signature": "HSS-BUSY",
+                "severity": {
+                    "code": 3,
+                    "name": "Informational"
+                },
+                "errorType": 31677,
+                "errorInstance": 25928,
+                "socket": 214,
                 "registerCount": 6,
+                "instanceBase": 14543594661762510610,
                 "registers": [
                     {
-                        "address": 9398085988411720601,
-                        "value": 1952944444865990253
+                        "address": 2004045230850847303,
+                        "value": 9685459672887920260
                     },
                     {
-                        "address": 12019458076784458703,
-                        "value": 12003124405090078479
+                        "address": 14385950886693394892,
+                        "value": 15971426308624496303
                     },
                     {
-                        "address": 10437616755251703533,
-                        "value": 4028408744142317612
+                        "address": 10738159531840650520,
+                        "value": 17695798691028191225
                     },
                     {
-                        "address": 1718800592230110915,
-                        "value": 12135726257609314743
+                        "address": 170408393793908752,
+                        "value": 14896948456245970145
                     },
                     {
-                        "address": 16493546021549234992,
-                        "value": 2278987830320468736
+                        "address": 17132419638085331260,
+                        "value": 10361825866813983923
                     },
                     {
-                        "address": 6488891720834628590,
-                        "value": 3432175023993797693
+                        "address": 2368511515735917066,
+                        "value": 17437000348398526766
                     }
-                ],
-                "severity": {
-                    "code": 0,
-                    "name": "Recoverable"
-                },
-                "signature": "PCIe-DPC",
-                "socket": 117
+                ]
             }
         }
     ]

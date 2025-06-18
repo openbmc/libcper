@@ -11,6 +11,7 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-nvidia.h>
 #include <libcper/log.h>
+#include <string.h>
 
 void parse_cmet_info(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
 		     size_t size, json_object *section_ir)
@@ -110,9 +111,15 @@ NV_SECTION_CALLBACKS section_handlers[] = {
 };
 
 //Converts a single NVIDIA CPER section into JSON IR.
-json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
+				       char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	char *property_desc = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+
 	if (size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
+		free(property_desc);
+		*desc_string = NULL;
 		return NULL;
 	}
 
@@ -120,15 +127,27 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 
 	json_object *section_ir = json_object_new_object();
 
-	add_untrusted_string(section_ir, "signature", nvidia_error->Signature,
-			     sizeof(nvidia_error->Signature));
+	const char *signature = nvidia_error->Signature;
+	add_untrusted_string(section_ir, "signature", signature,
+			     strlen(signature));
 
 	json_object *severity = json_object_new_object();
 	json_object_object_add(severity, "code",
 			       json_object_new_uint64(nvidia_error->Severity));
+	const char *severity_name = severity_to_string(nvidia_error->Severity);
 	json_object_object_add(severity, "name",
-			       json_object_new_string(severity_to_string(
-				       nvidia_error->Severity)));
+			       json_object_new_string(severity_name));
+	int outstr_len = 0;
+	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			      "A %s %s NVIDIA Error occurred", severity_name,
+			      signature);
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to description string\n");
+	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+		cper_print_log("Error: Description string truncated: %s\n",
+			       *desc_string);
+	}
 	json_object_object_add(section_ir, "severity", severity);
 
 	json_object_object_add(section_ir, "errorType",
@@ -138,6 +157,26 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 		json_object_new_int(nvidia_error->ErrorInstance));
 	json_object_object_add(section_ir, "socket",
 			       json_object_new_int(nvidia_error->Socket));
+
+	outstr_len = snprintf(property_desc, EFI_ERROR_DESCRIPTION_STRING_LEN,
+			      " on CPU %d", nvidia_error->Socket);
+	if (outstr_len < 0) {
+		cper_print_log("Error: Could not write to property string\n");
+	} else if (outstr_len > EFI_ERROR_DESCRIPTION_STRING_LEN) {
+		cper_print_log("Error: Property string truncated: %s\n",
+			       property_desc);
+	}
+
+	int property_desc_len = strlen(property_desc);
+	strncat(*desc_string, property_desc, property_desc_len);
+	// We still want to get as much info as possible, just warn about truncation
+	if (property_desc_len + strlen(*desc_string) >=
+	    SECTION_DESC_STRING_SIZE) {
+		cper_print_log("Error: Description string truncated: %s\n",
+			       *desc_string);
+	}
+	free(property_desc);
+
 	json_object_object_add(section_ir, "registerCount",
 			       json_object_new_int(nvidia_error->NumberRegs));
 	json_object_object_add(
