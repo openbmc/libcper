@@ -11,6 +11,7 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-nvidia.h>
 #include <libcper/log.h>
+#include <string.h>
 
 void parse_cmet_info(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
 		     size_t size, json_object *section_ir)
@@ -110,8 +111,12 @@ NV_SECTION_CALLBACKS section_handlers[] = {
 };
 
 //Converts a single NVIDIA CPER section into JSON IR.
-json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
+				       char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	char *property_desc = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+
 	if (size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
 		return NULL;
 	}
@@ -120,15 +125,18 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 
 	json_object *section_ir = json_object_new_object();
 
-	add_untrusted_string(section_ir, "signature", nvidia_error->Signature,
-			     sizeof(nvidia_error->Signature));
+	const char *signature = nvidia_error->Signature;
+	add_untrusted_string(section_ir, "signature", signature,
+			     sizeof(signature));
 
 	json_object *severity = json_object_new_object();
 	json_object_object_add(severity, "code",
 			       json_object_new_uint64(nvidia_error->Severity));
+	const char *severity_name = severity_to_string(nvidia_error->Severity);
 	json_object_object_add(severity, "name",
-			       json_object_new_string(severity_to_string(
-				       nvidia_error->Severity)));
+			       json_object_new_string(severity_name));
+	snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+		 "A %s %s NVIDIA Error occurred", severity_name, signature);
 	json_object_object_add(section_ir, "severity", severity);
 
 	json_object_object_add(section_ir, "errorType",
@@ -138,6 +146,12 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size)
 		json_object_new_int(nvidia_error->ErrorInstance));
 	json_object_object_add(section_ir, "socket",
 			       json_object_new_int(nvidia_error->Socket));
+
+	snprintf(property_desc, EFI_ERROR_DESCRIPTION_STRING_LEN, " on CPU %d",
+		 nvidia_error->Socket);
+	strncat(*desc_string, property_desc, strlen(property_desc));
+	free(property_desc);
+
 	json_object_object_add(section_ir, "registerCount",
 			       json_object_new_int(nvidia_error->NumberRegs));
 	json_object_object_add(

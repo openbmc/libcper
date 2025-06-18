@@ -12,10 +12,16 @@
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-dmar-vtd.h>
 #include <libcper/log.h>
+#include <string.h>
 
 //Converts a single VT-d specific DMAr CPER section into JSON IR.
-json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
+					 char **desc_string)
 {
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	strncpy(*desc_string, "A VT-d DMAr Error occurred",
+		SECTION_DESC_STRING_SIZE);
+
 	if (size < sizeof(EFI_DIRECTED_IO_DMAR_ERROR_DATA)) {
 		return NULL;
 	}
