@@ -16,6 +16,29 @@
       "message": "Looks like we need schema changes.",
       "revId": "eb07048c5ac08cac54e54143e3411a6739ee0336",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c9542d7_7ceb1669",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-06-24T00:06:25Z",
+      "side": 1,
+      "message": "nit, all of these need error checks to look for truncation.",
+      "range": {
+        "startLine": 301,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 9
+      },
+      "revId": "eb07048c5ac08cac54e54143e3411a6739ee0336",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
