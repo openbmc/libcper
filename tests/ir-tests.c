@@ -114,6 +114,7 @@ void cper_create_examples(const char *section_name)
 	if (fread(file_data, 1, file_size, record) != file_size) {
 		printf("Failed to read CPER data from memstream.");
 		fclose(outFile);
+		outFile = NULL;
 		assert(0);
 
 		goto done;
@@ -132,6 +133,7 @@ void cper_create_examples(const char *section_name)
 		}
 	}
 	fclose(outFile);
+	outFile = NULL;
 
 	//Convert to IR, free resources.
 	rewind(record);
