@@ -63,6 +63,30 @@
       },
       "revId": "eb07048c5ac08cac54e54143e3411a6739ee0336",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b59b75c_b50de11d",
+        "filename": "sections/cper-section-pcie.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1002169
+      },
+      "writtenOn": "2025-07-03T16:49:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb432be2_0a63021c",
+      "range": {
+        "startLine": 301,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 9
+      },
+      "revId": "eb07048c5ac08cac54e54143e3411a6739ee0336",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
