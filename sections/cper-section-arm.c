@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <json.h>
+#include <inttypes.h>
 #include <libcper/base64.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
@@ -114,7 +115,7 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		char *node_desc_str = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
 		outstr_len = snprintf(node_desc_str,
 				      EFI_ERROR_DESCRIPTION_STRING_LEN,
-				      " on CPU %lu", sock);
+				      " on CPU %" PRIu64, sock);
 		if (outstr_len < 0) {
 			cper_print_log(
 				"Error: Could not write to node description string\n");
