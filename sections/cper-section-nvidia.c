@@ -168,7 +168,8 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 	}
 
 	int property_desc_len = strlen(property_desc);
-	strncat(*desc_string, property_desc, property_desc_len);
+	strncat(*desc_string, property_desc,
+		SECTION_DESC_STRING_SIZE - strlen(*desc_string) - 1);
 	// We still want to get as much info as possible, just warn about truncation
 	if (property_desc_len + strlen(*desc_string) >=
 	    SECTION_DESC_STRING_SIZE) {

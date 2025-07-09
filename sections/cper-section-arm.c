@@ -181,7 +181,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		    strlen(*desc_string) + err_info_desc_i_len <
 			    SECTION_DESC_STRING_SIZE) {
 			strncat(*desc_string, err_info_desc_i,
-				err_info_desc_i_len);
+				SECTION_DESC_STRING_SIZE -
+					strlen(*desc_string) - 1);
 		} else {
 			cper_print_log(
 				"Error: Error info description string too long, not added to description string: %s\n",
