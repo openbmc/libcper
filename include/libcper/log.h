@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-void cper_set_log_stdio();
+void cper_set_log_stdio(void);
 void cper_set_log_custom(void (*fn)(const char *, ...));
 
 void cper_print_log(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
