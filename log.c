@@ -40,7 +40,7 @@ void cper_print_log(const char *fmt, ...)
 	va_end(ap);
 }
 
-void cper_set_log_stdio()
+void cper_set_log_stdio(void)
 {
 	log_type = CPER_LOG_STDIO;
 }
