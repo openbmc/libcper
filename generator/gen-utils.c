@@ -15,7 +15,7 @@ void cper_rand_seed(UINT32 seed)
 	lfsr = seed;
 }
 
-UINT32 cper_rand()
+UINT32 cper_rand(void)
 {
 	lfsr |= lfsr == 0; // if x == 0, set x = 1 instead
 	lfsr ^= (lfsr & 0x0007ffff) << 13;

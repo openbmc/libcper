@@ -12,7 +12,7 @@ const char *good_encode_inputs[] = {
 	"f", "fo", "foo", "foob", "fooba", "foobar",
 };
 
-void test_base64_encode_good()
+void test_base64_encode_good(void)
 {
 	int32_t encoded_len = 0;
 	for (long unsigned int i = 0;
@@ -35,7 +35,7 @@ const char *good_decode_outputs[] = {
 	"f", "f", "fo", "fo", "foo",
 };
 
-void test_base64_decode_good()
+void test_base64_decode_good(void)
 {
 	for (long unsigned int i = 0;
 	     i < sizeof(good_decode_inputs) / sizeof(good_decode_inputs[0]);

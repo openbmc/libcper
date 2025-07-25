@@ -409,7 +409,7 @@ void cper_log_section_dual_binary_test(const char *section_name)
 /*
 * Non-single section assertions.
 */
-void CompileTimeAssertions_TwoWayConversion()
+void CompileTimeAssertions_TwoWayConversion(void)
 {
 	for (size_t i = 0; i < section_definitions_len; i++) {
 		//If a conversion one way exists, a conversion the other way must exist.
@@ -422,7 +422,7 @@ void CompileTimeAssertions_TwoWayConversion()
 	}
 }
 
-void CompileTimeAssertions_ShortcodeNoSpaces()
+void CompileTimeAssertions_ShortcodeNoSpaces(void)
 {
 	for (size_t i = 0; i < generator_definitions_len; i++) {
 		for (int j = 0;
@@ -438,21 +438,21 @@ void CompileTimeAssertions_ShortcodeNoSpaces()
 */
 
 //Generic processor tests.
-void GenericProcessorTests_IRValid()
+void GenericProcessorTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("generic");
 }
-void GenericProcessorTests_BinaryEqual()
+void GenericProcessorTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("generic");
 }
 
 //IA32/x64 tests.
-void IA32x64Tests_IRValid()
+void IA32x64Tests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("ia32x64");
 }
-void IA32x64Tests_BinaryEqual()
+void IA32x64Tests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("ia32x64");
 }
@@ -462,162 +462,162 @@ void IA32x64Tests_BinaryEqual()
 // }
 
 //ARM tests.
-void ArmTests_IRValid()
+void ArmTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("arm");
 }
-void ArmTests_BinaryEqual()
+void ArmTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("arm");
 }
 
 //Memory tests.
-void MemoryTests_IRValid()
+void MemoryTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("memory");
 }
-void MemoryTests_BinaryEqual()
+void MemoryTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("memory");
 }
 
 //Memory 2 tests.
-void Memory2Tests_IRValid()
+void Memory2Tests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("memory2");
 }
-void Memory2Tests_BinaryEqual()
+void Memory2Tests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("memory2");
 }
 
 //PCIe tests.
-void PCIeTests_IRValid()
+void PCIeTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("pcie");
 }
-void PCIeTests_BinaryEqual()
+void PCIeTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("pcie");
 }
 
 //Firmware tests.
-void FirmwareTests_IRValid()
+void FirmwareTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("firmware");
 }
-void FirmwareTests_BinaryEqual()
+void FirmwareTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("firmware");
 }
 
 //PCI Bus tests.
-void PCIBusTests_IRValid()
+void PCIBusTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("pcibus");
 }
-void PCIBusTests_BinaryEqual()
+void PCIBusTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("pcibus");
 }
 
 //PCI Device tests.
-void PCIDevTests_IRValid()
+void PCIDevTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("pcidev");
 }
-void PCIDevTests_BinaryEqual()
+void PCIDevTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("pcidev");
 }
 
 //Generic DMAr tests.
-void DMArGenericTests_IRValid()
+void DMArGenericTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("dmargeneric");
 }
-void DMArGenericTests_BinaryEqual()
+void DMArGenericTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("dmargeneric");
 }
 
 //VT-d DMAr tests.
-void DMArVtdTests_IRValid()
+void DMArVtdTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("dmarvtd");
 }
-void DMArVtdTests_BinaryEqual()
+void DMArVtdTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("dmarvtd");
 }
 
 //IOMMU DMAr tests.
-void DMArIOMMUTests_IRValid()
+void DMArIOMMUTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("dmariommu");
 }
-void DMArIOMMUTests_BinaryEqual()
+void DMArIOMMUTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("dmariommu");
 }
 
 //CCIX PER tests.
-void CCIXPERTests_IRValid()
+void CCIXPERTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("ccixper");
 }
-void CCIXPERTests_BinaryEqual()
+void CCIXPERTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("ccixper");
 }
 
 //CXL Protocol tests.
-void CXLProtocolTests_IRValid()
+void CXLProtocolTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("cxlprotocol");
 }
-void CXLProtocolTests_BinaryEqual()
+void CXLProtocolTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("cxlprotocol");
 }
 
 //CXL Component tests.
-void CXLComponentTests_IRValid()
+void CXLComponentTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("cxlcomponent-media");
 }
-void CXLComponentTests_BinaryEqual()
+void CXLComponentTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("cxlcomponent-media");
 }
 
 //NVIDIA section tests.
-void NVIDIASectionTests_IRValid()
+void NVIDIASectionTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("nvidia");
 }
-void NVIDIASectionTests_BinaryEqual()
+void NVIDIASectionTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("nvidia");
 }
 
-void NVIDIACMETSectionTests_IRValid()
+void NVIDIACMETSectionTests_IRValid(void)
 {
 	cper_example_section_ir_test("nvidia_cmet_info");
 }
 
 //Unknown section tests.
-void UnknownSectionTests_IRValid()
+void UnknownSectionTests_IRValid(void)
 {
 	cper_log_section_dual_ir_test("unknown");
 }
-void UnknownSectionTests_BinaryEqual()
+void UnknownSectionTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("unknown");
 }
 
 //Entrypoint for the testing program.
-int main()
+int main(void)
 {
 	if (GEN_EXAMPLES) {
 		cper_create_examples("generic");
