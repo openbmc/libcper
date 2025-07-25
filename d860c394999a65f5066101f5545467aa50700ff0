@@ -16,6 +16,24 @@
       "message": "Just declare this as a proper uint table\n\nUINT8 decode_table[256] \u003d { 0x80, 0x80, 0x80......",
       "revId": "d860c394999a65f5066101f5545467aa50700ff0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec8589ec_3cfb93c9",
+        "filename": "base64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001839
+      },
+      "writtenOn": "2025-07-25T15:16:34Z",
+      "side": 1,
+      "message": "Acknowledged. Let me know if I should also remove the clang-format guards (it will wrap at 12 elements otherwise)",
+      "parentUuid": "cb1b8dff_3adb52fe",
+      "revId": "d860c394999a65f5066101f5545467aa50700ff0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
