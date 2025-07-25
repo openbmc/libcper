@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "356f637b_dc095075",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-07-25T17:51:38Z",
+      "side": 1,
+      "message": "Overriding CI temporarily.",
+      "revId": "c2388b73ecf256c55e337562bcf4b230418297e6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4004f365_8a7353fd",
+        "filename": "base64.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-07-25T17:51:38Z",
+      "side": 1,
+      "message": "I changed this patch to leave formatting on.",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "c2388b73ecf256c55e337562bcf4b230418297e6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
