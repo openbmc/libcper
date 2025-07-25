@@ -12,7 +12,7 @@
 #include <libcper/generator/cper-generate.h>
 #include <libcper/generator/sections/gen-section.h>
 
-void print_help();
+void print_help(void);
 
 int main(int argc, char *argv[])
 {
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 }
 
 //Prints command help for this CPER generator.
-void print_help()
+void print_help(void)
 {
 	printf(":: --out cper.file [--sections section1 ...] [--single-section sectiontype]\n");
 	printf("\tGenerates a pseudo-random CPER file with the provided section types and outputs to the given file name.\n\n");

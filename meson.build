@@ -18,6 +18,7 @@ add_project_arguments(
         '-DLIBCPER_EXAMPLES="' + example_dir + '"',
         '-DLIBCPER_JSON_SPEC="' + spec_dir + '"',
         '-D_POSIX_C_SOURCE=200809L',
+        '-Wno-gnu-statement-expression-from-macro-expansion',
     ],
     language: 'c',
 )

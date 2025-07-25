@@ -1,6 +1,9 @@
 jsonc_daccord = dependency(
     'jsoncdac',
-    default_options: ['default_library=static'],
+    default_options: [
+        'default_library=static',
+        'warning_level=2',
+    ],
 )
 
 test_sources = files('base64_test.c', 'test-utils.c')
