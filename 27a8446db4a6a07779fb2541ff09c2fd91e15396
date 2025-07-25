@@ -16,6 +16,24 @@
       "message": "I think OpenBMC unit tests docker updated at some point. There are lots of errors when running the unit tests which I\u0027m not sure what should be the right thing to do:\n\n```\n/usr/local/include/json-c/json_object.h:498:14: error: ISO C forbids braced-groups within expressions [-Werror\u003dpedantic]\n  498 |              ({                                                                  \\\n      |              ^\n../subprojects/jsoncdac/libjsoncdac/additionalproperties.c:30:5: note: in expansion of macro ‘json_object_object_foreach’\n   30 |     json_object_object_foreach(jobj, jobj_key, jobj_val)\n      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1: all warnings being treated as errors\n```\n\n```\n../log.c:43:24: error: a function declaration without a prototype is deprecated in all versions of C [-Werror,-Wstrict-prototypes]\n   43 | void cper_set_log_stdio()\n      |                        ^\n      |                         void\n```\n\n(as far as I can see)",
       "revId": "27a8446db4a6a07779fb2541ff09c2fd91e15396",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0193ccce_843c81c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-07-25T18:09:14Z",
+      "side": 1,
+      "message": "I fixed a bunch of them here:\n\nhttps://gerrit.openbmc.org/c/openbmc/libcper/+/82297",
+      "parentUuid": "d24d8495_df5923de",
+      "revId": "27a8446db4a6a07779fb2541ff09c2fd91e15396",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
