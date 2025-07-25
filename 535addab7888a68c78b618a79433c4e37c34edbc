@@ -16,6 +16,23 @@
       "message": "No idea why libcper is being compiled with Clang, which doesn’t recognize the nonstring attribute.",
       "revId": "535addab7888a68c78b618a79433c4e37c34edbc",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dce3cfaa_368a99d1",
+        "filename": "base64.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-07-25T15:08:17Z",
+      "side": 1,
+      "message": "Left what I think is the correct fix in https://gerrit.openbmc.org/c/openbmc/libcper/+/82230",
+      "revId": "535addab7888a68c78b618a79433c4e37c34edbc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
