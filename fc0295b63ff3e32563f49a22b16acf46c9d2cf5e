@@ -33,6 +33,29 @@
       "message": "Is it possible to get a unit test that would\u0027ve caught this bug?",
       "revId": "fc0295b63ff3e32563f49a22b16acf46c9d2cf5e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31d7c1be_65cc7f43",
+        "filename": "cli-app/cper-convert.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-07-28T16:40:05Z",
+      "side": 1,
+      "message": "The previous check was intentionally the opposite of this.  We don\u0027t expect most payloads to be base64 encoded, so we should attempt that first.  IN theory we could have a payload (like all zeros) that\u0027s valid CPER, but base64 encodes correctly.\n\nI suspect we just need to add is_single_section in the header_is_valid check",
+      "range": {
+        "startLine": 113,
+        "startChar": 18,
+        "endLine": 113,
+        "endChar": 31
+      },
+      "revId": "fc0295b63ff3e32563f49a22b16acf46c9d2cf5e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
