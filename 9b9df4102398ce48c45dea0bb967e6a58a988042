@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe67c414_f8bc3e3d",
+        "filename": "sections/cper-section-memory.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-07-28T21:59:57Z",
+      "side": 1,
+      "message": "Nit, we don\u0027t really need this comment here.   It makes sense in this change, but in isolation if we have to list everything that these are independent of, it would be a much longer list.\n\nIf you send another patch, please consider just removing this.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 63
+      },
+      "revId": "9b9df4102398ce48c45dea0bb967e6a58a988042",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
