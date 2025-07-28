@@ -82,7 +82,6 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 			*desc_string);
 	}
 	//"Extended" row/column indication field + misc.
-	// Review this
 	if (isvalid_prop_to_ir(&ui64Type, 18)) {
 		json_object *extended = json_object_new_object();
 		json_object_object_add(
@@ -99,20 +98,20 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 						    5));
 		}
 		json_object_object_add(section_ir, "extended", extended);
+	}
 
-		//bit 16 and 17 are valid only if extended is valid
-		if (isvalid_prop_to_ir(&ui64Type, 16)) {
-			json_object_object_add(
-				section_ir, "cardSmbiosHandle",
-				json_object_new_uint64(
-					memory_error->CardHandle));
-		}
-		if (isvalid_prop_to_ir(&ui64Type, 17)) {
-			json_object_object_add(
-				section_ir, "moduleSmbiosHandle",
-				json_object_new_uint64(
-					memory_error->ModuleHandle));
-		}
+	// SMBIOS handles are independent of extended field validation
+	if (isvalid_prop_to_ir(&ui64Type, 16)) {
+		json_object_object_add(
+			section_ir, "cardSmbiosHandle",
+			json_object_new_uint64(
+				memory_error->CardHandle));
+	}
+	if (isvalid_prop_to_ir(&ui64Type, 17)) {
+		json_object_object_add(
+			section_ir, "moduleSmbiosHandle",
+			json_object_new_uint64(
+				memory_error->ModuleHandle));
 	}
 
 	//Miscellaneous numeric fields.
