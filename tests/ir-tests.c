@@ -311,6 +311,44 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 	}
 }
 
+//Tests a single randomly generated CPER section of the given type to ensure CPER-JSON IR validity.
+void cper_buf_log_section_ir_test(const char *section_name, int single_section,
+				  GEN_VALID_BITS_TEST_TYPE validBitsType)
+{
+	//Generate full CPER record for the given type.
+	char *buf;
+	size_t size;
+	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
+						 single_section, validBitsType);
+
+	//Convert.
+	json_object *ir;
+	if (single_section) {
+		ir = cper_buf_single_section_to_ir((UINT8 *)buf, size);
+	} else {
+		ir = cper_buf_to_ir((UINT8 *)buf, size);
+	}
+	fclose(record);
+	free(buf);
+
+	if (!ir) {
+		printf("IR validation test failed (%d) : json object empty \n",
+		       single_section);
+		assert(0);
+	}
+
+	//Validate against schema.
+	int valid = schema_validate_from_file(ir, single_section,
+					      /*all_valid_bits*/ 1);
+	json_object_put(ir);
+
+	if (valid < 0) {
+		printf("IR validation test failed (single section mode = %d)\n",
+		       single_section);
+		assert(0);
+	}
+}
+
 int to_hex(const unsigned char *input, size_t size, char **out)
 {
 	*out = (char *)malloc(size * 2);
@@ -393,8 +431,14 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 //Tests randomly generated CPER sections for IR validity of a given type, in both single section mode and full CPER log mode.
 void cper_log_section_dual_ir_test(const char *section_name)
 {
+	// Test with file based APIs
 	cper_log_section_ir_test(section_name, 0, allValidbitsSet);
 	cper_log_section_ir_test(section_name, 1, allValidbitsSet);
+
+	// Test with buffer based APIs
+	cper_buf_log_section_ir_test(section_name, 0, allValidbitsSet);
+	cper_buf_log_section_ir_test(section_name, 1, allValidbitsSet);
+
 	//Validate against examples
 	cper_example_section_ir_test(section_name);
 }

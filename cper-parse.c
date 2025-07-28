@@ -414,6 +414,7 @@ json_object *read_section(const unsigned char *cper_section_buf, size_t size,
 	json_object *section_ir =
 		definition->ToIR(cper_section_buf, size, &cper_description);
 	if (section_ir == NULL) {
+		free(cper_description);
 		return NULL;
 	}
 	json_object *result = json_object_new_object();
@@ -527,7 +528,7 @@ json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 	json_object_object_add(ir, "sectionDescriptor", section_descriptor_ir);
 	section_begin = cper_buf + section_descriptor->SectionOffset;
 
-	if (section_begin + section_descriptor->SectionLength >= cper_end) {
+	if (section_begin + section_descriptor->SectionLength > cper_end) {
 		json_object_put(ir);
 		//cper_print_log("Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
 		return NULL;

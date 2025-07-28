@@ -108,7 +108,7 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 		return;
 	}
 
-	if (!header_valid(fbuff, readsize)) {
+	if (!is_single_section && !header_valid(fbuff, readsize)) {
 		// Check if it's base64 encoded
 		int32_t decoded_len = 0;
 		UINT8 *decoded = base64_decode(fbuff, readsize, &decoded_len);
