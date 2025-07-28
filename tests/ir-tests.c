@@ -606,6 +606,12 @@ void NVIDIACMETSectionTests_IRValid()
 	cper_example_section_ir_test("nvidia_cmet_info");
 }
 
+//Memory section test for validation bits.
+void MemoryValidationBitsSectionTests_IRValid()
+{
+	cper_example_section_ir_test("memory-validation-bits");
+}
+
 //Unknown section tests.
 void UnknownSectionTests_IRValid()
 {
@@ -673,6 +679,7 @@ int main()
 	NVIDIASectionTests_IRValid();
 	NVIDIASectionTests_BinaryEqual();
 	NVIDIACMETSectionTests_IRValid();
+	MemoryValidationBitsSectionTests_IRValid();
 	UnknownSectionTests_IRValid();
 	UnknownSectionTests_BinaryEqual();
 	CompileTimeAssertions_TwoWayConversion();
