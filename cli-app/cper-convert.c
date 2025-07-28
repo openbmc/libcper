@@ -108,23 +108,12 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 		return;
 	}
 
-	if (!header_valid(fbuff, readsize)) {
-		// Check if it's base64 encoded
-		int32_t decoded_len = 0;
-		UINT8 *decoded = base64_decode(fbuff, readsize, &decoded_len);
-		if (decoded == NULL) {
-			printf("base64 decode failed for CPER file '%s'.\n",
-			       in_file);
-			free(fbuff);
-			free(decoded);
-			return;
-		}
-		if (!header_valid((const char *)decoded, decoded_len)) {
-			printf("Invalid CPER file '%s'.\n", in_file);
-			free(fbuff);
-			free(decoded);
-			return;
-		}
+	//Check if data is base64 or not.
+	int32_t decoded_len = 0;
+	UINT8 *decoded = base64_decode(fbuff, readsize, &decoded_len);
+	if (!decoded) {
+		printf("Data not Base64 encoded. Skip Base64 decode errors message.\n");
+	} else {
 		// Swap the buffer to the base64 decoded buffer.
 		free(fbuff);
 		fbuff = (char *)decoded;
@@ -133,10 +122,17 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 		decoded = NULL;
 	}
 
+	//Check Record Header signature if not a single section
+	if (!is_single_section && !header_valid((const char *)fbuff, fsize)) {
+		printf("Invalid CPER file '%s'.\n", in_file);
+		free(fbuff);
+		return;
+	}
+
 	//Convert.
 	json_object *ir;
 	if (is_single_section) {
-		ir = cper_buf_single_section_to_ir((UINT8 *)fbuff, readsize);
+		ir = cper_buf_single_section_to_ir((UINT8 *)fbuff, fsize);
 	} else {
 		ir = cper_buf_to_ir((UINT8 *)fbuff, fsize);
 	}
