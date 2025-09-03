@@ -7,8 +7,7 @@
 	}
 
 	//Library function declarations for module export.
-	json_object *
-	cper_to_ir(FILE *cper_file);
+	json_object *cper_to_ir(FILE *cper_file);
 void ir_to_cper(json_object *ir, FILE *out);
 
 //JSON function symbol export.
