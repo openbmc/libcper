@@ -190,7 +190,8 @@ int string_to_binary(const char *source, size_t length, unsigned char **retval)
 		}
 		int val = hex2int(c);
 		if (val < 0) {
-			printf("Invalid hex character in test file: %c\n", c);
+			printf("Invalid hex character in test file: %c at offset %zu\n",
+			       c, i);
 			return -1;
 		}
 
@@ -208,6 +209,7 @@ int string_to_binary(const char *source, size_t length, unsigned char **retval)
 //Tests fixed CPER sections for IR validity with an example set.
 void cper_example_section_ir_test(const char *section_name)
 {
+	printf("cper_example_section_ir_test: %s\n", section_name);
 	//Open CPER record for the given type.
 	struct file_info *info = file_info_init(section_name);
 	if (info == NULL) {
@@ -403,6 +405,9 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 		ir = cper_to_ir(record);
 	}
 
+	cper_print_log("decoded:\n%s\n", json_object_to_json_string_ext(
+						 ir, JSON_C_TO_STRING_PRETTY));
+
 	//Now convert back to binary, and get a stream out.
 	char *cper_buf;
 	size_t cper_buf_size;
@@ -522,6 +527,16 @@ void ArmTests_IRValid(void)
 void ArmTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("arm");
+}
+
+// ARM RAS tests.
+void ArmRasTests_IRValid(void)
+{
+	cper_log_section_dual_ir_test("arm-ras");
+}
+void ArmRasTests_BinaryEqual(void)
+{
+	cper_log_section_dual_binary_test("arm-ras");
 }
 
 //Memory tests.
@@ -705,6 +720,8 @@ int main(void)
 	IA32x64Tests_BinaryEqual();
 	ArmTests_IRValid();
 	ArmTests_BinaryEqual();
+	ArmRasTests_IRValid();
+	ArmRasTests_BinaryEqual();
 	MemoryTests_IRValid();
 	MemoryTests_BinaryEqual();
 	Memory2Tests_IRValid();
