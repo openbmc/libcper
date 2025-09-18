@@ -223,6 +223,11 @@ typedef struct {
 	  0xbc11,                                                              \
 	  0x11e4,                                                              \
 	  { 0x9c, 0xaa, 0xc2, 0x05, 0x1d, 0x5d, 0x46, 0xb0 } }
+#define EFI_ERROR_SECTION_ARM_RAS_GUID                                         \
+	{ 0xBF32D4D5,                                                          \
+	  0xB427,                                                              \
+	  0x4025,                                                              \
+	  { 0x84, 0x95, 0x8A, 0x9E, 0x5D, 0x40, 0x30, 0xE4 } }
 #define EFI_ERROR_SECTION_PLATFORM_MEMORY_GUID                                 \
 	{ 0xa5bc1114,                                                          \
 	  0x6f64,                                                              \
@@ -1325,6 +1330,7 @@ extern EFI_GUID gEfiProcessorSpecificErrorSectionGuid;
 extern EFI_GUID gEfiIa32X64ProcessorErrorSectionGuid;
 extern EFI_GUID gEfiIpfProcessorErrorSectionGuid;
 extern EFI_GUID gEfiArmProcessorErrorSectionGuid;
+extern EFI_GUID gEfiArmRasNodeSectionGuid;
 extern EFI_GUID gEfiPlatformMemoryErrorSectionGuid;
 extern EFI_GUID gEfiPlatformMemoryError2SectionGuid;
 extern EFI_GUID gEfiPcieErrorSectionGuid;
@@ -1690,6 +1696,134 @@ typedef struct {
 	UINT64 MrsO0 : 2;
 	UINT64 Value : 64;
 } EFI_ARM_MISC_CONTEXT_REGISTER;
+
+///
+/// See: https://developer.arm.com/documentation/den0085/latest/
+/// ARM RAS System Architecture Node (Revision 1 - Table 20)
+///
+typedef struct {
+	UINT32 Revision;     /* Must be 1 for Rev1 */
+	UINT8 ComponentType; /* AEST Node Type (legacy from Rev1 onward) */
+	UINT8 Reserved0;     /* Reserved, must be 0 */
+	UINT8 Reserved1;     /* Reserved, must be 0 */
+	UINT8 Reserved2;     /* Reserved, must be 0 */
+	UINT32 ErrorSyndromeArrayNumEntries; /* N: number of descriptors (Table 21) */
+	/* err_arr_off: offset to error syndrome array */
+	UINT16 ErrorSyndromeArrayOffset;
+	UINT16 AuxiliaryDataOffset; /* aux_off: offset to auxiliary data block*/
+	UINT8 IPInstanceFormat;	    /* IP_instance_format (0..3) */
+	UINT8 IPTypeFormat;	    /* IP_type_format (0..3, 255 invalid) */
+	UINT8 Reserved3;	    /* Reserved, must be 0 */
+	UINT8 Reserved4;	    /* Reserved, must be 0 */
+	UINT8 Reserved5;	    /* Reserved, must be 0 */
+	UINT8 Reserved6;	    /* Reserved, must be 0 */
+	UINT8 Reserved7;	    /* Reserved, must be 0 */
+	UINT8 Reserved8;	    /* Reserved, must be 0 */
+	union {
+		struct {
+			UINT64 MPIDR_EL1;
+			UINT64 Reserved;
+		} pe;
+		struct {
+			UINT64 SystemPhysicalAddress;
+			UINT64 Reserved;
+		} systemPhysicalAddress;
+		struct {
+			UINT64 SocSpecificLocalAddressSpace;
+			UINT64 BaseAddress;
+		} localAddressIdentifier;
+		struct {
+			UINT8 SocSpecificIPIdentifier[16];
+		} socSpecificIpIdentifier;
+	} IPInstance;
+	union {
+		struct {
+			UINT64 MIDR_EL1;
+			UINT64 REVIDR_EL1;
+			UINT64 AIDR_EL1;
+		} smmuIidr;
+		struct {
+			UINT32 IIDR;
+			UINT32 AIDR;
+			UINT64 Reserved1;
+			UINT64 Reserved2;
+		} gicIidr;
+		struct {
+			UINT8 PIDR3;
+			UINT8 PIDR2;
+			UINT8 PIDR1;
+			UINT8 PIDR0;
+			UINT8 PIDR7;
+			UINT8 PIDR6;
+			UINT8 PIDR5;
+			UINT8 PIDR4;
+			UINT64 Reserved1;
+			UINT64 Reserved2;
+		} pidr;
+	} IPType;
+	CHAR8 UserData[16]; /* Null-terminated implementation-defined string */
+} EFI_ARM_RAS_NODE;
+
+///
+/// ARM RAS Error Record Descriptor (Revision 1 - Table 21)
+///
+typedef struct {
+	UINT32 ErrorRecordIndex;
+	UINT8 RasExtensionRevision; /* High nibble: REVISION, Low nibble: ARCHVER */
+	UINT8 Reserved[3];
+	UINT64 ERR_FR;		    /* Functional register */
+	UINT64 ERR_CTLR;	    /* Control register */
+	UINT64 ERR_STATUS;	    /* Status register */
+	UINT64 ERR_ADDR;	    /* Address register */
+	UINT64 ERR_MISC0;	    /* Misc register 0 */
+	UINT64 ERR_MISC1;	    /* Misc register 1 */
+	UINT64 ERR_MISC2; /* Misc register 2 (valid if RasExtensionRevision != 0) */
+	UINT64 ERR_MISC3; /* Misc register 3 (valid if RasExtensionRevision != 0) */
+} EFI_ARM_RAS_ERROR_RECORD_DESCRIPTOR;
+
+/*
+ * ARM RAS Auxiliary Data Structures (Revision 1 - Tables 22-26)
+ * All structures are packed. Offsets are relative to the start of the
+ * auxiliary data block (i.e. the byte at AuxiliaryDataOffset inside the
+ * Arm RAS Section).
+ */
+typedef struct {
+	UINT8 Version;			    /* Must be 1 */
+	UINT8 Reserved0;		    /* Must be 0 */
+	UINT16 AddressSpaceArrayEntryCount; /* N: number of Auxiliary Context headers */
+	UINT32 AuxiliaryDataSize; /* Total size in bytes including this header */
+	UINT32 KeyValuePairArrayOffset; /* kvp_off: offset (from aux start) to key_val_pair_array */
+	UINT16 KeyValuePairArrayEntryCount; /* K: number of key/value entries */
+	UINT16 Reserved1;		    /* Must be 0 */
+} EFI_ARM_RAS_AUX_DATA_HEADER;
+
+typedef struct {
+	UINT32 Length; /* Total length including header + register entries */
+	UINT8 Flags; /* Bit0: 0=System physical (global); 1=Local address space */
+	UINT8 Reserved0;		/* Must be 0 */
+	UINT16 RegisterArrayEntryCount; /* R: number of register entries */
+	UINT16 AddressSpaceIdentifier; /* Valid only if Flags bit0==1, else must be 0 */
+	UINT8 Reserved1[6];	       /* Must be 0 */
+} EFI_ARM_RAS_AUX_CONTEXT_HEADER;
+
+typedef struct {
+	UINT64 RegisterAddress; /* Memory mapped register address */
+	UINT64 RegisterValue; /* Register value (upper bits must be zero if reg <64b) */
+} EFI_ARM_RAS_AUX_MM_REG_ENTRY;
+
+typedef struct {
+	EFI_GUID Key; /* UUID describing the value */
+	UINT64 Value; /* Key-specific value */
+} EFI_ARM_RAS_AUX_KEY_VALUE_PAIR;
+
+/* Known Key Value Pair UUIDs (Table 26) */
+/* ebb45182-fb03-4bf9-9aca-8613709fd789 */
+static const EFI_GUID EFI_ARM_RAS_KVP_UUID_MPAM_PARTID = {
+	0xEBB45182,
+	0xFB03,
+	0x4BF9,
+	{ 0x9A, 0xCA, 0x86, 0x13, 0x70, 0x9F, 0xD7, 0x89 }
+};
 #pragma pack(pop)
 
 #ifdef __cplusplus

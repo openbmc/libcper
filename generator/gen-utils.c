@@ -42,6 +42,15 @@ UINT8 *generate_random_bytes(size_t size)
 	return bytes;
 }
 
+// Generates a null terminated string of printable chracters
+void generate_random_printable_string(char *dest, size_t length)
+{
+	for (size_t i = 0; i < length; i++) {
+		dest[i] = cper_rand() % (0x7f - 0x20) + 0x20;
+	}
+	dest[length] = 0;
+}
+
 //Creates a valid common CPER error section, given the start of the error section.
 //Clears reserved bits.
 void create_valid_error_section(UINT8 *start)
