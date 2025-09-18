@@ -71,6 +71,9 @@
                 "Ampere": {
                     "$ref": "./sections/cper-ampere.json"
                 },
+                "ArmRas": {
+                    "$ref": "./sections/cper-arm-ras.json"
+                },
                 "Unknown": {
                     "$ref": "./sections/cper-unknown.json"
                 }
