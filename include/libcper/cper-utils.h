@@ -80,6 +80,9 @@ void add_int_hex_24(json_object *register_ir, const char *field_name,
 void add_int_hex_64(json_object *register_ir, const char *field_name,
 		    UINT64 value);
 
+void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
+		   size_t byte_len);
+
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value);
 
 void add_bool_enum(json_object *register_ir, const char *field_name,
