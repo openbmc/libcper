@@ -419,7 +419,7 @@ void string_to_guid(EFI_GUID *out, const char *guid)
 }
 
 //Returns one if two EFI GUIDs are equal, zero otherwise.
-int guid_equal(EFI_GUID *a, EFI_GUID *b)
+int guid_equal(const EFI_GUID *a, const EFI_GUID *b)
 {
 	//Check top base 3 components.
 	if (a->Data1 != b->Data1 || a->Data2 != b->Data2 ||
@@ -485,6 +485,44 @@ int cper_printable_string_length(const char *str, int number_chars)
 	return fru_text_len;
 }
 
+size_t hex_string_to_bytes(const char *hex_string, size_t hex_string_len,
+			   UINT8 *bytes, size_t bytes_len)
+{
+	if (hex_string == NULL || bytes == NULL) {
+		return -1;
+	}
+
+	size_t index = 0;
+	UINT8 value = 0;
+	while (index < hex_string_len) {
+		char c = hex_string[index];
+		if (c >= '0' && c <= '9') {
+			value += (c - '0');
+		} else if (c >= 'A' && c <= 'F') {
+			value += (10 + (c - 'A'));
+		} else if (c >= 'a' && c <= 'f') {
+			value += (10 + (c - 'a'));
+		} else {
+			return -1;
+		}
+		if (index % 2 == 1) {
+			bytes[index / 2] = value;
+			value = 0;
+		} else {
+			value <<= 4;
+		}
+
+		index++;
+	}
+
+	// Failed to write all bytes
+	if (index != bytes_len * 2) {
+		return -1;
+	}
+
+	return bytes_len;
+}
+
 void add_untrusted_string(json_object *ir, const char *field_name,
 			  const char *str, int len)
 {
@@ -546,6 +584,31 @@ void add_int_hex_64(json_object *register_ir, const char *field_name,
 		    UINT64 value)
 {
 	add_int_hex_common(register_ir, field_name, value, 8);
+}
+
+void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
+		   size_t byte_len)
+{
+	if (!obj || !bytes || byte_len == 0) {
+		return;
+	}
+
+	size_t hex_len = byte_len * 2;
+	char *hex_buf = (char *)malloc(hex_len + 1);
+	if (!hex_buf) {
+		return;
+	}
+
+	// convert each byte to 2 hex characters
+	for (size_t i = 0; i < byte_len; i++) {
+		snprintf(&hex_buf[i * 2], 3, "%02x", bytes[i]);
+	}
+	hex_buf[hex_len] = '\0';
+
+	json_object_object_add(obj, field_name,
+			       json_object_new_string_len(hex_buf, hex_len));
+
+	free(hex_buf);
 }
 
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value)

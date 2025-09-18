@@ -1,0 +1,197 @@
+{
+    "header": {
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 2,
+            "name": "Corrected"
+        },
+        "recordLength": 792,
+        "timestamp": "7715-06-19T11:00:12+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1804289383,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
+    },
+    "sectionDescriptors": [
+        {
+            "sectionOffset": 200,
+            "sectionLength": 592,
+            "revision": {
+                "major": 183,
+                "minor": 162
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": true,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": true,
+                "latentError": false,
+                "propagated": false,
+                "overflow": true
+            },
+            "sectionType": {
+                "data": "bf32d4d5-b427-4025-8495-8a9e5d4030e4",
+                "type": "ARM RAS"
+            },
+            "fruID": "e9df75e3-d594-c9c5-d87f-9af8d2c2c1fb",
+            "fruText": ":mO4=ZvMD^bvU;e'Rrs",
+            "severity": {
+                "code": 1,
+                "name": "Fatal"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "message": "ARM RAS error occured",
+            "ArmRas": {
+                "revision": 1,
+                "componentType": 6,
+                "errorSyndromeArrayOffset": 80,
+                "auxDataOffset": 368,
+                "errorSyndromeArrayNumEntries": 4,
+                "ipInstanceFormat": 1,
+                "ipTypeFormat": 3,
+                "ipInstance": "d5cf61d221c1161f83458848e889d903",
+                "ipType": "bd190aca409a04adea0cda2c20b41d535ff8b7f5354f9a85",
+                "userData": "-M0O.VWKH5<UAD0",
+                "errorSyndromes": [
+                    {
+                        "errorRecordIndex": 0,
+                        "rasExtensionRevisionField": 15,
+                        "rasExtensionArchVer": 4,
+                        "errorRecordFeatureRegister": 3825552920,
+                        "errorRecordControlRegister": 4111169435,
+                        "errorRecordPrimaryStatusRegister": 3841136263,
+                        "errorRecordAddressRegister": 1112868694,
+                        "errorRecordMiscRegister0": 3041490729,
+                        "errorRecordMiscRegister1": 3996075295,
+                        "errorRecordMiscRegister2": 3608702329,
+                        "errorRecordMiscRegister3": 2354259042
+                    },
+                    {
+                        "errorRecordIndex": 1,
+                        "rasExtensionRevisionField": 9,
+                        "rasExtensionArchVer": 4,
+                        "errorRecordFeatureRegister": 3692093908,
+                        "errorRecordControlRegister": 3312073185,
+                        "errorRecordPrimaryStatusRegister": 3365749130,
+                        "errorRecordAddressRegister": 1965689436,
+                        "errorRecordMiscRegister0": 3092487660,
+                        "errorRecordMiscRegister1": 3055647611,
+                        "errorRecordMiscRegister2": 2961484892,
+                        "errorRecordMiscRegister3": 2229855675
+                    },
+                    {
+                        "errorRecordIndex": 2,
+                        "rasExtensionRevisionField": 0,
+                        "rasExtensionArchVer": 0,
+                        "errorRecordFeatureRegister": 3562009526,
+                        "errorRecordControlRegister": 1830679530,
+                        "errorRecordPrimaryStatusRegister": 3212546330,
+                        "errorRecordAddressRegister": 1716404598,
+                        "errorRecordMiscRegister0": 1652170374,
+                        "errorRecordMiscRegister1": 351470643
+                    },
+                    {
+                        "errorRecordIndex": 3,
+                        "rasExtensionRevisionField": 4,
+                        "rasExtensionArchVer": 0,
+                        "errorRecordFeatureRegister": 2479128107,
+                        "errorRecordControlRegister": 2619544907,
+                        "errorRecordPrimaryStatusRegister": 801852366,
+                        "errorRecordAddressRegister": 2431105655,
+                        "errorRecordMiscRegister0": 2458148291,
+                        "errorRecordMiscRegister1": 1052383997,
+                        "errorRecordMiscRegister2": 3243574767,
+                        "errorRecordMiscRegister3": 1559393915
+                    }
+                ],
+                "auxData": {
+                    "version": 1,
+                    "addressSpaceArrayEntryCount": 3,
+                    "auxiliaryDataSize": 224,
+                    "keyValuePairArrayOffset": 176,
+                    "keyValuePairArrayEntryCount": 2,
+                    "contexts": [
+                        {
+                            "length": 80,
+                            "flags": 1,
+                            "registerArrayEntryCount": 4,
+                            "addressSpaceIdentifier": 13293,
+                            "registers": [
+                                {
+                                    "address": 1436480453,
+                                    "value": 4146385142
+                                },
+                                {
+                                    "address": 3397315339,
+                                    "value": 4109340676
+                                },
+                                {
+                                    "address": 3675094291,
+                                    "value": 3779841988
+                                },
+                                {
+                                    "address": 2396221501,
+                                    "value": 4198542007
+                                }
+                            ]
+                        },
+                        {
+                            "length": 32,
+                            "flags": 0,
+                            "registerArrayEntryCount": 1,
+                            "registers": [
+                                {
+                                    "address": 231840444,
+                                    "value": 3997612575
+                                }
+                            ]
+                        },
+                        {
+                            "length": 48,
+                            "flags": 1,
+                            "registerArrayEntryCount": 2,
+                            "addressSpaceIdentifier": 36004,
+                            "registers": [
+                                {
+                                    "address": 430806333,
+                                    "value": 3393615800
+                                },
+                                {
+                                    "address": 2459945440,
+                                    "value": 534542865
+                                }
+                            ]
+                        }
+                    ],
+                    "keyValuePairs": [
+                        {
+                            "key": "892f4f40-12e2-b2ca-c7d3-daf279efab01",
+                            "value": 3838354012
+                        },
+                        {
+                            "key": "12207adb-e441-9c75-0c69-99c08d566c15",
+                            "value": 1211366847
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
