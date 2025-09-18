@@ -18,6 +18,8 @@ size_t generate_section_ia32x64(void **location,
 				GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_section_arm(void **location,
 			    GEN_VALID_BITS_TEST_TYPE validBitsType);
+size_t generate_section_arm_ras(void **location,
+				GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_section_memory(void **location,
 			       GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_section_memory2(void **location,
