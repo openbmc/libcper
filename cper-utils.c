@@ -419,7 +419,7 @@ void string_to_guid(EFI_GUID *out, const char *guid)
 }
 
 //Returns one if two EFI GUIDs are equal, zero otherwise.
-int guid_equal(EFI_GUID *a, EFI_GUID *b)
+int guid_equal(const EFI_GUID *a, const EFI_GUID *b)
 {
 	//Check top base 3 components.
 	if (a->Data1 != b->Data1 || a->Data2 != b->Data2 ||
@@ -485,6 +485,44 @@ int cper_printable_string_length(const char *str, int number_chars)
 	return fru_text_len;
 }
 
+size_t hex_string_to_bytes(const char *hex_string, size_t hex_string_len,
+			   UINT8 *bytes, size_t bytes_len)
+{
+	if (hex_string == NULL || bytes == NULL) {
+		return -1;
+	}
+
+	size_t index = 0;
+	UINT8 value = 0;
+	while (index < hex_string_len) {
+		char c = hex_string[index];
+		if (c >= '0' && c <= '9') {
+			value += (c - '0');
+		} else if (c >= 'A' && c <= 'F') {
+			value += (10 + (c - 'A'));
+		} else if (c >= 'a' && c <= 'f') {
+			value += (10 + (c - 'a'));
+		} else {
+			return -1;
+		}
+		if (index % 2 == 1) {
+			bytes[index / 2] = value;
+			value = 0;
+		} else {
+			value <<= 4;
+		}
+
+		index++;
+	}
+
+	// Failed to write all bytes
+	if (index != bytes_len * 2) {
+		return -1;
+	}
+
+	return bytes_len;
+}
+
 void add_untrusted_string(json_object *ir, const char *field_name,
 			  const char *str, int len)
 {
@@ -493,6 +531,9 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 		json_object_object_add(
 			ir, field_name,
 			json_object_new_string_len(str, fru_text_len));
+	} else {
+		cper_print_log("Invalid string length: %d for string: %s", len,
+			       str);
 	}
 }
 
@@ -542,10 +583,126 @@ void add_int_hex_24(json_object *register_ir, const char *field_name,
 	add_int_hex_common(register_ir, field_name, value, 6);
 }
 
-void add_int_hex_64(json_object *register_ir, const char *field_name,
+void add_int_hex_32(json_object *register_ir, const char *field_name,
 		    UINT64 value)
 {
 	add_int_hex_common(register_ir, field_name, value, 8);
+}
+
+// TODO, deduplicate with get_value_hex_64/32
+void get_value_hex_8(json_object *obj, const char *field_name, UINT8 *value_out)
+{
+	json_object *value = json_object_object_get(obj, field_name);
+	if (!value) {
+		return;
+	}
+	const char *hex_string = json_object_get_string(value);
+	if (!hex_string) {
+		return;
+	}
+	UINT8 byte;
+	size_t hex_string_len = strlen(hex_string);
+	if (hex_string_len != 4) {
+		return;
+	}
+	if (hex_string[0] != '0' || hex_string[1] != 'x') {
+		return;
+	}
+
+	if (hex_string_to_bytes(hex_string + 2, hex_string_len - 2, &byte, 1) !=
+	    1) {
+		return;
+	}
+	*value_out = byte;
+}
+
+// TODO, deduplicate with get_value_hex_64
+void get_value_hex_32(json_object *obj, const char *field_name,
+		      UINT32 *value_out)
+{
+	json_object *value = json_object_object_get(obj, field_name);
+	if (!value) {
+		return;
+	}
+	const char *hex_string = json_object_get_string(value);
+	if (!hex_string) {
+		return;
+	}
+	UINT8 bytes[4];
+	size_t hex_string_len = strlen(hex_string);
+	if (hex_string_len != 10) {
+		return;
+	}
+	if (hex_string[0] != '0' || hex_string[1] != 'x') {
+		return;
+	}
+
+	if (hex_string_to_bytes(hex_string + 2, hex_string_len - 2, bytes,
+				sizeof(bytes)) != 4) {
+		return;
+	}
+	*value_out = (UINT32)bytes[0] << 24 | (UINT32)bytes[1] << 16 |
+		     (UINT32)bytes[2] << 8 | (UINT32)bytes[3];
+}
+
+void get_value_hex_64(json_object *obj, const char *field_name,
+		      UINT64 *value_out)
+{
+	json_object *value = json_object_object_get(obj, field_name);
+	if (!value) {
+		return;
+	}
+	const char *hex_string = json_object_get_string(value);
+	if (!hex_string) {
+		return;
+	}
+	UINT8 bytes[8];
+	size_t hex_string_len = strlen(hex_string);
+	if (hex_string_len != 18) {
+		return;
+	}
+	if (hex_string[0] != '0' || hex_string[1] != 'x') {
+		return;
+	}
+
+	if (hex_string_to_bytes(hex_string + 2, hex_string_len - 2, bytes,
+				sizeof(bytes)) != 8) {
+		return;
+	}
+	*value_out = (UINT64)bytes[0] << 56 | (UINT64)bytes[1] << 48 |
+		     (UINT64)bytes[2] << 40 | (UINT64)bytes[3] << 32 |
+		     (UINT64)bytes[4] << 24 | (UINT64)bytes[5] << 16 |
+		     (UINT64)bytes[6] << 8 | (UINT64)bytes[7];
+}
+
+void add_int_hex_64(json_object *register_ir, const char *field_name,
+		    UINT64 value)
+{
+	add_int_hex_common(register_ir, field_name, value, 16);
+}
+void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
+		   size_t byte_len)
+{
+	if (!obj || !bytes || byte_len == 0) {
+		return;
+	}
+
+	size_t hex_len = byte_len * 2;
+	char *hex_buf = (char *)malloc(hex_len + 1);
+	if (!hex_buf) {
+		return;
+	}
+
+	// convert each byte to 2 hex characters
+	for (size_t i = 0; i < byte_len; i++) {
+		snprintf(&hex_buf[i * 2], 3, "%02x", bytes[i]);
+	}
+	hex_buf[hex_len] = '\0';
+
+	json_object_object_add(obj, field_name,
+			       json_object_new_string_len(hex_buf, hex_len));
+
+	free(hex_buf);
 }
 
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value)
