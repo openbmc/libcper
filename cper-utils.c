@@ -419,7 +419,7 @@ void string_to_guid(EFI_GUID *out, const char *guid)
 }
 
 //Returns one if two EFI GUIDs are equal, zero otherwise.
-int guid_equal(EFI_GUID *a, EFI_GUID *b)
+int guid_equal(const EFI_GUID *a, const EFI_GUID *b)
 {
 	//Check top base 3 components.
 	if (a->Data1 != b->Data1 || a->Data2 != b->Data2 ||
@@ -546,6 +546,31 @@ void add_int_hex_64(json_object *register_ir, const char *field_name,
 		    UINT64 value)
 {
 	add_int_hex_common(register_ir, field_name, value, 8);
+}
+
+void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
+		   size_t byte_len)
+{
+	if (!obj || !bytes || byte_len == 0) {
+		return;
+	}
+
+	size_t hex_len = byte_len * 2;
+	char *hex_buf = (char *)malloc(hex_len + 1);
+	if (!hex_buf) {
+		return;
+	}
+
+	// convert each byte to 2 hex characters
+	for (size_t i = 0; i < byte_len; i++) {
+		snprintf(&hex_buf[i * 2], 3, "%02x", bytes[i]);
+	}
+	hex_buf[hex_len] = '\0';
+
+	json_object_object_add(obj, field_name,
+			       json_object_new_string_len(hex_buf, hex_len));
+
+	free(hex_buf);
 }
 
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value)

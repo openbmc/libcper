@@ -59,7 +59,7 @@ int timestamp_to_string(char *out, int out_len,
 void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp);
 int guid_to_string(char *out, size_t out_len, EFI_GUID *guid);
 void string_to_guid(EFI_GUID *out, const char *guid);
-int guid_equal(EFI_GUID *a, EFI_GUID *b);
+int guid_equal(const EFI_GUID *a, const EFI_GUID *b);
 int select_guid_from_list(EFI_GUID *guid, EFI_GUID *guid_list[], int len);
 
 int cper_printable_string_length(const char *str, int number_chars);
@@ -81,6 +81,9 @@ void add_int_hex_24(json_object *register_ir, const char *field_name,
 		    UINT64 value);
 void add_int_hex_64(json_object *register_ir, const char *field_name,
 		    UINT64 value);
+
+void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
+		   size_t byte_len);
 
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value);
 
