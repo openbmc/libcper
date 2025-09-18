@@ -15,6 +15,7 @@ spec_dir = meson.current_source_dir() + '/specification/json'
 example_dir = meson.current_source_dir() + '/examples'
 add_project_arguments(
     [
+        '-fno-omit-frame-pointer',
         '-DLIBCPER_EXAMPLES="' + example_dir + '"',
         '-DLIBCPER_JSON_SPEC="' + spec_dir + '"',
         '-D_POSIX_C_SOURCE=200809L',
@@ -33,6 +34,7 @@ project_description = 'libcper library'
 
 libcper_parse_sources = files(
     'sections/cper-section-ampere.c',
+    'sections/cper-section-arm-ras.c',
     'sections/cper-section-arm.c',
     'sections/cper-section-ccix-per.c',
     'sections/cper-section-cxl-component.c',
@@ -56,6 +58,7 @@ edk_sources = files('Cper.c')
 
 libcper_generate_sources = files(
     'generator/sections/gen-section-ampere.c',
+    'generator/sections/gen-section-arm-ras.c',
     'generator/sections/gen-section-arm.c',
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',

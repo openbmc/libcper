@@ -17,6 +17,8 @@ extern "C" {
 size_t generate_random_section(void **location, size_t size);
 UINT8 *generate_random_bytes(size_t size);
 
+void generate_random_printable_string(char *dest, size_t length);
+
 void cper_rand_seed(UINT32 seed);
 UINT32 cper_rand(void);
 

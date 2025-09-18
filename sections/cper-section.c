@@ -6,6 +6,7 @@
 #include <libcper/Cper.h>
 #include <libcper/sections/cper-section.h>
 #include <libcper/sections/cper-section-arm.h>
+#include <libcper/sections/cper-section-arm-ras.h>
 #include <libcper/sections/cper-section-generic.h>
 #include <libcper/sections/cper-section-ia32x64.h>
 #include <libcper/sections/cper-section-ipf.h>
@@ -33,6 +34,8 @@ CPER_SECTION_DEFINITION section_definitions[] = {
 	{ &gEfiIpfProcessorErrorSectionGuid, "IPF", "IPF", NULL, NULL },
 	{ &gEfiArmProcessorErrorSectionGuid, "ARM", "ArmProcessor",
 	  cper_section_arm_to_ir, ir_section_arm_to_cper },
+	{ &gEfiArmRasNodeSectionGuid, "ARM RAS", "ArmRas",
+	  cper_section_arm_ras_to_ir, ir_section_arm_ras_to_cper },
 	{ &gEfiPlatformMemoryErrorSectionGuid, "Platform Memory", "Memory",
 	  cper_section_platform_memory_to_ir, ir_section_memory_to_cper },
 	{ &gEfiPlatformMemoryError2SectionGuid, "Platform Memory 2", "Memory2",
