@@ -11,6 +11,8 @@ CPER_GENERATOR_DEFINITION generator_definitions[] = {
 	{ &gEfiIa32X64ProcessorErrorSectionGuid, "ia32x64",
 	  generate_section_ia32x64 },
 	{ &gEfiArmProcessorErrorSectionGuid, "arm", generate_section_arm },
+	{ &gEfiArmRasNodeSectionGuid, "arm-ras-node",
+	  generate_section_arm_ras },
 	{ &gEfiPlatformMemoryErrorSectionGuid, "memory",
 	  generate_section_memory },
 	{ &gEfiPlatformMemoryError2SectionGuid, "memory2",

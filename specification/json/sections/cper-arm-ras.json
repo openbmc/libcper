@@ -1,0 +1,255 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Arm RAS Node Section Revision 1 (Tables 20 & 21)",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "revision",
+        "componentType",
+        "errorSyndromeArrayNumEntries",
+        "errorSyndromeArrayOffset",
+        "ipInstanceFormat",
+        "ipTypeFormat",
+        "ipInstance",
+        "ipType",
+        "userData",
+        "errorSyndromeArray"
+    ],
+    "properties": {
+        "revision": {
+            "type": "integer",
+            "const": 1,
+            "description": "Header Revision (must be 1)."
+        },
+        "componentType": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6,
+            "description": "Legacy AEST component type (0..6)."
+        },
+        "errorSyndromeArrayNumEntries": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "N: number of descriptor entries in errorSyndromeArray."
+        },
+        "errorSyndromeArrayOffset": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "err_arr_off: byte offset to descriptor array (usually sizeof(header))."
+        },
+        "auxDataOffset": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "aux_off: byte offset to auxiliary data block (0 if absent)."
+        },
+        "ipInstanceFormat": {
+            "type": "integer",
+            "enum": [0, 1, 2, 3],
+            "description": "IP_instance_format (Table 20)."
+        },
+        "ipTypeFormat": {
+            "type": "integer",
+            "enum": [0, 1, 2, 3, 255],
+            "description": "IP_type_format (Table 20). 255 means invalid/ignored."
+        },
+        "ipInstance": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{32}$",
+            "description": "16-byte IP_instance encoded as 32 hex chars."
+        },
+        "ipType": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{48}$",
+            "description": "24-byte IP_type encoded as 48 hex chars (zeroed if ipTypeFormat=255)."
+        },
+        "userData": {
+            "type": "string",
+            "maxLength": 16,
+            "description": "Null-terminated user data string (<=15 chars)."
+        },
+        "errorSyndromeArray": {
+            "type": "array",
+            "description": "Array of descriptor entries (Table 21). Length must equal errorSyndromeArrayNumEntries.",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "errorRecordIndex",
+                    "rasExtensionRevision",
+                    "errFR",
+                    "errCTLR",
+                    "errSTATUS",
+                    "errADDR",
+                    "errMISC0",
+                    "errMISC1"
+                ],
+                "properties": {
+                    "errorRecordIndex": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "rasExtensionRevision": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 255,
+                        "description": "ERRDEVARCH nibble encoding (REVISION:ARCHVER). If 0 then MISC2/3 architecturally invalid."
+                    },
+                    "errFR": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errCTLR": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errSTATUS": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errADDR": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errMISC0": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errMISC1": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errMISC2": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "errMISC3": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                }
+            }
+        },
+        "auxData": {
+            "type": "object",
+            "description": "Decoded auxiliary data per Tables 22–26. Present only if raw auxData blob was successfully parsed.",
+            "additionalProperties": false,
+            "required": [
+                "version",
+                "addressSpaceArrayEntryCount",
+                "keyValuePairArrayEntryCount",
+                "auxiliaryDataSize",
+                "keyValuePairArrayOffset",
+                "contexts",
+                "keyValuePairs"
+            ],
+            "properties": {
+                "version": {
+                    "type": "integer",
+                    "const": 1,
+                    "description": "Aux data header version (must be 1)."
+                },
+                "addressSpaceArrayEntryCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of context headers (must equal contexts.length)."
+                },
+                "keyValuePairArrayEntryCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of key-value pairs (must equal keyValuePairs.length)."
+                },
+                "auxiliaryDataSize": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Total size in bytes of auxiliary data block starting at auxDataOffset."
+                },
+                "keyValuePairArrayOffset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Byte offset from start of auxiliary data block to first key-value pair entry."
+                },
+                "contexts": {
+                    "type": "array",
+                    "description": "Address Space Context Array entries (each with register entries).",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "flags",
+                            "registerArrayEntryCount",
+                            "registers"
+                        ],
+                        "properties": {
+                            "flags": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255,
+                                "description": "Flags; bit0=1 global/system address space, bit0=0 local/component address space."
+                            },
+                            "registerArrayEntryCount": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Number of register entries (must equal registers.length)."
+                            },
+                            "registerArrayLength": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Length in bytes of the register array region (including all registers)."
+                            },
+                            "addressSpaceIdentifier": {
+                                "type": "integer",
+                                "description": "Optional identifier (present only when global/system address space)."
+                            },
+                            "registers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "required": ["address", "value"],
+                                    "properties": {
+                                        "address": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "description": "Register address (up to 64-bit)."
+                                        },
+                                        "value": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "description": "Register value (up to 64-bit)."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "keyValuePairs": {
+                    "type": "array",
+                    "description": "Decoded Key-Value Pair Array (UUID + 64-bit value).",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["uuid", "value"],
+                        "properties": {
+                            "uuid": {
+                                "type": "string",
+                                "pattern": "^[0-9a-fA-F]{32}$",
+                                "description": "16-byte UUID encoded as 32 hex characters (big-endian)."
+                            },
+                            "value": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Associated 64-bit value for UUID."
+                            },
+                            "mpamPartId": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Convenience decoding when UUID matches MPAM PartID UUID."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
