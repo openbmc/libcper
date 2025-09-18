@@ -33,6 +33,7 @@ project_description = 'libcper library'
 
 libcper_parse_sources = files(
     'sections/cper-section-ampere.c',
+    'sections/cper-section-arm-ras.c',
     'sections/cper-section-arm.c',
     'sections/cper-section-ccix-per.c',
     'sections/cper-section-cxl-component.c',
@@ -56,6 +57,7 @@ edk_sources = files('Cper.c')
 
 libcper_generate_sources = files(
     'generator/sections/gen-section-ampere.c',
+    'generator/sections/gen-section-arm-ras.c',
     'generator/sections/gen-section-arm.c',
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',
