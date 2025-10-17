@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <libcper/BaseTypes.h>
+#include <libcper/Cper.h>
 #include <libcper/generator/gen-utils.h>
 #include <libcper/generator/sections/gen-section.h>
 #define ARM_ERROR_INFO_SIZE 32
@@ -105,8 +106,9 @@ void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 	*error_info = 0;
 	*(error_info + 1) = ARM_ERROR_INFO_SIZE;
 
-	//Type of error.
-	UINT8 error_type = cper_rand() % 3;
+	//Type of error. UEFI spec uses bit positions: 1=Cache, 2=TLB, 4=Bus, 8=Microarch
+	const UINT8 error_type_values[] = { 1, 2, 4, 8 };
+	UINT8 error_type = error_type_values[cper_rand() % 4];
 	*(error_info + 4) = error_type;
 
 	//Reserved bits for error information.
@@ -122,8 +124,8 @@ void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 	UINT64 *error_subinfo = (UINT64 *)(error_info + 8);
 	switch (error_type) {
 	//Cache/TLB
-	case 0:
-	case 1:
+	case ARM_ERROR_INFORMATION_TYPE_CACHE:
+	case ARM_ERROR_INFORMATION_TYPE_TLB:
 		*error_subinfo &= 0xFFFFFFF;
 		//Reserved bits for cache/tlb.
 		UINT16 *val_cache = (UINT16 *)(error_info + 8);
@@ -135,7 +137,7 @@ void *generate_arm_error_info(GEN_VALID_BITS_TEST_TYPE validBitsType)
 		break;
 
 	//Bus
-	case 2:
+	case ARM_ERROR_INFORMATION_TYPE_BUS:
 		*error_subinfo &= 0xFFFFFFFFFFF;
 		UINT16 *val_bus = (UINT16 *)(error_info + 8);
 		if (validBitsType == ALL_VALID) {
