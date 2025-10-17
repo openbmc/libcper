@@ -62,7 +62,27 @@
                     },
                     "errorType": {
                         "type": "object",
-                        "$ref": "./common/cper-json-nvp.json"
+                        "additionalProperties": false,
+                        "required": [
+                            "Cache Error",
+                            "TLB Error",
+                            "Bus Error",
+                            "Micro-Architectural Error"
+                        ],
+                        "properties": {
+                            "Cache Error": {
+                                "type": "boolean"
+                            },
+                            "TLB Error": {
+                                "type": "boolean"
+                            },
+                            "Bus Error": {
+                                "type": "boolean"
+                            },
+                            "Micro-Architectural Error": {
+                                "type": "boolean"
+                            }
+                        }
                     },
                     "multipleError": {
                         "type": "object",

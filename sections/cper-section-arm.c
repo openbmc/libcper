@@ -306,9 +306,8 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 				     .value.ui16 = error_info->ValidationBits };
 
 	//The type of error information in this log.
-	json_object *error_type = integer_to_readable_pair(
-		error_info->Type, 4, ARM_ERROR_INFO_ENTRY_INFO_TYPES_KEYS,
-		ARM_ERROR_INFO_ENTRY_INFO_TYPES_VALUES, "Unknown (Reserved)");
+	json_object *error_type = bitfield_to_ir(
+		error_info->Type, 4, ARM_ERROR_INFO_ENTRY_INFO_TYPES_NAMES);
 	json_object_object_add(error_info_ir, "errorType", error_type);
 
 	//Multiple error count.
@@ -1025,8 +1024,9 @@ void ir_arm_error_info_to_cper(json_object *error_info, FILE *out)
 		json_object_object_get(error_info, "length"));
 
 	//Type, multiple error.
-	error_info_cper.Type = (UINT8)readable_pair_to_integer(
-		json_object_object_get(error_info, "errorType"));
+	error_info_cper.Type = (UINT8)ir_to_bitfield(
+		json_object_object_get(error_info, "errorType"), 4,
+		ARM_ERROR_INFO_ENTRY_INFO_TYPES_NAMES);
 
 	if (json_object_object_get_ex(error_info, "multipleError", &obj)) {
 		error_info_cper.MultipleError =
