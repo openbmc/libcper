@@ -44,8 +44,7 @@ extern "C" {
 #define ARM_ERROR_TRANSACTION_TYPES_KEYS (int[]){ 0, 1, 2 }
 #define ARM_ERROR_TRANSACTION_TYPES_VALUES                                     \
 	(const char *[]){ "Instruction", "Data Access", "Generic" }
-#define ARM_ERROR_INFO_ENTRY_INFO_TYPES_KEYS (int[]){ 0, 1, 2, 3 }
-#define ARM_ERROR_INFO_ENTRY_INFO_TYPES_VALUES                                 \
+#define ARM_ERROR_INFO_ENTRY_INFO_TYPES_NAMES                                  \
 	(const char *[]){ "Cache Error", "TLB Error", "Bus Error",             \
 			  "Micro-Architectural Error" }
 #define ARM_CACHE_BUS_OPERATION_TYPES_KEYS                                     \
