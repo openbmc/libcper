@@ -489,7 +489,7 @@ cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 
 	//Operation.
 	bool cacheErrorFlag = 1;
-	if (error_info->Type == 0) {
+	if (error_info->Type == ARM_ERROR_INFORMATION_TYPE_CACHE) {
 		cache_tlb_propname = "cacheError";
 	} else {
 		//TLB operation.
@@ -1024,10 +1024,14 @@ void ir_arm_error_info_to_cper(json_object *error_info, FILE *out)
 	error_info_cper.Length = json_object_get_int(
 		json_object_object_get(error_info, "length"));
 
-	//Type, multiple error.
-	error_info_cper.Type = (UINT8)readable_pair_to_integer(
-		json_object_object_get(error_info, "errorType"));
+	//Type
+	if (json_object_object_get_ex(error_info, "errorType", &obj)) {
+		error_info_cper.Type = readable_pair_to_integer(obj);
+	} else {
+		error_info_cper.Type = 0;
+	}
 
+	//multiple error.
 	if (json_object_object_get_ex(error_info, "multipleError", &obj)) {
 		error_info_cper.MultipleError =
 			(UINT16)readable_pair_to_integer(obj);
@@ -1116,6 +1120,8 @@ void ir_arm_error_cache_tlb_info_to_cper(
 	// //Validation bits.
 	ValidationTypes ui64Type = { UINT_64T, .value.ui64 = 0 };
 	struct json_object *obj = NULL;
+
+	memset(error_info_cper, 0, sizeof(EFI_ARM_CACHE_ERROR_STRUCTURE));
 
 	//Miscellaneous value fields.
 	if (json_object_object_get_ex(error_information, "transactionType",

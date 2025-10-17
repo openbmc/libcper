@@ -1439,10 +1439,10 @@ typedef struct {
 ///
 /// ARM Processor Error Information Structure
 ///
-#define ARM_ERROR_INFORMATION_TYPE_CACHE     0
-#define ARM_ERROR_INFORMATION_TYPE_TLB	     1
-#define ARM_ERROR_INFORMATION_TYPE_BUS	     2
-#define ARM_ERROR_INFORMATION_TYPE_MICROARCH 3
+#define ARM_ERROR_INFORMATION_TYPE_CACHE     1
+#define ARM_ERROR_INFORMATION_TYPE_TLB	     2
+#define ARM_ERROR_INFORMATION_TYPE_BUS	     4
+#define ARM_ERROR_INFORMATION_TYPE_MICROARCH 8
 
 typedef struct {
 	UINT64 ValidationBits : 16;
