@@ -57,7 +57,7 @@
     ],
     "sections": [
         {
-            "message": "An ARM Processor Error occurred; Error Type(s): {Bus Error Physical Addr=0x56B4ECD1926987CE, TLB Error Physical Addr=0x1924E7B2AD28850C}",
+            "message": "An ARM Processor Error occurred; Error Type(s): {TLB Error Physical Addr=0x56B4ECD1926987CE, Cache Error Physical Addr=0x1924E7B2AD28850C}",
             "ArmProcessor": {
                 "errorInfoNum": 2,
                 "contextInfoNum": 2,
@@ -74,27 +74,21 @@
                         "length": 32,
                         "errorType": {
                             "value": 2,
-                            "name": "Bus Error"
+                            "name": "TLB Error"
                         },
                         "multipleError": {
                             "value": 516,
                             "type": "Multiple Errors"
                         },
                         "errorInformation": {
-                            "busError": {
+                            "tlbError": {
                                 "transactionType": {
                                     "value": 0,
                                     "name": "Instruction"
                                 },
                                 "level": 7,
                                 "corrected": true,
-                                "restartablePC": false,
-                                "timedOut": true,
-                                "memoryAttributes": 223,
-                                "accessMode": {
-                                    "value": 0,
-                                    "name": "Secure"
-                                }
+                                "restartablePC": false
                             }
                         },
                         "physicalFaultAddress": 6247878967918430158
@@ -104,14 +98,14 @@
                         "length": 32,
                         "errorType": {
                             "value": 1,
-                            "name": "TLB Error"
+                            "name": "Cache Error"
                         },
                         "multipleError": {
                             "value": 3932,
                             "type": "Multiple Errors"
                         },
                         "errorInformation": {
-                            "tlbError": {
+                            "cacheError": {
                                 "transactionType": {
                                     "value": 2,
                                     "name": "Generic"
