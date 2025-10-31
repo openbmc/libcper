@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88183423_ab5c6f79",
+        "filename": "generator/sections/gen-section-arm.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2025-10-31T18:06:22Z",
+      "side": 1,
+      "message": "This only works if a single bit of the bitfield is set, right?  Don\u0027t we need to loop over the bits (or just explicitly check each one)?",
+      "revId": "2b96abfd596f8e9306f152847ef6ecd8abb96476",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
