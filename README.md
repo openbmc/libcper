@@ -27,8 +27,8 @@ that can be found in `build/`. With this, you can convert to and from CPER and
 CPER-JSON through the command line. An example usage scenario is below:
 
 ```sh
-cper-convert to-cper samples/cper-json-test-arm.json --out cper.dump
-cper-convert to-json cper.generated.dump
+build/cper-convert to-cper examples/arm.json --out cper.dump
+build/cper-convert to-json cper.dump
 ```
 
 Another tool bundled with this repository is `cper-generate`, found in `build/`.
@@ -36,7 +36,7 @@ This allows you to generate pseudo-random valid CPER records with sections of
 specified types for testing purposes. An example use of the program is below:
 
 ```sh
-cper-generate --out cper.generated.dump --sections generic ia32x64
+build/cper-generate --out cper.generated.dump --sections generic ia32x64
 ```
 
 Help for both of these tools can be accessed through using the `--help` flag in
