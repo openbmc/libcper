@@ -5,15 +5,15 @@
  * Author: Lawrence.Tang@arm.com
  **/
 
-#include <stdio.h>
-#include <string.h>
-#include <json.h>
+#include <assert.h>
 #include <inttypes.h>
+#include <json.h>
 #include <libcper/base64.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-arm.h>
 #include <libcper/log.h>
+#include <stdio.h>
 #include <string.h>
 
 //Private pre-definitions.
@@ -288,6 +288,21 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 	return section_ir;
 }
 
+//Handle unknown error type
+static void handle_unknown_error_type(char *err_info_desc,
+				      size_t err_info_desc_buffer_len)
+{
+	const char *unknown_error_desc = "Unknown Error";
+	if (strlen(unknown_error_desc) >= err_info_desc_buffer_len) {
+		cper_print_log(
+			"Error: Unknown error description string too long, not added to description string: %s\n",
+			unknown_error_desc);
+		return;
+	}
+	strncpy(err_info_desc, unknown_error_desc,
+		strlen(unknown_error_desc) + 1);
+}
+
 //Converts a single ARM Process Error Information structure into JSON IR.
 json_object *
 cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
@@ -388,6 +403,9 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 
 		default:
 			//Unknown/microarch, will not support.
+			handle_unknown_error_type(
+				*err_info_desc_i,
+				EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN);
 			break;
 		}
 		if (error_subinfo != NULL) {
@@ -395,6 +413,10 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 					       "errorInformation",
 					       error_subinfo);
 		}
+	} else {
+		handle_unknown_error_type(
+			*err_info_desc_i,
+			EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN);
 	}
 
 	//Virtual fault address, physical fault address.
