@@ -17,7 +17,7 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 						UINT32 size, char **desc_string)
 {
 	int outstr_len = 0;
-	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
 	if (size < sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA)) {
 		return NULL;
 	}
@@ -240,7 +240,7 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 						 char **desc_string)
 {
 	int outstr_len = 0;
-	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
 
 	if (size < sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA)) {
 		return NULL;

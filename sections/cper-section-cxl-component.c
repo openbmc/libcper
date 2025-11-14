@@ -18,7 +18,7 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 					      char **desc_string)
 {
 	int outstr_len = 0;
-	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A CXL Component Error occurred");
 	if (outstr_len < 0) {

@@ -50,7 +50,7 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 					char **desc_string)
 {
 	int outstr_len = 0;
-	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "An IA32/x64 Processor Error occurred");
 	if (outstr_len < 0) {

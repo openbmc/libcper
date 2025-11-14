@@ -51,7 +51,7 @@ void ir_arm_unknown_register_to_cper(json_object *registers, FILE *out);
 json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 				    char **desc_string)
 {
-	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
 	int outstr_len = 0;
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "An ARM Processor Error occurred");
@@ -112,7 +112,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
 		json_object_object_add(section_ir, "affinity3",
 				       json_object_new_uint64(sock));
-		char *node_desc_str = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+		char *node_desc_str =
+			calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
 		outstr_len = snprintf(node_desc_str,
 				      EFI_ERROR_DESCRIPTION_STRING_LEN,
 				      " on CPU %" PRIu64, sock);
@@ -170,7 +171,7 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 	strncat(*desc_string, "; Error Type(s): {",
 		EFI_ERROR_DESCRIPTION_STRING_LEN);
 	char *err_info_desc_i =
-		malloc(EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN);
+		calloc(1, EFI_ERROR_INFORMATION_DESCRIPTION_STRING_LEN);
 	size_t err_info_desc_i_len = 0;
 	for (int i = 0; i < record->ErrInfoNum; i++) {
 		json_object_array_add(
@@ -397,7 +398,7 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 	}
 
 	//Virtual fault address, physical fault address.
-	char *fault_address_desc = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+	char *fault_address_desc = calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
 	if (isvalid_prop_to_ir(&ui16Type, 3)) {
 		outstr_len = snprintf(fault_address_desc,
 				      EFI_ERROR_DESCRIPTION_STRING_LEN,

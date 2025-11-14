@@ -114,8 +114,8 @@ NV_SECTION_CALLBACKS section_handlers[] = {
 json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 				       char **desc_string)
 {
-	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
-	char *property_desc = malloc(EFI_ERROR_DESCRIPTION_STRING_LEN);
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	char *property_desc = calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
 
 	if (size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
 		free(property_desc);
