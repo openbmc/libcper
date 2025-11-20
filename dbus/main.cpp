@@ -17,6 +17,7 @@
 #include <iostream>
 #include <limits>
 #include <system_error>
+#include <utility>
 
 struct App
 {
@@ -146,6 +147,44 @@ static int readCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
     return 1;
 }
 
+static int readAllCpersHandler(sdbusplus::message::msgp_t msg, void* ctx,
+                               sd_bus_error* error)
+{
+    auto& app = *static_cast<App*>(ctx);
+    sdbusplus::message_t message(msg);
+    std::vector<uint8_t> buffer;
+    std::map<uint64_t, std::vector<uint8_t>> cpers;
+
+    auto response = message.new_method_return();
+    for (const auto& entry :
+         std::filesystem::directory_iterator(app.storageDir))
+    {
+        if (!entry.is_regular_file())
+        {
+            continue;
+        }
+
+        try
+        {
+            uint64_t index = std::stoull(entry.path().stem().string());
+            auto rc = readCper(app, index, buffer);
+            if (rc != 0)
+            {
+                sd_bus_error_set_errno(error, -rc);
+                return -rc;
+            }
+            cpers.insert(std::make_pair(index, std::move(buffer)));
+        }
+        catch (const std::invalid_argument&) // NOLINT(bugprone-empty-catch)
+        {
+            // not a number
+        }
+    }
+    response.append(std::move(cpers));
+    response.method_return();
+    return 1;
+}
+
 static int downloadCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
                                sd_bus_error* error)
 {
@@ -188,10 +227,12 @@ int main()
             .lastIndex = getIndexFromFilesystem(storageDir),
             .storageDir = std::move(storageDir)};
 
-    std::array<sdbusplus::vtable_t, 5> vtable{
+    std::array<sdbusplus::vtable_t, 6> vtable{
         sdbusplus::vtable::start(),
         sdbusplus::vtable::method("StoreCPER", "ay", "t", storeCperHandler),
         sdbusplus::vtable::method("ReadCPER", "t", "ay", readCperHandler),
+        sdbusplus::vtable::method("ReadAllCPERs", "", "a{tay}",
+                                  readAllCpersHandler),
         sdbusplus::vtable::method("DownloadCPER", "t", "h",
                                   downloadCperHandler),
         sdbusplus::vtable::end(),

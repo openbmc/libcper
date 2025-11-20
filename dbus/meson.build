@@ -34,10 +34,7 @@ systemd_system_unit_dir = dependency('systemd').get_variable(
     'systemd_system_unit_dir',
 )
 
-install_data(
-    systemd_service_unit,
-    install_dir: systemd_system_unit_dir,
-)
+install_data(systemd_service_unit, install_dir: systemd_system_unit_dir)
 
 dbus_system_bus_services_dir = dependency('dbus-1').get_variable(
     'system_bus_services_dir',
