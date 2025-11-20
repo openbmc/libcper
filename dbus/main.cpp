@@ -22,6 +22,7 @@
 #include <new>
 #include <string_view>
 #include <system_error>
+#include <utility>
 #include <vector>
 
 struct App
@@ -178,6 +179,54 @@ static int readCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
     return 0;
 }
 
+static int readAllCpersHandler(sdbusplus::message::msgp_t msg, void* ctx,
+                               sd_bus_error* error)
+{
+    if (ctx == nullptr)
+    {
+        std::abort();
+    }
+
+    std::error_code ec;
+    auto& app = *static_cast<App*>(ctx);
+    sdbusplus::message_t message(msg);
+    std::vector<uint8_t> buffer;
+    std::map<uint64_t, std::vector<uint8_t>> cpers;
+    uint64_t index = 0;
+
+    auto dir = std::filesystem::directory_iterator(app.storageDir, ec);
+    if (ec)
+    {
+        return sd_bus_error_set_errno(error, -ec.value());
+    }
+
+    auto response = message.new_method_return();
+    for (const auto& entry : dir)
+    {
+        if (!entry.is_regular_file())
+        {
+            continue;
+        }
+        auto stem = entry.path().stem();
+        std::string_view stemView = stem.c_str();
+        auto [ptr, fromCharsEc] =
+            std::from_chars(stemView.begin(), stemView.end(), index);
+
+        if (fromCharsEc == std::errc() && ptr == stemView.end())
+        {
+            auto rc = readCper(app, index, buffer);
+            if (rc != 0)
+            {
+                return sd_bus_error_set_errno(error, -rc);
+            }
+            cpers.insert(std::make_pair(index, std::move(buffer)));
+        }
+    }
+    response.append(std::move(cpers));
+    response.method_return();
+    return 0;
+}
+
 static int downloadCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
                                sd_bus_error* error)
 {
@@ -240,10 +289,12 @@ int main()
             .lastIndex = getIndexFromFilesystem(dir),
             .storageDir = std::move(storageDir)};
 
-    std::array<sdbusplus::vtable_t, 5> vtable{
+    std::array<sdbusplus::vtable_t, 6> vtable{
         sdbusplus::vtable::start(),
         sdbusplus::vtable::method("StoreCPER", "ay", "t", storeCperHandler),
         sdbusplus::vtable::method("ReadCPER", "t", "ay", readCperHandler),
+        sdbusplus::vtable::method("ReadAllCPERs", "", "a{tay}",
+                                  readAllCpersHandler),
         sdbusplus::vtable::method("DownloadCPER", "t", "h",
                                   downloadCperHandler),
         sdbusplus::vtable::end(),
