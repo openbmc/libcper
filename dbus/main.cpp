@@ -92,6 +92,45 @@ static int writeCper(App& app, std::span<uint8_t> sourceBuffer,
     return 0;
 }
 
+static int readCper(App& app, uint64_t sourceIndex,
+                    std::vector<uint8_t>& destBuffer)
+{
+    std::error_code ec;
+    std::filesystem::path cperPath;
+    try
+    {
+        cperPath = app.storageDir / std::to_string(sourceIndex);
+    }
+    catch (const std::bad_alloc&)
+    {
+        return ENOMEM;
+    }
+
+    auto byteCount =
+        static_cast<std::size_t>(std::filesystem::file_size(cperPath, ec));
+    if (ec)
+    {
+        return ec.value();
+    }
+
+    destBuffer.resize(byteCount);
+    std::ifstream file(cperPath, std::ios_base::binary | std::ios_base::in);
+    if (!file.good())
+    {
+        return EIO;
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    file.read(std::bit_cast<char*>(destBuffer.data()),
+              static_cast<std::streamsize>(destBuffer.size()));
+    if (!file.good())
+    {
+        return EIO;
+    }
+
+    return 0;
+}
+
 static int storeCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
                             sd_bus_error* error)
 {
@@ -112,6 +151,29 @@ static int storeCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
     }
     auto response = message.new_method_return();
     response.append(index);
+    response.method_return();
+    return 0;
+}
+
+static int readCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
+                           sd_bus_error* error)
+{
+    if (ctx == nullptr)
+    {
+        std::abort();
+    }
+
+    auto& app = *static_cast<App*>(ctx);
+    sdbusplus::message_t message(msg);
+    auto index = message.unpack<uint64_t>();
+    std::vector<uint8_t> buffer;
+    auto rc = readCper(app, index, buffer);
+    if (rc != 0)
+    {
+        return sd_bus_error_set_errno(error, -rc);
+    }
+    auto response = message.new_method_return();
+    response.append(buffer);
     response.method_return();
     return 0;
 }
@@ -178,9 +240,10 @@ int main()
             .lastIndex = getIndexFromFilesystem(dir),
             .storageDir = std::move(storageDir)};
 
-    std::array<sdbusplus::vtable_t, 4> vtable{
+    std::array<sdbusplus::vtable_t, 5> vtable{
         sdbusplus::vtable::start(),
         sdbusplus::vtable::method("StoreCPER", "ay", "t", storeCperHandler),
+        sdbusplus::vtable::method("ReadCPER", "t", "ay", readCperHandler),
         sdbusplus::vtable::method("DownloadCPER", "t", "h",
                                   downloadCperHandler),
         sdbusplus::vtable::end(),
