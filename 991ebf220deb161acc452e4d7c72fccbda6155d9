@@ -1,0 +1,8 @@
+Code-Review+2: Ed Tanous <ed@tanous.net>
+Code-Review+2: Patrick Williams <patrick@stwcx.xyz>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Ed Tanous <ed@tanous.net>
+Submitted-at: Fri, 21 Nov 2025 04:44:18 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/libcper/+/85295
+Project: openbmc/libcper
+Branch: refs/heads/main
