@@ -1,4 +1,7 @@
 /**
+ * SPDX-License-Identifier: Apache-2.0
+ * SPDX-FileCopyrightText: Copyright OpenBMC Authors
+ *
  * Describes available sections to the CPER parser.
  *
  * Author: Lawrence.Tang@arm.com
@@ -22,6 +25,7 @@
 #include <libcper/sections/cper-section-cxl-protocol.h>
 #include <libcper/sections/cper-section-cxl-component.h>
 #include <libcper/sections/cper-section-nvidia.h>
+#include <libcper/sections/cper-section-nvidia-events.h>
 #include <libcper/sections/cper-section-ampere.h>
 
 //Definitions of all sections available to the CPER parser.
@@ -80,6 +84,8 @@ CPER_SECTION_DEFINITION section_definitions[] = {
 	  ir_section_cxl_component_to_cper },
 	{ &gEfiNvidiaErrorSectionGuid, "NVIDIA", "Nvidia",
 	  cper_section_nvidia_to_ir, ir_section_nvidia_to_cper },
+	{ &gEfiNvidiaEventErrorSectionGuid, "NvidiaEvent", "NvidiaEvent",
+	  cper_section_nvidia_events_to_ir, ir_section_nvidia_events_to_cper },
 	{ &gEfiAmpereErrorSectionGuid, "Ampere", "Ampere",
 	  cper_section_ampere_to_ir, ir_section_ampere_to_cper },
 };
