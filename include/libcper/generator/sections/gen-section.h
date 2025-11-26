@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: Copyright OpenBMC Authors
 #ifndef GEN_SECTIONS_H
 #define GEN_SECTIONS_H
 
@@ -44,6 +46,8 @@ size_t generate_section_cxl_component(void **location,
 				      GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_section_nvidia(void **location,
 			       GEN_VALID_BITS_TEST_TYPE validBitsType);
+size_t generate_section_nvidia_events(void **location,
+				      GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_section_ampere(void **location,
 			       GEN_VALID_BITS_TEST_TYPE validBitsType);
 
