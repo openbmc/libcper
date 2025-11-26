@@ -1,9 +1,13 @@
 /**
+ * SPDX-License-Identifier: Apache-2.0
+ * SPDX-FileCopyrightText: Copyright OpenBMC Authors
+ *
  * Describes available section generators to the CPER generator.
  *
  * Author: Lawrence.Tang@arm.com
  **/
 #include <libcper/generator/sections/gen-section.h>
+#include <libcper/sections/cper-section-nvidia-events.h>
 
 CPER_GENERATOR_DEFINITION generator_definitions[] = {
 	{ &gEfiProcessorGenericErrorSectionGuid, "generic",
@@ -43,6 +47,8 @@ CPER_GENERATOR_DEFINITION generator_definitions[] = {
 	{ &gEfiCxlMldPortErrorSectionGuid, "cxlcomponent-mld",
 	  generate_section_cxl_component },
 	{ &gEfiNvidiaErrorSectionGuid, "nvidia", generate_section_nvidia },
+	{ &gEfiNvidiaEventErrorSectionGuid, "nvidiaevent",
+	  generate_section_nvidia_events },
 	{ &gEfiAmpereErrorSectionGuid, "ampere", generate_section_ampere },
 };
 const size_t generator_definitions_len =

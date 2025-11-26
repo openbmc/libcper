@@ -77,6 +77,9 @@
                     "Nvidia": {
                         "$ref": "./sections/cper-nvidia.json"
                     },
+                    "NvidiaEvent": {
+                        "$ref": "./sections/cper-nvidia-event.json"
+                    },
                     "Ampere": {
                         "$ref": "./sections/cper-ampere.json"
                     },
