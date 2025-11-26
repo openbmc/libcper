@@ -548,6 +548,88 @@ void add_int_hex_64(json_object *register_ir, const char *field_name,
 	add_int_hex_common(register_ir, field_name, value, 8);
 }
 
+void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
+		   size_t byte_len)
+{
+	if (obj == NULL || bytes == NULL || byte_len == 0) {
+		return;
+	}
+
+	size_t hex_len = byte_len * 2;
+	char *hex_buf = (char *)malloc(hex_len + 1);
+	if (hex_buf == NULL) {
+		return;
+	}
+
+	for (size_t i = 0; i < byte_len; i++) {
+		snprintf(&hex_buf[i * 2], 3, "%02x", bytes[i]);
+	}
+	hex_buf[hex_len] = '\0';
+
+	json_object_object_add(obj, field_name,
+			       json_object_new_string_len(hex_buf,
+							  (int)hex_len));
+	free(hex_buf);
+}
+
+// Convert hex character to nibble value, returns -1 on invalid input
+static int hex_char_to_nibble(char c)
+{
+	if (c >= '0' && c <= '9') {
+		return c - '0';
+	}
+	if (c >= 'a' && c <= 'f') {
+		return c - 'a' + 10;
+	}
+	if (c >= 'A' && c <= 'F') {
+		return c - 'A' + 10;
+	}
+	return -1;
+}
+
+// Returns malloc'd buffer (caller must free), or NULL on error
+UINT8 *get_bytes_hex(json_object *obj, const char *field_name, size_t *out_len)
+{
+	if (obj == NULL || out_len == NULL) {
+		return NULL;
+	}
+
+	json_object *field = json_object_object_get(obj, field_name);
+	if (field == NULL || !json_object_is_type(field, json_type_string)) {
+		return NULL;
+	}
+
+	const char *hex_str = json_object_get_string(field);
+	if (hex_str == NULL) {
+		return NULL;
+	}
+	size_t hex_len = (size_t)json_object_get_string_len(field);
+
+	// Must have even number of hex characters
+	if (hex_len % 2 != 0) {
+		return NULL;
+	}
+
+	size_t byte_len = hex_len / 2;
+	UINT8 *bytes = (UINT8 *)malloc(byte_len);
+	if (bytes == NULL) {
+		return NULL;
+	}
+
+	for (size_t i = 0; i < byte_len; i++) {
+		int high = hex_char_to_nibble(hex_str[i * 2]);
+		int low = hex_char_to_nibble(hex_str[i * 2 + 1]);
+		if (high < 0 || low < 0) {
+			free(bytes);
+			return NULL;
+		}
+		bytes[i] = (UINT8)((high << 4) | low);
+	}
+
+	*out_len = byte_len;
+	return bytes;
+}
+
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value)
 {
 	json_object_object_add(register_ir, field_name,
