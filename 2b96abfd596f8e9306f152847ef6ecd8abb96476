@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d794227_f68a3079",
+        "filename": "generator/sections/gen-section-arm.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-11-26T01:30:24Z",
+      "side": 1,
+      "message": "The bits have to be mutually exclusive.  This was a spec error in using bits vs value.  \n\nThe rest of the CPER depends on the error_type to be decoded correctly.",
+      "parentUuid": "88183423_ab5c6f79",
+      "revId": "2b96abfd596f8e9306f152847ef6ecd8abb96476",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b186498_5447e61a",
@@ -48,6 +66,24 @@
       "writtenOn": "2025-11-24T19:28:27Z",
       "side": 1,
       "message": "I think Aushim may have fixed this already with a calloc instead of alloc.  PTAL at his patch.",
+      "revId": "2b96abfd596f8e9306f152847ef6ecd8abb96476",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e384e981_95bcfaa7",
+        "filename": "sections/cper-section-arm.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1002399
+      },
+      "writtenOn": "2025-11-26T01:30:24Z",
+      "side": 1,
+      "message": "Aushim and I looked over this.  There is no harm in keeping memset (not new code) and it\u0027s in 3 other places.  We are unable to definitely trust that the structure was already cleared.\n\nIts note worthy though that calloc is used in all description string.",
+      "parentUuid": "9b186498_5447e61a",
       "revId": "2b96abfd596f8e9306f152847ef6ecd8abb96476",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
