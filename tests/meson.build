@@ -1,6 +1,6 @@
 subdir('schemavalidator')
 
-test_sources = files('base64_test.c', 'test-utils.c')
+test_sources = files('base64_test.c', 'hex_test.c', 'test-utils.c')
 
 test_include_dirs = ['.', '../include']
 
