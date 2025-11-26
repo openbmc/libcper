@@ -1,4 +1,7 @@
 /**
+ * SPDX-License-Identifier: Apache-2.0
+ * SPDX-FileCopyrightText: Copyright OpenBMC Authors
+ *
  * Defines tests for validating CPER-JSON IR output from the cper-parse library.
  *
  * Author: Lawrence.Tang@arm.com
@@ -16,6 +19,7 @@
 #include <libcper/generator/sections/gen-section.h>
 #include <libcper/json-schema.h>
 #include <libcper/sections/cper-section.h>
+#include <libcper/sections/cper-section-nvidia-events.h>
 
 #include "base64_test.h"
 
@@ -209,6 +213,7 @@ int string_to_binary(const char *source, size_t length, unsigned char **retval)
 void cper_example_section_ir_test(const char *section_name)
 {
 	//Open CPER record for the given type.
+	printf("Testing: %s\n", section_name);
 	struct file_info *info = file_info_init(section_name);
 	if (info == NULL) {
 		return;
@@ -260,6 +265,10 @@ void cper_example_section_ir_test(const char *section_name)
 	}
 
 	json_object *expected = json_object_from_file(info->json_out);
+	if (expected == NULL) {
+		printf("ERROR: Failed to load expected JSON file: %s\n",
+		       info->json_out);
+	}
 	assert(expected != NULL);
 	if (expected == NULL) {
 		free(buffer);
@@ -659,6 +668,174 @@ void NVIDIACMETSectionTests_IRValid(void)
 	cper_example_section_ir_test("nvidia_cmet_info");
 }
 
+void NVIDIAEVENTALLTYPESSectionTests_IRValid(void)
+{
+	cper_example_section_ir_test("nvidia_event_all_types");
+}
+
+// Test Event Header version mismatch during IR to CPER conversion (should error and skip)
+void NVIDIAEVENTEventHeaderVersionMismatch_IRValid(void)
+{
+	printf("Testing Event Header version mismatch (IR to CPER)...\n");
+
+	// Create a test JSON with EventVersion != 1
+	json_object *test_ir = json_object_new_object();
+	json_object *header_ir = json_object_new_object();
+	json_object_object_add(header_ir, "revision", json_object_new_int(0));
+	json_object_object_add(header_ir, "sectionCount",
+			       json_object_new_int(1));
+	json_object_object_add(header_ir, "severity", json_object_new_int(0));
+	json_object_object_add(header_ir, "recordLength",
+			       json_object_new_int(256));
+	json_object_object_add(
+		header_ir, "timestamp",
+		json_object_new_string("0000-00-00T00:00:00+00:00"));
+	json_object_object_add(header_ir, "timestampIsPrecise",
+			       json_object_new_boolean(0));
+	json_object_object_add(
+		header_ir, "platformID",
+		json_object_new_string("00000000-0000-0000-0000-000000000000"));
+	json_object_object_add(
+		header_ir, "creatorID",
+		json_object_new_string("00000000-0000-0000-0000-000000000000"));
+	json_object_object_add(
+		header_ir, "notificationType",
+		json_object_new_string("00000000-0000-0000-0000-000000000000"));
+	json_object_object_add(test_ir, "header", header_ir);
+
+	json_object *sections_arr = json_object_new_array();
+	json_object *section_obj = json_object_new_object();
+	json_object *nvidiaevent_obj = json_object_new_object();
+	json_object *event_header = json_object_new_object();
+
+	// Set EventVersion to 99 (not matching expected version 1)
+	json_object_object_add(event_header, "version",
+			       json_object_new_int(99));
+	json_object_object_add(event_header, "contextCount",
+			       json_object_new_int(0));
+	json_object_object_add(event_header, "deviceType",
+			       json_object_new_int(0));
+	json_object_object_add(event_header, "eventType",
+			       json_object_new_int(0));
+	json_object_object_add(event_header, "eventSubtype",
+			       json_object_new_int(0));
+	json_object_object_add(event_header, "eventLinkId",
+			       json_object_new_string("0x0"));
+	json_object_object_add(event_header, "signature",
+			       json_object_new_string("TEST-EVENT-00000"));
+
+	json_object *event_info = json_object_new_object();
+	json_object_object_add(event_info, "version", json_object_new_int(0));
+	json_object_object_add(event_info, "size", json_object_new_int(19));
+
+	json_object *info_data = json_object_new_object();
+	json_object_object_add(info_data, "socketNum", json_object_new_int(0));
+	json_object_object_add(info_data, "architecture",
+			       json_object_new_int(0));
+	json_object_object_add(info_data, "ecid0", json_object_new_int(0));
+	json_object_object_add(info_data, "ecid1", json_object_new_int(0));
+	json_object_object_add(info_data, "ecid2", json_object_new_int(0));
+	json_object_object_add(info_data, "ecid3", json_object_new_int(0));
+	json_object_object_add(info_data, "instanceBase",
+			       json_object_new_string("0x0"));
+	json_object_object_add(event_info, "data", info_data);
+
+	json_object_object_add(nvidiaevent_obj, "eventHeader", event_header);
+	json_object_object_add(nvidiaevent_obj, "eventInfo", event_info);
+	json_object_object_add(nvidiaevent_obj, "eventContexts",
+			       json_object_new_array());
+
+	json_object_object_add(section_obj, "sectionType",
+			       json_object_new_string("nvidiaevent"));
+	json_object_object_add(section_obj, "nvidiaevent", nvidiaevent_obj);
+	json_object_array_add(sections_arr, section_obj);
+	json_object_object_add(test_ir, "sections", sections_arr);
+
+	// Add section descriptors (required by ir_to_cper)
+	json_object *section_descriptors = json_object_new_array();
+	json_object *descriptor = json_object_new_object();
+	json_object_object_add(descriptor, "sectionOffset",
+			       json_object_new_int(200));
+	json_object_object_add(descriptor, "sectionLength",
+			       json_object_new_int(100));
+	json_object_object_add(descriptor, "sectionType",
+			       json_object_new_string("nvidiaevent"));
+	json_object_array_add(section_descriptors, descriptor);
+	json_object_object_add(test_ir, "sectionDescriptors",
+			       section_descriptors);
+
+	// Try to convert to CPER - this should log an error
+	char *cper_buf;
+	size_t cper_buf_size;
+	FILE *stream = open_memstream(&cper_buf, &cper_buf_size);
+
+	if (stream == NULL) {
+		printf("Failed to open memstream\n");
+		json_object_put(test_ir);
+		assert(0);
+		return;
+	}
+
+	ir_to_cper(test_ir, stream);
+	fclose(stream);
+
+	printf("Event Header version mismatch (IR to CPER) handled correctly\n");
+
+	free(cper_buf);
+	json_object_put(test_ir);
+}
+
+// Test Event Header version mismatch during binary to IR conversion (should error and return NULL)
+void NVIDIAEVENTEventHeaderVersionMismatch_BinaryEqual(void)
+{
+	printf("Testing Event Header version mismatch (binary to IR)...\n");
+
+	// Create a minimal CPER binary with EventVersion = 99
+	// CPER header (128 bytes) + section descriptor (72 bytes) + NvidiaEvent section
+	uint8_t test_cper[256] = { 0 };
+
+	// CPER header signature
+	memcpy(test_cper, "CPER", 4);
+
+	// Section count = 1
+	test_cper[0x10] = 1;
+
+	// Record length = 256
+	*(uint32_t *)(test_cper + 0x14) = 256;
+
+	// Section descriptor at 0x80
+	// Section length
+	*(uint32_t *)(test_cper + 0x80) =
+		56; // Event header (28) + info header (3) + CPU info (16) + padding
+	// Section offset (from start of record)
+	*(uint32_t *)(test_cper + 0x84) = 200; // 0xC8
+
+	// NvidiaEvent section GUID at 0x88
+	// {9068e568-a06c-f011-aeaf-159343591eac}
+	uint8_t nvidiaevent_guid[] = { 0x68, 0xe5, 0x68, 0x90, 0xa0, 0x6c,
+				       0xf0, 0x11, 0xae, 0xaf, 0x15, 0x93,
+				       0x43, 0x59, 0x1e, 0xac };
+	memcpy(test_cper + 0x88, nvidiaevent_guid, 16);
+
+	// Event header at 0xC8 (200)
+	test_cper[0xC8] = 99; // EventVersion = 99 (not 1)
+	test_cper[0xC9] = 0;  // EventContextCount = 0
+	test_cper[0xCA] = 0;  // SourceDeviceType = CPU
+	test_cper[0xCB] = 0;  // Reserved
+
+	// Parse this CPER - should return NULL due to version mismatch
+	json_object *ir =
+		cper_section_nvidia_events_to_ir(test_cper + 0xC8, 56, NULL);
+
+	if (ir == NULL) {
+		printf("Event Header version mismatch (binary to IR) handled correctly (returned NULL)\n");
+	} else {
+		printf("ERROR: Event Header version mismatch should have returned NULL\n");
+		json_object_put(ir);
+		assert(0);
+	}
+}
+
 //Memory section test for validation bits.
 void MemoryValidationBitsSectionTests_IRValid()
 {
@@ -732,6 +909,9 @@ int main(void)
 	NVIDIASectionTests_IRValid();
 	NVIDIASectionTests_BinaryEqual();
 	NVIDIACMETSectionTests_IRValid();
+	NVIDIAEVENTALLTYPESSectionTests_IRValid();
+	NVIDIAEVENTEventHeaderVersionMismatch_IRValid();
+	NVIDIAEVENTEventHeaderVersionMismatch_BinaryEqual();
 	MemoryValidationBitsSectionTests_IRValid();
 	UnknownSectionTests_IRValid();
 	UnknownSectionTests_BinaryEqual();
