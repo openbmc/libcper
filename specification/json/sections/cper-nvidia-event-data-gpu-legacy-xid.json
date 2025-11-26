@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "cper-json-nvidia-event-data-gpu-legacy-xid",
+    "type": "object",
+    "description": "GPU legacy XID context data (GPU dataFormatType=2)",
+    "additionalProperties": false,
+    "required": ["xid", "subXid", "xidInfo", "faultingEngineId", "faultingSubSystem", "faultingSlot", "faultingAddress", "timeStampLo", "timeStampHi", "rawFirst16DWords", "rawSecond16DWords"],
+    "properties": {
+        "xid": { "type": "integer", "minimum": 0 },
+        "subXid": { "type": "integer", "minimum": 0 },
+        "xidInfo": { "type": "integer", "minimum": 0 },
+        "faultingEngineId": { "type": "integer", "minimum": 0 },
+        "faultingSubSystem": { "type": "integer", "minimum": 0 },
+        "faultingSlot": { "type": "integer", "minimum": 0 },
+        "faultingAddress": { "type": "integer", "minimum": 0 },
+        "timeStampLo": { "type": "integer", "minimum": 0 },
+        "timeStampHi": { "type": "integer", "minimum": 0 },
+        "rawFirst16DWords": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" },
+        "rawSecond16DWords": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" },
+        "data": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" }
+    }
+}
+
