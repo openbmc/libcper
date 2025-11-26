@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "cper-json-nvidia-event-data-type4",
+    "type": "object",
+    "description": "Type 4 context data (dataFormatType=4) - 32-bit value array",
+    "additionalProperties": false,
+    "required": ["valArray32"],
+    "properties": {
+        "valArray32": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["val32"],
+                "additionalProperties": false,
+                "properties": {
+                    "val32": { "type": "integer", "minimum": 0 }
+                }
+            }
+        },
+        "data": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" }
+    }
+}
+
