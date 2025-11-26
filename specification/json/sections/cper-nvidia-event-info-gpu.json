@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cper-json-nvidia-event-info-gpu",
+  "type": "object",
+  "description": "GPU-specific event information for NVIDIA events",
+  "required": [
+    "version",
+    "size",
+    "EventOriginator",
+    "SourcePartition",
+    "SourceSubPartition",
+    "Pdi"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "description": "Event info version",
+      "minimum": 0
+    },
+    "size": {
+      "type": "integer",
+      "description": "Total size of event info structure in bytes",
+      "minimum": 0
+    },
+    "EventOriginator": { "type": "integer", "minimum": 0 },
+    "SourcePartition": { "type": "integer", "minimum": 0 },
+    "SourceSubPartition": { "type": "integer", "minimum": 0 },
+    "Pdi": { "type": "integer", "minimum": 0 }
+  }
+}

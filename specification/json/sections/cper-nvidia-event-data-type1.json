@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cper-json-nvidia-event-data-type1",
+  "type": "object",
+  "description": "Type 1 context data (dataFormatType=1) - 64-bit key-value pairs",
+  "additionalProperties": false,
+  "required": ["keyValArray64"],
+  "properties": {
+    "keyValArray64": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key64", "val64"],
+        "additionalProperties": false,
+        "properties": {
+          "key64": { "type": "integer", "minimum": 0 },
+          "val64": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "data": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" }
+  }
+}

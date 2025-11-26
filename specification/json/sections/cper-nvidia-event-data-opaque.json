@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cper-json-nvidia-event-data-opaque",
+  "type": "object",
+  "description": "Opaque context data (dataFormatType=0) - hex encoded binary",
+  "additionalProperties": false,
+  "required": ["data"],
+  "properties": {
+    "data": { "type": "string", "pattern": "^[0-9a-fA-F]*$" }
+  }
+}

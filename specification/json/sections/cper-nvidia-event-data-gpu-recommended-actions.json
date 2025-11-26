@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cper-json-nvidia-event-data-gpu-recommended-actions",
+  "type": "object",
+  "description": "GPU recommended actions context data (GPU dataFormatType=3)",
+  "additionalProperties": false,
+  "required": ["recommendedActions"],
+  "properties": {
+    "recommendedActions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["xid", "subXid", "recommendedAction"],
+        "additionalProperties": false,
+        "properties": {
+          "xid": { "type": "integer", "minimum": 0 },
+          "subXid": { "type": "integer", "minimum": 0 },
+          "recommendedAction": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "data": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" }
+  }
+}
