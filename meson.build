@@ -204,3 +204,5 @@ if get_option('python').allowed()
         install: true,
     )
 endif
+
+subdir('dbus')
