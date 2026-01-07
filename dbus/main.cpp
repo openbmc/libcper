@@ -97,6 +97,28 @@ static int storeCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
     return 1;
 }
 
+static int downloadCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
+                               sd_bus_error* error)
+{
+    auto& app = *static_cast<App*>(ctx);
+    sdbusplus::message_t message(msg);
+    auto index = message.unpack<uint64_t>();
+
+    auto path = app.storageDir / std::to_string(index);
+    auto fd = open(path.c_str(), O_RDONLY, 0);
+    if (fd < 0)
+    {
+        auto rc = errno;
+        sd_bus_error_set_errno(error, -rc);
+        return -rc;
+    }
+    auto response = message.new_method_return();
+    response.append(static_cast<sdbusplus::message::unix_fd>(fd));
+    static_cast<void>(close(fd));
+    response.method_return();
+    return 1;
+}
+
 int main()
 {
     const auto* stateDir =
@@ -117,9 +139,11 @@ int main()
             .lastIndex = getIndexFromFilesystem(storageDir),
             .storageDir = std::move(storageDir)};
 
-    std::array<sdbusplus::vtable_t, 3> vtable{
+    std::array<sdbusplus::vtable_t, 4> vtable{
         sdbusplus::vtable::start(),
         sdbusplus::vtable::method("StoreCPER", "ay", "t", storeCperHandler),
+        sdbusplus::vtable::method("DownloadCPER", "t", "h",
+                                  downloadCperHandler),
         sdbusplus::vtable::end(),
     };
 
