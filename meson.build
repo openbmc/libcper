@@ -1,10 +1,12 @@
 project(
     'libcper',
     'c',
+    'cpp',
     version: '0.1',
     meson_version: '>=1.2.0',
     default_options: [
         'c_std=c18',
+        'cpp_std=c++23',
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
         'warning_level=2',
         'werror=true',
@@ -22,6 +24,30 @@ add_project_arguments(
     ],
     language: 'c',
 )
+
+cxx = meson.get_compiler('cpp')
+
+if (cxx.get_id() == 'gcc')
+    if (cxx.version().version_compare('<15.0'))
+        error('This project requires gcc-15 or higher')
+    endif
+
+    add_project_arguments(
+        '-Wformat=2',
+        '-Wcast-align',
+        '-Wconversion',
+        '-Woverloaded-virtual',
+        '-Wsign-conversion',
+        '-Wunused',
+        '-Wduplicated-cond',
+        '-Wduplicated-branches',
+        '-Wlogical-op',
+        '-Wunused-parameter',
+        '-Wdouble-promotion',
+        '-Wshadow',
+        language: 'cpp',
+    )
+endif
 
 library_is_share = get_option('default_library') == 'shared'
 
