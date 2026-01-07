@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=xyz.openbmc_project.CPERRepository1
+Exec=/bin/false
+User=cper-dbus
+SystemdService=dbus-xyz.openbmc_project.CPERRepository1.service
