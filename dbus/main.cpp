@@ -116,6 +116,41 @@ static int storeCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
     return 0;
 }
 
+static int downloadCperHandler(sdbusplus::message::msgp_t msg, void* ctx,
+                               sd_bus_error* error)
+{
+    if (ctx == nullptr)
+    {
+        std::abort();
+    }
+
+    auto& app = *static_cast<App*>(ctx);
+    sdbusplus::message_t message(msg);
+    auto index = message.unpack<uint64_t>();
+
+    std::filesystem::path cperPath;
+    try
+    {
+        cperPath = app.storageDir / std::to_string(index);
+    }
+    catch (const std::bad_alloc&)
+    {
+        return sd_bus_error_set_errno(error, -ENOMEM);
+    }
+
+    auto fd = open(cperPath.c_str(), O_RDONLY, 0);
+    if (fd < 0)
+    {
+        auto rc = errno;
+        return sd_bus_error_set_errno(error, -rc);
+    }
+    auto response = message.new_method_return();
+    response.append(static_cast<sdbusplus::message::unix_fd>(fd));
+    static_cast<void>(close(fd));
+    response.method_return();
+    return 0;
+}
+
 int main()
 {
     // NOLINTNEXTLINE(concurrency-mt-unsafe)
@@ -143,9 +178,11 @@ int main()
             .lastIndex = getIndexFromFilesystem(dir),
             .storageDir = std::move(storageDir)};
 
-    std::array<sdbusplus::vtable_t, 3> vtable{
+    std::array<sdbusplus::vtable_t, 4> vtable{
         sdbusplus::vtable::start(),
         sdbusplus::vtable::method("StoreCPER", "ay", "t", storeCperHandler),
+        sdbusplus::vtable::method("DownloadCPER", "t", "h",
+                                  downloadCperHandler),
         sdbusplus::vtable::end(),
     };
 
