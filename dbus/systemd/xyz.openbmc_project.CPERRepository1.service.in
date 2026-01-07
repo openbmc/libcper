@@ -1,0 +1,14 @@
+[Unit]
+Description=CPER D-Bus Repository
+
+[Service]
+Restart=on-failure
+Type=dbus
+ExecStart=@LIBEXECDIR@/cper-dbus
+BusName=xyz.openbmc_project.CPERRepository1
+User=cper-dbus
+StateDirectory=cper-dbus
+
+[Install]
+Alias=dbus-xyz.openbmc_project.CPERRepository1.service
+WantedBy=multi-user.target

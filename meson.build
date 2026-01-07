@@ -5,6 +5,7 @@ project(
     meson_version: '>=1.2.0',
     default_options: [
         'c_std=c18',
+        'cpp_std=c++23',
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
         'warning_level=2',
         'werror=true',
@@ -22,6 +23,42 @@ add_project_arguments(
     ],
     language: 'c',
 )
+
+have_cpp = add_languages(
+    'cpp',
+    native: false,
+    required: get_option('repository'),
+)
+if have_cpp
+    cxx = meson.get_compiler('cpp')
+
+    if (cxx.get_id() == 'gcc')
+        if (cxx.version().version_compare('<15.0'))
+            if get_option('repository').enabled()
+                error('GCC version >= 15.0 higher required with C++ enabled')
+            else
+                warning('found GCC version < 15.0, disabling C++')
+                have_cpp = false
+            endif
+        else
+            add_project_arguments(
+                '-Wformat=2',
+                '-Wcast-align',
+                '-Wconversion',
+                '-Woverloaded-virtual',
+                '-Wsign-conversion',
+                '-Wunused',
+                '-Wduplicated-cond',
+                '-Wduplicated-branches',
+                '-Wlogical-op',
+                '-Wunused-parameter',
+                '-Wdouble-promotion',
+                '-Wshadow',
+                language: 'cpp',
+            )
+        endif
+    endif
+endif
 
 library_is_share = get_option('default_library') == 'shared'
 
@@ -177,4 +214,8 @@ if get_option('python').allowed()
         dependencies: [libcper_parse_dep, json_c_dep],
         install: true,
     )
+endif
+
+if get_option('repository').allowed() and have_cpp
+    subdir('dbus')
 endif

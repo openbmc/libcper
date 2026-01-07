@@ -12,6 +12,12 @@ option(
     description: 'Compile CLI utilities',
 )
 option(
+    'repository',
+    type: 'feature',
+    value: 'enabled',
+    description: 'Compile CPER Repository D-Bus service',
+)
+option(
     'python',
     type: 'feature',
     value: 'disabled',
