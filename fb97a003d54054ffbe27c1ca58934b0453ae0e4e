@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e00366fe_bdbae676",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-08T03:21:59Z",
+      "side": 1,
+      "message": "Remove \"Array\" from this name.  Just \"errorSyndromes\"",
+      "range": {
+        "startLine": 72,
+        "startChar": 30,
+        "endLine": 72,
+        "endChar": 35
+      },
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2aaa23a2_b2690917",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-08T03:21:59Z",
+      "side": 1,
+      "message": "Generally we would spell these out, unless these are register names, not addresses themselves?",
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e2a2d53_b8f363a0",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-08T03:21:59Z",
+      "side": 1,
+      "message": "Remove \"structured\" (unless that\u0027s somehow a descriptor of the error).",
+      "range": {
+        "startLine": 120,
+        "startChar": 24,
+        "endLine": 120,
+        "endChar": 34
+      },
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
