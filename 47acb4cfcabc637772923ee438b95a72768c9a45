@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc00f898_6944abef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-01-09T18:44:41Z",
+      "side": 1,
+      "message": "systemd uses macros that leverage `__attribute__((cleanup(...)))` calls.  Would this be more readable and less error prone?  I\u0027m concerned about how many free-in-return paths this commit introduces.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 37
+      },
+      "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
