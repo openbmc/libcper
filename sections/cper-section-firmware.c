@@ -17,7 +17,18 @@ json_object *cper_section_firmware_to_ir(const UINT8 *section, UINT32 size,
 					 char **desc_string)
 {
 	int outstr_len = 0;
+	*desc_string = NULL;
+	if (size < sizeof(EFI_FIRMWARE_ERROR_DATA)) {
+		cper_print_log("Error: Firmware section too small\n");
+		return NULL;
+	}
+
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate Firmware desc string\n");
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A Firmware Error occurred");
 	if (outstr_len < 0) {
@@ -26,10 +37,6 @@ json_object *cper_section_firmware_to_ir(const UINT8 *section, UINT32 size,
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log(
 			"Error: Firmware description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_FIRMWARE_ERROR_DATA)) {
-		return NULL;
 	}
 
 	EFI_FIRMWARE_ERROR_DATA *firmware_error =

@@ -11,7 +11,18 @@ json_object *cper_section_ampere_to_ir(const UINT8 *section, UINT32 size,
 				       char **desc_string)
 {
 	int outstr_len = 0;
+	*desc_string = NULL;
+	if (size < sizeof(EFI_AMPERE_ERROR_DATA)) {
+		cper_print_log("Error: Ampere section too small\n");
+		return NULL;
+	}
+
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate Ampere desc string\n");
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "An Ampere Error occurred");
 	if (outstr_len < 0) {
@@ -19,10 +30,6 @@ json_object *cper_section_ampere_to_ir(const UINT8 *section, UINT32 size,
 			"Error: Could not write to Ampere description string\n");
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log("Error: Ampere description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_AMPERE_ERROR_DATA)) {
-		return NULL;
 	}
 
 	EFI_AMPERE_ERROR_DATA *record = (EFI_AMPERE_ERROR_DATA *)section;

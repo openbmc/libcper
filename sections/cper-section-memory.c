@@ -17,8 +17,17 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 						UINT32 size, char **desc_string)
 {
 	int outstr_len = 0;
-	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+
+	*desc_string = NULL;
 	if (size < sizeof(EFI_PLATFORM_MEMORY_ERROR_DATA)) {
+		cper_print_log("Error: Platform memory section too small\n");
+		return NULL;
+	}
+
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate Platform memory desc string\n");
 		return NULL;
 	}
 
@@ -240,9 +249,16 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 						 char **desc_string)
 {
 	int outstr_len = 0;
-	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
-
+	*desc_string = NULL;
 	if (size < sizeof(EFI_PLATFORM_MEMORY2_ERROR_DATA)) {
+		cper_print_log("Error: Platform memory2 section too small\n");
+		return NULL;
+	}
+
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate Platform memory2 desc string\n");
 		return NULL;
 	}
 

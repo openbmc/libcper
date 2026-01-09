@@ -18,7 +18,19 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 					      char **desc_string)
 {
 	int outstr_len = 0;
+
+	*desc_string = NULL;
+	if (size < sizeof(EFI_CXL_COMPONENT_EVENT_HEADER)) {
+		cper_print_log("Error: CXL Component section too small\n");
+		return NULL;
+	}
+
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate CXL Component desc string\n");
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A CXL Component Error occurred");
 	if (outstr_len < 0) {
@@ -29,16 +41,16 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 			"Error: CXL Component description string truncated\n");
 	}
 
-	if (size < sizeof(EFI_CXL_COMPONENT_EVENT_HEADER)) {
-		return NULL;
-	}
-
 	EFI_CXL_COMPONENT_EVENT_HEADER *cxl_error =
 		(EFI_CXL_COMPONENT_EVENT_HEADER *)section;
 	if (cxl_error->Length < sizeof(EFI_CXL_COMPONENT_EVENT_HEADER)) {
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 	if (size < cxl_error->Length) {
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 	json_object *section_ir = json_object_new_object();
@@ -100,6 +112,8 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 				cper_print_log(
 					"Failed to allocate encode output buffer. \n");
 				json_object_put(section_ir);
+				free(*desc_string);
+				*desc_string = NULL;
 				return NULL;
 			}
 			json_object *event_log = json_object_new_object();

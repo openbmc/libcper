@@ -114,12 +114,25 @@ NV_SECTION_CALLBACKS section_handlers[] = {
 json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 				       char **desc_string)
 {
-	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
-	char *property_desc = calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
-
+	*desc_string = NULL;
 	if (size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
-		free(property_desc);
+		cper_print_log("Error: NVIDIA section too small\n");
+		return NULL;
+	}
+
+	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate NVIDIA desc string\n");
+		return NULL;
+	}
+
+	char *property_desc = calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
+	if (property_desc == NULL) {
+		free(*desc_string);
 		*desc_string = NULL;
+		cper_print_log(
+			"Error: Failed to allocate NVIDIA property desc\n");
 		return NULL;
 	}
 

@@ -19,7 +19,18 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 					   char **desc_string)
 {
 	int outstr_len = 0;
+	*desc_string = NULL;
+	if (size < sizeof(EFI_IOMMU_DMAR_ERROR_DATA)) {
+		cper_print_log("Error: DMAr IOMMU section too small\n");
+		return NULL;
+	}
+
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate DMAr IOMMU desc string\n");
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A IOMMU Specific DMAr Error occurred");
 	if (outstr_len < 0) {
@@ -28,10 +39,6 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log(
 			"Error: IOMMU Specific DMAr description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_IOMMU_DMAR_ERROR_DATA)) {
-		return NULL;
 	}
 
 	EFI_IOMMU_DMAR_ERROR_DATA *iommu_error =
@@ -56,7 +63,9 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 				      &encoded_len);
 	if (encoded == NULL) {
 		cper_print_log("Failed to allocate encode output buffer. \n");
-
+		json_object_put(section_ir);
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 	json_object_object_add(section_ir, "eventLogEntry",
@@ -71,6 +80,9 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 				&encoded_len);
 	if (encoded == NULL) {
 		cper_print_log("Failed to allocate encode output buffer. \n");
+		json_object_put(section_ir);
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 	json_object_object_add(section_ir, "deviceTableEntry",

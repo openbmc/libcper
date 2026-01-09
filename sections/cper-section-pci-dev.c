@@ -17,7 +17,19 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
 					char **desc_string)
 {
 	int outstr_len = 0;
+
+	*desc_string = NULL;
+	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA)) {
+		cper_print_log("Error: PCI/PCI-X Device section too small\n");
+		return NULL;
+	}
+
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL) {
+		cper_print_log(
+			"Error: Failed to allocate PCI/PCI-X Device desc string\n");
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A PCI/PCI-X Device Error occurred");
 	if (outstr_len < 0) {
@@ -28,16 +40,14 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
 			"Error: PCI/PCI-X Device description string truncated\n");
 	}
 
-	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA)) {
-		return NULL;
-	}
-
 	EFI_PCI_PCIX_DEVICE_ERROR_DATA *dev_error =
 		(EFI_PCI_PCIX_DEVICE_ERROR_DATA *)section;
 
 	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA) +
 			   ((dev_error->MemoryNumber + dev_error->IoNumber) *
 			    sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA_REGISTER))) {
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 
