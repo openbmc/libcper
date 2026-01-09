@@ -22,6 +22,30 @@
       },
       "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7c57b9e_07916759",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-09T19:16:25Z",
+      "side": 1,
+      "message": "In general, I agree with you those would be better for scoped variables.  I think some of the issue here is that this buffer is being passed out of the method, so (unless i\u0027m not understanding the proposal) I don\u0027t think setting the cleanup attr would work?",
+      "parentUuid": "fc00f898_6944abef",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 37
+      },
+      "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
