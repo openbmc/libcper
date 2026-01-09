@@ -22,7 +22,7 @@
                 "type": ["object", "null"],
                 "minProperties": 1,
                 "maxProperties": 1,
-                "required": ["message"],
+                "required": [],
                 "additionalProperties": false,
                 "properties": {
                     "message": {
