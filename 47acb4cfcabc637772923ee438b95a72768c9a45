@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6ae7d715_3b2d12b4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-09T19:27:19Z",
+      "side": 1,
+      "message": "Or are you thinking that we would declare a local desc_string pointer variable in the function, then at the very end null it and move it into the in-out variable?\n\nThat might work.  I\u0027d have to poke at it.",
+      "parentUuid": "d7c57b9e_07916759",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 37
+      },
+      "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ede6afeb_a4f41fd7",
         "filename": "sections/cper-section-ampere.c",
         "patchSetId": 1
