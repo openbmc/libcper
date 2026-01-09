@@ -46,6 +46,23 @@
       },
       "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ede6afeb_a4f41fd7",
+        "filename": "sections/cper-section-ampere.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-09T19:24:32Z",
+      "side": 1,
+      "message": "I think you need to split these branches.  If the malloc fails, you don\u0027t need to free it.\n\nSize can also be checked before the calloc so you don\u0027t even malloc if you hit a size failure (similar to previous).",
+      "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
