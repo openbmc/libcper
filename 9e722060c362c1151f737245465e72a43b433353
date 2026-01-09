@@ -1,4 +1,28 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d19d59be_c43d4601",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-01-09T15:10:22Z",
+      "side": 1,
+      "message": "Why are we not using generated bindings?",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 57
+      },
+      "revId": "9e722060c362c1151f737245465e72a43b433353",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ],
   "submitRequirementResults": []
 }
