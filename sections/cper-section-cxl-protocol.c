@@ -19,6 +19,12 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL ||
+	    size < sizeof(EFI_CXL_PROTOCOL_ERROR_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A CXL Protocol Error occurred");
 	if (outstr_len < 0) {
@@ -29,16 +35,14 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 			"Error: CXL protocol description string truncated\n");
 	}
 
-	if (size < sizeof(EFI_CXL_PROTOCOL_ERROR_DATA)) {
-		return NULL;
-	}
-
 	EFI_CXL_PROTOCOL_ERROR_DATA *cxl_protocol_error =
 		(EFI_CXL_PROTOCOL_ERROR_DATA *)section;
 
 	if (size < sizeof(EFI_CXL_PROTOCOL_ERROR_DATA) +
 			   cxl_protocol_error->CxlDvsecLength +
 			   cxl_protocol_error->CxlErrorLogLength) {
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 
@@ -154,7 +158,8 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 			cper_print_log(
 				"Failed to allocate encode output buffer. \n");
 			json_object_put(section_ir);
-
+			free(*desc_string);
+			*desc_string = NULL;
 			return NULL;
 		}
 		json_object_object_add(section_ir, "capabilityStructure",
@@ -181,6 +186,8 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 					&encoded_len);
 		if (encoded == NULL) {
 			json_object_put(section_ir);
+			free(*desc_string);
+			*desc_string = NULL;
 			return NULL;
 		}
 		json_object_object_add(section_ir, "cxlDVSEC",
@@ -210,6 +217,8 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 			cper_print_log(
 				"Failed to allocate encode output buffer. \n");
 			json_object_put(section_ir);
+			free(*desc_string);
+			*desc_string = NULL;
 			return NULL;
 		}
 		json_object_object_add(section_ir, "cxlErrorLog",

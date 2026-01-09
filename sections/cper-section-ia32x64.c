@@ -51,6 +51,12 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL ||
+	    size < sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "An IA32/x64 Processor Error occurred");
 	if (outstr_len < 0) {
@@ -59,10 +65,6 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log(
 			"Error: IA32/x64 description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_IA32_X64_PROCESSOR_ERROR_RECORD)) {
-		return NULL;
 	}
 	EFI_IA32_X64_PROCESSOR_ERROR_RECORD *record =
 		(EFI_IA32_X64_PROCESSOR_ERROR_RECORD *)section;
@@ -114,6 +116,8 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 			      sizeof(EFI_IA32_X64_PROCESS_ERROR_INFO))) {
 		json_object_put(error_info_array);
 		json_object_put(record_ir);
+		free(*desc_string);
+		*desc_string = NULL;
 		cper_print_log(
 			"Invalid CPER file: Invalid processor error info num.\n");
 		return NULL;
@@ -135,6 +139,8 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 	if (remaining_size < (processor_context_info_num *
 			      sizeof(EFI_IA32_X64_PROCESSOR_CONTEXT_INFO))) {
 		json_object_put(record_ir);
+		free(*desc_string);
+		*desc_string = NULL;
 		cper_print_log(
 			"Invalid CPER file: Invalid processor context info num.\n");
 		return NULL;

@@ -117,8 +117,10 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
 	char *property_desc = calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
 
-	if (size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
+	if (*desc_string == NULL || property_desc == NULL ||
+	    size < sizeof(EFI_NVIDIA_ERROR_DATA)) {
 		free(property_desc);
+		free(*desc_string);
 		*desc_string = NULL;
 		return NULL;
 	}

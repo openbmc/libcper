@@ -20,6 +20,12 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL ||
+	    size < sizeof(EFI_DIRECTED_IO_DMAR_ERROR_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A VT-d DMAr Error occurred");
 	if (outstr_len < 0) {
@@ -28,10 +34,6 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log(
 			"Error: VT-d DMAr description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_DIRECTED_IO_DMAR_ERROR_DATA)) {
-		return NULL;
 	}
 
 	EFI_DIRECTED_IO_DMAR_ERROR_DATA *vtd_error =

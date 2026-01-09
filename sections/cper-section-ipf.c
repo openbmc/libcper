@@ -22,6 +22,11 @@ json_object *cper_section_ipf_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL || size < sizeof(EFI_IPF_ERROR_INFO_HEADER)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "An IPF Error occurred");
 	if (outstr_len < 0) {
@@ -29,10 +34,6 @@ json_object *cper_section_ipf_to_ir(const UINT8 *section, UINT32 size,
 			"Error: Could not write to IPF description string\n");
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log("Error: IPF description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_IPF_ERROR_INFO_HEADER)) {
-		return NULL;
 	}
 
 	EFI_IPF_ERROR_INFO_HEADER *ipf_error =

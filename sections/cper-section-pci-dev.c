@@ -18,6 +18,12 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL ||
+	    size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A PCI/PCI-X Device Error occurred");
 	if (outstr_len < 0) {
@@ -28,16 +34,14 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
 			"Error: PCI/PCI-X Device description string truncated\n");
 	}
 
-	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA)) {
-		return NULL;
-	}
-
 	EFI_PCI_PCIX_DEVICE_ERROR_DATA *dev_error =
 		(EFI_PCI_PCIX_DEVICE_ERROR_DATA *)section;
 
 	if (size < sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA) +
 			   ((dev_error->MemoryNumber + dev_error->IoNumber) *
 			    sizeof(EFI_PCI_PCIX_DEVICE_ERROR_DATA_REGISTER))) {
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 

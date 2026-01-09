@@ -20,6 +20,12 @@ json_object *cper_section_generic_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL ||
+	    size < sizeof(EFI_PROCESSOR_GENERIC_ERROR_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A Generic Processor Error occurred");
 	if (outstr_len < 0) {
@@ -27,10 +33,6 @@ json_object *cper_section_generic_to_ir(const UINT8 *section, UINT32 size,
 			"Error: Could not write to Generic description string\n");
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log("Error: Generic description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_PROCESSOR_GENERIC_ERROR_DATA)) {
-		return NULL;
 	}
 
 	EFI_PROCESSOR_GENERIC_ERROR_DATA *section_generic =

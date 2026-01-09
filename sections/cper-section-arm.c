@@ -52,6 +52,11 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 				    char **desc_string)
 {
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL || size < sizeof(EFI_ARM_ERROR_RECORD)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	int outstr_len = 0;
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "An ARM Processor Error occurred");
@@ -65,10 +70,6 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 
 	const UINT8 *cur_pos = section;
 	UINT32 remaining_size = size;
-
-	if (remaining_size < sizeof(EFI_ARM_ERROR_RECORD)) {
-		return NULL;
-	}
 	EFI_ARM_ERROR_RECORD *record = (EFI_ARM_ERROR_RECORD *)cur_pos;
 	cur_pos += sizeof(EFI_ARM_ERROR_RECORD);
 	remaining_size -= sizeof(EFI_ARM_ERROR_RECORD);
@@ -164,6 +165,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 	    (record->ErrInfoNum * sizeof(EFI_ARM_ERROR_INFORMATION_ENTRY))) {
 		json_object_put(error_info_array);
 		json_object_put(section_ir);
+		free(*desc_string);
+		*desc_string = NULL;
 		cper_print_log(
 			"Invalid CPER file: Invalid processor error info num.\n");
 		return NULL;
@@ -226,6 +229,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		    sizeof(EFI_ARM_CONTEXT_INFORMATION_HEADER)) {
 			json_object_put(context_info_array);
 			json_object_put(section_ir);
+			free(*desc_string);
+			*desc_string = NULL;
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
 			return NULL;
@@ -241,6 +246,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		if (processor_context == NULL) {
 			json_object_put(context_info_array);
 			json_object_put(section_ir);
+			free(*desc_string);
+			*desc_string = NULL;
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
 			return NULL;
@@ -258,6 +265,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 			if (remaining_size < input_size) {
 				json_object_put(vendor_specific);
 				json_object_put(section_ir);
+				free(*desc_string);
+				*desc_string = NULL;
 				cper_print_log(
 					"Invalid CPER file: Invalid vendor-specific info length.\n");
 				return NULL;
@@ -268,6 +277,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 			if (encoded == NULL) {
 				json_object_put(vendor_specific);
 				json_object_put(section_ir);
+				free(*desc_string);
+				*desc_string = NULL;
 				cper_print_log(
 					"base64 encode of vendorSpecificInfo failed\n");
 				return NULL;

@@ -299,6 +299,11 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL || size < sizeof(EFI_PCIE_ERROR_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A PCIe Error occurred");
 	if (outstr_len < 0) {
@@ -306,10 +311,6 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
 			"Error: Could not write to PCIe description string\n");
 	} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
 		cper_print_log("Error: PCIe description string truncated\n");
-	}
-
-	if (size < sizeof(EFI_PCIE_ERROR_DATA)) {
-		return NULL;
 	}
 
 	EFI_PCIE_ERROR_DATA *pcie_error = (EFI_PCIE_ERROR_DATA *)section;

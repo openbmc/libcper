@@ -20,6 +20,11 @@ json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size,
 {
 	int outstr_len = 0;
 	*desc_string = calloc(1, SECTION_DESC_STRING_SIZE);
+	if (*desc_string == NULL || size < sizeof(EFI_CCIX_PER_LOG_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
 			      "A CCIX PER Log Error occurred");
 	if (outstr_len < 0) {
@@ -30,13 +35,11 @@ json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size,
 			"Error: CCIX PER Log description string truncated\n");
 	}
 
-	if (size < sizeof(EFI_CCIX_PER_LOG_DATA)) {
-		return NULL;
-	}
-
 	EFI_CCIX_PER_LOG_DATA *ccix_error = (EFI_CCIX_PER_LOG_DATA *)section;
 
 	if (size < ccix_error->Length) {
+		free(*desc_string);
+		*desc_string = NULL;
 		return NULL;
 	}
 
