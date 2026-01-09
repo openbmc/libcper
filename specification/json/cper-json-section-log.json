@@ -13,7 +13,7 @@
             "type": "object",
             "minProperties": 2,
             "maxProperties": 2,
-            "required": ["message"],
+            "required": [],
             "additionalProperties": false,
             "properties": {
                 "message": {
