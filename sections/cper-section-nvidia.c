@@ -110,6 +110,32 @@ NV_SECTION_CALLBACKS section_handlers[] = {
 	{ "", &parse_registers },
 };
 
+int get_index(const char *signature)
+{
+	if (signature == NULL) {
+		cper_print_log("Error: NULL signature\n");
+		return -1;
+	}
+	int index = -1;
+	// we're comparing i with section_handlers type
+	size_t i = 0;
+	for (i = 0; i < sizeof(section_handlers) / sizeof(section_handlers[0]);
+	     i++) {
+		const char *ip_signature = section_handlers[i].ip_signature;
+		if (strncmp(signature, ip_signature, strlen(ip_signature)) ==
+		    0) {
+			// i is small so we won't overflow
+			return (int)i;
+		}
+	}
+// if no match was found, and fuzzing is enabled, pick one to get coverage
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	index = (unsigned char)signature[0] %
+		(sizeof(section_handlers) / sizeof(section_handlers[0]));
+#endif
+	return index;
+}
+
 //Converts a single NVIDIA CPER section into JSON IR.
 json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 				       char **desc_string)
@@ -196,18 +222,17 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(
 		section_ir, "instanceBase",
 		json_object_new_uint64(nvidia_error->InstanceBase));
-
-	for (long unsigned int i = 0;
-	     i < sizeof(section_handlers) / sizeof(section_handlers[0]); i++) {
-		const char *ip_signature = section_handlers[i].ip_signature;
-		if (strncmp(nvidia_error->Signature, ip_signature,
-			    strlen(ip_signature)) == 0) {
-			section_handlers[i].callback(&nvidia_error->Register[0],
-						     nvidia_error->NumberRegs,
-						     size, section_ir);
-			break;
-		}
+	int index = get_index(nvidia_error->Signature);
+	if (index == -1) {
+		cper_print_log("Error: Unknown NVIDIA section signature: %s\n",
+			       nvidia_error->Signature);
+		return NULL;
+	} else {
+		section_handlers[index].callback(&nvidia_error->Register[0],
+						 nvidia_error->NumberRegs, size,
+						 section_ir);
 	}
+
 	return section_ir;
 }
 
