@@ -196,12 +196,17 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(
 		section_ir, "instanceBase",
 		json_object_new_uint64(nvidia_error->InstanceBase));
-
-	for (long unsigned int i = 0;
-	     i < sizeof(section_handlers) / sizeof(section_handlers[0]); i++) {
+	const long unsigned int section_handlers_len =
+		sizeof(section_handlers) / sizeof(section_handlers[0]);
+	char *nv_signature = nvidia_error->Signature;
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	nv_signature =
+		section_handlers[(size % section_handlers_len)].ip_signature;
+#endif
+	for (long unsigned int i = 0; i < section_handlers_len; i++) {
 		const char *ip_signature = section_handlers[i].ip_signature;
-		if (strncmp(nvidia_error->Signature, ip_signature,
-			    strlen(ip_signature)) == 0) {
+		if (strncmp(nv_signature, ip_signature, strlen(ip_signature)) ==
+		    0) {
 			section_handlers[i].callback(&nvidia_error->Register[0],
 						     nvidia_error->NumberRegs,
 						     size, section_ir);
