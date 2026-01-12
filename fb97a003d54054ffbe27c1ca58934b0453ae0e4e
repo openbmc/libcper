@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5aa81a4e_01bd7666",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "The spec defines this field as error_syndrome_array",
+      "parentUuid": "e00366fe_bdbae676",
+      "range": {
+        "startLine": 72,
+        "startChar": 30,
+        "endLine": 72,
+        "endChar": 35
+      },
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2aaa23a2_b2690917",
         "filename": "examples/arm-ras.json",
         "patchSetId": 1
@@ -43,6 +67,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3dada9ad_73877d9a",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "This is how the spec defines these fields.\nERR\u003cn\u003eFR 8 8 Contents of the Error Record Feature Register.\nERR\u003cn\u003eCTLR 8 16 Contents of the Error Record Control Register\nERR\u003cn\u003eSTATUS 8 24 Contents of the Error Record Primary Status Register.\nERR\u003cn\u003eADDR 8 32 Contents of the Error Record Address Register.\nERR\u003cn\u003eMISC0 8 40 Contents of the Error Record Miscellaneous Register 0.\nERR\u003cn\u003eMISC1 8 48 Contents of the Error Record Miscellaneous Register 1.\nERR\u003cn\u003eMISC2 8 56 Content of the Error Record Miscellaneous Register 2.\nERR\u003cn\u003eMISC3 8 64 Content of the Error Record Miscellaneous Register 3.",
+      "parentUuid": "2aaa23a2_b2690917",
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5e2a2d53_b8f363a0",
         "filename": "examples/arm-ras.json",
         "patchSetId": 1
@@ -54,6 +96,30 @@
       "writtenOn": "2026-01-08T03:21:59Z",
       "side": 1,
       "message": "Remove \"structured\" (unless that\u0027s somehow a descriptor of the error).",
+      "range": {
+        "startLine": 120,
+        "startChar": 24,
+        "endLine": 120,
+        "endChar": 34
+      },
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ac9a46c_8ebdcd32",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e2a2d53_b8f363a0",
       "range": {
         "startLine": 120,
         "startChar": 24,

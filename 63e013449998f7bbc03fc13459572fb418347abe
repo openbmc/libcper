@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cfceee0d_5c793539",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "I see there\u0027s other generators which do not implement this, is this mandatory? Can you please share any documentation of how this should be implemented or the relevance of this field?",
+      "parentUuid": "cf3a5474_6a43d015",
+      "range": {
+        "startLine": 39,
+        "startChar": 7,
+        "endLine": 39,
+        "endChar": 20
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e4c11115_d1150867",
         "filename": "generator/sections/gen-section-arm-ras.c",
         "patchSetId": 2
@@ -54,6 +78,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "This needs to just be a failure.  We shouldn\u0027t continue on allocation failures.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 52
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca05f628_6df592c0",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4c11115_d1150867",
       "range": {
         "startLine": 115,
         "startChar": 0,
@@ -81,6 +129,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c30d52fd_51be3176",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58fb2975_2d016bad",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf80d084_9cb4ed26",
@@ -98,6 +164,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "addc6b34_1a72a142",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf80d084_9cb4ed26",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70195aae_849b14b9",
@@ -111,6 +195,24 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Please wrap on 80 chars.",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "878337f2_0c17ae5c",
+        "filename": "include/libcper/Cper.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1710,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70195aae_849b14b9",
       "revId": "63e013449998f7bbc03fc13459572fb418347abe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -138,6 +240,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "29ed7bd0_77eba971",
+        "filename": "include/libcper/sections/cper-section-arm.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ee058fa_fc669a33",
+      "range": {
+        "startLine": 141,
+        "startChar": 13,
+        "endLine": 141,
+        "endChar": 39
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b9211f9_85983cc4",
@@ -155,6 +281,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9f4d6e3_afe06905",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b9211f9_85983cc4",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6efa4185_5a58beda",
@@ -168,6 +312,24 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Please remove this terinary to make the usage more clear.  Also, please move this math down to line 134 where it\u0027s actually used.\n\nAlso, please implement a range check (this will fail fuzzing)",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b97c6d4f_bab6deb7",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6efa4185_5a58beda",
       "revId": "63e013449998f7bbc03fc13459572fb418347abe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -191,6 +353,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0e7a1761_f1f44353",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "This is just a description message, is it not okay to report the revision and number of entries in the description message?",
+      "parentUuid": "5df0df91_fad7485e",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "296376e4_ef34437d",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 2
@@ -202,6 +382,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Lots of uses of new_int need to be replaced with new_uint64.",
+      "range": {
+        "startLine": 55,
+        "startChar": 10,
+        "endLine": 55,
+        "endChar": 29
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f91bb31_166722b1",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "296376e4_ef34437d",
       "range": {
         "startLine": 55,
         "startChar": 10,
@@ -235,6 +439,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00706f87_94a732f4",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82166d10_fb66156f",
+      "range": {
+        "startLine": 69,
+        "startChar": 13,
+        "endLine": 69,
+        "endChar": 23
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57396335_214c3b85",
@@ -248,6 +476,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Remove 16 and replace with an appropriate sizeof() call.",
+      "range": {
+        "startLine": 70,
+        "startChar": 21,
+        "endLine": 70,
+        "endChar": 23
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a20390bb_dba49068",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57396335_214c3b85",
       "range": {
         "startLine": 70,
         "startChar": 21,
@@ -283,6 +535,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9bf82313_b20c1a24",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "The existing helper functions are not suitable for encoding an arbitrary byte array like IPInstance[16] / IPType[24] into a plain hex string. Do you want me to create a helper function to do this?",
+      "parentUuid": "88d2f980_d4d4db70",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 2
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "231ca771_0bc1919c",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 2
@@ -294,6 +570,24 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Please use the unsafe buffer to string helper functions.  THere\u0027s no gaurantee this buffer is correctly formed.",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2541bbc_9e576dd4",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "231ca771_0bc1919c",
       "revId": "63e013449998f7bbc03fc13459572fb418347abe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -323,6 +617,54 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "48ba7c16_c5dc991b",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "this is now handled earlier to return an empty descarray",
+      "parentUuid": "b9538bb7_971d4596",
+      "range": {
+        "startLine": 99,
+        "startChar": 3,
+        "endLine": 99,
+        "endChar": 8
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b918cf94_2551b777",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Now handling this earlier to return empty descArray",
+      "parentUuid": "b9538bb7_971d4596",
+      "range": {
+        "startLine": 99,
+        "startChar": 3,
+        "endLine": 99,
+        "endChar": 8
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "089d2f32_702e3da9",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 2
@@ -334,6 +676,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "give this a better variable name.  \"jd\" could be improved to describe what the value is.",
+      "range": {
+        "startLine": 103,
+        "startChar": 15,
+        "endLine": 103,
+        "endChar": 17
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eda65ed8_516edede",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "089d2f32_702e3da9",
       "range": {
         "startLine": 103,
         "startChar": 15,
@@ -369,6 +735,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1e652368_8fb67b77",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "The spec doesn\u0027t present these as seperate nibbles. The generator generates the revision as two independent numbers but clubs them together as the RasExtensionRevision. Do we have to present this as two nibbles in the json?",
+      "parentUuid": "00790f15_8b423093",
+      "range": {
+        "startLine": 109,
+        "startChar": 28,
+        "endLine": 109,
+        "endChar": 48
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "45d908f6_120334f1",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 2
@@ -380,6 +770,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Unless these come from some other specification, please follow the naming convention.",
+      "range": {
+        "startLine": 110,
+        "startChar": 30,
+        "endLine": 110,
+        "endChar": 35
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84b99650_f32bf88e",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Yes, these do come from the spec",
+      "parentUuid": "45d908f6_120334f1",
       "range": {
         "startLine": 110,
         "startChar": 30,
@@ -409,6 +823,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65051acf_2698d9d0",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "auxLen is being compared to the sizeof(EFI_ARM_RAS_AUX_DATA_HEADER), I don\u0027t see how this\u0027ll be an underflow issue?",
+      "parentUuid": "99ee0a1a_530bec41",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "21b99adc_0e31a342",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 2
@@ -420,6 +852,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Why are we checking reserved bits?  Remove.",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 32
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89764fd2_bc35f1dd",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b99adc_0e31a342",
       "range": {
         "startLine": 146,
         "startChar": 0,
@@ -447,6 +903,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bc14e1e_d051b32a",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1b8a679_cf98608a",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db5b08cb_95f7703a",
@@ -460,6 +934,30 @@
       "writtenOn": "2026-01-08T03:49:20Z",
       "side": 1,
       "message": "Should these be in hex strings, not int?",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 82
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acec412b_cc64a634",
+        "filename": "specification/json/sections/cper-arm-ras.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-12T23:00:26Z",
+      "side": 1,
+      "message": "The spec doesn\u0027t define the type of these fields.",
+      "parentUuid": "db5b08cb_95f7703a",
       "range": {
         "startLine": 242,
         "startChar": 0,
