@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f91a8301_a291f09e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-14T21:19:55Z",
+      "side": 1,
+      "message": "I\u0027m still not in love with the structure, but this does look like an improvement on what we had.",
+      "revId": "f125142cd92122fea035c12c82890a00cfc1ef7a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
