@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0111d38_2dce7f88",
+        "filename": "sections/cper-section-nvidia.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-14T21:18:30Z",
+      "side": 1,
+      "message": "Lets model this like we do the other one:\nhttps://github.com/openbmc/libcper/blob/043d5f4b4f95d9f2a4f8182850ed0e6f2b076b15/cper-utils.c#L453\n\n1. If the value matches, use it directly (so unit tests still pass even with fuzzing enabled), and we\u0027re only modifying the failure path.\n2. Put it in a helper function.\n3. Make sure we\u0027re using something from the input buffer to do it, so the fuzzer can hit everything.  Generally we would just use the first character and mod it into an index.",
+      "revId": "a2972f9eda863db685b776facfcabed29763d572",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
