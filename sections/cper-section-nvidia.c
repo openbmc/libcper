@@ -20,7 +20,7 @@ void parse_cmet_info(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
 	for (int i = 0; i < NumberRegs; i++, regPtr++) {
 		json_object *reg = NULL;
 		if (sizeof(EFI_NVIDIA_ERROR_DATA) +
-			    i * sizeof(EFI_NVIDIA_REGISTER_DATA) <
+			    (i + 1) * sizeof(EFI_NVIDIA_REGISTER_DATA) <=
 		    size) {
 			reg = json_object_new_object();
 			add_int_hex_64(reg, "ChannelAddress", regPtr->Address);
