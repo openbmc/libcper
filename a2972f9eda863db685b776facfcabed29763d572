@@ -34,6 +34,24 @@
       "parentUuid": "c0111d38_2dce7f88",
       "revId": "a2972f9eda863db685b776facfcabed29763d572",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0127269_23b434ab",
+        "filename": "sections/cper-section-nvidia.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-15T22:58:13Z",
+      "side": 1,
+      "message": "\u003e 1. I don\u0027t follow what directly means here. You don\u0027t want `nv_signature` to exist?\n\nI mean, keep the code path the same for \"normal\" cases.  Only call the fuzz specific path if the main path \"fails\" to find a match.\n\n\u003e 2. Helper function common to any fuzzing path in the file, or just for this specific scenario?\n\nThis specific scenario is fine.  Just want to abstract away the \"get an index\" so this is readable.\n\n\u003e 3. we\u0027re using size from the input here\u0027\n\nSize isn\u0027t a field though, it\u0027s the total lenth.  There are conditions where you have a bug, but you never hit it because the size that fails isn\u0027t of mod(code index).",
+      "parentUuid": "566ae489_c86ef8f6",
+      "revId": "a2972f9eda863db685b776facfcabed29763d572",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
