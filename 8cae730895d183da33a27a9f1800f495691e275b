@@ -108,6 +108,30 @@
       },
       "revId": "8cae730895d183da33a27a9f1800f495691e275b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a46c83f0_fb370a29",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1002429
+      },
+      "writtenOn": "2026-01-15T16:49:16Z",
+      "side": 1,
+      "message": "This is a great comment!\nWe\u0027re safe because of the RAS System Arch (as defined in Arm IHI0100)\u003e\n\nHeader size is 80 bytes.\neach entry of the error_syndrome_array is 72 bytes.\nThere are at most 896 entries in the error_syndrome_array (if FEAT_RASSA_64KB_GRP is implemented, more details are in the Arm IHI0100).\n\nSo, architecturally, the maximum value of node.AuxiliaryDataOffset\u003d80 + 896*72 \u003d 64592 \u003c 2^16.",
+      "parentUuid": "db5e1336_f9e43da3",
+      "range": {
+        "startLine": 752,
+        "startChar": 2,
+        "endLine": 752,
+        "endChar": 54
+      },
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
