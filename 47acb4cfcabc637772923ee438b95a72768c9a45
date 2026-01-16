@@ -141,6 +141,24 @@
       "parentUuid": "51b6d314_52bcd688",
       "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "475a044a_9bb695b2",
+        "filename": "sections/cper-section-ampere.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-16T17:32:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b3b06da_d7a775b3",
+      "revId": "47acb4cfcabc637772923ee438b95a72768c9a45",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
