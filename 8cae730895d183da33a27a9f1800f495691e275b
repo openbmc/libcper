@@ -58,6 +58,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1db0d2bd_210b12d8",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6b603f3_749c7134",
+      "range": {
+        "startLine": 216,
+        "startChar": 1,
+        "endLine": 227,
+        "endChar": 39
+      },
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f11f196_b51fe9ee",
@@ -71,6 +95,24 @@
       "writtenOn": "2026-01-16T22:09:52Z",
       "side": 1,
       "message": "We should capture the error instead of silently omitting the data, so issues are visible.",
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a7e8360_a83b3518",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f11f196_b51fe9ee",
       "revId": "8cae730895d183da33a27a9f1800f495691e275b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -92,6 +134,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aefdcfbe_7f3cfaa8",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31216f12_2d825baa",
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63d85645_2bfdaf41",
@@ -109,6 +169,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22f2dfa4_d76405c8",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "added debug statements to validation function",
+      "parentUuid": "63d85645_2bfdaf41",
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72c4f03b_ac3bfd8a",
@@ -122,6 +200,30 @@
       "writtenOn": "2026-01-16T22:09:52Z",
       "side": 1,
       "message": "We should not attempt to decode the remaining data because the size is incorrect and the remaining data may be meaningless.",
+      "range": {
+        "startLine": 433,
+        "startChar": 5,
+        "endLine": 433,
+        "endChar": 62
+      },
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d97b593_49c38365",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72c4f03b_ac3bfd8a",
       "range": {
         "startLine": 433,
         "startChar": 5,
@@ -155,6 +257,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6036c9b_0c541b91",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbcb6da5_1b12d027",
+      "range": {
+        "startLine": 622,
+        "startChar": 28,
+        "endLine": 622,
+        "endChar": 53
+      },
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6efa86b6_1de5fa31",
@@ -168,6 +294,30 @@
       "writtenOn": "2026-01-14T01:08:44Z",
       "side": 1,
       "message": "AuxiliaryDataSize is 4 bytes in the specs. Any reason to check `0xFFFF`?",
+      "range": {
+        "startLine": 664,
+        "startChar": 17,
+        "endLine": 664,
+        "endChar": 33
+      },
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "951cf571_13516f64",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "This is just an appropriate size check which keeps the code simple and works for practical use cases.",
+      "parentUuid": "6efa86b6_1de5fa31",
       "range": {
         "startLine": 664,
         "startChar": 17,
@@ -239,6 +389,30 @@
       "side": 1,
       "message": "@john.chung@arm.com rightly commented that at https://gerrit.openbmc.org/c/openbmc/libcper/+/85933/3/sections/cper-section-arm-ras.c#531 we should comment that descCount is \u003c\u003d 896.",
       "parentUuid": "a46c83f0_fb370a29",
+      "range": {
+        "startLine": 752,
+        "startChar": 2,
+        "endLine": 752,
+        "endChar": 54
+      },
+      "revId": "8cae730895d183da33a27a9f1800f495691e275b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b8e9270_2b9cbbd5",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7eadc996_caefc171",
       "range": {
         "startLine": 752,
         "startChar": 2,

@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e16db9c5_551a84e3",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "Figured that unlike in the CPER section in the UEFI spec, the Arm RAS spec does not define the Validation Bit field.",
+      "parentUuid": "cfceee0d_5c793539",
+      "range": {
+        "startLine": 39,
+        "startChar": 7,
+        "endLine": 39,
+        "endChar": 20
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e4c11115_d1150867",
         "filename": "generator/sections/gen-section-arm-ras.c",
         "patchSetId": 2
@@ -835,6 +859,24 @@
       "side": 1,
       "message": "auxLen is being compared to the sizeof(EFI_ARM_RAS_AUX_DATA_HEADER), I don\u0027t see how this\u0027ll be an underflow issue?",
       "parentUuid": "99ee0a1a_530bec41",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5ae4ab7_d10d332b",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-20T06:26:02Z",
+      "side": 1,
+      "message": "changed this to instead fail if auxLen less than size of header.",
+      "parentUuid": "65051acf_2698d9d0",
       "revId": "63e013449998f7bbc03fc13459572fb418347abe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
