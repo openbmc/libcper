@@ -1,8 +1,0 @@
-[wrap-git]
-revision = HEAD
-url = https://github.com/domoslabs/jsonc-daccord.git
-patch_directory = jsoncdac
-
-[provide]
-jsoncdac = jsoncdac_dep
-

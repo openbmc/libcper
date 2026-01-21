@@ -1,7 +1,4 @@
-jsonc_daccord = dependency(
-    'jsoncdac',
-    default_options: ['default_library=static', 'warning_level=2'],
-)
+subdir('schemavalidator')
 
 test_sources = files('base64_test.c', 'test-utils.c')
 
@@ -15,7 +12,7 @@ cper_tests = executable(
     include_directories: include_directories(test_include_dirs),
     dependencies: [
         json_c_dep,
-        jsonc_daccord,
+        jsonc_validator_dep,
         libcper_parse_dep,
         libcper_generate_dep,
     ],
@@ -41,7 +38,7 @@ if (cc.get_id() == 'clang') and get_option('fuzz').allowed() and not is_darwin
             include_directories: include_directories(test_include_dirs),
             c_args: fuzz_args,
             link_args: fuzz_args,
-            dependencies: [json_c_dep, jsonc_daccord],
+            dependencies: [json_c_dep, jsonc_validator_dep],
         )
         test(
             fuzzer_test,
