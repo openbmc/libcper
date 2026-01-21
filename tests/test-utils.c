@@ -12,7 +12,7 @@
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
 
-#include <jsoncdaccord.h>
+#include <validate.h>
 #include <json.h>
 #include <libcper/log.h>
 
@@ -228,23 +228,18 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 		free(schema_path);
 		return -1;
 	}
-	printf("start jdac_validate\n");
-	int err = jdac_validate(to_test, schema);
-	if (err == JDAC_ERR_VALID) {
+	printf("start schemavalidator_validate\n");
+	int err = schemavalidator_validate(to_test, schema);
+	if (err == SCHEMAVALIDATOR_ERR_VALID) {
 		cper_print_log("validation ok\n");
 		json_object_put(schema);
 		free(schema_path);
 		return 1;
 	}
-	printf("end jdac_validate\n");
-	cper_print_log("validate failed %d: %s\n", err, jdac_errorstr(err));
+	printf("end schemavalidator_validate\n");
+	cper_print_log("validate failed %d: %s\n", err,
+		       schemavalidator_errorstr(err));
 
-	// cper_print_log("schema: \n%s\n",
-	// 	       json_object_to_json_string_ext(schema,
-	// 					      JSON_C_TO_STRING_PRETTY));
-	// cper_print_log("to_test: \n%s\n",
-	// 	       json_object_to_json_string_ext(to_test,
-	// 					      JSON_C_TO_STRING_PRETTY));
 	json_object_put(schema);
 	free(schema_path);
 	return 0;

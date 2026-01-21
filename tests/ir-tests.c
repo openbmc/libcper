@@ -9,6 +9,8 @@
 #include "assert.h"
 #include <ctype.h>
 #include <json.h>
+#include <libcper/log.h>
+
 #include <libcper/cper-parse.h>
 #include <libcper/generator/cper-generate.h>
 #include <libcper/generator/sections/gen-section.h>
@@ -269,8 +271,15 @@ void cper_example_section_ir_test(const char *section_name)
 		assert(strcmp(str, expected_str) == 0);
 		return;
 	}
+	cper_print_log("section_name: %s", section_name);
 
+	cper_print_log("ir: %s", json_object_to_json_string_ext(
+					 ir, JSON_C_TO_STRING_PRETTY));
+	cper_print_log("expected: %s",
+		       json_object_to_json_string_ext(expected,
+						      JSON_C_TO_STRING_PRETTY));
 	assert(json_object_equal(ir, expected));
+
 	free(buffer);
 	free(cper_bin);
 	json_object_put(ir);
