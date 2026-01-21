@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "92e5103d_8db99da7",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-21T00:22:19Z",
+      "side": 1,
+      "message": "That\u0027s fine.  This implementation doesn\u0027t include the type int the json, as that would duplicate the information.  the cper spec very likely might include the type.",
+      "parentUuid": "5aa81a4e_01bd7666",
+      "range": {
+        "startLine": 72,
+        "startChar": 30,
+        "endLine": 72,
+        "endChar": 35
+      },
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2aaa23a2_b2690917",
         "filename": "examples/arm-ras.json",
         "patchSetId": 1
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "This is how the spec defines these fields.\nERR\u003cn\u003eFR 8 8 Contents of the Error Record Feature Register.\nERR\u003cn\u003eCTLR 8 16 Contents of the Error Record Control Register\nERR\u003cn\u003eSTATUS 8 24 Contents of the Error Record Primary Status Register.\nERR\u003cn\u003eADDR 8 32 Contents of the Error Record Address Register.\nERR\u003cn\u003eMISC0 8 40 Contents of the Error Record Miscellaneous Register 0.\nERR\u003cn\u003eMISC1 8 48 Contents of the Error Record Miscellaneous Register 1.\nERR\u003cn\u003eMISC2 8 56 Content of the Error Record Miscellaneous Register 2.\nERR\u003cn\u003eMISC3 8 64 Content of the Error Record Miscellaneous Register 3.",
       "parentUuid": "2aaa23a2_b2690917",
+      "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8bcc54e_41267254",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-21T00:22:19Z",
+      "side": 1,
+      "message": "So then these would be:\nerrorRecordFeatureRegister: 1\nerrorRecordControlRegister: 1\n\nect",
+      "parentUuid": "3dada9ad_73877d9a",
       "revId": "fb97a003d54054ffbe27c1ca58934b0453ae0e4e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
