@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b352eedc_e092314f",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-21T23:29:51Z",
+      "side": 1,
+      "message": "add_int_hex takes integers as input and directly adds them as json objects. Instead, this function is used to convert IPInstance and IPType which are defined as arrays of ints.",
+      "parentUuid": "a01ac908_14f1b0ab",
+      "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fe3a7cfc_25129d4f",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 4
@@ -60,6 +78,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1eb2077c_5013582b",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-21T23:29:51Z",
+      "side": 1,
+      "message": "Do you mean check string populated using snprintf?",
+      "parentUuid": "fe3a7cfc_25129d4f",
+      "range": {
+        "startLine": 405,
+        "startChar": 2,
+        "endLine": 405,
+        "endChar": 10
+      },
+      "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c423d7a_4f7b091c",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 4
@@ -71,6 +113,24 @@
       "writtenOn": "2026-01-21T00:17:36Z",
       "side": 1,
       "message": "Please follow what we do https://github.com/openbmc/libcper/blob/043d5f4b4f95d9f2a4f8182850ed0e6f2b076b15/cper-parse.c#L444\n\nTo make sure we get fuzzing coverage if this doesn\u0027t match.",
+      "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5995ea9_4844a528",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-21T23:29:51Z",
+      "side": 1,
+      "message": "I don\u0027t fully understand, the need for fuzzing coverage here:\nLooks like the select_section_by_guid fuzz hook exists because everything downstream hangs off that GUID dispatch. Without a fuzz‑only override, most of the code in sections would be effectively unreachable from a fuzzer.\nIn contrast, this mpamPartId code is a tiny, optional decoration inside one specific section parser. Not part of critical safety checks or control‑flow, it just adds one more JSON field for a specific UUID. If KV matches add extra json object, else just add the default kv structure.",
+      "parentUuid": "0c423d7a_4f7b091c",
       "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
