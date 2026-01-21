@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c364ba71_be282658",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-21T23:55:34Z",
+      "side": 1,
+      "message": "Can we make this function generic and reuse code?",
+      "parentUuid": "b352eedc_e092314f",
+      "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fe3a7cfc_25129d4f",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 4
@@ -90,6 +108,30 @@
       "side": 1,
       "message": "Do you mean check string populated using snprintf?",
       "parentUuid": "fe3a7cfc_25129d4f",
+      "range": {
+        "startLine": 405,
+        "startChar": 2,
+        "endLine": 405,
+        "endChar": 10
+      },
+      "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8516534a_87cccc3b",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-21T23:55:34Z",
+      "side": 1,
+      "message": "I mean the output of snprintf, which can return errors.",
+      "parentUuid": "1eb2077c_5013582b",
       "range": {
         "startLine": 405,
         "startChar": 2,
