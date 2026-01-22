@@ -20,6 +20,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7a5b28ba_9b616cb7",
+        "filename": "dbus/.clang-tidy",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "We leave these turned on even if there are cases we ignore them.  In main, it\u0027s pretty clear that it can\u0027t be a multithread issue, because we haven\u0027t started any threads yet.",
+      "parentUuid": "cd031516_e8de1cf9",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91f27fdb_acdd53ba",
+        "filename": "dbus/.clang-tidy",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Can we put this at the root?  If not, what\u0027s preventing that?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b0c71604_31b5e7a0",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -31,6 +66,24 @@
       "writtenOn": "2026-01-22T07:05:48Z",
       "side": 1,
       "message": "nit: Can this be a `std::unique_ptr`?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa40cdba_59ccaeaf",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Why would that be better if the pointer isn\u0027t required?",
+      "parentUuid": "b0c71604_31b5e7a0",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -60,6 +113,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "96ad41a4_21582df5",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "This call throws if the directory doesn\u0027t exist for some reason.  Please use the EC overload if we\u0027re handling this error at this level.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d54f8d10_9e0b515f",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "std::from_chars here would avoid needing to throw/catch.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f6097113_b6519545",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -71,6 +158,24 @@
       "writtenOn": "2026-01-22T07:05:48Z",
       "side": 1,
       "message": "Can we maybe log an error and continue?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97fa663c_0d1b6fcb",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "f6097113_b6519545",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -94,6 +199,64 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "97ebd524_e3fee149",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "nit, could we pass by std::span to avoid the dependency on vector?",
+      "range": {
+        "startLine": 53,
+        "startChar": 42,
+        "endLine": 53,
+        "endChar": 48
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70347148_1ba1bbbb",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "using std::error_code in apis that don\u0027t use std library things isn\u0027t commonly done.  IF we were going to change this, I would recommend we use an enum class for the various return codes that this function can return.\n\nWith that said, returning an int for failure is pretty well defined.",
+      "parentUuid": "5ec45ea6_0ee8fad3",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4c6a7ad_b6e54ae0",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Can we set a more specific limit here?  Maybe 20KB?  It\u0027s arbitrary, but I\u0027m assuming we don\u0027t want to allow writing 4GB to a file.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "875a2bf8_2b34fef1",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -105,6 +268,46 @@
       "writtenOn": "2026-01-22T07:05:48Z",
       "side": 1,
       "message": "Use `std::bit_cast` here? Any specific reason for `reinterpret_cast`?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61deecab_bd5cab23",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Uncaught exceptions here.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa9b0fb4_79ca8318",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "nit, need to check against nullptr before you do this.",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -128,6 +331,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "93e0bdfa_ae36a3fb",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Should this be a full dbus path rather than an index?  I can\u0027t see any use for this other than just immediately using it to log, and if you\u0027re going to do that you should be using the path.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d994222f_d3bdeda4",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Could we do NOLINTNEXTLINE here?  That might make the code easier to read.",
+      "range": {
+        "startLine": 103,
+        "startChar": 43,
+        "endLine": 103,
+        "endChar": 49
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "79bd7dc3_97672273",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -139,6 +382,97 @@
       "writtenOn": "2026-01-22T07:05:48Z",
       "side": 1,
       "message": "Do we need this clang tidy check?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47449830_a7a537c8",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Nit, could we put the strerror on its own line, so we can use a NOLINTNEXTLINE and make it more clear which part we\u0027re ignoring?\n\nIf that\u0027s not a change you want to make, nbd.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5780df0_6ae689e7",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "This should be /logging/cper or something similar, right?",
+      "range": {
+        "startLine": 127,
+        "startChar": 39,
+        "endLine": 127,
+        "endChar": 54
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "843785f5_c2a8529e",
+        "filename": "dbus/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "nit, minor preference for\n\ncper_dbus_dependencies \u003d [\n    dependency(\u0027libsystemd\u0027),\n    dependency(\u0027sdbusplus\u0027),\n]\n\nDynamically constructing the list makes more sense for when we might optionally include depdencies.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "febd9f8b_170cf942",
+        "filename": "dbus/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "Doesn\u0027t this duplicate line 33?  Both are installing xyz.openbmc_project.CPERRepository1.service",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6051b8e4_c2d964f8",
+        "filename": "dbus/systemd/xyz.openbmc_project.CPERRepository1.service.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-01-22T16:06:52Z",
+      "side": 1,
+      "message": "If we\u0027re going to run as our own user, don\u0027t we require a lot more XML config?  If this works, rock on, I thought more was required.",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
