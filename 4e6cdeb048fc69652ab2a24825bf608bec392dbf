@@ -1,0 +1,146 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd031516_e8de1cf9",
+        "filename": "dbus/.clang-tidy",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "I see you had to add linter ignore for this check in your main file. Is this required for a single-threaded event loop?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0c71604_31b5e7a0",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "nit: Can this be a `std::unique_ptr`?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26cf6ca2_7e1e49be",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "nit: Maybe name this `file`?",
+      "range": {
+        "startLine": 32,
+        "startChar": 21,
+        "endLine": 32,
+        "endChar": 27
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6097113_b6519545",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "Can we maybe log an error and continue?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ec45ea6_0ee8fad3",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "Can this function return `std::error_code` instead of an integer?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "875a2bf8_2b34fef1",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "Use `std::bit_cast` here? Any specific reason for `reinterpret_cast`?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "283b7063_2a61d394",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "nit: Can this index be incremented in the `writeCper` function?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79bd7dc3_97672273",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1002723
+      },
+      "writtenOn": "2026-01-22T07:05:48Z",
+      "side": 1,
+      "message": "Do we need this clang tidy check?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
