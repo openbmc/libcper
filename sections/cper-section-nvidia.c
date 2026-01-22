@@ -142,7 +142,7 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 
 	const char *signature = nvidia_error->Signature;
 	add_untrusted_string(section_ir, "signature", signature,
-			     strlen(signature));
+			     sizeof(signature));
 
 	json_object *severity = json_object_new_object();
 	json_object_object_add(severity, "code",
@@ -152,8 +152,7 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 			       json_object_new_string(severity_name));
 	int outstr_len = 0;
 	outstr_len = snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
-			      "A %s %s NVIDIA Error occurred", severity_name,
-			      signature);
+			      "A %s NVIDIA Error occurred", severity_name);
 	if (outstr_len < 0) {
 		cper_print_log(
 			"Error: Could not write to description string\n");
