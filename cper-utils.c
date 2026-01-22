@@ -459,11 +459,14 @@ int select_guid_from_list(EFI_GUID *guid, EFI_GUID *guid_list[], int len)
 	return i;
 }
 
-void add_untrusted_string(json_object *ir, const char *field_name,
-			  const char *str, int len)
+int cper_printable_string_length(const char *str, int number_chars)
 {
+	if (str == NULL) {
+		return -1; // Return 0 for a null pointer input
+	}
+
 	int fru_text_len = 0;
-	for (; fru_text_len < len; fru_text_len++) {
+	for (; fru_text_len < number_chars; fru_text_len++) {
 		char c = str[fru_text_len];
 		if (c == '\0') {
 			break;
@@ -473,6 +476,19 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 			break;
 		}
 	}
+
+	if (fru_text_len == 0 || fru_text_len == number_chars) {
+		// string was not null terminated
+		return -1;
+	}
+
+	return fru_text_len;
+}
+
+void add_untrusted_string(json_object *ir, const char *field_name,
+			  const char *str, int len)
+{
+	int fru_text_len = cper_printable_string_length(str, len);
 	if (fru_text_len >= 0) {
 		json_object_object_add(
 			ir, field_name,

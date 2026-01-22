@@ -62,6 +62,8 @@ void string_to_guid(EFI_GUID *out, const char *guid);
 int guid_equal(EFI_GUID *a, EFI_GUID *b);
 int select_guid_from_list(EFI_GUID *guid, EFI_GUID *guid_list[], int len);
 
+int cper_printable_string_length(const char *str, int number_chars);
+
 void add_untrusted_string(json_object *ir, const char *field_name,
 			  const char *str, int len);
 

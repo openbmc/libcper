@@ -17,14 +17,32 @@ size_t generate_section_nvidia(void **location,
 			       GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	(void)validBitsType;
-	const char *signatures[] = {
-		"DCC-ECC",   "DCC-COH",	      "HSS-BUSY",      "HSS-IDLE",
-		"CLink",     "C2C",	      "C2C-IP-FAIL",   "L0 RESET",
-		"L1 RESET",  "L2 RESET",      "PCIe",	       "PCIe-DPC",
-		"SOCHUB",    "CCPLEXSCF",     "CMET-NULL",     "CMET-SHA256",
-		"CMET-FULL", "DRAM-CHANNELS", "PAGES-RETIRED", "CCPLEXGIC",
-		"MCF",	     "GPU-STATUS",    "GPU-CONTNMT",   "SMMU",
-		"CMET-INFO",
+	const char signatures[][16 + 1] = {
+		"DCC-ECC\0\0\0\0\0\0\0\0\0",
+		"DCC-COH\0\0\0\0\0\0\0\0\0",
+		"HSS-BUSY\0\0\0\0\0\0\0\0",
+		"HSS-IDLE\0\0\0\0\0\0\0\0",
+		"CLink\0\0\0\0\0\0\0\0\0\0",
+		"C2C\0\0\0\0\0\0\0\0\0\0",
+		"C2C-IP-FAIL\0\0\0\0\0",
+		"L0 RESET\0\0\0\0\0\0\0\0",
+		"L1 RESET\0\0\0\0\0\0\0\0",
+		"L2 RESET\0\0\0\0\0\0\0\0",
+		"PCIe\0\0\0\0\0\0\0\0",
+		"PCIe-DPC\0\0\0\0\0\0\0\0",
+		"SOCHUB\0\0\0\0\0\0\0\0",
+		"CCPLEXSCF\0\0\0\0\0",
+		"CMET-NULL\0\0\0\0\0",
+		"CMET-SHA256\0\0\0\0\0",
+		"CMET-FULL\0\0\0\0\0",
+		"DRAM-CHANNELS\0\0\0",
+		"PAGES-RETIRED\0\0\0",
+		"CCPLEXGIC\0\0\0\0\0",
+		"MCF\0\0\0\0\0",
+		"GPU-STATUS\0\0\0\0\0\0",
+		"GPU-CONTNMT\0\0\0\0\0",
+		"SMMU\0\0\0\0\0\0\0\0",
+		"CMET-INFO\0\0\0\0\0\0\0",
 	};
 
 	//Create random bytes.
@@ -46,9 +64,8 @@ size_t generate_section_nvidia(void **location,
 	//Signature.
 	int idx_random =
 		cper_rand() % (sizeof(signatures) / sizeof(signatures[0]));
-	strncpy(nvidia_error->Signature, signatures[idx_random],
-		sizeof(nvidia_error->Signature) - 1);
-	nvidia_error->Signature[sizeof(nvidia_error->Signature) - 1] = '\0';
+	memcpy(nvidia_error->Signature, signatures[idx_random],
+	       sizeof(nvidia_error->Signature));
 
 	//Set return values, exit.
 	*location = section;
