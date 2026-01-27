@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dadda4c6_e4593001",
+        "filename": "dbus/.clang-tidy",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5b28ba_9b616cb7",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "91f27fdb_acdd53ba",
@@ -67,6 +85,41 @@
       "side": 1,
       "message": "There is already a .clang-tidy at the root.  It doesn\u0027t have the c++ checks enabled.  I seem to remember that a lot of common c-idioms get flagged by the c++ checks but I could be mis-remembering.\n\nI\u0027m willing to doing some work here but I think I need a hint as to what it would be.",
       "parentUuid": "91f27fdb_acdd53ba",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db71ba6c_480131e6",
+        "filename": "dbus/.clang-tidy",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Marking as resolved, please unresolve as desired.",
+      "parentUuid": "8b1801db_48e119cd",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26ad7bb2_716948d1",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Several headers missed.",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -224,6 +277,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5a4c2ff_1372b357",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "I reworked slightly to just pass the opened directory iterator from main (and use the ec overload there).",
+      "parentUuid": "9004058c_7f500fe7",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f401a730_758c6073",
@@ -237,6 +308,30 @@
       "writtenOn": "2026-01-27T17:22:16Z",
       "side": 1,
       "message": "not sure how this snuck in here.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 21
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8d6c7a1_5feb56f4",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f401a730_758c6073",
       "range": {
         "startLine": 34,
         "startChar": 0,
@@ -278,6 +373,24 @@
       "side": 1,
       "message": "will do.",
       "parentUuid": "d54f8d10_9e0b515f",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "136de969_286e54d2",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2947cdf_fb0e6cac",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -435,6 +548,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16c405fd_eea51add",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "825df89d_41d0ac66",
+      "range": {
+        "startLine": 53,
+        "startChar": 42,
+        "endLine": 53,
+        "endChar": 48
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4c6a7ad_b6e54ae0",
@@ -470,6 +607,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7376de33_0543c331",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "737874a8_548c34f1",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "875a2bf8_2b34fef1",
@@ -501,6 +656,24 @@
       "side": 1,
       "message": "will do.",
       "parentUuid": "875a2bf8_2b34fef1",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6c299dc_7cd5df34",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf7bc267_3e636358",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -552,6 +725,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8348ade3_e18f9117",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c8f56b1_2becf9a6",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa9b0fb4_79ca8318",
@@ -587,6 +784,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2482a25c_ab7cdd60",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9bd1cdd_a2fea606",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "283b7063_2a61d394",
@@ -618,6 +833,23 @@
       "side": 1,
       "message": "It could.  Why do you prefer it there?  I tend to prefer putting logic such as this higher in the stack as opposed to lower, to facilitate potential reuse.  Please un-resolve if there are still concerns.",
       "parentUuid": "283b7063_2a61d394",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09910534_3623a983",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "This is meant to be returned directly.",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -680,6 +912,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65cf0620_79c16626",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7ccf4f5_2d25d658",
+      "range": {
+        "startLine": 97,
+        "startChar": 2,
+        "endLine": 97,
+        "endChar": 13
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d994222f_d3bdeda4",
@@ -727,6 +983,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a15d385a_1644b3ab",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d560db01_632c3bf4",
+      "range": {
+        "startLine": 103,
+        "startChar": 43,
+        "endLine": 103,
+        "endChar": 49
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "79bd7dc3_97672273",
@@ -758,6 +1038,24 @@
       "side": 1,
       "message": "You are correct, I don\u0027t need it if I avoid strerror by using ec.message() as you suggest below.",
       "parentUuid": "79bd7dc3_97672273",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4df5d507_5c2b1e0e",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40158f66_ccb2c279",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -811,6 +1109,24 @@
       "side": 1,
       "message": "\u003e Also, using ec.message() would help us avoid strerror altogether.\n\nNice, will do that.",
       "parentUuid": "a4ce034b_db134923",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6f5dbbe_f0116fcf",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "058cccca_6b67f9f6",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -893,6 +1209,24 @@
       "side": 1,
       "message": "will do.",
       "parentUuid": "843785f5_c2a8529e",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7b67472_b95e4e38",
+        "filename": "dbus/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9d34185_1f0d22ae",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
