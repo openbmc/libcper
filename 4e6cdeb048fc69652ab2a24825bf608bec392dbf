@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b1801db_48e119cd",
+        "filename": "dbus/.clang-tidy",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "There is already a .clang-tidy at the root.  It doesn\u0027t have the c++ checks enabled.  I seem to remember that a lot of common c-idioms get flagged by the c++ checks but I could be mis-remembering.\n\nI\u0027m willing to doing some work here but I think I need a hint as to what it would be.",
+      "parentUuid": "91f27fdb_acdd53ba",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b0c71604_31b5e7a0",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -106,6 +124,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5211d091_cfb701dc",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "\u003e and the bus cannot outlive the app or be accidentally shared.\n\nThat is the intent but I\u0027m not sure how unique_ptr helps with that?  Please unresolve if there is still a concern.",
+      "parentUuid": "407cc72e_03712fed",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26cf6ca2_7e1e49be",
@@ -146,6 +182,71 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbc1c0c1_fa05ba72",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "Open to a better name, but I don\u0027t think file is it because an entry could be a directory...",
+      "parentUuid": "26cf6ca2_7e1e49be",
+      "range": {
+        "startLine": 32,
+        "startChar": 21,
+        "endLine": 32,
+        "endChar": 27
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9004058c_7f500fe7",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "96ad41a4_21582df5",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f401a730_758c6073",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "not sure how this snuck in here.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 21
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d54f8d10_9e0b515f",
@@ -159,6 +260,24 @@
       "writtenOn": "2026-01-22T16:06:52Z",
       "side": 1,
       "message": "std::from_chars here would avoid needing to throw/catch.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2947cdf_fb0e6cac",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "d54f8d10_9e0b515f",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -194,6 +313,24 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "f6097113_b6519545",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d404180_cb064fe5",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "Sorry I\u0027m confused.  We do continue on error; are you saying you\u0027d like to see the continue keyword explicitly?\n\nAs far as logging it goes...I guess the scenario would be that someone wrote a file in the state directory?  Or more likely is a developer is running the application locally and the state directory defaulted to $CWD which has the development source files in it?  Do we really want to log all that?  That seems pointlessly noisy to me.  Please unresolve if there are still concerns.",
+      "parentUuid": "97fa663c_0d1b6fcb",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -276,6 +413,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "825df89d_41d0ac66",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "97ebd524_e3fee149",
+      "range": {
+        "startLine": 53,
+        "startChar": 42,
+        "endLine": 53,
+        "endChar": 48
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f4c6a7ad_b6e54ae0",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -293,6 +454,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "737874a8_548c34f1",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "f4c6a7ad_b6e54ae0",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "875a2bf8_2b34fef1",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -304,6 +483,24 @@
       "writtenOn": "2026-01-22T07:05:48Z",
       "side": 1,
       "message": "Use `std::bit_cast` here? Any specific reason for `reinterpret_cast`?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf7bc267_3e636358",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "875a2bf8_2b34fef1",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -333,6 +530,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4c8f56b1_2becf9a6",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "std::bad_alloc?",
+      "parentUuid": "61deecab_bd5cab23",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa9b0fb4_79ca8318",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -344,6 +565,24 @@
       "writtenOn": "2026-01-22T16:06:52Z",
       "side": 1,
       "message": "nit, need to check against nullptr before you do this.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9bd1cdd_a2fea606",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "fa9b0fb4_79ca8318",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -365,6 +604,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d90a1484_c23fca8b",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "It could.  Why do you prefer it there?  I tend to prefer putting logic such as this higher in the stack as opposed to lower, to facilitate potential reuse.  Please un-resolve if there are still concerns.",
+      "parentUuid": "283b7063_2a61d394",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93e0bdfa_ae36a3fb",
@@ -378,6 +635,47 @@
       "writtenOn": "2026-01-22T16:06:52Z",
       "side": 1,
       "message": "Should this be a full dbus path rather than an index?  I can\u0027t see any use for this other than just immediately using it to log, and if you\u0027re going to do that you should be using the path.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a0b8b53_016aee19",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "There is no path in the API/model to return...\n\nI had modeled it like that initially where storing a CPER created a first class D-Bus interface with a read method, but in the docs repository review you had asked for a post-code like interface so that each cper didn\u0027t have its own dbus object to save on start up introspection costs.\n\n\u003e  I can\u0027t see any use for this other than just immediately using it to log\n\nI don\u0027t understand what you mean by this.  Please unresolve if there are still concerns.",
+      "parentUuid": "93e0bdfa_ae36a3fb",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7ccf4f5_2d25d658",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "no need to return 1 here.",
+      "range": {
+        "startLine": 97,
+        "startChar": 2,
+        "endLine": 97,
+        "endChar": 13
+      },
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -407,6 +705,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d560db01_632c3bf4",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "Sure, will do.",
+      "parentUuid": "d994222f_d3bdeda4",
+      "range": {
+        "startLine": 103,
+        "startChar": 43,
+        "endLine": 103,
+        "endChar": 49
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "79bd7dc3_97672273",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -418,6 +740,24 @@
       "writtenOn": "2026-01-22T07:05:48Z",
       "side": 1,
       "message": "Do we need this clang tidy check?",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40158f66_ccb2c279",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "You are correct, I don\u0027t need it if I avoid strerror by using ec.message() as you suggest below.",
+      "parentUuid": "79bd7dc3_97672273",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -459,6 +799,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "058cccca_6b67f9f6",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "\u003e Also, using ec.message() would help us avoid strerror altogether.\n\nNice, will do that.",
+      "parentUuid": "a4ce034b_db134923",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c5780df0_6ae689e7",
         "filename": "dbus/main.cpp",
         "patchSetId": 2
@@ -470,6 +828,30 @@
       "writtenOn": "2026-01-22T16:06:52Z",
       "side": 1,
       "message": "This should be /logging/cper or something similar, right?",
+      "range": {
+        "startLine": 127,
+        "startChar": 39,
+        "endLine": 127,
+        "endChar": 54
+      },
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e57eae1_b6696eb9",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "Should it?  Why?",
+      "parentUuid": "c5780df0_6ae689e7",
       "range": {
         "startLine": 127,
         "startChar": 39,
@@ -499,6 +881,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f9d34185_1f0d22ae",
+        "filename": "dbus/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "will do.",
+      "parentUuid": "843785f5_c2a8529e",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "febd9f8b_170cf942",
         "filename": "dbus/meson.build",
         "patchSetId": 2
@@ -510,6 +910,24 @@
       "writtenOn": "2026-01-22T16:06:52Z",
       "side": 1,
       "message": "Doesn\u0027t this duplicate line 33?  Both are installing xyz.openbmc_project.CPERRepository1.service",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09396054_f575306e",
+        "filename": "dbus/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "No, the content and destination are different.",
+      "parentUuid": "febd9f8b_170cf942",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -527,6 +945,24 @@
       "writtenOn": "2026-01-22T16:06:52Z",
       "side": 1,
       "message": "If we\u0027re going to run as our own user, don\u0027t we require a lot more XML config?  If this works, rock on, I thought more was required.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a03cce9_3f7ba2b8",
+        "filename": "dbus/systemd/xyz.openbmc_project.CPERRepository1.service.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:22:16Z",
+      "side": 1,
+      "message": "It does work without additional configuration, although I\u0027m not sure if that\u0027s because the callers are running as root or because of https://github.com/openbmc/openbmc/blob/master/meta-phosphor/recipes-phosphor/dbus/dbus-perms/org.openbmc.conf\n\nIf those were to become more restrictive its possible more configuration would be necessary here.  Marked resolved, please unresolve if there are still concerns.",
+      "parentUuid": "6051b8e4_c2d964f8",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
