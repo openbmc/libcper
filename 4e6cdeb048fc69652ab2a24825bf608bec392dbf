@@ -124,6 +124,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be13810e_23eff73a",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26ad7bb2_716948d1",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b0c71604_31b5e7a0",
@@ -850,6 +868,24 @@
       "writtenOn": "2026-01-27T17:40:31Z",
       "side": 1,
       "message": "This is meant to be returned directly.",
+      "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89fd28f9_baef6c91",
+        "filename": "dbus/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2026-01-27T17:40:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09910534_3623a983",
       "revId": "4e6cdeb048fc69652ab2a24825bf608bec392dbf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
