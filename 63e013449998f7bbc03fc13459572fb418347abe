@@ -441,6 +441,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3b43434_d50490ec",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-29T17:36:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e7a1761_f1f44353",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "296376e4_ef34437d",
@@ -629,6 +647,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a54a247_03967f0b",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-29T17:36:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bf82313_b20c1a24",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 2
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "231ca771_0bc1919c",
@@ -725,6 +767,30 @@
       "side": 1,
       "message": "Now handling this earlier to return empty descArray",
       "parentUuid": "b9538bb7_971d4596",
+      "range": {
+        "startLine": 99,
+        "startChar": 3,
+        "endLine": 99,
+        "endChar": 8
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c88155c9_28d9d937",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-29T17:36:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b918cf94_2551b777",
       "range": {
         "startLine": 99,
         "startChar": 3,
@@ -925,6 +991,24 @@
       "side": 1,
       "message": "changed this to instead fail if auxLen less than size of header.",
       "parentUuid": "65051acf_2698d9d0",
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c232af98_67fe7e02",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-29T17:36:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5ae4ab7_d10d332b",
       "revId": "63e013449998f7bbc03fc13459572fb418347abe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
