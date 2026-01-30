@@ -300,6 +300,24 @@
       "parentUuid": "0c423d7a_4f7b091c",
       "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8256c346_52ad3fa7",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-30T15:39:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5995ea9_4844a528",
+      "revId": "7089f74e429bb166747d42faf10bf6d7520b48e0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

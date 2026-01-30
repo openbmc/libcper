@@ -895,6 +895,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b11050d1_5976bc50",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-30T15:39:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e652368_8fb67b77",
+      "range": {
+        "startLine": 109,
+        "startChar": 28,
+        "endLine": 109,
+        "endChar": 48
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "45d908f6_120334f1",
@@ -1132,6 +1156,30 @@
       "side": 1,
       "message": "The spec doesn\u0027t define the type of these fields.",
       "parentUuid": "db5b08cb_95f7703a",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 82
+      },
+      "revId": "63e013449998f7bbc03fc13459572fb418347abe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcc54f1c_a5a07001",
+        "filename": "specification/json/sections/cper-arm-ras.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-01-30T15:39:01Z",
+      "side": 1,
+      "message": "Had a conversation with @jmarinho, this can be integer for now, if a future requirement mandates this to be a string it can be changed as needed.",
+      "parentUuid": "acec412b_cc64a634",
       "range": {
         "startLine": 242,
         "startChar": 0,
