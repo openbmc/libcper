@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "99f8737b_9d47a29e",
+        "filename": "cper-utils.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-02T18:54:58Z",
+      "side": 1,
+      "message": "Can you add a unit test for this please?",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "847c6dda_cd0c0789",
         "filename": "examples/arm-ras.json",
         "patchSetId": 11
@@ -83,6 +100,23 @@
         "endLine": 70,
         "endChar": 23
       },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d9b95f2_9dccf299",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-02T18:54:58Z",
+      "side": 1,
+      "message": "Not clear to me what this means?",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
