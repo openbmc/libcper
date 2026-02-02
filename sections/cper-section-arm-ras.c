@@ -104,13 +104,10 @@ static const char *componentType[] = {
 static void arm_ras_add_fixed_fields(json_object *root,
 				     const EFI_ARM_RAS_NODE *node)
 {
-	json_object_object_add(root, "revision",
-			       json_object_new_uint64(node->Revision));
+	add_uint(root, "revision", node->Revision);
 	add_dict(root, "componentType", node->ComponentType, componentType,
 		 sizeof(componentType) / sizeof(componentType[0]));
-	json_object_object_add(
-		root, "errorSyndromeArrayNumEntries",
-		json_object_new_uint64(node->ErrorSyndromeArrayNumEntries));
+	add_uint(root, "errorSyndromeArrayNumEntries", node->ErrorSyndromeArrayNumEntries);
 
 	add_dict(root, "ipInstanceFormat", node->IPInstanceFormat,
 		 ipInstanceFormat,
@@ -136,8 +133,7 @@ static void arm_ras_add_fixed_fields(json_object *root,
 			node->IPInstance.localAddressIdentifier.BaseAddress);
 		break;
 	case 3:
-		json_object_object_add(ipInstance, "socSpecificIpIdentifier",
-				       json_object_new_string("<OpaqueData>"));
+		add_string(ipInstance, "socSpecificIpIdentifier", "<OpaqueData>");
 		break;
 	}
 	json_object_object_add(root, "ipInstance", ipInstance);
@@ -192,16 +188,10 @@ static json_object *arm_ras_parse_descriptors(const UINT8 *section,
 		EFI_ARM_RAS_ERROR_RECORD_DESCRIPTOR d;
 		memcpy(&d, cur, sizeof(d));
 		json_object *desc = json_object_new_object();
-		json_object_object_add(
-			desc, "errorRecordIndex",
-			json_object_new_uint64(d.ErrorRecordIndex));
-		json_object_object_add(
-			desc, "rasExtensionRevisionField",
-			json_object_new_uint64((d.RasExtensionRevision >> 4) &
-					       0x0F));
-		json_object_object_add(
-			desc, "rasExtensionArchVersion",
-			json_object_new_uint64(d.RasExtensionRevision & 0x0F));
+		add_uint(desc, "errorRecordIndex", d.ErrorRecordIndex);
+		add_uint(desc, "rasExtensionRevisionField", (d.RasExtensionRevision >> 4) &
+					       0x0F);
+		add_uint(desc, "rasExtensionArchVersion", d.RasExtensionRevision & 0x0F);
 		add_int_hex_64(desc, "errorRecordFeatureRegister", d.ERR_FR);
 		add_int_hex_64(desc, "errorRecordControlRegister", d.ERR_CTLR);
 		add_int_hex_64(desc, "errorRecordPrimaryStatusRegister",
@@ -266,8 +256,7 @@ arm_ras_aux_emit_header_fields(const EFI_ARM_RAS_AUX_DATA_HEADER *auxHdr)
 	 * reserved1 (omitted).
 	 */
 	json_object *auxStructured = json_object_new_object();
-	json_object_object_add(auxStructured, "version",
-			       json_object_new_uint64(auxHdr->Version));
+	add_uint(auxStructured, "version", auxHdr->Version);
 	return auxStructured;
 }
 
@@ -333,10 +322,7 @@ arm_ras_aux_parse_contexts(json_object *auxStructured, const UINT8 *aux_ptr,
 		json_object_object_add(ctxObjInstance, "flags", flags);
 
 		if (ctx->AddressSpaceIdentifierScope == 1) {
-			json_object_object_add(
-				ctxObjInstance, "addressSpaceIdentifier",
-				json_object_new_uint64(
-					(UINT64)ctx->AddressSpaceIdentifier));
+			add_uint(ctxObjInstance, "addressSpaceIdentifier", (UINT64)ctx->AddressSpaceIdentifier);
 		}
 
 		json_object *regs = json_object_new_array();
@@ -401,8 +387,7 @@ static void arm_ras_aux_parse_kvps(json_object *auxStructured,
 
 		if (is_mpam(&key)) {
 			UINT16 partId = (UINT16)(kvEntry->Value & 0xFFFF);
-			json_object_object_add(kv, "mpamPartId",
-					       json_object_new_uint64(partId));
+			add_uint(kv, "mpamPartId", partId);
 		} else {
 			add_int_hex_64(kv, "value", kvEntry->Value);
 		}

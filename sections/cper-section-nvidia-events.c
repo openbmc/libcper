@@ -453,17 +453,11 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	json_object_object_add(
 		event_info_ir, "Architecture",
 		json_object_new_int64(cpu_event_info->Architecture));
-	json_object_object_add(event_info_ir, "Ecid1",
-			       json_object_new_uint64(cpu_event_info->Ecid[0]));
-	json_object_object_add(event_info_ir, "Ecid2",
-			       json_object_new_uint64(cpu_event_info->Ecid[1]));
-	json_object_object_add(event_info_ir, "Ecid3",
-			       json_object_new_uint64(cpu_event_info->Ecid[2]));
-	json_object_object_add(event_info_ir, "Ecid4",
-			       json_object_new_uint64(cpu_event_info->Ecid[3]));
-	json_object_object_add(
-		event_info_ir, "InstanceBase",
-		json_object_new_uint64(cpu_event_info->InstanceBase));
+	add_uint(event_info_ir, "Ecid1", cpu_event_info->Ecid[0]);
+	add_uint(event_info_ir, "Ecid2", cpu_event_info->Ecid[1]);
+	add_uint(event_info_ir, "Ecid3", cpu_event_info->Ecid[2]);
+	add_uint(event_info_ir, "Ecid4", cpu_event_info->Ecid[3]);
+	add_uint(event_info_ir, "InstanceBase", cpu_event_info->InstanceBase);
 }
 // Converts CPU-specific event info from JSON IR to CPER binary format.
 // Writes socket number, architecture, ECID array, and instance base.
@@ -547,9 +541,7 @@ static void parse_gpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 		event_info_ir, "SourceSubPartition",
 		json_object_new_int64(
 			gpu_event_info->SourceSubPartition)); // UINT16
-	json_object_object_add(
-		event_info_ir, "Pdi",
-		json_object_new_uint64(gpu_event_info->Pdi)); // UINT64
+	add_uint(event_info_ir, "Pdi", gpu_event_info->Pdi); // UINT64
 }
 
 // Converts GPU-specific event info from JSON IR to CPER binary format.
@@ -630,26 +622,15 @@ static void parse_gpu_ctx_metadata_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 		(EFI_NVIDIA_GPU_CTX_METADATA *)ctx->Data;
 
 	// String fields - use json_object_new_string to stop at first null (no null padding in JSON)
-	json_object_object_add(output_data_ir, "deviceName",
-			       json_object_new_string(metadata->DeviceName));
-	json_object_object_add(
-		output_data_ir, "firmwareVersion",
-		json_object_new_string(metadata->FirmwareVersion));
-	json_object_object_add(
-		output_data_ir, "pfDriverMicrocodeVersion",
-		json_object_new_string(metadata->PfDriverMicrocodeVersion));
-	json_object_object_add(
-		output_data_ir, "pfDriverVersion",
-		json_object_new_string(metadata->PfDriverVersion));
-	json_object_object_add(
-		output_data_ir, "vfDriverVersion",
-		json_object_new_string(metadata->VfDriverVersion));
+	add_string(output_data_ir, "deviceName", metadata->DeviceName);
+	add_string(output_data_ir, "firmwareVersion", metadata->FirmwareVersion);
+	add_string(output_data_ir, "pfDriverMicrocodeVersion", metadata->PfDriverMicrocodeVersion);
+	add_string(output_data_ir, "pfDriverVersion", metadata->PfDriverVersion);
+	add_string(output_data_ir, "vfDriverVersion", metadata->VfDriverVersion);
 
 	// Numeric fields
-	json_object_object_add(output_data_ir, "configuration",
-			       json_object_new_uint64(metadata->Configuration));
-	json_object_object_add(output_data_ir, "pdi",
-			       json_object_new_uint64(metadata->Pdi));
+	add_uint(output_data_ir, "configuration", metadata->Configuration);
+	add_uint(output_data_ir, "pdi", metadata->Pdi);
 	json_object_object_add(output_data_ir, "architectureId",
 			       json_object_new_int64(metadata->ArchitectureId));
 	json_object_object_add(
@@ -681,24 +662,12 @@ static void parse_gpu_ctx_metadata_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 		json_object_object_add(
 			pci_info, "subsystemId",
 			json_object_new_int64(metadata->PciInfo.SubsystemId));
-		json_object_object_add(
-			pci_info, "bar0Start",
-			json_object_new_uint64(metadata->PciInfo.Bar0Start));
-		json_object_object_add(
-			pci_info, "bar0Size",
-			json_object_new_uint64(metadata->PciInfo.Bar0Size));
-		json_object_object_add(
-			pci_info, "bar1Start",
-			json_object_new_uint64(metadata->PciInfo.Bar1Start));
-		json_object_object_add(
-			pci_info, "bar1Size",
-			json_object_new_uint64(metadata->PciInfo.Bar1Size));
-		json_object_object_add(
-			pci_info, "bar2Start",
-			json_object_new_uint64(metadata->PciInfo.Bar2Start));
-		json_object_object_add(
-			pci_info, "bar2Size",
-			json_object_new_uint64(metadata->PciInfo.Bar2Size));
+		add_uint(pci_info, "bar0Start", metadata->PciInfo.Bar0Start);
+		add_uint(pci_info, "bar0Size", metadata->PciInfo.Bar0Size);
+		add_uint(pci_info, "bar1Start", metadata->PciInfo.Bar1Start);
+		add_uint(pci_info, "bar1Size", metadata->PciInfo.Bar1Size);
+		add_uint(pci_info, "bar2Start", metadata->PciInfo.Bar2Start);
+		add_uint(pci_info, "bar2Size", metadata->PciInfo.Bar2Size);
 		json_object_object_add(output_data_ir, "pciInfo", pci_info);
 	}
 }
@@ -848,8 +817,7 @@ parse_gpu_ctx_legacy_xid_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	json_object_object_add(output_data_ir, "xidCode",
 			       json_object_new_int64(xid->XidCode));
 	// Use json_object_new_string to stop at first null terminator (no null padding in JSON)
-	json_object_object_add(output_data_ir, "message",
-			       json_object_new_string(xid->Message));
+	add_string(output_data_ir, "message", xid->Message);
 }
 
 // Converts GPU Event Legacy Xid from JSON IR to binary.
@@ -1081,10 +1049,8 @@ static void parse_common_ctx_type1_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type1++) {
 		json_object *kv = NULL;
 		kv = json_object_new_object();
-		json_object_object_add(kv, "key64",
-				       json_object_new_uint64(data_type1->Key));
-		json_object_object_add(
-			kv, "val64", json_object_new_uint64(data_type1->Value));
+		add_uint(kv, "key64", data_type1->Key);
+		add_uint(kv, "val64", data_type1->Value);
 
 		json_object_array_add(kv64arr, kv);
 	}
@@ -1185,10 +1151,8 @@ static void parse_common_ctx_type2_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type2++) {
 		json_object *kv = NULL;
 		kv = json_object_new_object();
-		json_object_object_add(kv, "key32",
-				       json_object_new_uint64(data_type2->Key));
-		json_object_object_add(
-			kv, "val32", json_object_new_uint64(data_type2->Value));
+		add_uint(kv, "key32", data_type2->Key);
+		add_uint(kv, "val32", data_type2->Value);
 
 		json_object_array_add(kv32arr, kv);
 	}
@@ -1289,8 +1253,7 @@ static void parse_common_ctx_type3_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type3++) {
 		json_object *v = NULL;
 		v = json_object_new_object();
-		json_object_object_add(
-			v, "val64", json_object_new_uint64(data_type3->Value));
+		add_uint(v, "val64", data_type3->Value);
 
 		json_object_array_add(val64arr, v);
 	}
@@ -1388,8 +1351,7 @@ static void parse_common_ctx_type4_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type4++) {
 		json_object *v = NULL;
 		v = json_object_new_object();
-		json_object_object_add(
-			v, "val32", json_object_new_uint64(data_type4->Value));
+		add_uint(v, "val32", data_type4->Value);
 
 		json_object_array_add(val32arr, v);
 	}
@@ -1541,9 +1503,7 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 		event_header_ir, "subtype",
 		json_object_new_int64(event_header->EventSubtype));
 	if (event_header->EventLinkId != 0) {
-		json_object_object_add(
-			event_header_ir, "linkId",
-			json_object_new_uint64(event_header->EventLinkId));
+		add_uint(event_header_ir, "linkId", event_header->EventLinkId);
 	}
 
 	// Parse event info structure
