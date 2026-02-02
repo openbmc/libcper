@@ -69,7 +69,12 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 
 void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid);
 
-void add_int(json_object *register_ir, const char *field_name, int value);
+void add_string(json_object *register_ir, const char *field_name,
+		const char *value);
+void add_string_len(json_object *register_ir, const char *field_name,
+		    const char *value, int len);
+void add_int(json_object *register_ir, const char *field_name, int64_t value);
+void add_uint(json_object *register_ir, const char *field_name, uint64_t value);
 
 void add_int_hex(json_object *register_ir, const char *field_name,
 		 UINT64 value);
