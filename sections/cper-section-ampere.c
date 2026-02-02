@@ -35,12 +35,9 @@ json_object *cper_section_ampere_to_ir(const UINT8 *section, UINT32 size,
 	EFI_AMPERE_ERROR_DATA *record = (EFI_AMPERE_ERROR_DATA *)section;
 	json_object *section_ir = json_object_new_object();
 
-	json_object_object_add(section_ir, "typeId",
-			       json_object_new_int(record->TypeId));
-	json_object_object_add(section_ir, "subTypeId",
-			       json_object_new_int(record->SubtypeId));
-	json_object_object_add(section_ir, "instanceId",
-			       json_object_new_int(record->InstanceId));
+	add_int(section_ir, "typeId", record->TypeId);
+	add_int(section_ir, "subTypeId", record->SubtypeId);
+	add_int(section_ir, "instanceId", record->InstanceId);
 
 	return section_ir;
 }

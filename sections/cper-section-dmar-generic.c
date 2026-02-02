@@ -45,12 +45,8 @@ json_object *cper_section_dmar_generic_to_ir(const UINT8 *section, UINT32 size,
 	json_object *section_ir = json_object_new_object();
 
 	//Requester ID, segment.
-	json_object_object_add(
-		section_ir, "requesterID",
-		json_object_new_int(firmware_error->RequesterId));
-	json_object_object_add(
-		section_ir, "segmentNumber",
-		json_object_new_int(firmware_error->SegmentNumber));
+	add_int(section_ir, "requesterID", firmware_error->RequesterId);
+	add_int(section_ir, "segmentNumber", firmware_error->SegmentNumber);
 
 	//Fault reason.
 	json_object *fault_reason = integer_to_readable_pair_with_desc(
@@ -82,9 +78,7 @@ json_object *cper_section_dmar_generic_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(section_ir, "architectureType", arch_type);
 
 	//Device address.
-	json_object_object_add(
-		section_ir, "deviceAddress",
-		json_object_new_uint64(firmware_error->DeviceAddr));
+	add_uint(section_ir, "deviceAddress", firmware_error->DeviceAddr);
 
 	return section_ir;
 }
