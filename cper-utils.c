@@ -86,8 +86,7 @@ json_object *uniform_struct64_to_ir(UINT64 *start, int len, const char *names[])
 
 	UINT64 *cur = start;
 	for (int i = 0; i < len; i++) {
-		json_object_object_add(result, names[i],
-				       json_object_new_uint64(*cur));
+		add_uint(result, names[i], *cur);
 		cur++;
 	}
 
@@ -103,8 +102,7 @@ json_object *uniform_struct_to_ir(UINT32 *start, int len, const char *names[])
 	for (int i = 0; i < len; i++) {
 		UINT32 value;
 		memcpy(&value, cur, sizeof(UINT32));
-		json_object_object_add(result, names[i],
-				       json_object_new_uint64(value));
+		add_uint(result, names[i], value);
 		cur++;
 	}
 
@@ -141,7 +139,7 @@ json_object *integer_to_readable_pair(UINT64 value, int len, const int keys[],
 				      const char *default_value)
 {
 	json_object *result = json_object_new_object();
-	json_object_object_add(result, "value", json_object_new_uint64(value));
+	add_uint(result, "value", value);
 
 	//Search for human readable name, add.
 	const char *name = default_value;
@@ -163,7 +161,7 @@ json_object *integer_to_readable_pair_with_desc(int value, int len,
 						const char *default_value)
 {
 	json_object *result = json_object_new_object();
-	json_object_object_add(result, "value", json_object_new_int(value));
+	add_int(result, "value", value);
 
 	//Search for human readable name, add.
 	const char *name = default_value;
@@ -308,10 +306,8 @@ json_object *uint64_array_to_ir_array(UINT64 *array, int len)
 json_object *revision_to_ir(UINT16 revision)
 {
 	json_object *revision_info = json_object_new_object();
-	json_object_object_add(revision_info, "major",
-			       json_object_new_int(revision >> 8));
-	json_object_object_add(revision_info, "minor",
-			       json_object_new_int(revision & 0xFF));
+	add_int(revision_info, "major", revision >> 8);
+	add_int(revision_info, "minor", revision & 0xFF);
 	return revision_info;
 }
 
@@ -508,10 +504,16 @@ void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid)
 					   sizeof(platform_string) - 1));
 }
 
-void add_int(json_object *register_ir, const char *field_name, int value)
+void add_uint(json_object *register_ir, const char *field_name, uint64_t value)
 {
 	json_object_object_add(register_ir, field_name,
 			       json_object_new_uint64(value));
+}
+
+void add_int(json_object *register_ir, const char *field_name, int64_t value)
+{
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_int(value));
 }
 
 static void add_int_hex_common(json_object *register_ir, const char *field_name,
@@ -570,7 +572,7 @@ void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
 {
 	json_object *field_ir = json_object_new_object();
 	json_object_object_add(register_ir, field_name, field_ir);
-	json_object_object_add(field_ir, "raw", json_object_new_uint64(value));
+	add_uint(field_ir, "raw", value);
 
 	if (dict != NULL) {
 		if (value < dict_size) {

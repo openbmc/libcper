@@ -49,17 +49,11 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 	json_object *bank = json_object_new_object();
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
 		//Entire bank address mode.
-		json_object_object_add(
-			bank, "value",
-			json_object_new_uint64(memory_error->Bank));
+		add_uint(bank, "value", memory_error->Bank);
 	} else {
 		//Address/group address mode.
-		json_object_object_add(
-			bank, "address",
-			json_object_new_uint64(memory_error->Bank & 0xFF));
-		json_object_object_add(
-			bank, "group",
-			json_object_new_uint64(memory_error->Bank >> 8));
+		add_uint(bank, "address", memory_error->Bank & 0xFF);
+		add_uint(bank, "group", memory_error->Bank >> 8);
 	}
 	json_object_object_add(section_ir, "bank", bank);
 
@@ -101,30 +95,22 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 			json_object_new_boolean((memory_error->Extended >> 1) &
 						0x1));
 		if (isvalid_prop_to_ir(&ui64Type, 21)) {
-			json_object_object_add(
-				extended, "chipIdentification",
-				json_object_new_int(memory_error->Extended >>
-						    5));
+			add_int(extended, "chipIdentification", memory_error->Extended >>
+						    5);
 		}
 		json_object_object_add(section_ir, "extended", extended);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 16)) {
-		json_object_object_add(
-			section_ir, "cardSmbiosHandle",
-			json_object_new_uint64(memory_error->CardHandle));
+		add_uint(section_ir, "cardSmbiosHandle", memory_error->CardHandle);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 17)) {
-		json_object_object_add(
-			section_ir, "moduleSmbiosHandle",
-			json_object_new_uint64(memory_error->ModuleHandle));
+		add_uint(section_ir, "moduleSmbiosHandle", memory_error->ModuleHandle);
 	}
 
 	//Miscellaneous numeric fields.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
-		json_object_object_add(
-			section_ir, "physicalAddress",
-			json_object_new_uint64(memory_error->PhysicalAddress));
+		add_uint(section_ir, "physicalAddress", memory_error->PhysicalAddress);
 
 		char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
 		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
@@ -157,15 +143,10 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 		}
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			section_ir, "physicalAddressMask",
-			json_object_new_uint64(
-				memory_error->PhysicalAddressMask));
+		add_uint(section_ir, "physicalAddressMask", memory_error->PhysicalAddressMask);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			section_ir, "node",
-			json_object_new_uint64(memory_error->Node));
+		add_uint(section_ir, "node", memory_error->Node);
 		char node_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
 		outstr_len = snprintf(node_desc,
 				      EFI_ERROR_DESCRIPTION_STRING_LEN,
@@ -190,54 +171,34 @@ json_object *cper_section_platform_memory_to_ir(const UINT8 *section,
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			section_ir, "card",
-			json_object_new_uint64(memory_error->Card));
+		add_uint(section_ir, "card", memory_error->Card);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
-		json_object_object_add(
-			section_ir, "moduleRank",
-			json_object_new_uint64(memory_error->ModuleRank));
+		add_uint(section_ir, "moduleRank", memory_error->ModuleRank);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
-		json_object_object_add(
-			section_ir, "device",
-			json_object_new_uint64(memory_error->Device));
+		add_uint(section_ir, "device", memory_error->Device);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 8)) {
-		json_object_object_add(
-			section_ir, "row",
-			json_object_new_uint64(memory_error->Row));
+		add_uint(section_ir, "row", memory_error->Row);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 9)) {
-		json_object_object_add(
-			section_ir, "column",
-			json_object_new_uint64(memory_error->Column));
+		add_uint(section_ir, "column", memory_error->Column);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 10)) {
-		json_object_object_add(
-			section_ir, "bitPosition",
-			json_object_new_uint64(memory_error->BitPosition));
+		add_uint(section_ir, "bitPosition", memory_error->BitPosition);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 11)) {
-		json_object_object_add(
-			section_ir, "requestorID",
-			json_object_new_uint64(memory_error->RequestorId));
+		add_uint(section_ir, "requestorID", memory_error->RequestorId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 12)) {
-		json_object_object_add(
-			section_ir, "responderID",
-			json_object_new_uint64(memory_error->ResponderId));
+		add_uint(section_ir, "responderID", memory_error->ResponderId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 13)) {
-		json_object_object_add(
-			section_ir, "targetID",
-			json_object_new_uint64(memory_error->TargetId));
+		add_uint(section_ir, "targetID", memory_error->TargetId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 15)) {
-		json_object_object_add(
-			section_ir, "rankNumber",
-			json_object_new_uint64(memory_error->RankNum));
+		add_uint(section_ir, "rankNumber", memory_error->RankNum);
 	}
 
 	return section_ir;
@@ -280,17 +241,11 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 	json_object *bank = json_object_new_object();
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
 		//Entire bank address mode.
-		json_object_object_add(
-			bank, "value",
-			json_object_new_uint64(memory_error->Bank));
+		add_uint(bank, "value", memory_error->Bank);
 	} else {
 		//Address/group address mode.
-		json_object_object_add(
-			bank, "address",
-			json_object_new_uint64(memory_error->Bank & 0xFF));
-		json_object_object_add(
-			bank, "group",
-			json_object_new_uint64(memory_error->Bank >> 8));
+		add_uint(bank, "address", memory_error->Bank & 0xFF);
+		add_uint(bank, "group", memory_error->Bank >> 8);
 	}
 	json_object_object_add(section_ir, "bank", bank);
 
@@ -324,9 +279,7 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 	//Status.
 	if (isvalid_prop_to_ir(&ui64Type, 14)) {
 		json_object *status = json_object_new_object();
-		json_object_object_add(
-			status, "value",
-			json_object_new_int(memory_error->Status));
+		add_int(status, "value", memory_error->Status);
 		json_object_object_add(
 			status, "state",
 			json_object_new_string((memory_error->Status & 0x1) ==
@@ -338,9 +291,7 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 
 	//Miscellaneous numeric fields.
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
-		json_object_object_add(
-			section_ir, "physicalAddress",
-			json_object_new_uint64(memory_error->PhysicalAddress));
+		add_uint(section_ir, "physicalAddress", memory_error->PhysicalAddress);
 		char physical_address_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
 		outstr_len = snprintf(physical_address_desc,
 				      EFI_ERROR_DESCRIPTION_STRING_LEN,
@@ -374,15 +325,10 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 			       json_object_new_string(hexstring_buf));
 
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			section_ir, "physicalAddressMask",
-			json_object_new_uint64(
-				memory_error->PhysicalAddressMask));
+		add_uint(section_ir, "physicalAddressMask", memory_error->PhysicalAddressMask);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			section_ir, "node",
-			json_object_new_uint64(memory_error->Node));
+		add_uint(section_ir, "node", memory_error->Node);
 		char node_desc[EFI_ERROR_DESCRIPTION_STRING_LEN];
 		outstr_len = snprintf(node_desc,
 				      EFI_ERROR_DESCRIPTION_STRING_LEN,
@@ -406,69 +352,43 @@ json_object *cper_section_platform_memory2_to_ir(const UINT8 *section,
 		}
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			section_ir, "card",
-			json_object_new_uint64(memory_error->Card));
+		add_uint(section_ir, "card", memory_error->Card);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
-		json_object_object_add(
-			section_ir, "module",
-			json_object_new_uint64(memory_error->Module));
+		add_uint(section_ir, "module", memory_error->Module);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
-		json_object_object_add(
-			section_ir, "device",
-			json_object_new_uint64(memory_error->Device));
+		add_uint(section_ir, "device", memory_error->Device);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 8)) {
-		json_object_object_add(
-			section_ir, "row",
-			json_object_new_uint64(memory_error->Row));
+		add_uint(section_ir, "row", memory_error->Row);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 9)) {
-		json_object_object_add(
-			section_ir, "column",
-			json_object_new_uint64(memory_error->Column));
+		add_uint(section_ir, "column", memory_error->Column);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 10)) {
-		json_object_object_add(
-			section_ir, "rank",
-			json_object_new_uint64(memory_error->Rank));
+		add_uint(section_ir, "rank", memory_error->Rank);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 11)) {
-		json_object_object_add(
-			section_ir, "bitPosition",
-			json_object_new_uint64(memory_error->BitPosition));
+		add_uint(section_ir, "bitPosition", memory_error->BitPosition);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 12)) {
-		json_object_object_add(
-			section_ir, "chipID",
-			json_object_new_uint64(memory_error->ChipId));
+		add_uint(section_ir, "chipID", memory_error->ChipId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 15)) {
-		json_object_object_add(
-			section_ir, "requestorID",
-			json_object_new_uint64(memory_error->RequestorId));
+		add_uint(section_ir, "requestorID", memory_error->RequestorId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 16)) {
-		json_object_object_add(
-			section_ir, "responderID",
-			json_object_new_uint64(memory_error->ResponderId));
+		add_uint(section_ir, "responderID", memory_error->ResponderId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 17)) {
-		json_object_object_add(
-			section_ir, "targetID",
-			json_object_new_uint64(memory_error->TargetId));
+		add_uint(section_ir, "targetID", memory_error->TargetId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 18)) {
-		json_object_object_add(
-			section_ir, "cardSmbiosHandle",
-			json_object_new_uint64(memory_error->CardHandle));
+		add_uint(section_ir, "cardSmbiosHandle", memory_error->CardHandle);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 19)) {
-		json_object_object_add(
-			section_ir, "moduleSmbiosHandle",
-			json_object_new_uint64(memory_error->ModuleHandle));
+		add_uint(section_ir, "moduleSmbiosHandle", memory_error->ModuleHandle);
 	}
 
 	return section_ir;

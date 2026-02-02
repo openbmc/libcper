@@ -50,36 +50,23 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
 	for (int i = 0; i < 6; i++) {
 		oem_id |= (UINT64)vtd_error->OemId[i] << (i * 8);
 	}
-	json_object_object_add(section_ir, "version",
-			       json_object_new_int(vtd_error->Version));
-	json_object_object_add(section_ir, "revision",
-			       json_object_new_int(vtd_error->Revision));
-	json_object_object_add(section_ir, "oemID",
-			       json_object_new_uint64(oem_id));
+	add_int(section_ir, "version", vtd_error->Version);
+	add_int(section_ir, "revision", vtd_error->Revision);
+	add_uint(section_ir, "oemID", oem_id);
 
 	//Registers.
-	json_object_object_add(section_ir, "capabilityRegister",
-			       json_object_new_uint64(vtd_error->Capability));
-	json_object_object_add(section_ir, "extendedCapabilityRegister",
-			       json_object_new_uint64(vtd_error->CapabilityEx));
-	json_object_object_add(
-		section_ir, "globalCommandRegister",
-		json_object_new_uint64(vtd_error->GlobalCommand));
-	json_object_object_add(section_ir, "globalStatusRegister",
-			       json_object_new_uint64(vtd_error->GlobalStatus));
-	json_object_object_add(section_ir, "faultStatusRegister",
-			       json_object_new_uint64(vtd_error->FaultStatus));
+	add_uint(section_ir, "capabilityRegister", vtd_error->Capability);
+	add_uint(section_ir, "extendedCapabilityRegister", vtd_error->CapabilityEx);
+	add_uint(section_ir, "globalCommandRegister", vtd_error->GlobalCommand);
+	add_uint(section_ir, "globalStatusRegister", vtd_error->GlobalStatus);
+	add_uint(section_ir, "faultStatusRegister", vtd_error->FaultStatus);
 
 	//Fault record basic fields.
 	json_object *fault_record_ir = json_object_new_object();
 	EFI_VTD_FAULT_RECORD *fault_record =
 		(EFI_VTD_FAULT_RECORD *)vtd_error->FaultRecord;
-	json_object_object_add(
-		fault_record_ir, "faultInformation",
-		json_object_new_uint64(fault_record->FaultInformation));
-	json_object_object_add(
-		fault_record_ir, "sourceIdentifier",
-		json_object_new_uint64(fault_record->SourceIdentifier));
+	add_uint(fault_record_ir, "faultInformation", fault_record->FaultInformation);
+	add_uint(fault_record_ir, "sourceIdentifier", fault_record->SourceIdentifier);
 	json_object_object_add(
 		fault_record_ir, "privelegeModeRequested",
 		json_object_new_boolean(fault_record->PrivelegeModeRequested));
@@ -90,15 +77,9 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(
 		fault_record_ir, "pasidPresent",
 		json_object_new_boolean(fault_record->PasidPresent));
-	json_object_object_add(
-		fault_record_ir, "faultReason",
-		json_object_new_uint64(fault_record->FaultReason));
-	json_object_object_add(
-		fault_record_ir, "pasidValue",
-		json_object_new_uint64(fault_record->PasidValue));
-	json_object_object_add(
-		fault_record_ir, "addressType",
-		json_object_new_uint64(fault_record->AddressType));
+	add_uint(fault_record_ir, "faultReason", fault_record->FaultReason);
+	add_uint(fault_record_ir, "pasidValue", fault_record->PasidValue);
+	add_uint(fault_record_ir, "addressType", fault_record->AddressType);
 
 	//Fault record type.
 	json_object *fault_record_type = integer_to_readable_pair(
@@ -131,18 +112,12 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
 	}
 
 	//PTE entry for all page levels.
-	json_object_object_add(section_ir, "pageTableEntry_Level6",
-			       json_object_new_uint64(vtd_error->PteL6));
-	json_object_object_add(section_ir, "pageTableEntry_Level5",
-			       json_object_new_uint64(vtd_error->PteL5));
-	json_object_object_add(section_ir, "pageTableEntry_Level4",
-			       json_object_new_uint64(vtd_error->PteL4));
-	json_object_object_add(section_ir, "pageTableEntry_Level3",
-			       json_object_new_uint64(vtd_error->PteL3));
-	json_object_object_add(section_ir, "pageTableEntry_Level2",
-			       json_object_new_uint64(vtd_error->PteL2));
-	json_object_object_add(section_ir, "pageTableEntry_Level1",
-			       json_object_new_uint64(vtd_error->PteL1));
+	add_uint(section_ir, "pageTableEntry_Level6", vtd_error->PteL6);
+	add_uint(section_ir, "pageTableEntry_Level5", vtd_error->PteL5);
+	add_uint(section_ir, "pageTableEntry_Level4", vtd_error->PteL4);
+	add_uint(section_ir, "pageTableEntry_Level3", vtd_error->PteL3);
+	add_uint(section_ir, "pageTableEntry_Level2", vtd_error->PteL2);
+	add_uint(section_ir, "pageTableEntry_Level1", vtd_error->PteL1);
 
 	return section_ir;
 }

@@ -85,19 +85,14 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 				     .value.ui64 = record->ValidFields };
 
 	//Number of error info and context info structures, and length.
-	json_object_object_add(section_ir, "errorInfoNum",
-			       json_object_new_int(record->ErrInfoNum));
-	json_object_object_add(section_ir, "contextInfoNum",
-			       json_object_new_int(record->ContextInfoNum));
-	json_object_object_add(section_ir, "sectionLength",
-			       json_object_new_uint64(record->SectionLength));
+	add_int(section_ir, "errorInfoNum", record->ErrInfoNum);
+	add_int(section_ir, "contextInfoNum", record->ContextInfoNum);
+	add_uint(section_ir, "sectionLength", record->SectionLength);
 
 	//Error affinity.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
 		json_object *error_affinity = json_object_new_object();
-		json_object_object_add(
-			error_affinity, "value",
-			json_object_new_int(record->ErrorAffinityLevel));
+		add_int(error_affinity, "value", record->ErrorAffinityLevel);
 		json_object_object_add(
 			error_affinity, "type",
 			json_object_new_string(record->ErrorAffinityLevel < 4 ?
@@ -111,13 +106,11 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
 		uint64_t mpidr_eli1 = record->MPIDR_EL1;
 		uint64_t sock;
-		json_object_object_add(section_ir, "mpidrEl1",
-				       json_object_new_uint64(mpidr_eli1));
+		add_uint(section_ir, "mpidrEl1", mpidr_eli1);
 
 		//Arm Processor socket info dependes on mpidr_eli1
 		sock = (mpidr_eli1 & ARM_SOCK_MASK) >> 32;
-		json_object_object_add(section_ir, "affinity3",
-				       json_object_new_uint64(sock));
+		add_uint(section_ir, "affinity3", sock);
 		char *node_desc_str =
 			calloc(1, EFI_ERROR_DESCRIPTION_STRING_LEN);
 		outstr_len = snprintf(node_desc_str,
@@ -144,8 +137,7 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		free(node_desc_str);
 	}
 
-	json_object_object_add(section_ir, "midrEl1",
-			       json_object_new_uint64(record->MIDR_EL1));
+	add_uint(section_ir, "midrEl1", record->MIDR_EL1);
 
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		//Whether the processor is running, and the state of it if so.
@@ -157,9 +149,7 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 		//Bit 32 of running state is on, so PSCI state information is included.
 		//This can't be made human readable, as it is unknown whether this will be the pre-PSCI 1.0 format
 		//or the newer Extended StateID format.
-		json_object_object_add(
-			section_ir, "psciState",
-			json_object_new_uint64(record->PsciState));
+		add_uint(section_ir, "psciState", record->PsciState);
 	}
 
 	//Processor error structures.
@@ -328,10 +318,8 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 	int outstr_len = 0;
 
 	//Version, length.
-	json_object_object_add(error_info_ir, "version",
-			       json_object_new_int(error_info->Version));
-	json_object_object_add(error_info_ir, "length",
-			       json_object_new_int(error_info->Length));
+	add_int(error_info_ir, "version", error_info->Version);
+	add_int(error_info_ir, "length", error_info->Length);
 
 	//Validation bitfield.
 	ValidationTypes ui16Type = { UINT_16T,
@@ -346,9 +334,7 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 	//Multiple error count.
 	if (isvalid_prop_to_ir(&ui16Type, 0)) {
 		json_object *multiple_error = json_object_new_object();
-		json_object_object_add(
-			multiple_error, "value",
-			json_object_new_int(error_info->MultipleError));
+		add_int(multiple_error, "value", error_info->MultipleError);
 		json_object_object_add(
 			multiple_error, "type",
 			json_object_new_string(error_info->MultipleError < 1 ?
@@ -461,10 +447,7 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 					fault_address_desc);
 			}
 		}
-		json_object_object_add(
-			error_info_ir, "virtualFaultAddress",
-			json_object_new_uint64(
-				error_info->VirtualFaultAddress));
+		add_uint(error_info_ir, "virtualFaultAddress", error_info->VirtualFaultAddress);
 	}
 	if (isvalid_prop_to_ir(&ui16Type, 4)) {
 		outstr_len = snprintf(fault_address_desc,
@@ -490,10 +473,7 @@ cper_arm_error_info_to_ir(EFI_ARM_ERROR_INFORMATION_ENTRY *error_info,
 					fault_address_desc);
 			}
 		}
-		json_object_object_add(
-			error_info_ir, "physicalFaultAddress",
-			json_object_new_uint64(
-				error_info->PhysicalFaultAddress));
+		add_uint(error_info_ir, "physicalFaultAddress", error_info->PhysicalFaultAddress);
 	}
 
 	free(fault_address_desc);
@@ -559,9 +539,7 @@ cper_arm_cache_tlb_error_to_ir(EFI_ARM_CACHE_ERROR_STRUCTURE *cache_tlb_error,
 
 	//Miscellaneous remaining fields.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			cache_tlb_error_ir, "level",
-			json_object_new_int(cache_tlb_error->Level));
+		add_int(cache_tlb_error_ir, "level", cache_tlb_error->Level);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
 		json_object_object_add(
@@ -625,8 +603,7 @@ json_object *cper_arm_bus_error_to_ir(EFI_ARM_BUS_ERROR_STRUCTURE *bus_error)
 
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		//Affinity level of bus error, + miscellaneous fields.
-		json_object_object_add(bus_error_ir, "level",
-				       json_object_new_int(bus_error->Level));
+		add_int(bus_error_ir, "level", bus_error->Level);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
 		json_object_object_add(
@@ -678,18 +655,13 @@ json_object *cper_arm_bus_error_to_ir(EFI_ARM_BUS_ERROR_STRUCTURE *bus_error)
 	//Memory access attributes.
 	//todo: find the specification of these in the ARM ARM
 	if (isvalid_prop_to_ir(&ui64Type, 10)) {
-		json_object_object_add(
-			bus_error_ir, "memoryAttributes",
-			json_object_new_int(
-				bus_error->MemoryAddressAttributes));
+		add_int(bus_error_ir, "memoryAttributes", bus_error->MemoryAddressAttributes);
 	}
 
 	//Access Mode
 	if (isvalid_prop_to_ir(&ui64Type, 8)) {
 		json_object *access_mode = json_object_new_object();
-		json_object_object_add(
-			access_mode, "value",
-			json_object_new_int(bus_error->AccessMode));
+		add_int(access_mode, "value", bus_error->AccessMode);
 		json_object_object_add(
 			access_mode, "name",
 			json_object_new_string(bus_error->AccessMode == 0 ?
@@ -716,8 +688,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 	json_object *context_ir = json_object_new_object();
 
 	//Version.
-	json_object_object_add(context_ir, "version",
-			       json_object_new_int(header->Version));
+	add_int(context_ir, "version", header->Version);
 
 	//Add the context type.
 	json_object *context_type = integer_to_readable_pair(
@@ -729,9 +700,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 	json_object_object_add(context_ir, "registerContextType", context_type);
 
 	//Register array size (bytes).
-	json_object_object_add(
-		context_ir, "registerArraySize",
-		json_object_new_uint64(header->RegisterArraySize));
+	add_uint(context_ir, "registerArraySize", header->RegisterArraySize);
 
 	//The register array itself.
 	json_object *register_array = NULL;
@@ -942,19 +911,13 @@ cper_arm_misc_register_array_to_ir(EFI_ARM_MISC_CONTEXT_REGISTER *misc_register)
 {
 	json_object *register_array = json_object_new_object();
 	json_object *mrs_encoding = json_object_new_object();
-	json_object_object_add(mrs_encoding, "op2",
-			       json_object_new_uint64(misc_register->MrsOp2));
-	json_object_object_add(mrs_encoding, "crm",
-			       json_object_new_uint64(misc_register->MrsCrm));
-	json_object_object_add(mrs_encoding, "crn",
-			       json_object_new_uint64(misc_register->MrsCrn));
-	json_object_object_add(mrs_encoding, "op1",
-			       json_object_new_uint64(misc_register->MrsOp1));
-	json_object_object_add(mrs_encoding, "o0",
-			       json_object_new_uint64(misc_register->MrsO0));
+	add_uint(mrs_encoding, "op2", misc_register->MrsOp2);
+	add_uint(mrs_encoding, "crm", misc_register->MrsCrm);
+	add_uint(mrs_encoding, "crn", misc_register->MrsCrn);
+	add_uint(mrs_encoding, "op1", misc_register->MrsOp1);
+	add_uint(mrs_encoding, "o0", misc_register->MrsO0);
 	json_object_object_add(register_array, "mrsEncoding", mrs_encoding);
-	json_object_object_add(register_array, "value",
-			       json_object_new_uint64(misc_register->Value));
+	add_uint(register_array, "value", misc_register->Value);
 
 	return register_array;
 }

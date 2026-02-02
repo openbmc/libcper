@@ -46,14 +46,11 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 	json_object *section_ir = json_object_new_object();
 
 	//Revision.
-	json_object_object_add(section_ir, "revision",
-			       json_object_new_int(iommu_error->Revision));
+	add_int(section_ir, "revision", iommu_error->Revision);
 
 	//IOMMU registers.
-	json_object_object_add(section_ir, "controlRegister",
-			       json_object_new_uint64(iommu_error->Control));
-	json_object_object_add(section_ir, "statusRegister",
-			       json_object_new_uint64(iommu_error->Status));
+	add_uint(section_ir, "controlRegister", iommu_error->Control);
+	add_uint(section_ir, "statusRegister", iommu_error->Status);
 
 	//IOMMU event log entry.
 	//The format of these entries differ widely by the type of error.
@@ -91,18 +88,12 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 	free(encoded);
 
 	//Page table entries.
-	json_object_object_add(section_ir, "pageTableEntry_Level6",
-			       json_object_new_uint64(iommu_error->PteL6));
-	json_object_object_add(section_ir, "pageTableEntry_Level5",
-			       json_object_new_uint64(iommu_error->PteL5));
-	json_object_object_add(section_ir, "pageTableEntry_Level4",
-			       json_object_new_uint64(iommu_error->PteL4));
-	json_object_object_add(section_ir, "pageTableEntry_Level3",
-			       json_object_new_uint64(iommu_error->PteL3));
-	json_object_object_add(section_ir, "pageTableEntry_Level2",
-			       json_object_new_uint64(iommu_error->PteL2));
-	json_object_object_add(section_ir, "pageTableEntry_Level1",
-			       json_object_new_uint64(iommu_error->PteL1));
+	add_uint(section_ir, "pageTableEntry_Level6", iommu_error->PteL6);
+	add_uint(section_ir, "pageTableEntry_Level5", iommu_error->PteL5);
+	add_uint(section_ir, "pageTableEntry_Level4", iommu_error->PteL4);
+	add_uint(section_ir, "pageTableEntry_Level3", iommu_error->PteL3);
+	add_uint(section_ir, "pageTableEntry_Level2", iommu_error->PteL2);
+	add_uint(section_ir, "pageTableEntry_Level1", iommu_error->PteL1);
 
 	return section_ir;
 }

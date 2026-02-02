@@ -102,16 +102,12 @@ json_object *cper_section_generic_to_ir(const UINT8 *section, UINT32 size,
 
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
 		//The level of the error.
-		json_object_object_add(
-			section_ir, "level",
-			json_object_new_int(section_generic->Level));
+		add_int(section_ir, "level", section_generic->Level);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
 		//CPU version information.
-		json_object_object_add(
-			section_ir, "cpuVersionInfo",
-			json_object_new_uint64(section_generic->VersionInfo));
+		add_uint(section_ir, "cpuVersionInfo", section_generic->VersionInfo);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
@@ -123,33 +119,23 @@ json_object *cper_section_generic_to_ir(const UINT8 *section, UINT32 size,
 
 	if (isvalid_prop_to_ir(&ui64Type, 8)) {
 		//Remaining 64-bit fields.
-		json_object_object_add(
-			section_ir, "processorID",
-			json_object_new_uint64(section_generic->ApicId));
+		add_uint(section_ir, "processorID", section_generic->ApicId);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 9)) {
-		json_object_object_add(
-			section_ir, "targetAddress",
-			json_object_new_uint64(section_generic->TargetAddr));
+		add_uint(section_ir, "targetAddress", section_generic->TargetAddr);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 10)) {
-		json_object_object_add(
-			section_ir, "requestorID",
-			json_object_new_uint64(section_generic->RequestorId));
+		add_uint(section_ir, "requestorID", section_generic->RequestorId);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 11)) {
-		json_object_object_add(
-			section_ir, "responderID",
-			json_object_new_uint64(section_generic->ResponderId));
+		add_uint(section_ir, "responderID", section_generic->ResponderId);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 12)) {
-		json_object_object_add(
-			section_ir, "instructionIP",
-			json_object_new_uint64(section_generic->InstructionIP));
+		add_uint(section_ir, "instructionIP", section_generic->InstructionIP);
 	}
 
 	return section_ir;

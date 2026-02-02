@@ -67,42 +67,22 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
 	//ID information.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
 		json_object *id_info = json_object_new_object();
-		json_object_object_add(
-			id_info, "vendorID",
-			json_object_new_uint64(dev_error->IdInfo.VendorId));
-		json_object_object_add(
-			id_info, "deviceID",
-			json_object_new_uint64(dev_error->IdInfo.DeviceId));
-		json_object_object_add(
-			id_info, "classCode",
-			json_object_new_uint64(dev_error->IdInfo.ClassCode));
-		json_object_object_add(
-			id_info, "functionNumber",
-			json_object_new_uint64(
-				dev_error->IdInfo.FunctionNumber));
-		json_object_object_add(
-			id_info, "deviceNumber",
-			json_object_new_uint64(dev_error->IdInfo.DeviceNumber));
-		json_object_object_add(
-			id_info, "busNumber",
-			json_object_new_uint64(dev_error->IdInfo.BusNumber));
-		json_object_object_add(
-			id_info, "segmentNumber",
-			json_object_new_uint64(
-				dev_error->IdInfo.SegmentNumber));
+		add_uint(id_info, "vendorID", dev_error->IdInfo.VendorId);
+		add_uint(id_info, "deviceID", dev_error->IdInfo.DeviceId);
+		add_uint(id_info, "classCode", dev_error->IdInfo.ClassCode);
+		add_uint(id_info, "functionNumber", dev_error->IdInfo.FunctionNumber);
+		add_uint(id_info, "deviceNumber", dev_error->IdInfo.DeviceNumber);
+		add_uint(id_info, "busNumber", dev_error->IdInfo.BusNumber);
+		add_uint(id_info, "segmentNumber", dev_error->IdInfo.SegmentNumber);
 		json_object_object_add(section_ir, "idInfo", id_info);
 	}
 
 	//Number of following register data pairs.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			section_ir, "memoryNumber",
-			json_object_new_uint64(dev_error->MemoryNumber));
+		add_uint(section_ir, "memoryNumber", dev_error->MemoryNumber);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			section_ir, "ioNumber",
-			json_object_new_uint64(dev_error->IoNumber));
+		add_uint(section_ir, "ioNumber", dev_error->IoNumber);
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
@@ -118,12 +98,8 @@ json_object *cper_section_pci_dev_to_ir(const UINT8 *section, UINT32 size,
 			//Save current pair to array.
 			json_object *register_data_pair =
 				json_object_new_object();
-			json_object_object_add(
-				register_data_pair, "firstHalf",
-				json_object_new_uint64(*cur_pos));
-			json_object_object_add(
-				register_data_pair, "secondHalf",
-				json_object_new_uint64(*(cur_pos + 1)));
+			add_uint(register_data_pair, "firstHalf", *cur_pos);
+			add_uint(register_data_pair, "secondHalf", *(cur_pos + 1));
 			json_object_array_add(register_data_pair_array,
 					      register_data_pair);
 

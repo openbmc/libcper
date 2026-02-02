@@ -54,19 +54,14 @@ json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size,
 				     .value.ui64 = ccix_error->ValidBits };
 
 	//Length (bytes) for the entire structure.
-	json_object_object_add(section_ir, "length",
-			       json_object_new_uint64(ccix_error->Length));
+	add_uint(section_ir, "length", ccix_error->Length);
 
 	//CCIX source/port IDs.
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
-		json_object_object_add(
-			section_ir, "ccixSourceID",
-			json_object_new_int(ccix_error->CcixSourceId));
+		add_int(section_ir, "ccixSourceID", ccix_error->CcixSourceId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
-		json_object_object_add(
-			section_ir, "ccixPortID",
-			json_object_new_int(ccix_error->CcixPortId));
+		add_int(section_ir, "ccixPortID", ccix_error->CcixPortId);
 	}
 
 	//CCIX PER Log.

@@ -73,35 +73,20 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 		    CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
 			agent_address = json_object_new_object();
 			//Address is a CXL1.1 device agent.
-			json_object_object_add(
-				agent_address, "functionNumber",
-				json_object_new_uint64(
-					cxl_protocol_error->CxlAgentAddress
-						.DeviceAddress.FunctionNumber));
-			json_object_object_add(
-				agent_address, "deviceNumber",
-				json_object_new_uint64(
-					cxl_protocol_error->CxlAgentAddress
-						.DeviceAddress.DeviceNumber));
-			json_object_object_add(
-				agent_address, "busNumber",
-				json_object_new_uint64(
-					cxl_protocol_error->CxlAgentAddress
-						.DeviceAddress.BusNumber));
-			json_object_object_add(
-				agent_address, "segmentNumber",
-				json_object_new_uint64(
-					cxl_protocol_error->CxlAgentAddress
-						.DeviceAddress.SegmentNumber));
+			add_uint(agent_address, "functionNumber", cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.FunctionNumber);
+			add_uint(agent_address, "deviceNumber", cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.DeviceNumber);
+			add_uint(agent_address, "busNumber", cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.BusNumber);
+			add_uint(agent_address, "segmentNumber", cxl_protocol_error->CxlAgentAddress
+						.DeviceAddress.SegmentNumber);
 		} else if (cxl_protocol_error->CxlAgentType ==
 			   CXL_PROTOCOL_ERROR_HOST_DOWNSTREAM_PORT_AGENT) {
 			agent_address = json_object_new_object();
 			//Address is a CXL port RCRB base address.
-			json_object_object_add(
-				agent_address, "value",
-				json_object_new_uint64(
-					cxl_protocol_error->CxlAgentAddress
-						.PortRcrbBaseAddress));
+			add_uint(agent_address, "value", cxl_protocol_error->CxlAgentAddress
+						.PortRcrbBaseAddress);
 		}
 		if (agent_address != NULL) {
 			json_object_object_add(section_ir, "cxlAgentAddress",
@@ -110,32 +95,15 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 	}
 
 	json_object *device_id = json_object_new_object();
-	json_object_object_add(
-		device_id, "vendorID",
-		json_object_new_uint64(cxl_protocol_error->DeviceId.VendorId));
+	add_uint(device_id, "vendorID", cxl_protocol_error->DeviceId.VendorId);
 
 	//Device ID.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			device_id, "deviceID",
-			json_object_new_uint64(
-				cxl_protocol_error->DeviceId.DeviceId));
-		json_object_object_add(
-			device_id, "subsystemVendorID",
-			json_object_new_uint64(
-				cxl_protocol_error->DeviceId.SubsystemVendorId));
-		json_object_object_add(
-			device_id, "subsystemDeviceID",
-			json_object_new_uint64(
-				cxl_protocol_error->DeviceId.SubsystemDeviceId));
-		json_object_object_add(
-			device_id, "classCode",
-			json_object_new_uint64(
-				cxl_protocol_error->DeviceId.ClassCode));
-		json_object_object_add(
-			device_id, "slotNumber",
-			json_object_new_uint64(
-				cxl_protocol_error->DeviceId.SlotNumber));
+		add_uint(device_id, "deviceID", cxl_protocol_error->DeviceId.DeviceId);
+		add_uint(device_id, "subsystemVendorID", cxl_protocol_error->DeviceId.SubsystemVendorId);
+		add_uint(device_id, "subsystemDeviceID", cxl_protocol_error->DeviceId.SubsystemDeviceId);
+		add_uint(device_id, "classCode", cxl_protocol_error->DeviceId.ClassCode);
+		add_uint(device_id, "slotNumber", cxl_protocol_error->DeviceId.SlotNumber);
 	}
 	json_object_object_add(section_ir, "deviceID", device_id);
 
@@ -143,10 +111,7 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 		//Device serial & capability structure (if CXL 1.1 device).
 		if (cxl_protocol_error->CxlAgentType ==
 		    CXL_PROTOCOL_ERROR_DEVICE_AGENT) {
-			json_object_object_add(
-				section_ir, "deviceSerial",
-				json_object_new_uint64(
-					cxl_protocol_error->DeviceSerial));
+			add_uint(section_ir, "deviceSerial", cxl_protocol_error->DeviceSerial);
 		}
 	}
 
@@ -178,10 +143,7 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
 		//CXL DVSEC & error log length.
-		json_object_object_add(
-			section_ir, "dvsecLength",
-			json_object_new_int(
-				cxl_protocol_error->CxlDvsecLength));
+		add_int(section_ir, "dvsecLength", cxl_protocol_error->CxlDvsecLength);
 		//CXL DVSEC
 		//For CXL 1.1 devices, this is the "CXL DVSEC For Flex Bus Device" structure as in CXL 1.1 spec.
 		//For CXL 1.1 host downstream ports, this is the "CXL DVSEC For Flex Bus Port" structure as in CXL 1.1 spec.
@@ -206,10 +168,7 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 	cur_pos += cxl_protocol_error->CxlDvsecLength;
 
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
-		json_object_object_add(
-			section_ir, "errorLogLength",
-			json_object_new_int(
-				cxl_protocol_error->CxlErrorLogLength));
+		add_int(section_ir, "errorLogLength", cxl_protocol_error->CxlErrorLogLength);
 
 		//CXL Error Log
 		//This is the "CXL RAS Capability Structure" as in CXL 1.1 spec.
