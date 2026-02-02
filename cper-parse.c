@@ -234,21 +234,18 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 			       revision_to_ir(header->Revision));
 
 	//Section count.
-	json_object_object_add(header_ir, "sectionCount",
-			       json_object_new_int(header->SectionCount));
+	add_int(header_ir, "sectionCount", header->SectionCount);
 
 	//Error severity (with interpreted string version).
 	json_object *error_severity = json_object_new_object();
-	json_object_object_add(error_severity, "code",
-			       json_object_new_uint64(header->ErrorSeverity));
+	add_uint(error_severity, "code", header->ErrorSeverity);
 	json_object_object_add(error_severity, "name",
 			       json_object_new_string(severity_to_string(
 				       header->ErrorSeverity)));
 	json_object_object_add(header_ir, "severity", error_severity);
 
 	//Total length of the record (including headers) in bytes.
-	json_object_object_add(header_ir, "recordLength",
-			       json_object_new_uint64(header->RecordLength));
+	add_uint(header_ir, "recordLength", header->RecordLength);
 
 	//If a timestamp exists according to validation bits, then add it.
 	if (header->ValidationBits & 0x2) {
@@ -317,8 +314,7 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 			       notification_type);
 
 	//The record ID for this record, unique on a given system.
-	json_object_object_add(header_ir, "recordID",
-			       json_object_new_uint64(header->RecordID));
+	add_uint(header_ir, "recordID", header->RecordID);
 
 	//Flag for the record, and a human readable form.
 	json_object *flags = integer_to_readable_pair(
@@ -329,8 +325,7 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	json_object_object_add(header_ir, "flags", flags);
 
 	//Persistence information. Outside the scope of specification, so just a uint32 here.
-	json_object_object_add(header_ir, "persistenceInfo",
-			       json_object_new_uint64(header->PersistenceInfo));
+	add_uint(header_ir, "persistenceInfo", header->PersistenceInfo);
 	return header_ir;
 }
 
@@ -341,12 +336,10 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	json_object *section_descriptor_ir = json_object_new_object();
 
 	//The offset of the section from the base of the record header, length.
-	json_object_object_add(
-		section_descriptor_ir, "sectionOffset",
-		json_object_new_uint64(section_descriptor->SectionOffset));
-	json_object_object_add(
-		section_descriptor_ir, "sectionLength",
-		json_object_new_uint64(section_descriptor->SectionLength));
+	add_uint(section_descriptor_ir, "sectionOffset",
+		 section_descriptor->SectionOffset);
+	add_uint(section_descriptor_ir, "sectionLength",
+		 section_descriptor->SectionLength);
 
 	//Revision.
 	json_object_object_add(section_descriptor_ir, "revision",
@@ -391,9 +384,7 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 
 	//Section severity.
 	json_object *section_severity = json_object_new_object();
-	json_object_object_add(
-		section_severity, "code",
-		json_object_new_uint64(section_descriptor->Severity));
+	add_uint(section_severity, "code", section_descriptor->Severity);
 	json_object_object_add(section_severity, "name",
 			       json_object_new_string(severity_to_string(
 				       section_descriptor->Severity)));

@@ -66,30 +66,19 @@ json_object *cper_section_ipf_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(section_ir, "validationBits", validation);
 
 	//Numbers of various variable length segments.
-	json_object_object_add(
-		section_ir, "cacheCheckNum",
-		json_object_new_uint64(ipf_error->ValidBits.CacheCheckNum));
-	json_object_object_add(
-		section_ir, "tlbCheckNum",
-		json_object_new_uint64(ipf_error->ValidBits.TlbCheckNum));
-	json_object_object_add(
-		section_ir, "busCheckNum",
-		json_object_new_uint64(ipf_error->ValidBits.BusCheckNum));
-	json_object_object_add(
-		section_ir, "regFileCheckNum",
-		json_object_new_uint64(ipf_error->ValidBits.RegFileCheckNum));
-	json_object_object_add(
-		section_ir, "msCheckNum",
-		json_object_new_uint64(ipf_error->ValidBits.MsCheckNum));
+	add_uint(section_ir, "cacheCheckNum",
+		 ipf_error->ValidBits.CacheCheckNum);
+	add_uint(section_ir, "tlbCheckNum", ipf_error->ValidBits.TlbCheckNum);
+	add_uint(section_ir, "busCheckNum", ipf_error->ValidBits.BusCheckNum);
+	add_uint(section_ir, "regFileCheckNum",
+		 ipf_error->ValidBits.RegFileCheckNum);
+	add_uint(section_ir, "msCheckNum", ipf_error->ValidBits.MsCheckNum);
 
 	//Process error map, state params/CR LID.
-	json_object_object_add(section_ir, "procErrorMap",
-			       json_object_new_uint64(ipf_error->ProcErrorMap));
-	json_object_object_add(
-		section_ir, "procStateParameter",
-		json_object_new_uint64(ipf_error->ProcStateParameter));
-	json_object_object_add(section_ir, "procCRLID",
-			       json_object_new_uint64(ipf_error->ProcCrLid));
+	add_uint(section_ir, "procErrorMap", ipf_error->ProcErrorMap);
+	add_uint(section_ir, "procStateParameter",
+		 ipf_error->ProcStateParameter);
+	add_uint(section_ir, "procCRLID", ipf_error->ProcCrLid);
 
 	//Read cache, TLB, bus, register file, MS errors.
 	EFI_IPF_MOD_ERROR_INFO *cur_error =
@@ -174,18 +163,11 @@ json_object *cper_ipf_mod_error_to_ir(EFI_IPF_MOD_ERROR_INFO *mod_error)
 	json_object_object_add(mod_error_ir, "validationBits", validation);
 
 	//Numeric fields.
-	json_object_object_add(mod_error_ir, "modCheckInfo",
-			       json_object_new_uint64(mod_error->ModCheckInfo));
-	json_object_object_add(mod_error_ir, "modTargetID",
-			       json_object_new_uint64(mod_error->ModTargetId));
-	json_object_object_add(
-		mod_error_ir, "modRequestorID",
-		json_object_new_uint64(mod_error->ModRequestorId));
-	json_object_object_add(
-		mod_error_ir, "modResponderID",
-		json_object_new_uint64(mod_error->ModResponderId));
-	json_object_object_add(mod_error_ir, "modPreciseIP",
-			       json_object_new_uint64(mod_error->ModPreciseIp));
+	add_uint(mod_error_ir, "modCheckInfo", mod_error->ModCheckInfo);
+	add_uint(mod_error_ir, "modTargetID", mod_error->ModTargetId);
+	add_uint(mod_error_ir, "modRequestorID", mod_error->ModRequestorId);
+	add_uint(mod_error_ir, "modResponderID", mod_error->ModResponderId);
+	add_uint(mod_error_ir, "modPreciseIP", mod_error->ModPreciseIp);
 
 	return mod_error_ir;
 }

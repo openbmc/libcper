@@ -67,12 +67,8 @@ json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size,
 	//Bus ID.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		json_object *bus_id = json_object_new_object();
-		json_object_object_add(bus_id, "busNumber",
-				       json_object_new_int(bus_error->BusId &
-							   0xFF));
-		json_object_object_add(bus_id, "segmentNumber",
-				       json_object_new_int(bus_error->BusId >>
-							   8));
+		add_int(bus_id, "busNumber", bus_error->BusId & 0xFF);
+		add_int(bus_id, "segmentNumber", bus_error->BusId >> 8);
 		json_object_object_add(section_ir, "busID", bus_id);
 	}
 
@@ -80,14 +76,10 @@ json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size,
 	//Byte 7, bit 0.
 	UINT8 command_type = (bus_error->BusCommand >> 56) & 0x1;
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			section_ir, "busAddress",
-			json_object_new_uint64(bus_error->BusAddress));
+		add_uint(section_ir, "busAddress", bus_error->BusAddress);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			section_ir, "busData",
-			json_object_new_uint64(bus_error->BusData));
+		add_uint(section_ir, "busData", bus_error->BusData);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
 		json_object_object_add(
@@ -98,9 +90,7 @@ json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size,
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
 
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
-		json_object_object_add(
-			section_ir, "busRequestorID",
-			json_object_new_uint64(bus_error->RequestorId));
+		add_uint(section_ir, "busRequestorID", bus_error->RequestorId);
 
 		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
 			 bus_error->RequestorId);
@@ -109,9 +99,7 @@ json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size,
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
-		json_object_object_add(
-			section_ir, "busCompleterID",
-			json_object_new_uint64(bus_error->ResponderId));
+		add_uint(section_ir, "busCompleterID", bus_error->ResponderId);
 		snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%016llX",
 			 bus_error->ResponderId);
 		json_object_object_add(section_ir, "busCompleterIDHex",
@@ -119,9 +107,7 @@ json_object *cper_section_pci_bus_to_ir(const UINT8 *section, UINT32 size,
 	}
 
 	if (isvalid_prop_to_ir(&ui64Type, 8)) {
-		json_object_object_add(
-			section_ir, "targetID",
-			json_object_new_uint64(bus_error->TargetId));
+		add_uint(section_ir, "targetID", bus_error->TargetId);
 	}
 
 	return section_ir;

@@ -83,12 +83,8 @@ void parse_registers(EFI_NVIDIA_REGISTER_DATA *regPtr, UINT8 NumberRegs,
 			    (i + 1) * sizeof(EFI_NVIDIA_REGISTER_DATA) <=
 		    size) {
 			reg = json_object_new_object();
-			json_object_object_add(
-				reg, "address",
-				json_object_new_uint64(regPtr->Address));
-			json_object_object_add(
-				reg, "value",
-				json_object_new_uint64(regPtr->Value));
+			add_uint(reg, "address", regPtr->Address);
+			add_uint(reg, "value", regPtr->Value);
 		} else {
 			reg = json_object_new_null();
 		}
@@ -170,8 +166,7 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 			     sizeof(nvidia_error->Signature));
 
 	json_object *severity = json_object_new_object();
-	json_object_object_add(severity, "code",
-			       json_object_new_uint64(nvidia_error->Severity));
+	add_uint(severity, "code", nvidia_error->Severity);
 	const char *severity_name = severity_to_string(nvidia_error->Severity);
 	json_object_object_add(severity, "name",
 			       json_object_new_string(severity_name));
@@ -196,13 +191,9 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 	}
 	json_object_object_add(section_ir, "severity", severity);
 
-	json_object_object_add(section_ir, "errorType",
-			       json_object_new_int(nvidia_error->ErrorType));
-	json_object_object_add(
-		section_ir, "errorInstance",
-		json_object_new_int(nvidia_error->ErrorInstance));
-	json_object_object_add(section_ir, "socket",
-			       json_object_new_int(nvidia_error->Socket));
+	add_int(section_ir, "errorType", nvidia_error->ErrorType);
+	add_int(section_ir, "errorInstance", nvidia_error->ErrorInstance);
+	add_int(section_ir, "socket", nvidia_error->Socket);
 
 	outstr_len = snprintf(property_desc, EFI_ERROR_DESCRIPTION_STRING_LEN,
 			      " on CPU %d", nvidia_error->Socket);
@@ -224,11 +215,8 @@ json_object *cper_section_nvidia_to_ir(const UINT8 *section, UINT32 size,
 	}
 	free(property_desc);
 
-	json_object_object_add(section_ir, "registerCount",
-			       json_object_new_int(nvidia_error->NumberRegs));
-	json_object_object_add(
-		section_ir, "instanceBase",
-		json_object_new_uint64(nvidia_error->InstanceBase));
+	add_int(section_ir, "registerCount", nvidia_error->NumberRegs);
+	add_uint(section_ir, "instanceBase", nvidia_error->InstanceBase);
 	int index = get_index(nvidia_error->Signature);
 	if (index == -1) {
 		cper_print_log("Error: Unknown NVIDIA section signature: %s\n",
