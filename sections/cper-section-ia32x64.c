@@ -83,19 +83,17 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 	//about processorErrorInfoNum and processorContextInfoNum.
 	//Ensure this is decoded properly in IR->CPER
 	int processor_error_info_num = (record->ValidFields >> 2) & 0x3F;
-	json_object_object_add(record_ir, "processorErrorInfoNum",
-			       json_object_new_int(processor_error_info_num));
+	add_int(record_ir, "processorErrorInfoNum", processor_error_info_num);
 	int processor_context_info_num = (record->ValidFields >> 8) & 0x3F;
-	json_object_object_add(record_ir, "processorContextInfoNum",
-			       json_object_new_int(processor_context_info_num));
+	add_int(record_ir, "processorContextInfoNum",
+		processor_context_info_num);
 
 	ValidationTypes ui64Type = { UINT_64T,
 				     .value.ui64 = record->ValidFields };
 
 	//APIC ID.
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
-		json_object_object_add(record_ir, "localAPICID",
-				       json_object_new_uint64(record->ApicId));
+		add_uint(record_ir, "localAPICID", record->ApicId);
 	}
 
 	//CPUID information.
@@ -103,14 +101,10 @@ json_object *cper_section_ia32x64_to_ir(const UINT8 *section, UINT32 size,
 		json_object *cpuid_info_ir = json_object_new_object();
 		EFI_IA32_X64_CPU_ID *cpuid_info =
 			(EFI_IA32_X64_CPU_ID *)record->CpuIdInfo;
-		json_object_object_add(cpuid_info_ir, "eax",
-				       json_object_new_uint64(cpuid_info->Eax));
-		json_object_object_add(cpuid_info_ir, "ebx",
-				       json_object_new_uint64(cpuid_info->Ebx));
-		json_object_object_add(cpuid_info_ir, "ecx",
-				       json_object_new_uint64(cpuid_info->Ecx));
-		json_object_object_add(cpuid_info_ir, "edx",
-				       json_object_new_uint64(cpuid_info->Edx));
+		add_uint(cpuid_info_ir, "eax", cpuid_info->Eax);
+		add_uint(cpuid_info_ir, "ebx", cpuid_info->Ebx);
+		add_uint(cpuid_info_ir, "ecx", cpuid_info->Ecx);
+		add_uint(cpuid_info_ir, "edx", cpuid_info->Edx);
 		json_object_object_add(record_ir, "cpuidInfo", cpuid_info_ir);
 	}
 
@@ -208,8 +202,7 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 		readable_type = readable_names[index];
 	}
 
-	json_object_object_add(type, "name",
-			       json_object_new_string(readable_type));
+	add_string(type, "name", readable_type);
 	json_object_object_add(error_info_ir, "type", type);
 
 	//Validation bits.
@@ -252,24 +245,18 @@ json_object *cper_ia32x64_processor_error_info_to_ir(
 
 	//Target, requestor, and responder identifiers.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
-		json_object_object_add(
-			error_info_ir, "targetAddressID",
-			json_object_new_uint64(error_info->TargetId));
+		add_uint(error_info_ir, "targetAddressID",
+			 error_info->TargetId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			error_info_ir, "requestorID",
-			json_object_new_uint64(error_info->RequestorId));
+		add_uint(error_info_ir, "requestorID", error_info->RequestorId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			error_info_ir, "responderID",
-			json_object_new_uint64(error_info->ResponderId));
+		add_uint(error_info_ir, "responderID", error_info->ResponderId);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			error_info_ir, "instructionPointer",
-			json_object_new_uint64(error_info->InstructionIP));
+		add_uint(error_info_ir, "instructionPointer",
+			 error_info->InstructionIP);
 	}
 
 	return error_info_ir;
@@ -310,38 +297,29 @@ json_object *cper_ia32x64_cache_tlb_check_to_ir(
 
 	//Affected cache/TLB level.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			cache_tlb_check_ir, "level",
-			json_object_new_uint64(cache_tlb_check->Level));
+		add_uint(cache_tlb_check_ir, "level", cache_tlb_check->Level);
 	}
 
 	//Miscellaneous boolean fields.
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			cache_tlb_check_ir, "processorContextCorrupt",
-			json_object_new_boolean(
-				cache_tlb_check->ContextCorrupt));
+		add_bool(cache_tlb_check_ir, "processorContextCorrupt",
+			 cache_tlb_check->ContextCorrupt);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			cache_tlb_check_ir, "uncorrected",
-			json_object_new_boolean(
-				cache_tlb_check->ErrorUncorrected));
+		add_bool(cache_tlb_check_ir, "uncorrected",
+			 cache_tlb_check->ErrorUncorrected);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
-		json_object_object_add(
-			cache_tlb_check_ir, "preciseIP",
-			json_object_new_boolean(cache_tlb_check->PreciseIp));
+		add_bool(cache_tlb_check_ir, "preciseIP",
+			 cache_tlb_check->PreciseIp);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
-		json_object_object_add(cache_tlb_check_ir, "restartableIP",
-				       json_object_new_boolean(
-					       cache_tlb_check->RestartableIp));
+		add_bool(cache_tlb_check_ir, "restartableIP",
+			 cache_tlb_check->RestartableIp);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
-		json_object_object_add(
-			cache_tlb_check_ir, "overflow",
-			json_object_new_boolean(cache_tlb_check->Overflow));
+		add_bool(cache_tlb_check_ir, "overflow",
+			 cache_tlb_check->Overflow);
 	}
 
 	return cache_tlb_check_ir;
@@ -380,41 +358,30 @@ cper_ia32x64_bus_check_to_ir(EFI_IA32_X64_BUS_CHECK_INFO *bus_check)
 
 	//Affected bus level.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			bus_check_ir, "level",
-			json_object_new_uint64(bus_check->Level));
+		add_uint(bus_check_ir, "level", bus_check->Level);
 	}
 
 	//Miscellaneous boolean fields.
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			bus_check_ir, "processorContextCorrupt",
-			json_object_new_boolean(bus_check->ContextCorrupt));
+		add_bool(bus_check_ir, "processorContextCorrupt",
+			 bus_check->ContextCorrupt);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			bus_check_ir, "uncorrected",
-			json_object_new_boolean(bus_check->ErrorUncorrected));
+		add_bool(bus_check_ir, "uncorrected",
+			 bus_check->ErrorUncorrected);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
-		json_object_object_add(
-			bus_check_ir, "preciseIP",
-			json_object_new_boolean(bus_check->PreciseIp));
+		add_bool(bus_check_ir, "preciseIP", bus_check->PreciseIp);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 6)) {
-		json_object_object_add(
-			bus_check_ir, "restartableIP",
-			json_object_new_boolean(bus_check->RestartableIp));
+		add_bool(bus_check_ir, "restartableIP",
+			 bus_check->RestartableIp);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 7)) {
-		json_object_object_add(
-			bus_check_ir, "overflow",
-			json_object_new_boolean(bus_check->Overflow));
+		add_bool(bus_check_ir, "overflow", bus_check->Overflow);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 9)) {
-		json_object_object_add(
-			bus_check_ir, "timedOut",
-			json_object_new_boolean(bus_check->TimeOut));
+		add_bool(bus_check_ir, "timedOut", bus_check->TimeOut);
 	}
 
 	//Participation type.
@@ -461,29 +428,21 @@ json_object *cper_ia32x64_ms_check_to_ir(EFI_IA32_X64_MS_CHECK_INFO *ms_check)
 
 	//Miscellaneous fields.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
-		json_object_object_add(
-			ms_check_ir, "processorContextCorrupt",
-			json_object_new_boolean(ms_check->ContextCorrupt));
+		add_bool(ms_check_ir, "processorContextCorrupt",
+			 ms_check->ContextCorrupt);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
-		json_object_object_add(
-			ms_check_ir, "uncorrected",
-			json_object_new_boolean(ms_check->ErrorUncorrected));
+		add_bool(ms_check_ir, "uncorrected",
+			 ms_check->ErrorUncorrected);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 3)) {
-		json_object_object_add(
-			ms_check_ir, "preciseIP",
-			json_object_new_boolean(ms_check->PreciseIp));
+		add_bool(ms_check_ir, "preciseIP", ms_check->PreciseIp);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			ms_check_ir, "restartableIP",
-			json_object_new_boolean(ms_check->RestartableIp));
+		add_bool(ms_check_ir, "restartableIP", ms_check->RestartableIp);
 	}
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
-		json_object_object_add(
-			ms_check_ir, "overflow",
-			json_object_new_boolean(ms_check->Overflow));
+		add_bool(ms_check_ir, "overflow", ms_check->Overflow);
 	}
 
 	return ms_check_ir;
@@ -509,14 +468,10 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 			       context_type);
 
 	//Register array size, MSR and MM address.
-	json_object_object_add(context_info_ir, "registerArraySize",
-			       json_object_new_uint64(context_info->ArraySize));
-	json_object_object_add(
-		context_info_ir, "msrAddress",
-		json_object_new_uint64(context_info->MsrAddress));
-	json_object_object_add(
-		context_info_ir, "mmRegisterAddress",
-		json_object_new_uint64(context_info->MmRegisterAddress));
+	add_uint(context_info_ir, "registerArraySize", context_info->ArraySize);
+	add_uint(context_info_ir, "msrAddress", context_info->MsrAddress);
+	add_uint(context_info_ir, "mmRegisterAddress",
+		 context_info->MmRegisterAddress);
 
 	//Register array.
 	json_object *register_array = NULL;
@@ -555,9 +510,8 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 				"Failed to allocate encode output buffer. \n");
 		} else {
 			register_array = json_object_new_object();
-			json_object_object_add(register_array, "data",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
+			add_string_len(register_array, "data", encoded,
+				       encoded_len);
 			free(encoded);
 		}
 
@@ -578,60 +532,33 @@ json_object *
 cper_ia32x64_register_32bit_to_ir(EFI_CONTEXT_IA32_REGISTER_STATE *registers)
 {
 	json_object *ia32_registers = json_object_new_object();
-	json_object_object_add(ia32_registers, "eax",
-			       json_object_new_uint64(registers->Eax));
-	json_object_object_add(ia32_registers, "ebx",
-			       json_object_new_uint64(registers->Ebx));
-	json_object_object_add(ia32_registers, "ecx",
-			       json_object_new_uint64(registers->Ecx));
-	json_object_object_add(ia32_registers, "edx",
-			       json_object_new_uint64(registers->Edx));
-	json_object_object_add(ia32_registers, "esi",
-			       json_object_new_uint64(registers->Esi));
-	json_object_object_add(ia32_registers, "edi",
-			       json_object_new_uint64(registers->Edi));
-	json_object_object_add(ia32_registers, "ebp",
-			       json_object_new_uint64(registers->Ebp));
-	json_object_object_add(ia32_registers, "esp",
-			       json_object_new_uint64(registers->Esp));
-	json_object_object_add(ia32_registers, "cs",
-			       json_object_new_uint64(registers->Cs));
-	json_object_object_add(ia32_registers, "ds",
-			       json_object_new_uint64(registers->Ds));
-	json_object_object_add(ia32_registers, "ss",
-			       json_object_new_uint64(registers->Ss));
-	json_object_object_add(ia32_registers, "es",
-			       json_object_new_uint64(registers->Es));
-	json_object_object_add(ia32_registers, "fs",
-			       json_object_new_uint64(registers->Fs));
-	json_object_object_add(ia32_registers, "gs",
-			       json_object_new_uint64(registers->Gs));
-	json_object_object_add(ia32_registers, "eflags",
-			       json_object_new_uint64(registers->Eflags));
-	json_object_object_add(ia32_registers, "eip",
-			       json_object_new_uint64(registers->Eip));
-	json_object_object_add(ia32_registers, "cr0",
-			       json_object_new_uint64(registers->Cr0));
-	json_object_object_add(ia32_registers, "cr1",
-			       json_object_new_uint64(registers->Cr1));
-	json_object_object_add(ia32_registers, "cr2",
-			       json_object_new_uint64(registers->Cr2));
-	json_object_object_add(ia32_registers, "cr3",
-			       json_object_new_uint64(registers->Cr3));
-	json_object_object_add(ia32_registers, "cr4",
-			       json_object_new_uint64(registers->Cr4));
-	json_object_object_add(
-		ia32_registers, "gdtr",
-		json_object_new_uint64(registers->Gdtr[0] +
-				       ((UINT64)registers->Gdtr[1] << 32)));
-	json_object_object_add(
-		ia32_registers, "idtr",
-		json_object_new_uint64(registers->Idtr[0] +
-				       ((UINT64)registers->Idtr[1] << 32)));
-	json_object_object_add(ia32_registers, "ldtr",
-			       json_object_new_uint64(registers->Ldtr));
-	json_object_object_add(ia32_registers, "tr",
-			       json_object_new_uint64(registers->Tr));
+	add_uint(ia32_registers, "eax", registers->Eax);
+	add_uint(ia32_registers, "ebx", registers->Ebx);
+	add_uint(ia32_registers, "ecx", registers->Ecx);
+	add_uint(ia32_registers, "edx", registers->Edx);
+	add_uint(ia32_registers, "esi", registers->Esi);
+	add_uint(ia32_registers, "edi", registers->Edi);
+	add_uint(ia32_registers, "ebp", registers->Ebp);
+	add_uint(ia32_registers, "esp", registers->Esp);
+	add_uint(ia32_registers, "cs", registers->Cs);
+	add_uint(ia32_registers, "ds", registers->Ds);
+	add_uint(ia32_registers, "ss", registers->Ss);
+	add_uint(ia32_registers, "es", registers->Es);
+	add_uint(ia32_registers, "fs", registers->Fs);
+	add_uint(ia32_registers, "gs", registers->Gs);
+	add_uint(ia32_registers, "eflags", registers->Eflags);
+	add_uint(ia32_registers, "eip", registers->Eip);
+	add_uint(ia32_registers, "cr0", registers->Cr0);
+	add_uint(ia32_registers, "cr1", registers->Cr1);
+	add_uint(ia32_registers, "cr2", registers->Cr2);
+	add_uint(ia32_registers, "cr3", registers->Cr3);
+	add_uint(ia32_registers, "cr4", registers->Cr4);
+	add_uint(ia32_registers, "gdtr",
+		 registers->Gdtr[0] + ((UINT64)registers->Gdtr[1] << 32));
+	add_uint(ia32_registers, "idtr",
+		 registers->Idtr[0] + ((UINT64)registers->Idtr[1] << 32));
+	add_uint(ia32_registers, "ldtr", registers->Ldtr);
+	add_uint(ia32_registers, "tr", registers->Tr);
 
 	return ia32_registers;
 }
@@ -641,78 +568,42 @@ json_object *
 cper_ia32x64_register_64bit_to_ir(EFI_CONTEXT_X64_REGISTER_STATE *registers)
 {
 	json_object *x64_registers = json_object_new_object();
-	json_object_object_add(x64_registers, "rax",
-			       json_object_new_uint64(registers->Rax));
-	json_object_object_add(x64_registers, "rbx",
-			       json_object_new_uint64(registers->Rbx));
-	json_object_object_add(x64_registers, "rcx",
-			       json_object_new_uint64(registers->Rcx));
-	json_object_object_add(x64_registers, "rdx",
-			       json_object_new_uint64(registers->Rdx));
-	json_object_object_add(x64_registers, "rsi",
-			       json_object_new_uint64(registers->Rsi));
-	json_object_object_add(x64_registers, "rdi",
-			       json_object_new_uint64(registers->Rdi));
-	json_object_object_add(x64_registers, "rbp",
-			       json_object_new_uint64(registers->Rbp));
-	json_object_object_add(x64_registers, "rsp",
-			       json_object_new_uint64(registers->Rsp));
-	json_object_object_add(x64_registers, "r8",
-			       json_object_new_uint64(registers->R8));
-	json_object_object_add(x64_registers, "r9",
-			       json_object_new_uint64(registers->R9));
-	json_object_object_add(x64_registers, "r10",
-			       json_object_new_uint64(registers->R10));
-	json_object_object_add(x64_registers, "r11",
-			       json_object_new_uint64(registers->R11));
-	json_object_object_add(x64_registers, "r12",
-			       json_object_new_uint64(registers->R12));
-	json_object_object_add(x64_registers, "r13",
-			       json_object_new_uint64(registers->R13));
-	json_object_object_add(x64_registers, "r14",
-			       json_object_new_uint64(registers->R14));
-	json_object_object_add(x64_registers, "r15",
-			       json_object_new_uint64(registers->R15));
-	json_object_object_add(x64_registers, "cs",
-			       json_object_new_int(registers->Cs));
-	json_object_object_add(x64_registers, "ds",
-			       json_object_new_int(registers->Ds));
-	json_object_object_add(x64_registers, "ss",
-			       json_object_new_int(registers->Ss));
-	json_object_object_add(x64_registers, "es",
-			       json_object_new_int(registers->Es));
-	json_object_object_add(x64_registers, "fs",
-			       json_object_new_int(registers->Fs));
-	json_object_object_add(x64_registers, "gs",
-			       json_object_new_int(registers->Gs));
-	json_object_object_add(x64_registers, "rflags",
-			       json_object_new_uint64(registers->Rflags));
-	json_object_object_add(x64_registers, "eip",
-			       json_object_new_uint64(registers->Rip));
-	json_object_object_add(x64_registers, "cr0",
-			       json_object_new_uint64(registers->Cr0));
-	json_object_object_add(x64_registers, "cr1",
-			       json_object_new_uint64(registers->Cr1));
-	json_object_object_add(x64_registers, "cr2",
-			       json_object_new_uint64(registers->Cr2));
-	json_object_object_add(x64_registers, "cr3",
-			       json_object_new_uint64(registers->Cr3));
-	json_object_object_add(x64_registers, "cr4",
-			       json_object_new_uint64(registers->Cr4));
-	json_object_object_add(x64_registers, "cr8",
-			       json_object_new_uint64(registers->Cr8));
-	json_object_object_add(x64_registers, "gdtr_0",
-			       json_object_new_uint64(registers->Gdtr[0]));
-	json_object_object_add(x64_registers, "gdtr_1",
-			       json_object_new_uint64(registers->Gdtr[1]));
-	json_object_object_add(x64_registers, "idtr_0",
-			       json_object_new_uint64(registers->Idtr[0]));
-	json_object_object_add(x64_registers, "idtr_1",
-			       json_object_new_uint64(registers->Idtr[1]));
-	json_object_object_add(x64_registers, "ldtr",
-			       json_object_new_int(registers->Ldtr));
-	json_object_object_add(x64_registers, "tr",
-			       json_object_new_int(registers->Tr));
+	add_uint(x64_registers, "rax", registers->Rax);
+	add_uint(x64_registers, "rbx", registers->Rbx);
+	add_uint(x64_registers, "rcx", registers->Rcx);
+	add_uint(x64_registers, "rdx", registers->Rdx);
+	add_uint(x64_registers, "rsi", registers->Rsi);
+	add_uint(x64_registers, "rdi", registers->Rdi);
+	add_uint(x64_registers, "rbp", registers->Rbp);
+	add_uint(x64_registers, "rsp", registers->Rsp);
+	add_uint(x64_registers, "r8", registers->R8);
+	add_uint(x64_registers, "r9", registers->R9);
+	add_uint(x64_registers, "r10", registers->R10);
+	add_uint(x64_registers, "r11", registers->R11);
+	add_uint(x64_registers, "r12", registers->R12);
+	add_uint(x64_registers, "r13", registers->R13);
+	add_uint(x64_registers, "r14", registers->R14);
+	add_uint(x64_registers, "r15", registers->R15);
+	add_int(x64_registers, "cs", registers->Cs);
+	add_int(x64_registers, "ds", registers->Ds);
+	add_int(x64_registers, "ss", registers->Ss);
+	add_int(x64_registers, "es", registers->Es);
+	add_int(x64_registers, "fs", registers->Fs);
+	add_int(x64_registers, "gs", registers->Gs);
+	add_uint(x64_registers, "rflags", registers->Rflags);
+	add_uint(x64_registers, "eip", registers->Rip);
+	add_uint(x64_registers, "cr0", registers->Cr0);
+	add_uint(x64_registers, "cr1", registers->Cr1);
+	add_uint(x64_registers, "cr2", registers->Cr2);
+	add_uint(x64_registers, "cr3", registers->Cr3);
+	add_uint(x64_registers, "cr4", registers->Cr4);
+	add_uint(x64_registers, "cr8", registers->Cr8);
+	add_uint(x64_registers, "gdtr_0", registers->Gdtr[0]);
+	add_uint(x64_registers, "gdtr_1", registers->Gdtr[1]);
+	add_uint(x64_registers, "idtr_0", registers->Idtr[0]);
+	add_uint(x64_registers, "idtr_1", registers->Idtr[1]);
+	add_int(x64_registers, "ldtr", registers->Ldtr);
+	add_int(x64_registers, "tr", registers->Tr);
 
 	return x64_registers;
 }

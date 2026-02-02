@@ -336,26 +336,19 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
 	//Version, provided each half in BCD.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
 		json_object *version = json_object_new_object();
-		json_object_object_add(version, "minor",
-				       json_object_new_int(bcd_to_int(
-					       pcie_error->Version & 0xFF)));
-		json_object_object_add(version, "major",
-				       json_object_new_int(bcd_to_int(
-					       pcie_error->Version >> 8)));
+		add_int(version, "minor",
+			bcd_to_int(pcie_error->Version & 0xFF));
+		add_int(version, "major", bcd_to_int(pcie_error->Version >> 8));
 		json_object_object_add(section_ir, "version", version);
 	}
 
 	//Command & status.
 	if (isvalid_prop_to_ir(&ui64Type, 2)) {
 		json_object *command_status = json_object_new_object();
-		json_object_object_add(
-			command_status, "commandRegister",
-			json_object_new_uint64(pcie_error->CommandStatus &
-					       0xFFFF));
-		json_object_object_add(
-			command_status, "statusRegister",
-			json_object_new_uint64(pcie_error->CommandStatus >>
-					       16));
+		add_uint(command_status, "commandRegister",
+			 pcie_error->CommandStatus & 0xFFFF);
+		add_uint(command_status, "statusRegister",
+			 pcie_error->CommandStatus >> 16);
 		json_object_object_add(section_ir, "commandStatus",
 				       command_status);
 	}
@@ -372,9 +365,7 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
 					    pcie_error->DevBridge.ClassCode[1],
 					    pcie_error->DevBridge.ClassCode[0]);
 		if (class_name != NULL) {
-			json_object_object_add(
-				device_id, "class",
-				json_object_new_string(class_name));
+			add_string(device_id, "class", class_name);
 		}
 		add_int_hex_16(device_id, "deviceID_Hex",
 			       pcie_error->DevBridge.DeviceId);
@@ -422,22 +413,17 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
 
 	//Device serial number.
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		json_object_object_add(
-			section_ir, "deviceSerialNumber",
-			json_object_new_uint64(pcie_error->SerialNo));
+		add_uint(section_ir, "deviceSerialNumber",
+			 pcie_error->SerialNo);
 	}
 
 	//Bridge control status.
 	if (isvalid_prop_to_ir(&ui64Type, 5)) {
 		json_object *bridge_control_status = json_object_new_object();
-		json_object_object_add(
-			bridge_control_status, "secondaryStatusRegister",
-			json_object_new_uint64(pcie_error->BridgeControlStatus &
-					       0xFFFF));
-		json_object_object_add(
-			bridge_control_status, "controlRegister",
-			json_object_new_uint64(
-				pcie_error->BridgeControlStatus >> 16));
+		add_uint(bridge_control_status, "secondaryStatusRegister",
+			 pcie_error->BridgeControlStatus & 0xFFFF);
+		add_uint(bridge_control_status, "controlRegister",
+			 pcie_error->BridgeControlStatus >> 16);
 		json_object_object_add(section_ir, "bridgeControlStatus",
 				       bridge_control_status);
 	}
@@ -472,9 +458,8 @@ json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	if (encoded == NULL) {
 		printf("Failed to allocate encode output buffer. \n");
 	} else {
-		json_object_object_add(pcie_capability_ir, "data",
-				       json_object_new_string_len(encoded,
-								  encoded_len));
+		add_string_len(pcie_capability_ir, "data", encoded,
+			       encoded_len);
 		free(encoded);
 	}
 
@@ -1089,9 +1074,7 @@ json_object *pcie_aer_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 	if (encoded == NULL) {
 		printf("Failed to allocate encode output buffer. \n");
 	} else {
-		json_object_object_add(aer_capability_ir, "data",
-				       json_object_new_string_len(encoded,
-								  encoded_len));
+		add_string_len(aer_capability_ir, "data", encoded, encoded_len);
 		free(encoded);
 	}
 

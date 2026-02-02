@@ -56,8 +56,7 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 	json_object *section_ir = json_object_new_object();
 
 	//Length (bytes) for the entire structure.
-	json_object_object_add(section_ir, "length",
-			       json_object_new_uint64(cxl_error->Length));
+	add_uint(section_ir, "length", cxl_error->Length);
 
 	//Validation bits.
 	ValidationTypes ui64Type = { UINT_64T,
@@ -66,36 +65,23 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 	//Device ID.
 	if (isvalid_prop_to_ir(&ui64Type, 0)) {
 		json_object *device_id = json_object_new_object();
-		json_object_object_add(
-			device_id, "vendorID",
-			json_object_new_int(cxl_error->DeviceId.VendorId));
-		json_object_object_add(
-			device_id, "deviceID",
-			json_object_new_int(cxl_error->DeviceId.DeviceId));
-		json_object_object_add(
-			device_id, "functionNumber",
-			json_object_new_int(
-				cxl_error->DeviceId.FunctionNumber));
-		json_object_object_add(
-			device_id, "deviceNumber",
-			json_object_new_int(cxl_error->DeviceId.DeviceNumber));
-		json_object_object_add(
-			device_id, "busNumber",
-			json_object_new_int(cxl_error->DeviceId.BusNumber));
-		json_object_object_add(
-			device_id, "segmentNumber",
-			json_object_new_int(cxl_error->DeviceId.SegmentNumber));
-		json_object_object_add(
-			device_id, "slotNumber",
-			json_object_new_int(cxl_error->DeviceId.SlotNumber));
+		add_int(device_id, "vendorID", cxl_error->DeviceId.VendorId);
+		add_int(device_id, "deviceID", cxl_error->DeviceId.DeviceId);
+		add_int(device_id, "functionNumber",
+			cxl_error->DeviceId.FunctionNumber);
+		add_int(device_id, "deviceNumber",
+			cxl_error->DeviceId.DeviceNumber);
+		add_int(device_id, "busNumber", cxl_error->DeviceId.BusNumber);
+		add_int(device_id, "segmentNumber",
+			cxl_error->DeviceId.SegmentNumber);
+		add_int(device_id, "slotNumber",
+			cxl_error->DeviceId.SlotNumber);
 		json_object_object_add(section_ir, "deviceID", device_id);
 	}
 
 	//Device serial.
 	if (isvalid_prop_to_ir(&ui64Type, 1)) {
-		json_object_object_add(
-			section_ir, "deviceSerial",
-			json_object_new_uint64(cxl_error->DeviceSerial));
+		add_uint(section_ir, "deviceSerial", cxl_error->DeviceSerial);
 	}
 
 	//The specification for this is defined within the CXL Specification Section 8.2.9.1.
@@ -118,9 +104,7 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 			}
 			json_object *event_log = json_object_new_object();
 
-			json_object_object_add(event_log, "data",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
+			add_string_len(event_log, "data", encoded, encoded_len);
 
 			free(encoded);
 			json_object_object_add(
