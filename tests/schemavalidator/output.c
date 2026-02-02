@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <json-c/json.h>
+#include <libcper/cper-utils.h>
 #include "validate.h"
 
 json_object *_schemavalidator_output_create_node(const char *name)
 {
 	json_object *joutput = json_object_new_object();
-	json_object_object_add(joutput, "name", json_object_new_string(name));
+	add_string(joutput, "name", name);
 	json_object_object_add(joutput, "nodes", json_object_new_array());
 	return joutput;
 }
@@ -46,7 +47,7 @@ void _schemavalidator_output_apply_result(json_object *joutput,
 					  enum schemavalidator_errors err)
 {
 	int res = err == SCHEMAVALIDATOR_ERR_VALID ? 1 : 0;
-	json_object_object_add(joutput, "valid", json_object_new_boolean(res));
+	add_bool(joutput, "valid", res);
 }
 
 void schemavalidator_output_print_traverse_error_nodes(

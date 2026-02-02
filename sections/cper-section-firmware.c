@@ -50,11 +50,8 @@ json_object *cper_section_firmware_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(section_ir, "errorRecordType", record_type);
 
 	//Revision, record identifier.
-	json_object_object_add(section_ir, "revision",
-			       json_object_new_int(firmware_error->Revision));
-	json_object_object_add(
-		section_ir, "recordID",
-		json_object_new_uint64(firmware_error->RecordId));
+	add_int(section_ir, "revision", firmware_error->Revision);
+	add_uint(section_ir, "recordID", firmware_error->RecordId);
 
 	//Record GUID.
 	add_guid(section_ir, "recordIDGUID", &firmware_error->RecordIdGuid);

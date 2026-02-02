@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <json.h>
 #include <libcper/log.h>
+#include <libcper/cper-utils.h>
 
 #include <libcper/cper-parse.h>
 #include <libcper/generator/cper-generate.h>
@@ -702,26 +703,18 @@ void NVIDIAEVENTEventHeaderVersionMismatch_IRValid(void)
 	// Create a test JSON with EventVersion != 1
 	json_object *test_ir = json_object_new_object();
 	json_object *header_ir = json_object_new_object();
-	json_object_object_add(header_ir, "revision", json_object_new_int(0));
-	json_object_object_add(header_ir, "sectionCount",
-			       json_object_new_int(1));
-	json_object_object_add(header_ir, "severity", json_object_new_int(0));
-	json_object_object_add(header_ir, "recordLength",
-			       json_object_new_int(256));
-	json_object_object_add(
-		header_ir, "timestamp",
-		json_object_new_string("0000-00-00T00:00:00+00:00"));
-	json_object_object_add(header_ir, "timestampIsPrecise",
-			       json_object_new_boolean(0));
-	json_object_object_add(
-		header_ir, "platformID",
-		json_object_new_string("00000000-0000-0000-0000-000000000000"));
-	json_object_object_add(
-		header_ir, "creatorID",
-		json_object_new_string("00000000-0000-0000-0000-000000000000"));
-	json_object_object_add(
-		header_ir, "notificationType",
-		json_object_new_string("00000000-0000-0000-0000-000000000000"));
+	add_int(header_ir, "revision", 0);
+	add_int(header_ir, "sectionCount", 1);
+	add_int(header_ir, "severity", 0);
+	add_int(header_ir, "recordLength", 256);
+	add_string(header_ir, "timestamp", "0000-00-00T00:00:00+00:00");
+	add_bool(header_ir, "timestampIsPrecise", 0);
+	add_string(header_ir, "platformID",
+		   "00000000-0000-0000-0000-000000000000");
+	add_string(header_ir, "creatorID",
+		   "00000000-0000-0000-0000-000000000000");
+	add_string(header_ir, "notificationType",
+		   "00000000-0000-0000-0000-000000000000");
 	json_object_object_add(test_ir, "header", header_ir);
 
 	json_object *sections_arr = json_object_new_array();
@@ -730,42 +723,34 @@ void NVIDIAEVENTEventHeaderVersionMismatch_IRValid(void)
 	json_object *event_header = json_object_new_object();
 
 	// Set EventVersion to 99 (not matching expected version 1)
-	json_object_object_add(event_header, "version",
-			       json_object_new_int(99));
-	json_object_object_add(event_header, "deviceType",
-			       json_object_new_int(0));
-	json_object_object_add(event_header, "eventType",
-			       json_object_new_int(0));
-	json_object_object_add(event_header, "eventSubtype",
-			       json_object_new_int(0));
-	json_object_object_add(event_header, "eventLinkId",
-			       json_object_new_string("0x0"));
-	json_object_object_add(event_header, "signature",
-			       json_object_new_string("TEST-EVENT-00000"));
+	add_int(event_header, "version", 99);
+	add_int(event_header, "deviceType", 0);
+	add_int(event_header, "eventType", 0);
+	add_int(event_header, "eventSubtype", 0);
+	add_string(event_header, "eventLinkId", "0x0");
+	add_string(event_header, "signature", "TEST-EVENT-00000");
 
 	json_object *event_info = json_object_new_object();
-	json_object_object_add(event_info, "version", json_object_new_int(0));
-	json_object_object_add(event_info, "size", json_object_new_int(19));
+	add_int(event_info, "version", 0);
+	add_int(event_info, "size", 19);
 
 	json_object *info_data = json_object_new_object();
-	json_object_object_add(info_data, "socketNum", json_object_new_int(0));
-	json_object_object_add(info_data, "architecture",
-			       json_object_new_int(0));
-	json_object_object_add(info_data, "ecid0", json_object_new_int(0));
-	json_object_object_add(info_data, "ecid1", json_object_new_int(0));
-	json_object_object_add(info_data, "ecid2", json_object_new_int(0));
-	json_object_object_add(info_data, "ecid3", json_object_new_int(0));
-	json_object_object_add(info_data, "instanceBase",
-			       json_object_new_string("0x0"));
+	add_int(info_data, "socketNum", 0);
+	add_int(info_data, "architecture", 0);
+	add_int(info_data, "ecid0", 0);
+	add_int(info_data, "ecid1", 0);
+	add_int(info_data, "ecid2", 0);
+	add_int(info_data, "ecid3", 0);
+	add_string(info_data, "instanceBase", "0x0");
 	json_object_object_add(event_info, "data", info_data);
 
 	json_object_object_add(nvidiaevent_obj, "eventHeader", event_header);
 	json_object_object_add(nvidiaevent_obj, "eventInfo", event_info);
+	json_object *event_contexts = json_object_new_array();
 	json_object_object_add(nvidiaevent_obj, "eventContexts",
-			       json_object_new_array());
+			       event_contexts);
 
-	json_object_object_add(section_obj, "sectionType",
-			       json_object_new_string("nvidiaevent"));
+	add_string(section_obj, "sectionType", "nvidiaevent");
 	json_object_object_add(section_obj, "nvidiaevent", nvidiaevent_obj);
 	json_object_array_add(sections_arr, section_obj);
 	json_object_object_add(test_ir, "sections", sections_arr);
@@ -773,12 +758,9 @@ void NVIDIAEVENTEventHeaderVersionMismatch_IRValid(void)
 	// Add section descriptors (required by ir_to_cper)
 	json_object *section_descriptors = json_object_new_array();
 	json_object *descriptor = json_object_new_object();
-	json_object_object_add(descriptor, "sectionOffset",
-			       json_object_new_int(200));
-	json_object_object_add(descriptor, "sectionLength",
-			       json_object_new_int(100));
-	json_object_object_add(descriptor, "sectionType",
-			       json_object_new_string("nvidiaevent"));
+	add_int(descriptor, "sectionOffset", 200);
+	add_int(descriptor, "sectionLength", 100);
+	add_string(descriptor, "sectionType", "nvidiaevent");
 	json_object_array_add(section_descriptors, descriptor);
 	json_object_object_add(test_ir, "sectionDescriptors",
 			       section_descriptors);

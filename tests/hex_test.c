@@ -97,8 +97,7 @@ void test_hex_decode_good(void)
 	// Test 1: Single zero byte
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string(test_hex_1));
+		add_string(obj, "data", test_hex_1);
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes != NULL);
@@ -111,8 +110,7 @@ void test_hex_decode_good(void)
 	// Test 2: Single 0xFF byte
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string(test_hex_2));
+		add_string(obj, "data", test_hex_2);
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes != NULL);
@@ -125,8 +123,7 @@ void test_hex_decode_good(void)
 	// Test 3: "deadbeef"
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string(test_hex_3));
+		add_string(obj, "data", test_hex_3);
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes != NULL);
@@ -139,9 +136,7 @@ void test_hex_decode_good(void)
 	// Test 4: Full range with uppercase hex
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(
-			obj, "data",
-			json_object_new_string("0123456789ABCDEF"));
+		add_string(obj, "data", "0123456789ABCDEF");
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes != NULL);
@@ -154,8 +149,7 @@ void test_hex_decode_good(void)
 	// Test 5: Mixed case hex
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string("DeAdBeEf"));
+		add_string(obj, "data", "DeAdBeEf");
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes != NULL);
@@ -207,8 +201,7 @@ void test_hex_error_cases(void)
 	// Test decode with NULL out_len
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string("deadbeef"));
+		add_string(obj, "data", "deadbeef");
 		UINT8 *bytes = get_bytes_hex(obj, "data", NULL);
 		assert(bytes == NULL);
 		json_object_put(obj);
@@ -226,7 +219,7 @@ void test_hex_error_cases(void)
 	// Test decode with non-string field
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data", json_object_new_int(12345));
+		add_int(obj, "data", 12345);
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes == NULL);
@@ -236,8 +229,7 @@ void test_hex_error_cases(void)
 	// Test decode with odd-length hex string
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string("abc"));
+		add_string(obj, "data", "abc");
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes == NULL); // Should fail - odd length
@@ -247,8 +239,7 @@ void test_hex_error_cases(void)
 	// Test decode with invalid hex character
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data",
-				       json_object_new_string("deadbXef"));
+		add_string(obj, "data", "deadbXef");
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		assert(bytes == NULL); // Should fail - 'X' is invalid
@@ -258,7 +249,7 @@ void test_hex_error_cases(void)
 	// Test decode with empty string
 	{
 		json_object *obj = json_object_new_object();
-		json_object_object_add(obj, "data", json_object_new_string(""));
+		add_string(obj, "data", "");
 		size_t out_len = 0;
 		UINT8 *bytes = get_bytes_hex(obj, "data", &out_len);
 		// Empty string has even length (0), so it might succeed with 0 bytes

@@ -230,38 +230,32 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	json_object *header_ir = json_object_new_object();
 
 	//Revision/version information.
-	json_object_object_add(header_ir, "revision",
-			       revision_to_ir(header->Revision));
+	json_object *revision = revision_to_ir(header->Revision);
+	json_object_object_add(header_ir, "revision", revision);
 
 	//Section count.
-	json_object_object_add(header_ir, "sectionCount",
-			       json_object_new_int(header->SectionCount));
+	add_int(header_ir, "sectionCount", header->SectionCount);
 
 	//Error severity (with interpreted string version).
 	json_object *error_severity = json_object_new_object();
-	json_object_object_add(error_severity, "code",
-			       json_object_new_uint64(header->ErrorSeverity));
-	json_object_object_add(error_severity, "name",
-			       json_object_new_string(severity_to_string(
-				       header->ErrorSeverity)));
+	add_uint(error_severity, "code", header->ErrorSeverity);
+	const char *severity_name = severity_to_string(header->ErrorSeverity);
+	add_string(error_severity, "name", severity_name);
+
 	json_object_object_add(header_ir, "severity", error_severity);
 
 	//Total length of the record (including headers) in bytes.
-	json_object_object_add(header_ir, "recordLength",
-			       json_object_new_uint64(header->RecordLength));
+	add_uint(header_ir, "recordLength", header->RecordLength);
 
 	//If a timestamp exists according to validation bits, then add it.
 	if (header->ValidationBits & 0x2) {
 		char timestamp_string[TIMESTAMP_LENGTH];
 		if (timestamp_to_string(timestamp_string, TIMESTAMP_LENGTH,
 					&header->TimeStamp) >= 0) {
-			json_object_object_add(
-				header_ir, "timestamp",
-				json_object_new_string(timestamp_string));
+			add_string(header_ir, "timestamp", timestamp_string);
 
-			json_object_object_add(header_ir, "timestampIsPrecise",
-					       json_object_new_boolean(
-						       header->TimeStamp.Flag));
+			add_bool(header_ir, "timestampIsPrecise",
+				 header->TimeStamp.Flag);
 		}
 	}
 
@@ -310,15 +304,12 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 		notification_type_readable = readable_names[index];
 	}
 
-	json_object_object_add(
-		notification_type, "type",
-		json_object_new_string(notification_type_readable));
+	add_string(notification_type, "type", notification_type_readable);
 	json_object_object_add(header_ir, "notificationType",
 			       notification_type);
 
 	//The record ID for this record, unique on a given system.
-	json_object_object_add(header_ir, "recordID",
-			       json_object_new_uint64(header->RecordID));
+	add_uint(header_ir, "recordID", header->RecordID);
 
 	//Flag for the record, and a human readable form.
 	json_object *flags = integer_to_readable_pair(
@@ -329,8 +320,7 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	json_object_object_add(header_ir, "flags", flags);
 
 	//Persistence information. Outside the scope of specification, so just a uint32 here.
-	json_object_object_add(header_ir, "persistenceInfo",
-			       json_object_new_uint64(header->PersistenceInfo));
+	add_uint(header_ir, "persistenceInfo", header->PersistenceInfo);
 	return header_ir;
 }
 
@@ -341,16 +331,14 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 	json_object *section_descriptor_ir = json_object_new_object();
 
 	//The offset of the section from the base of the record header, length.
-	json_object_object_add(
-		section_descriptor_ir, "sectionOffset",
-		json_object_new_uint64(section_descriptor->SectionOffset));
-	json_object_object_add(
-		section_descriptor_ir, "sectionLength",
-		json_object_new_uint64(section_descriptor->SectionLength));
+	add_uint(section_descriptor_ir, "sectionOffset",
+		 section_descriptor->SectionOffset);
+	add_uint(section_descriptor_ir, "sectionLength",
+		 section_descriptor->SectionLength);
 
 	//Revision.
-	json_object_object_add(section_descriptor_ir, "revision",
-			       revision_to_ir(section_descriptor->Revision));
+	json_object *revision = revision_to_ir(section_descriptor->Revision);
+	json_object_object_add(section_descriptor_ir, "revision", revision);
 
 	//Flag bits.
 	json_object *flags =
@@ -371,8 +359,7 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 		section_type_readable = section->ReadableName;
 	}
 
-	json_object_object_add(section_type, "type",
-			       json_object_new_string(section_type_readable));
+	add_string(section_type, "type", section_type_readable);
 	json_object_object_add(section_descriptor_ir, "sectionType",
 			       section_type);
 
@@ -391,12 +378,9 @@ cper_section_descriptor_to_ir(EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor)
 
 	//Section severity.
 	json_object *section_severity = json_object_new_object();
-	json_object_object_add(
-		section_severity, "code",
-		json_object_new_uint64(section_descriptor->Severity));
-	json_object_object_add(section_severity, "name",
-			       json_object_new_string(severity_to_string(
-				       section_descriptor->Severity)));
+	add_uint(section_severity, "code", section_descriptor->Severity);
+	add_string(section_severity, "name",
+		   severity_to_string(section_descriptor->Severity));
 	json_object_object_add(section_descriptor_ir, "severity",
 			       section_severity);
 
@@ -419,9 +403,7 @@ json_object *read_section(const unsigned char *cper_section_buf, size_t size,
 	}
 	json_object *result = json_object_new_object();
 	if (cper_description != NULL) {
-		json_object_object_add(
-			result, "message",
-			json_object_new_string(cper_description));
+		add_string(result, "message", cper_description);
 		free(cper_description);
 	}
 	json_object_object_add(result, definition->ShortName, section_ir);
@@ -487,9 +469,8 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 				"Failed to allocate encode output buffer. \n");
 		} else {
 			section_ir = json_object_new_object();
-			json_object_object_add(section_ir, "data",
-					       json_object_new_string_len(
-						       encoded, encoded_len));
+			add_string_len(section_ir, "data", encoded,
+				       encoded_len);
 			free(encoded);
 
 			result = json_object_new_object();
