@@ -32,27 +32,16 @@ cper_generic_error_status_to_ir(EFI_GENERIC_ERROR_STATUS *error_status)
 				       "Unknown (Reserved)"));
 
 	//Boolean bit fields.
-	json_object_object_add(
-		error_status_ir, "addressSignal",
-		json_object_new_boolean(error_status->AddressSignal));
-	json_object_object_add(
-		error_status_ir, "controlSignal",
-		json_object_new_boolean(error_status->ControlSignal));
-	json_object_object_add(
-		error_status_ir, "dataSignal",
-		json_object_new_boolean(error_status->DataSignal));
-	json_object_object_add(
-		error_status_ir, "detectedByResponder",
-		json_object_new_boolean(error_status->DetectedByResponder));
-	json_object_object_add(
-		error_status_ir, "detectedByRequester",
-		json_object_new_boolean(error_status->DetectedByRequester));
-	json_object_object_add(
-		error_status_ir, "firstError",
-		json_object_new_boolean(error_status->FirstError));
-	json_object_object_add(
-		error_status_ir, "overflowDroppedLogs",
-		json_object_new_boolean(error_status->OverflowNotLogged));
+	add_bool(error_status_ir, "addressSignal", error_status->AddressSignal);
+	add_bool(error_status_ir, "controlSignal", error_status->ControlSignal);
+	add_bool(error_status_ir, "dataSignal", error_status->DataSignal);
+	add_bool(error_status_ir, "detectedByResponder",
+		 error_status->DetectedByResponder);
+	add_bool(error_status_ir, "detectedByRequester",
+		 error_status->DetectedByRequester);
+	add_bool(error_status_ir, "firstError", error_status->FirstError);
+	add_bool(error_status_ir, "overflowDroppedLogs",
+		 error_status->OverflowNotLogged);
 
 	return error_status_ir;
 }
@@ -86,8 +75,7 @@ json_object *uniform_struct64_to_ir(UINT64 *start, int len, const char *names[])
 
 	UINT64 *cur = start;
 	for (int i = 0; i < len; i++) {
-		json_object_object_add(result, names[i],
-				       json_object_new_uint64(*cur));
+		add_uint(result, names[i], *cur);
 		cur++;
 	}
 
@@ -103,8 +91,7 @@ json_object *uniform_struct_to_ir(UINT32 *start, int len, const char *names[])
 	for (int i = 0; i < len; i++) {
 		UINT32 value;
 		memcpy(&value, cur, sizeof(UINT32));
-		json_object_object_add(result, names[i],
-				       json_object_new_uint64(value));
+		add_uint(result, names[i], value);
 		cur++;
 	}
 
@@ -141,7 +128,7 @@ json_object *integer_to_readable_pair(UINT64 value, int len, const int keys[],
 				      const char *default_value)
 {
 	json_object *result = json_object_new_object();
-	json_object_object_add(result, "value", json_object_new_uint64(value));
+	add_uint(result, "value", value);
 
 	//Search for human readable name, add.
 	const char *name = default_value;
@@ -151,7 +138,7 @@ json_object *integer_to_readable_pair(UINT64 value, int len, const int keys[],
 		}
 	}
 
-	json_object_object_add(result, "name", json_object_new_string(name));
+	add_string(result, "name", name);
 	return result;
 }
 
@@ -163,20 +150,18 @@ json_object *integer_to_readable_pair_with_desc(int value, int len,
 						const char *default_value)
 {
 	json_object *result = json_object_new_object();
-	json_object_object_add(result, "value", json_object_new_int(value));
+	add_int(result, "value", value);
 
 	//Search for human readable name, add.
 	const char *name = default_value;
 	for (int i = 0; i < len; i++) {
 		if (keys[i] == value) {
 			name = values[i];
-			json_object_object_add(
-				result, "description",
-				json_object_new_string(descriptions[i]));
+			add_string(result, "description", descriptions[i]);
 		}
 	}
 
-	json_object_object_add(result, "name", json_object_new_string(name));
+	add_string(result, "name", name);
 	return result;
 }
 
@@ -193,9 +178,7 @@ json_object *bitfield_to_ir(UINT64 bitfield, int num_fields,
 {
 	json_object *result = json_object_new_object();
 	for (int i = 0; i < num_fields; i++) {
-		json_object_object_add(result, names[i],
-				       json_object_new_boolean((bitfield >> i) &
-							       0x1));
+		add_bool(result, names[i], (bitfield >> i) & 0x1);
 	}
 
 	return result;
@@ -308,10 +291,8 @@ json_object *uint64_array_to_ir_array(UINT64 *array, int len)
 json_object *revision_to_ir(UINT16 revision)
 {
 	json_object *revision_info = json_object_new_object();
-	json_object_object_add(revision_info, "major",
-			       json_object_new_int(revision >> 8));
-	json_object_object_add(revision_info, "minor",
-			       json_object_new_int(revision & 0xFF));
+	add_int(revision_info, "major", revision >> 8);
+	add_int(revision_info, "minor", revision & 0xFF);
 	return revision_info;
 }
 
@@ -490,9 +471,7 @@ void add_untrusted_string(json_object *ir, const char *field_name,
 {
 	int fru_text_len = cper_printable_string_length(str, len);
 	if (fru_text_len >= 0) {
-		json_object_object_add(
-			ir, field_name,
-			json_object_new_string_len(str, fru_text_len));
+		add_string_len(ir, field_name, str, fru_text_len);
 	}
 }
 
@@ -502,16 +481,33 @@ void add_guid(json_object *ir, const char *field_name, EFI_GUID *guid)
 	if (!guid_to_string(platform_string, sizeof(platform_string), guid)) {
 		return;
 	}
-	json_object_object_add(
-		ir, field_name,
-		json_object_new_string_len(platform_string,
-					   sizeof(platform_string) - 1));
+	add_string_len(ir, field_name, platform_string,
+		       sizeof(platform_string) - 1);
+}
+void add_string(json_object *register_ir, const char *field_name,
+		const char *value)
+{
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_string(value));
 }
 
-void add_int(json_object *register_ir, const char *field_name, int value)
+void add_string_len(json_object *register_ir, const char *field_name,
+		    const char *value, int len)
+{
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_string_len(value, len));
+}
+
+void add_uint(json_object *register_ir, const char *field_name, uint64_t value)
 {
 	json_object_object_add(register_ir, field_name,
 			       json_object_new_uint64(value));
+}
+
+void add_int(json_object *register_ir, const char *field_name, int64_t value)
+{
+	json_object_object_add(register_ir, field_name,
+			       json_object_new_int(value));
 }
 
 static void add_int_hex_common(json_object *register_ir, const char *field_name,
@@ -520,8 +516,7 @@ static void add_int_hex_common(json_object *register_ir, const char *field_name,
 	char hexstring_buf[EFI_UINT64_HEX_STRING_LEN];
 	snprintf(hexstring_buf, EFI_UINT64_HEX_STRING_LEN, "0x%0*llX", len,
 		 value);
-	json_object_object_add(register_ir, field_name,
-			       json_object_new_string(hexstring_buf));
+	add_string(register_ir, field_name, hexstring_buf);
 }
 
 void add_int_hex_8(json_object *register_ir, const char *field_name,
@@ -561,8 +556,7 @@ void add_bool_enum(json_object *register_ir, const char *field_name,
 	if (value_int > 0) {
 		value = value_dict[1];
 	}
-	json_object_object_add(register_ir, field_name,
-			       json_object_new_string(value));
+	add_string(register_ir, field_name, value);
 }
 
 void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
@@ -570,7 +564,7 @@ void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
 {
 	json_object *field_ir = json_object_new_object();
 	json_object_object_add(register_ir, field_name, field_ir);
-	json_object_object_add(field_ir, "raw", json_object_new_uint64(value));
+	add_uint(field_ir, "raw", value);
 
 	if (dict != NULL) {
 		if (value < dict_size) {
@@ -578,9 +572,7 @@ void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
 			if (name != NULL) {
 				const char *value_name = name;
 
-				json_object_object_add(
-					field_ir, "value",
-					json_object_new_string(value_name));
+				add_string(field_ir, "value", value_name);
 			}
 		}
 	}
