@@ -3,6 +3,7 @@
  * Minimal parser/generator for ARM RAS CPER section (Table 20/21)
  * Author: prachotan.bathi@arm.com
  */
+#include <libcper/Cper.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -357,9 +358,21 @@ arm_ras_aux_parse_contexts(json_object *auxStructured, const UINT8 *aux_ptr,
 	return ok;
 }
 
+int is_mpam(EFI_GUID *key)
+{
+	if (guid_equal(key, &EFI_ARM_RAS_KVP_UUID_MPAM_PARTID)) {
+		return 1;
+	}
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	// The exact byte used here is arbitrary.
+	return key->Data4[0] % 2;
+#endif
+	return 0;
+}
+
 static void arm_ras_aux_parse_kvps(json_object *auxStructured,
 				   const UINT8 *aux_ptr,
-				   const EFI_ARM_RAS_AUX_DATA_HEADER *auxHdr)
+				   EFI_ARM_RAS_AUX_DATA_HEADER *auxHdr)
 {
 	const UINT8 *kvBase = aux_ptr + auxHdr->KeyValuePairArrayOffset;
 	UINT32 kvAvail =
@@ -371,42 +384,18 @@ static void arm_ras_aux_parse_kvps(json_object *auxStructured,
 	}
 
 	json_object *kvps = json_object_new_array();
-	const EFI_ARM_RAS_AUX_KEY_VALUE_PAIR *kvArr =
-		(const EFI_ARM_RAS_AUX_KEY_VALUE_PAIR *)kvBase;
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-	bool mpam_match_found = false;
-#endif
+	EFI_ARM_RAS_AUX_KEY_VALUE_PAIR *kvArr =
+		(EFI_ARM_RAS_AUX_KEY_VALUE_PAIR *)kvBase;
 	for (UINT16 ki = 0; ki < auxHdr->KeyValuePairArrayEntryCount; ki++) {
 		json_object *kv = json_object_new_object();
-		char uuidStr[37];
-		const UINT8 *kb = kvArr[ki].Key;
-		int len = snprintf(
-			uuidStr, sizeof(uuidStr),
-			"%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-			kb[0], kb[1], kb[2], kb[3], kb[4], kb[5], kb[6], kb[7],
-			kb[8], kb[9], kb[10], kb[11], kb[12], kb[13], kb[14],
-			kb[15]);
-		if (len < 0) {
-			cper_print_log(
-				"Error: Could not write to UUID string\n");
-		} else if (len > (int)sizeof(uuidStr)) {
-			cper_print_log("Error: UUID string truncated\n");
-		}
-		json_object_object_add(kv, "key",
-				       json_object_new_string(uuidStr));
+		EFI_ARM_RAS_AUX_KEY_VALUE_PAIR *kvEntry = &kvArr[ki];
+		EFI_GUID key = kvEntry->Key;
+		add_guid(kv, "key", &key);
+
 		json_object_object_add(kv, "value",
-				       json_object_new_uint64(kvArr[ki].Value));
-		if (memcmp(kvArr[ki].Key, EFI_ARM_RAS_KVP_UUID_MPAM_PARTID,
-			   16) == 0
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-		    || (!mpam_match_found &&
-			ki == auxHdr->KeyValuePairArrayEntryCount - 1)
-#endif
-		) {
-#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-			mpam_match_found = true;
-#endif
-			UINT16 partId = (UINT16)(kvArr[ki].Value & 0xFFFF);
+				       json_object_new_uint64(kvEntry->Value));
+		if (is_mpam(&key)) {
+			UINT16 partId = (UINT16)(kvEntry->Value & 0xFFFF);
 			json_object_object_add(
 				kv, "mpamPartId",
 				json_object_new_uint64((UINT64)partId));
@@ -437,8 +426,8 @@ static json_object *arm_ras_parse_aux_data(const UINT8 *section, UINT32 size,
 		return NULL;
 	}
 
-	const EFI_ARM_RAS_AUX_DATA_HEADER *auxHdr =
-		(const EFI_ARM_RAS_AUX_DATA_HEADER *)aux_ptr;
+	EFI_ARM_RAS_AUX_DATA_HEADER *auxHdr =
+		(EFI_ARM_RAS_AUX_DATA_HEADER *)aux_ptr;
 	if (!arm_ras_aux_hdr_valid(auxHdr, auxLen)) {
 		cper_print_log(
 			"Invalid ARM RAS auxiliary header: version=%u, auxSize=%u, kvOffset=%u, kvCount=%u",
@@ -649,22 +638,8 @@ static void arm_ras_build_aux_kvps(UINT8 *builtAux, UINT16 kvpCount,
 		json_object_object_get_ex(kv, "value", &valObj);
 		const char *hexKey = keyObj ? json_object_get_string(keyObj) :
 					      NULL;
-		if (hexKey && strlen(hexKey) >= ARM_RAS_KEY_HEX_LEN) {
-			int bi = 0;
-			int hi = 0;
-			while (bi < ARM_RAS_KEY_HEX_BYTES && hexKey[hi]) {
-				if (hexKey[hi] == '-') {
-					hi++;
-					continue;
-				}
-				unsigned v = 0;
-				sscanf(&hexKey[hi], "%02x", &v);
-				kvOut[ki].Key[bi++] = (UINT8)v;
-				hi += 2;
-			}
-		} else {
-			memset(kvOut[ki].Key, 0, ARM_RAS_KEY_HEX_BYTES);
-		}
+		string_to_guid(&kvOut[ki].Key, hexKey);
+
 		kvOut[ki].Value = valObj ? json_object_get_uint64(valObj) : 0;
 	}
 }

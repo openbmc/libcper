@@ -59,7 +59,7 @@ int timestamp_to_string(char *out, int out_len,
 void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp);
 int guid_to_string(char *out, size_t out_len, EFI_GUID *guid);
 void string_to_guid(EFI_GUID *out, const char *guid);
-int guid_equal(EFI_GUID *a, EFI_GUID *b);
+int guid_equal(const EFI_GUID *a, const EFI_GUID *b);
 int select_guid_from_list(EFI_GUID *guid, EFI_GUID *guid_list[], int len);
 
 void add_untrusted_string(json_object *ir, const char *field_name,

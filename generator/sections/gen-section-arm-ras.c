@@ -188,19 +188,14 @@ static bool gen_arm_ras_fill_aux_data(UINT8 *buf, UINT16 auxOffset,
 				 *)(auxBase + hdr->KeyValuePairArrayOffset);
 		for (UINT16 ki = 0; ki < kvCount; ki++) {
 			if ((cper_rand() % 4) == 0) {
-				memcpy(kvOut[ki].Key,
-				       EFI_ARM_RAS_KVP_UUID_MPAM_PARTID, 16);
-				kvOut[ki].Value =
-					(UINT64)(cper_rand() & 0xFFFF);
+				kvOut[ki].Key =
+					EFI_ARM_RAS_KVP_UUID_MPAM_PARTID;
 			} else {
 				UINT8 *rb = generate_random_bytes(16);
-				if (!rb) {
-					return false;
-				}
-				memcpy(kvOut[ki].Key, rb, 16);
+				kvOut[ki].Key = *((EFI_GUID *)rb);
 				free(rb);
-				kvOut[ki].Value = (UINT64)cper_rand();
 			}
+			kvOut[ki].Value = (UINT64)cper_rand();
 		}
 	}
 

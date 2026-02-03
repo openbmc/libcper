@@ -1765,15 +1765,17 @@ typedef struct {
 } __attribute__((packed, aligned(1))) EFI_ARM_RAS_AUX_MM_REG_ENTRY;
 
 typedef struct {
-	UINT8 Key[16]; /* UUID describing the value */
-	UINT64 Value;  /* Key-specific value */
+	EFI_GUID Key; /* UUID describing the value */
+	UINT64 Value; /* Key-specific value */
 } __attribute__((packed, aligned(1))) EFI_ARM_RAS_AUX_KEY_VALUE_PAIR;
 
 /* Known Key Value Pair UUIDs (Table 26) */
 /* ebb45182-fb03-4bf9-9aca-8613709fd789 */
-static const UINT8 EFI_ARM_RAS_KVP_UUID_MPAM_PARTID[16] = {
-	0xEB, 0xB4, 0x51, 0x82, 0xFB, 0x03, 0x4B, 0xF9,
-	0x9A, 0xCA, 0x86, 0x13, 0x70, 0x9F, 0xD7, 0x89
+static const EFI_GUID EFI_ARM_RAS_KVP_UUID_MPAM_PARTID = {
+	0xEBB45182,
+	0xFB03,
+	0x4BF9,
+	{ 0x9A, 0xCA, 0x86, 0x13, 0x70, 0x9F, 0xD7, 0x89 }
 };
 #pragma pack(pop)
 
