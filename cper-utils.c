@@ -419,7 +419,7 @@ void string_to_guid(EFI_GUID *out, const char *guid)
 }
 
 //Returns one if two EFI GUIDs are equal, zero otherwise.
-int guid_equal(EFI_GUID *a, EFI_GUID *b)
+int guid_equal(const EFI_GUID *a, const EFI_GUID *b)
 {
 	//Check top base 3 components.
 	if (a->Data1 != b->Data1 || a->Data2 != b->Data2 ||
