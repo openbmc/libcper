@@ -16,6 +16,24 @@
       "message": "I\u0027ve stacked some fixes to this here:\nhttps://gerrit.openbmc.org/c/openbmc/libcper/+/87170\n\nplease incorporate them.",
       "revId": "c5917a6ca83585debe2fad304a58df0e8a2724d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3349e389_b90d4c34",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-03T03:41:59Z",
+      "side": 1,
+      "message": "They move to using the common guid struct for matching, as well as clean up several things.",
+      "parentUuid": "704b28b9_c99900a2",
+      "revId": "c5917a6ca83585debe2fad304a58df0e8a2724d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
