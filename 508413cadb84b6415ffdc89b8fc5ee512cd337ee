@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "abecd779_b71b9ff8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-03T00:26:58Z",
+      "side": 1,
+      "message": "We\u0027re close, but we\u0027re still seeing code safety issues.  Hopefully the next round should be ready to merge.",
+      "parentUuid": "cafdc811_355ab0bb",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99f8737b_9d47a29e",
@@ -117,6 +135,23 @@
       "writtenOn": "2026-02-02T18:54:58Z",
       "side": 1,
       "message": "Not clear to me what this means?",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c1c3a27_885e133b",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-03T00:26:58Z",
+      "side": 1,
+      "message": "This looks incorrect.  Need some validation of the pointer here, and passing in a length.\n\nSuspect you want to use the untrusted one here.",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
