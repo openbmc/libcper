@@ -65,9 +65,10 @@ void ir_section_pcie_to_cper(json_object *section, FILE *out);
  * Offset: 0x0
  */
 typedef struct {
-	UINT16 capability_id : 8; // bits [7:0] - Capability ID (should be 0x10)
-	UINT16 next_capability_pointer
-		: 8;		  // bits [7:0] - Next capability pointer
+	// bits [7:0] - Capability ID (should be 0x10)
+	UINT16 capability_id : 8;
+	// bits [7:0] - Next capability pointer
+	UINT16 next_capability_pointer : 8;
 } __attribute__((packed)) pcie_capability_header_t;
 
 /*

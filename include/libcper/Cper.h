@@ -802,17 +802,20 @@ typedef struct {
 typedef struct {
 	UINT64 Resv1 : 8;
 	UINT64 Type : 8;
-	UINT64 AddressSignal
-		: 1; ///< Error in Address signals or in Address portion of transaction
-	UINT64 ControlSignal
-		: 1; ///< Error in Control signals or in Control portion of transaction
-	UINT64 DataSignal
-		: 1; ///< Error in Data signals or in Data portion of transaction
-	UINT64 DetectedByResponder : 1; ///< Error detected by responder
-	UINT64 DetectedByRequester : 1; ///< Error detected by requestor
-	UINT64 FirstError : 1; ///< First Error in the sequence - option field
-	UINT64 OverflowNotLogged
-		: 1; ///< Additional errors were not logged due to lack of resources
+	// Error in Address signals or in Address portion of transaction
+	UINT64 AddressSignal : 1;
+	// Error in Control signals or in Control portion of transaction
+	UINT64 ControlSignal : 1;
+	// Error in Data signals or in Data portion of transaction
+	UINT64 DataSignal : 1;
+	// Error detected by responder
+	UINT64 DetectedByResponder : 1;
+	// Error detected by requestor
+	UINT64 DetectedByRequester : 1;
+	// First Error in the sequence - option field
+	UINT64 FirstError : 1;
+	// Additional errors were not logged due to lack of resources
+	UINT64 OverflowNotLogged : 1;
 	UINT64 Resv2 : 41;
 } EFI_GENERIC_ERROR_STATUS;
 
