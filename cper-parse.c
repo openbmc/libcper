@@ -460,22 +460,12 @@ json_object *cper_buf_section_to_ir(const void *cper_section_buf, size_t size,
 	//Was it an unknown GUID/failed read?
 	if (result == NULL) {
 		//Output the data as formatted base64.
-		int32_t encoded_len = 0;
-		char *encoded = base64_encode(cper_section_buf,
-					      descriptor->SectionLength,
-					      &encoded_len);
-		if (encoded == NULL) {
-			cper_print_log(
-				"Failed to allocate encode output buffer. \n");
-		} else {
-			section_ir = json_object_new_object();
-			add_string_len(section_ir, "data", encoded,
-				       encoded_len);
-			free(encoded);
+		section_ir = json_object_new_object();
+		add_binary_base64(section_ir, "data", cper_section_buf,
+				  descriptor->SectionLength);
 
-			result = json_object_new_object();
-			json_object_object_add(result, "Unknown", section_ir);
-		}
+		result = json_object_new_object();
+		json_object_object_add(result, "Unknown", section_ir);
 	}
 	if (result == NULL) {
 		cper_print_log("RETURNING NULL!! !!\n");

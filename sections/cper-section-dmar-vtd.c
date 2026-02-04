@@ -87,24 +87,14 @@ json_object *cper_section_dmar_vtd_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(section_ir, "faultRecord", fault_record_ir);
 
 	//Root entry.
-	int32_t encoded_len = 0;
-
-	char *encoded =
-		base64_encode((UINT8 *)vtd_error->RootEntry, 16, &encoded_len);
-	add_string_len(section_ir, "rootEntry", encoded, encoded_len);
-	free(encoded);
+	add_binary_base64(section_ir, "rootEntry",
+			  (UINT8 *)vtd_error->RootEntry,
+			  sizeof(vtd_error->RootEntry));
 
 	//Context entry.
-	encoded_len = 0;
-	encoded = base64_encode((UINT8 *)vtd_error->ContextEntry, 16,
-				&encoded_len);
-	if (encoded == NULL) {
-		cper_print_log("Failed to allocate encode output buffer. \n");
-	} else {
-		add_string_len(section_ir, "contextEntry", encoded,
-			       encoded_len);
-		free(encoded);
-	}
+	add_binary_base64(section_ir, "contextEntry",
+			  (UINT8 *)vtd_error->ContextEntry,
+			  sizeof(vtd_error->ContextEntry));
 
 	//PTE entry for all page levels.
 	add_uint(section_ir, "pageTableEntry_Level6", vtd_error->PteL6);

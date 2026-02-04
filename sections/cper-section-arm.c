@@ -266,21 +266,8 @@ json_object *cper_section_arm_to_ir(const UINT8 *section, UINT32 size,
 					"Invalid CPER file: Invalid vendor-specific info length.\n");
 				return NULL;
 			}
-			int32_t encoded_len = 0;
-			char *encoded = base64_encode(cur_pos, input_size,
-						      &encoded_len);
-			if (encoded == NULL) {
-				json_object_put(vendor_specific);
-				json_object_put(section_ir);
-				free(*desc_string);
-				*desc_string = NULL;
-				cper_print_log(
-					"base64 encode of vendorSpecificInfo failed\n");
-				return NULL;
-			}
-			add_string_len(vendor_specific, "data", encoded,
-				       encoded_len);
-			free(encoded);
+			add_binary_base64(vendor_specific, "data", cur_pos,
+					  input_size);
 
 			json_object_object_add(section_ir, "vendorSpecificInfo",
 					       vendor_specific);
@@ -860,16 +847,9 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 			goto fail;
 		}
 		//Unknown register array type, add as base64 data instead.
-		int32_t encoded_len = 0;
-		char *encoded = base64_encode((UINT8 *)*cur_pos,
-					      header->RegisterArraySize,
-					      &encoded_len);
-		if (encoded == NULL) {
-			goto fail;
-		}
 		register_array = json_object_new_object();
-		add_string_len(register_array, "data", encoded, encoded_len);
-		free(encoded);
+		add_binary_base64(register_array, "data", *cur_pos,
+				  header->RegisterArraySize);
 
 		break;
 	}

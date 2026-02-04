@@ -90,23 +90,9 @@ json_object *cper_section_cxl_component_to_ir(const UINT8 *section, UINT32 size,
 		int remaining_len = cxl_error->Length -
 				    sizeof(EFI_CXL_COMPONENT_EVENT_HEADER);
 		if (remaining_len > 0) {
-			int32_t encoded_len = 0;
-
-			char *encoded = base64_encode(cur_pos, remaining_len,
-						      &encoded_len);
-			if (encoded == NULL) {
-				cper_print_log(
-					"Failed to allocate encode output buffer. \n");
-				json_object_put(section_ir);
-				free(*desc_string);
-				*desc_string = NULL;
-				return NULL;
-			}
 			json_object *event_log = json_object_new_object();
-
-			add_string_len(event_log, "data", encoded, encoded_len);
-
-			free(encoded);
+			add_binary_base64(event_log, "data", cur_pos,
+					  remaining_len);
 			json_object_object_add(
 				section_ir, "cxlComponentEventLog", event_log);
 		}
