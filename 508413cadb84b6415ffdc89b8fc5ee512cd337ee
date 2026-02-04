@@ -53,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17b31372_b59bf11b",
+        "filename": "cper-utils.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Can you point me to where the test case should go? I don\u0027t see test cases for other helper functions.",
+      "parentUuid": "99f8737b_9d47a29e",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "847c6dda_cd0c0789",
@@ -66,6 +84,30 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "Presumably this should actually be an enum?  type\u003d6 isn\u0027t very descriptive.\n\nThere\u0027s a number of fields:\nipInstanceFormat\nipTypeFormat\n\nThat look similar",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 35
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46096d50_48f4c735",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Thanks for pointing this, now using the readable_pair_to_integer and integer_to_readable_pair utility functions to improve json readability.",
+      "parentUuid": "847c6dda_cd0c0789",
       "range": {
         "startLine": 63,
         "startChar": 0,
@@ -99,6 +141,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "376444cf_3ec2c316",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ff6523c_e195a8ef",
+      "range": {
+        "startLine": 69,
+        "startChar": 17,
+        "endLine": 69,
+        "endChar": 27
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf43967f_0e3c13bb",
@@ -112,6 +178,30 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "ipTypeHex?",
+      "range": {
+        "startLine": 70,
+        "startChar": 17,
+        "endLine": 70,
+        "endChar": 23
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "852b079f_88548a39",
+        "filename": "examples/arm-ras.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf43967f_0e3c13bb",
       "range": {
         "startLine": 70,
         "startChar": 17,
@@ -139,6 +229,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68d2d48a_0891fa8c",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "This is what the spec says about the component type field:\nComponent type 1 4 This field must be set to the value of the Type field\nin the AEST node that describes this error node.\nThe Type field is defined in Table 4.\nNote that from Revision 1 onward, this field is\nconsidered legacy. More concrete IP identification\nis present in the fields below.",
+      "parentUuid": "7d9b95f2_9dccf299",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c1c3a27_885e133b",
@@ -156,6 +264,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2ea825c_966c645f",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "the add_untrusted_string helper function adds a json object, this doesn\u0027t support our use case to update the desc string to reflect the state of the parsing, if fails parsing we return an empty json with the desc string reflecting the reason, the ternary should act as the null check, however reason is always a string literal in this file. Is there something specific that looks incorrect?",
+      "parentUuid": "7c1c3a27_885e133b",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e8f7ee5_773a79c7",
@@ -169,6 +295,30 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "Doesn\u0027t this need to depend on the value of IPInstanceFormat?",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 23
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95f6af17_7ba05ec5",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Yes, the value of ipInstance depends on the value of IPInstanceFormat, but since this is just parsing from/to a json, do we have to validate the correctness or just report as is?",
+      "parentUuid": "8e8f7ee5_773a79c7",
       "range": {
         "startLine": 132,
         "startChar": 22,
@@ -202,6 +352,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72712acf_822b0b39",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2a5bde7_3fe8e005",
+      "range": {
+        "startLine": 133,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 33
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fac60f75_f6eb51cf",
@@ -215,6 +389,30 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "should be sizeof(node-\u003eIPType)",
+      "range": {
+        "startLine": 134,
+        "startChar": 56,
+        "endLine": 134,
+        "endChar": 57
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0be6f0a2_8b516aa9",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fac60f75_f6eb51cf",
       "range": {
         "startLine": 134,
         "startChar": 56,
@@ -248,6 +446,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3271e022_68442ba9",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96f53388_4c16b056",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 2
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ede8584_ce6bdf24",
@@ -261,6 +483,30 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "Why are we casting to char here?  This is already a char array.",
+      "range": {
+        "startLine": 144,
+        "startChar": 40,
+        "endLine": 144,
+        "endChar": 54
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "555cd77f_ffab9f90",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ede8584_ce6bdf24",
       "range": {
         "startLine": 144,
         "startChar": 40,
@@ -288,6 +534,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0225ca73_88525b1d",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b63bb772_d4b90318",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51f21795_f4579b0d",
@@ -301,6 +565,30 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "?  can this be cleaned up any?",
+      "range": {
+        "startLine": 330,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 48
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92bf3a14_5f9ae684",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51f21795_f4579b0d",
       "range": {
         "startLine": 330,
         "startChar": 0,
@@ -328,6 +616,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "af1f57a4_c0edd2ec",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f7e8ca2_f4cefb6d",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43544907_cb726e62",
@@ -351,6 +657,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ff3d695_e1f2e405",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43544907_cb726e62",
+      "range": {
+        "startLine": 401,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 6
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3255a2ab_909287b7",
@@ -364,6 +694,24 @@
       "writtenOn": "2026-02-02T16:16:02Z",
       "side": 1,
       "message": "This isn\u0027t right.\n\n{\n   \"key\": \"....\",\n   \"value\": \"....\",\n   \"mpamPartId\": \"....\"\n}\n\nThis should be more like\n\n{\n   \"key\": \"....\",\n   \"value\": {\n      \"raw\": \"....\",\n   },\n}\nor \n{\n   \"key\": \"....\",\n   \"value\": {\n      \"mpamPartId\": \"....\",\n   },\n}",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c47136d1_764d82e6",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-04T23:21:44Z",
+      "side": 1,
+      "message": "The mpamPartId is not a field mandated by the spec, only added it here for convenience and readability, I understand the structure isn\u0027t accurately representing this, removing this field to keep structure accurate with the spec.",
+      "parentUuid": "3255a2ab_909287b7",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
