@@ -22,6 +22,69 @@
       },
       "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d57d9455_d6c75a0c",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-04T21:47:39Z",
+      "side": 1,
+      "message": "don\u0027t make methods that start with _",
+      "range": {
+        "startLine": 304,
+        "startChar": 12,
+        "endLine": 304,
+        "endChar": 36
+      },
+      "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fbf959c_9d00c4c8",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-04T21:47:39Z",
+      "side": 1,
+      "message": "Please don\u0027t do this.  add_uint does exactly this without macros.",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 359,
+        "endChar": 81
+      },
+      "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0892d0_f9de3728",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-04T21:47:39Z",
+      "side": 1,
+      "message": "Remove",
+      "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
