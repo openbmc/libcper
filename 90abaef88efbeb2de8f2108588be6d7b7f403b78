@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6452c8f1_7f6a40ac",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-04T22:04:25Z",
+      "side": 1,
+      "message": "Not sure we do this anywhere else?",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 56
+      },
+      "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf247d6f_b2db1a85",
         "filename": "sections/cper-section-nvidia-events.c",
         "patchSetId": 8
@@ -106,6 +129,23 @@
         "endLine": 539,
         "endChar": 73
       },
+      "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09ef3b41_313e6725",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1764,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-04T22:04:25Z",
+      "side": 1,
+      "message": "Good call, but this (and more) is what add_untrusted_string does.",
       "revId": "90abaef88efbeb2de8f2108588be6d7b7f403b78",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
