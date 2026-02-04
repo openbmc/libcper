@@ -85,6 +85,10 @@ void add_string(json_object *register_ir, const char *field_name,
 		const char *value);
 void add_string_len(json_object *register_ir, const char *field_name,
 		    const char *value, int len);
+
+void add_binary_base64(json_object *register_ir, const char *field_name,
+		       const UINT8 *value, int len);
+
 void add_int(json_object *register_ir, const char *field_name, int64_t value);
 void add_uint(json_object *register_ir, const char *field_name, uint64_t value);
 
