@@ -126,27 +126,14 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 		}
 	}
 
-	char *encoded;
-	int32_t encoded_len = 0;
-
 	//The PCIe capability structure provided here could either be PCIe 1.1 Capability Structure
 	//(36-byte, padded to 60 bytes) or PCIe 2.0 Capability Structure (60-byte). There does not seem
 	//to be a way to differentiate these, so this is left as a b64 dump.
 	if (isvalid_prop_to_ir(&ui64Type, 4)) {
-		encoded = base64_encode(
-			(UINT8 *)cxl_protocol_error->CapabilityStructure.PcieCap,
-			60, &encoded_len);
-		if (encoded == NULL) {
-			cper_print_log(
-				"Failed to allocate encode output buffer. \n");
-			json_object_put(section_ir);
-			free(*desc_string);
-			*desc_string = NULL;
-			return NULL;
-		}
-		add_string_len(section_ir, "capabilityStructure", encoded,
-			       encoded_len);
-		free(encoded);
+		add_binary_base64(
+			section_ir, "capabilityStructure",
+			cxl_protocol_error->CapabilityStructure.PcieCap,
+			sizeof(cxl_protocol_error->CapabilityStructure.PcieCap));
 	}
 
 	const UINT8 *cur_pos = (const UINT8 *)(cxl_protocol_error + 1);
@@ -158,20 +145,8 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 		//CXL DVSEC
 		//For CXL 1.1 devices, this is the "CXL DVSEC For Flex Bus Device" structure as in CXL 1.1 spec.
 		//For CXL 1.1 host downstream ports, this is the "CXL DVSEC For Flex Bus Port" structure as in CXL 1.1 spec.
-		int32_t encoded_len = 0;
-
-		encoded = base64_encode(cur_pos,
-					cxl_protocol_error->CxlDvsecLength,
-					&encoded_len);
-		if (encoded == NULL) {
-			json_object_put(section_ir);
-			free(*desc_string);
-			*desc_string = NULL;
-			return NULL;
-		}
-		add_string_len(section_ir, "cxlDVSEC", encoded, encoded_len);
-
-		free(encoded);
+		add_binary_base64(section_ir, "cxlDVSEC", cur_pos,
+				  cxl_protocol_error->CxlDvsecLength);
 	}
 
 	cur_pos += cxl_protocol_error->CxlDvsecLength;
@@ -183,21 +158,8 @@ json_object *cper_section_cxl_protocol_to_ir(const UINT8 *section, UINT32 size,
 		//CXL Error Log
 		//This is the "CXL RAS Capability Structure" as in CXL 1.1 spec.
 
-		encoded_len = 0;
-		encoded = base64_encode((UINT8 *)cur_pos,
-					cxl_protocol_error->CxlErrorLogLength,
-					&encoded_len);
-
-		if (encoded == NULL) {
-			cper_print_log(
-				"Failed to allocate encode output buffer. \n");
-			json_object_put(section_ir);
-			free(*desc_string);
-			*desc_string = NULL;
-			return NULL;
-		}
-		add_string_len(section_ir, "cxlErrorLog", encoded, encoded_len);
-		free(encoded);
+		add_binary_base64(section_ir, "cxlErrorLog", cur_pos,
+				  cxl_protocol_error->CxlErrorLogLength);
 	}
 
 	return section_ir;

@@ -71,19 +71,8 @@ json_object *cper_section_ccix_per_to_ir(const UINT8 *section, UINT32 size,
 		int remaining_length =
 			ccix_error->Length - sizeof(EFI_CCIX_PER_LOG_DATA);
 		if (remaining_length > 0) {
-			int32_t encoded_len = 0;
-
-			char *encoded = base64_encode((UINT8 *)cur_pos,
-						      remaining_length,
-						      &encoded_len);
-			if (encoded == NULL) {
-				cper_print_log(
-					"Failed to allocate encode output buffer. \n");
-			} else {
-				add_string_len(section_ir, "ccixPERLog",
-					       encoded, encoded_len);
-				free(encoded);
-			}
+			add_binary_base64(section_ir, "ccixPERLog", cur_pos,
+					  remaining_length);
 		}
 	}
 

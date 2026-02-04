@@ -11,6 +11,7 @@
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/log.h>
+#include <libcper/base64.h>
 
 //The available severity types for CPER.
 const char *CPER_SEVERITY_TYPES[4] = { "Recoverable", "Fatal", "Corrected",
@@ -496,6 +497,26 @@ void add_string_len(json_object *register_ir, const char *field_name,
 {
 	json_object_object_add(register_ir, field_name,
 			       json_object_new_string_len(value, len));
+}
+
+void free_char_ptr(char **char_ptr)
+{
+	free(*char_ptr);
+}
+
+void add_binary_base64(json_object *register_ir, const char *field_name,
+		       const UINT8 *value, int32_t len)
+{
+	if (value == NULL || len <= 0) {
+		return;
+	}
+	int32_t encoded_len = 0;
+	char *encoded __attribute__((cleanup(free_char_ptr))) =
+		base64_encode(value, len, &encoded_len);
+	if (encoded == NULL) {
+		return;
+	}
+	add_string_len(register_ir, field_name, encoded, encoded_len);
 }
 
 void add_uint(json_object *register_ir, const char *field_name, uint64_t value)
