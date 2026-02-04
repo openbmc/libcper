@@ -501,19 +501,9 @@ json_object *cper_ia32x64_processor_context_info_to_ir(
 		if (*remaining_size < context_info->ArraySize) {
 			return context_info_ir;
 		}
-		int32_t encoded_len = 0;
-		char *encoded = base64_encode((UINT8 *)*cur_pos,
-					      context_info->ArraySize,
-					      &encoded_len);
-		if (encoded == NULL) {
-			cper_print_log(
-				"Failed to allocate encode output buffer. \n");
-		} else {
-			register_array = json_object_new_object();
-			add_string_len(register_array, "data", encoded,
-				       encoded_len);
-			free(encoded);
-		}
+		register_array = json_object_new_object();
+		add_binary_base64(register_array, "data", (UINT8 *)*cur_pos,
+				  context_info->ArraySize);
 
 		*cur_pos =
 			(void *)(((char *)*cur_pos) + context_info->ArraySize);

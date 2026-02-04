@@ -54,34 +54,14 @@ json_object *cper_section_dmar_iommu_to_ir(const UINT8 *section, UINT32 size,
 
 	//IOMMU event log entry.
 	//The format of these entries differ widely by the type of error.
-	int32_t encoded_len = 0;
-
-	char *encoded = base64_encode((UINT8 *)iommu_error->EventLogEntry, 16,
-				      &encoded_len);
-	if (encoded == NULL) {
-		cper_print_log("Failed to allocate encode output buffer. \n");
-		json_object_put(section_ir);
-		free(*desc_string);
-		*desc_string = NULL;
-		return NULL;
-	}
-	add_string_len(section_ir, "eventLogEntry", encoded, encoded_len);
-	free(encoded);
+	add_binary_base64(section_ir, "eventLogEntry",
+			  (UINT8 *)iommu_error->EventLogEntry,
+			  sizeof(iommu_error->EventLogEntry));
 
 	//Device table entry (as base64).
-	encoded_len = 0;
-
-	encoded = base64_encode((UINT8 *)iommu_error->DeviceTableEntry, 32,
-				&encoded_len);
-	if (encoded == NULL) {
-		cper_print_log("Failed to allocate encode output buffer. \n");
-		json_object_put(section_ir);
-		free(*desc_string);
-		*desc_string = NULL;
-		return NULL;
-	}
-	add_string_len(section_ir, "deviceTableEntry", encoded, encoded_len);
-	free(encoded);
+	add_binary_base64(section_ir, "deviceTableEntry",
+			  (UINT8 *)iommu_error->DeviceTableEntry,
+			  sizeof(iommu_error->DeviceTableEntry));
 
 	//Page table entries.
 	add_uint(section_ir, "pageTableEntry_Level6", iommu_error->PteL6);

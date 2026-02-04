@@ -449,19 +449,11 @@ json_object *cper_section_pcie_to_ir(const UINT8 *section, UINT32 size,
 //Converts PCIe Capability Structure section into JSON IR.
 json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 {
-	int32_t encoded_len = 0;
-	char *encoded = NULL;
 	json_object *pcie_capability_ir = json_object_new_object();
 
-	encoded = base64_encode((UINT8 *)pcie_error->Capability.PcieCap, 60,
-				&encoded_len);
-	if (encoded == NULL) {
-		printf("Failed to allocate encode output buffer. \n");
-	} else {
-		add_string_len(pcie_capability_ir, "data", encoded,
-			       encoded_len);
-		free(encoded);
-	}
+	add_binary_base64(pcie_capability_ir, "data",
+			  pcie_error->Capability.PcieCap,
+			  sizeof(pcie_error->Capability.PcieCap));
 
 	json_object *fields_ir;
 	capability_registers *cap_decode;
@@ -1065,18 +1057,11 @@ json_object *pcie_capability_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 //Converts PCIe Capability Structure section into JSON IR.
 json_object *pcie_aer_to_ir(EFI_PCIE_ERROR_DATA *pcie_error)
 {
-	int32_t encoded_len = 0;
-	char *encoded = NULL;
 	json_object *aer_capability_ir = json_object_new_object();
 
-	encoded = base64_encode((UINT8 *)pcie_error->AerInfo.PcieAer, 96,
-				&encoded_len);
-	if (encoded == NULL) {
-		printf("Failed to allocate encode output buffer. \n");
-	} else {
-		add_string_len(aer_capability_ir, "data", encoded, encoded_len);
-		free(encoded);
-	}
+	add_binary_base64(aer_capability_ir, "data",
+			  pcie_error->AerInfo.PcieAer,
+			  sizeof(pcie_error->AerInfo.PcieAer));
 
 	json_object *fields_ir;
 
