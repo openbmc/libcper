@@ -389,6 +389,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c2f534e_c4e559b1",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T18:58:31Z",
+      "side": 1,
+      "message": "I looked through the spec in the commit message, and in section 4 I don\u0027t see the CPER definition.  I\u0027ve removed this code for now.  We can follow up in another patch.",
+      "parentUuid": "526faa32_56169f1f",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 23
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2a5bde7_3fe8e005",
