@@ -249,6 +249,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4de0c080_83962c62",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T18:00:21Z",
+      "side": 1,
+      "message": "Great, lets make the comment more clear.",
+      "parentUuid": "68d2d48a_0891fa8c",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c1c3a27_885e133b",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 11
@@ -278,6 +296,24 @@
       "side": 1,
       "message": "the add_untrusted_string helper function adds a json object, this doesn\u0027t support our use case to update the desc string to reflect the state of the parsing, if fails parsing we return an empty json with the desc string reflecting the reason, the ternary should act as the null check, however reason is always a string literal in this file. Is there something specific that looks incorrect?",
       "parentUuid": "7c1c3a27_885e133b",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "555127df_9c452650",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T18:00:21Z",
+      "side": 1,
+      "message": "Don\u0027t resolve comments that haven\u0027t been fixed.  The buffer here is coming from the input.  There\u0027s no gaurantee it\u0027s properly formatted.\n\nThere\u0027s helper functions that have been added recently to separate out the strlen from add_untrusted_string",
+      "parentUuid": "d2ea825c_966c645f",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -319,6 +355,30 @@
       "side": 1,
       "message": "Yes, the value of ipInstance depends on the value of IPInstanceFormat, but since this is just parsing from/to a json, do we have to validate the correctness or just report as is?",
       "parentUuid": "8e8f7ee5_773a79c7",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 23
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "526faa32_56169f1f",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T18:00:21Z",
+      "side": 1,
+      "message": "Parsing it correctly would be to check the format, and apply the correct decode for that format value.  We can\u0027t just assume all values are hex.",
+      "parentUuid": "95f6af17_7ba05ec5",
       "range": {
         "startLine": 132,
         "startChar": 22,
@@ -712,6 +772,24 @@
       "side": 1,
       "message": "The mpamPartId is not a field mandated by the spec, only added it here for convenience and readability, I understand the structure isn\u0027t accurately representing this, removing this field to keep structure accurate with the spec.",
       "parentUuid": "3255a2ab_909287b7",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "665e6f3b_6f2b7c58",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T18:00:21Z",
+      "side": 1,
+      "message": "Whether or not it\u0027s mandated, we should decode it if it\u0027s there.",
+      "parentUuid": "c47136d1_764d82e6",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
