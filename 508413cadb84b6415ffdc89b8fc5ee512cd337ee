@@ -267,6 +267,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "59e1508d_8de6eb8a",
+        "filename": "generator/sections/gen-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-05T20:25:59Z",
+      "side": 1,
+      "message": "Acknowledged, will update it in the next patchset.",
+      "parentUuid": "4de0c080_83962c62",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c1c3a27_885e133b",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 11
@@ -314,6 +332,24 @@
       "side": 1,
       "message": "Don\u0027t resolve comments that haven\u0027t been fixed.  The buffer here is coming from the input.  There\u0027s no gaurantee it\u0027s properly formatted.\n\nThere\u0027s helper functions that have been added recently to separate out the strlen from add_untrusted_string",
       "parentUuid": "d2ea825c_966c645f",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bf589f3_afc88ce4",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-05T20:25:59Z",
+      "side": 1,
+      "message": "Sorry about the \"resolved\" checkbox, should\u0027ve double checked.\n\nI\u0027ve followed how desc_string is being set in cper_section_arm.c\nhttps://github.com/openbmc/libcper/blob/847522336b116e7f12068e6eb579d98a42f5daf5/sections/cper-section-arm.c#L66\nFor setting the \"reason\", do you recommend we do something which is also being done in cper_section_arm.c\nhttps://github.com/openbmc/libcper/blob/847522336b116e7f12068e6eb579d98a42f5daf5/sections/cper-section-arm.c#L136\nHowever, unlike here, \"reason\" is a fixed size string set per the failure. We can get rid of the \"reason\", I don\u0027t see other implementations doing this but thought could help with readability.\nThis is based on earlier feedback from this patch series which suggested returning an empty json on parsing failure.",
+      "parentUuid": "555127df_9c452650",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -403,6 +439,30 @@
       "side": 1,
       "message": "I looked through the spec in the commit message, and in section 4 I don\u0027t see the CPER definition.  I\u0027ve removed this code for now.  We can follow up in another patch.",
       "parentUuid": "526faa32_56169f1f",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 23
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92255643_8a498eb5",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-05T20:25:59Z",
+      "side": 1,
+      "message": "These fields are defined in Table 20: Arm RAS Node Section. As a first attempt, we currently dump the hex for the field, I was hoping to make another patch to break down the hex into json fields indicating information each byte range holds, but can do it within this patch too.",
+      "parentUuid": "1c2f534e_c4e559b1",
       "range": {
         "startLine": 132,
         "startChar": 22,
@@ -814,6 +874,24 @@
       "side": 1,
       "message": "Whether or not it\u0027s mandated, we should decode it if it\u0027s there.",
       "parentUuid": "c47136d1_764d82e6",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79cc9a35_b2440b58",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-05T20:25:59Z",
+      "side": 1,
+      "message": "Thanks for fixing this, my initial assumption was to have it as a seperate field when the criteria matches, but then realized that its not a good idea and removed it, but what you did here seems to be a better approach at this.",
+      "parentUuid": "665e6f3b_6f2b7c58",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
