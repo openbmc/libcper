@@ -16,6 +16,41 @@
       "message": "Please see my responses below when you have a chance. Also, some of the changes to prior feedback seem to have been rollbacked, wanted to make sure if this was intentional.",
       "revId": "364ba1a79cad9336a72d79c5fdd0b383772d115c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28b20c9b_7fb75ed6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T23:00:02Z",
+      "side": 1,
+      "message": "I\u0027ve been",
+      "parentUuid": "d5082988_761c385c",
+      "revId": "364ba1a79cad9336a72d79c5fdd0b383772d115c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8129a44_165a6f7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T23:00:02Z",
+      "side": 1,
+      "message": "I found that while there are examples, they didn\u0027t get enabled properly in the unit tests.  I\u0027ve enabled them, and implemented the breakdown of the ip fields, but we\u0027re currently failing the roundtrip tests;  Likely something about the IR-\u003eCPER decoder is out of date or incomplete.\n\nI\u0027ve pushed what I have",
+      "revId": "364ba1a79cad9336a72d79c5fdd0b383772d115c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

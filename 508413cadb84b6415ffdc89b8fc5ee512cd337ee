@@ -475,6 +475,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fe5b524d_42a17c4f",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T23:00:02Z",
+      "side": 1,
+      "message": "I\u0027ve got most of the patch for that done.  I\u0027ve pushed the patch here.",
+      "parentUuid": "92255643_8a498eb5",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 23
+      },
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2a5bde7_3fe8e005",
         "filename": "sections/cper-section-arm-ras.c",
         "patchSetId": 11
