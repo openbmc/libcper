@@ -918,6 +918,24 @@
       "parentUuid": "665e6f3b_6f2b7c58",
       "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9ead823_e93a61c5",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-05T23:00:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79cc9a35_b2440b58",
+      "revId": "508413cadb84b6415ffdc89b8fc5ee512cd337ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
