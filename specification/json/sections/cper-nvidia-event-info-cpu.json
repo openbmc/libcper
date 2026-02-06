@@ -20,7 +20,58 @@
             "minimum": 0
         },
         "SocketNum": { "type": "integer", "minimum": 0 },
-        "Architecture": { "type": "integer", "minimum": 0 },
+        "Architecture": {
+            "type": "object",
+            "required": [
+                "hidFam",
+                "majorRev",
+                "chipId",
+                "minorRev",
+                "preSiPlatform",
+                "einjTag"
+            ],
+            "properties": {
+                "hidFam": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 15
+                },
+                "majorRev": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 15
+                },
+                "chipId": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "minorRev": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 15
+                },
+                "preSiPlatform": {
+                    "type": "object",
+                    "required": ["raw", "value"],
+                    "properties": {
+                        "raw": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 31
+                        },
+                        "value": {
+                            "type": "string",
+                            "enum": ["Silicon", "PreSilicon"]
+                        }
+                    }
+                },
+                "einjTag": {
+                    "type": "boolean",
+                    "description": "Set by RAS FW if error was injected"
+                }
+            }
+        },
         "Ecid1": { "type": "integer", "minimum": 0 },
         "Ecid2": { "type": "integer", "minimum": 0 },
         "Ecid3": { "type": "integer", "minimum": 0 },
