@@ -117,6 +117,13 @@ void add_bool_enum(json_object *register_ir, const char *field_name,
 void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
 	      const char *dict[], size_t dict_size);
 
+void free_json_object(json_object **obj);
+
+static inline void freep(void *p)
+{
+	free(*(void **)p);
+}
+
 //The available severity types for CPER.
 extern const char *CPER_SEVERITY_TYPES[4];
 

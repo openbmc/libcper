@@ -63,20 +63,21 @@ int header_valid(const char *cper_buf, size_t size)
 
 json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 {
-	json_object *parent = NULL;
-	json_object *header_ir = NULL;
-	json_object *section_descriptors_ir = NULL;
-	json_object *sections_ir = NULL;
+	json_object *parent __attribute__((cleanup(free_json_object))) = NULL;
+	json_object *section_descriptors_ir
+		__attribute__((cleanup(free_json_object))) = NULL;
+	json_object *sections_ir
+		__attribute__((cleanup(free_json_object))) = NULL;
 
 	const unsigned char *pos = cper_buf;
 	unsigned int remaining = size;
 	if (size < sizeof(EFI_COMMON_ERROR_RECORD_HEADER)) {
-		goto fail;
+		return NULL;
 	}
 	EFI_COMMON_ERROR_RECORD_HEADER *header =
 		(EFI_COMMON_ERROR_RECORD_HEADER *)cper_buf;
 	if (!header_signature_valid(header)) {
-		goto fail;
+		return NULL;
 	}
 	pos += sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
 	remaining -= sizeof(EFI_COMMON_ERROR_RECORD_HEADER);
@@ -84,13 +85,12 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 	if (remaining < sizeof(EFI_ERROR_SECTION_DESCRIPTOR)) {
 		cper_print_log(
 			"Invalid CPER file: Invalid section descriptor (section offset + length > size).\n");
-		goto fail;
+		return NULL;
 	}
 
 	//Create the header JSON object from the read bytes.
 	parent = json_object_new_object();
-	header_ir = cper_header_to_ir(header);
-
+	json_object *header_ir = cper_header_to_ir(header);
 	json_object_object_add(parent, "header", header_ir);
 
 	//Read the appropriate number of section descriptors & sections, and convert them into IR format.
@@ -102,7 +102,7 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 			cper_print_log(
 				"Invalid number of section headers: Header states %d sections, could not read section %d.\n",
 				header->SectionCount, i + 1);
-			goto fail;
+			return NULL;
 		}
 
 		EFI_ERROR_SECTION_DESCRIPTOR *section_descriptor;
@@ -113,20 +113,20 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 		if (section_descriptor->SectionOffset > size) {
 			cper_print_log(
 				"Invalid section descriptor: Section offset > size.\n");
-			goto fail;
+			return NULL;
 		}
 
 		if (section_descriptor->SectionLength <= 0) {
 			cper_print_log(
 				"Invalid section descriptor: Section length <= 0.\n");
-			goto fail;
+			return NULL;
 		}
 
 		if (section_descriptor->SectionOffset >
 		    UINT_MAX - section_descriptor->SectionLength) {
 			cper_print_log(
 				"Invalid section descriptor: Section offset + length would overflow.\n");
-			goto fail;
+			return NULL;
 		}
 
 		if (section_descriptor->SectionOffset +
@@ -134,7 +134,7 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 		    size) {
 			cper_print_log(
 				"Invalid section descriptor: Section offset + length > size.\n");
-			goto fail;
+			return NULL;
 		}
 
 		const unsigned char *section_begin =
@@ -146,25 +146,19 @@ json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size)
 				      section_descriptor_ir);
 
 		//Read the section itself.
-		json_object *section_ir = cper_buf_section_to_ir(
+		json_object *section_ir2 = cper_buf_section_to_ir(
 			section_begin, section_descriptor->SectionLength,
 			section_descriptor);
-		json_object_array_add(sections_ir, section_ir);
+		json_object_array_add(sections_ir, section_ir2);
 	}
 
 	//Add the header, section descriptors, and sections to a parent object.
 	json_object_object_add(parent, "sectionDescriptors",
 			       section_descriptors_ir);
+	section_descriptors_ir = NULL;
 	json_object_object_add(parent, "sections", sections_ir);
-
-	return parent;
-
-fail:
-	json_object_put(sections_ir);
-	json_object_put(section_descriptors_ir);
-	json_object_put(parent);
-	cper_print_log("Failed to parse CPER file.\n");
-	return NULL;
+	sections_ir = NULL;
+	return json_object_get(parent);
 }
 
 //Reads a CPER log file at the given file location, and returns an intermediate
@@ -187,11 +181,11 @@ json_object *cper_to_ir(FILE *cper_file)
 		return NULL;
 	}
 	fseek(cper_file, -sizeof(EFI_COMMON_ERROR_RECORD_HEADER), SEEK_CUR);
-	unsigned char *cper_buf = malloc(header.RecordLength);
+	unsigned char *cper_buf __attribute__((cleanup(freep)));
+	cper_buf = malloc(header.RecordLength);
 	int bytes_read = fread(cper_buf, 1, header.RecordLength, cper_file);
 	if (bytes_read < 0) {
 		cper_print_log("File read failed with code %u\n", bytes_read);
-		free(cper_buf);
 		return NULL;
 	}
 	if ((UINT32)bytes_read != header.RecordLength) {
@@ -199,13 +193,10 @@ json_object *cper_to_ir(FILE *cper_file)
 		cper_print_log(
 			"File read failed file was %u bytes, expecting %u bytes from header.\n",
 			position, header.RecordLength);
-		free(cper_buf);
 		return NULL;
 	}
 
-	json_object *ir = cper_buf_to_ir(cper_buf, bytes_read);
-	free(cper_buf);
-	return ir;
+	return cper_buf_to_ir(cper_buf, bytes_read);
 }
 
 char *cper_to_str_ir(FILE *cper_file)
@@ -393,18 +384,16 @@ json_object *read_section(const unsigned char *cper_section_buf, size_t size,
 	if (definition->ToIR == NULL) {
 		return NULL;
 	}
-	char *cper_description = NULL;
+	char *cper_description __attribute__((cleanup(freep))) = NULL;
 
 	json_object *section_ir =
 		definition->ToIR(cper_section_buf, size, &cper_description);
 	if (section_ir == NULL) {
-		free(cper_description);
 		return NULL;
 	}
 	json_object *result = json_object_new_object();
 	if (cper_description != NULL) {
 		add_string(result, "message", cper_description);
-		free(cper_description);
 	}
 	json_object_object_add(result, definition->ShortName, section_ir);
 	return result;
@@ -521,7 +510,8 @@ json_object *cper_buf_single_section_to_ir(const unsigned char *cper_buf,
 //Converts a single CPER section, without a header but with a section descriptor, to JSON.
 json_object *cper_single_section_to_ir(FILE *cper_section_file)
 {
-	json_object *ir = json_object_new_object();
+	json_object *ir __attribute__((cleanup(free_json_object)));
+	ir = json_object_new_object();
 
 	//Read the current file pointer location as base record position.
 	long base_pos = ftell(cper_section_file);
@@ -547,7 +537,8 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 	//Read section as described by the section descriptor.
 	fseek(cper_section_file, base_pos + section_descriptor.SectionOffset,
 	      SEEK_SET);
-	void *section = malloc(section_descriptor.SectionLength);
+	void *section __attribute__((cleanup(freep)));
+	section = malloc(section_descriptor.SectionLength);
 	if (fread(section, section_descriptor.SectionLength, 1,
 		  cper_section_file) != 1) {
 		cper_print_log(
@@ -555,7 +546,6 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 			section_descriptor.SectionLength,
 			section_descriptor.SectionOffset);
 		json_object_put(ir);
-		free(section);
 		return NULL;
 	}
 
@@ -566,16 +556,19 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 	json_object *section_ir = cper_buf_section_to_ir(
 		section, section_descriptor.SectionLength, &section_descriptor);
 	json_object_object_add(ir, "section", section_ir);
-	free(section);
-	return ir;
+	json_object *ret = ir;
+	ir = NULL;
+	return ret;
 }
 
 char *cperbuf_single_section_to_str_ir(const unsigned char *cper_section,
 				       size_t size)
 {
-	json_object *jobj = cper_buf_single_section_to_ir(cper_section, size);
-	char *str = jobj ? strdup(json_object_to_json_string(jobj)) : NULL;
+	json_object *jobj __attribute__((cleanup(free_json_object)));
+	jobj = cper_buf_single_section_to_ir(cper_section, size);
+	if (jobj) {
+		return NULL;
+	}
 
-	json_object_put(jobj);
-	return str;
+	return strdup(json_object_to_json_string(jobj));
 }

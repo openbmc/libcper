@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include <libcper/cper-utils.h>
+
 static const UINT8 encode_table[65] =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -102,21 +104,21 @@ UINT8 decode_table[256] = {
  */
 UINT8 *base64_decode(const CHAR8 *src, INT32 len, INT32 *out_len)
 {
-	UINT8 *out = NULL;
+	UINT8 *out __attribute__((cleanup(freep))) = NULL;
 	UINT8 *pos = NULL;
 	UINT8 block[4];
 	INT32 block_index = 0;
 	INT32 src_index = 0;
 
 	if (!out_len) {
-		goto error;
+		return NULL;
 	}
 
 	// Malloc might be up to 2 larger dependent on padding
 	*out_len = len / 4 * 3 + 2;
 	pos = out = malloc(*out_len);
 	if (out == NULL) {
-		goto error;
+		return NULL;
 	}
 
 	block_index = 0;
@@ -135,7 +137,7 @@ UINT8 *base64_decode(const CHAR8 *src, INT32 len, INT32 *out_len)
 		block[block_index] = decode_table[(UINT8)current_char];
 		if (block[block_index] == 0x80) {
 			printf("Invalid character \"%c\".\n", current_char);
-			goto error;
+			return NULL;
 		}
 
 		block_index++;
@@ -150,7 +152,7 @@ UINT8 *base64_decode(const CHAR8 *src, INT32 len, INT32 *out_len)
 		// mod 4 Even number of characters, no padding.
 	} else if (block_index == 1) {
 		printf("Invalid base64 input length.  Last character truncated.\n");
-		goto error;
+		return NULL;
 	} else if (block_index == 2) {
 		*pos++ = (block[0] << 2) | (block[1] >> 4);
 	} else if (block_index == 3) {
@@ -159,13 +161,11 @@ UINT8 *base64_decode(const CHAR8 *src, INT32 len, INT32 *out_len)
 	} else {
 		/* Invalid pad_counting */
 		printf("Invalid base64 input length %d.\n", block_index);
-		goto error;
+		return NULL;
 	}
 
 	*out_len = pos - out;
-	return out;
-
-error:
-	free(out);
-	return NULL;
+	UINT8 *ret_out = out;
+	out = NULL;
+	return ret_out;
 }

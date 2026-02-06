@@ -11,6 +11,7 @@
 
 #include <libcper/BaseTypes.h>
 #include <libcper/generator/cper-generate.h>
+#include <libcper/cper-utils.h>
 
 #include <validate.h>
 #include <json.h>
@@ -73,6 +74,8 @@ FILE *generate_record_memstream(const char **types, UINT16 num_types,
 
 int iterate_make_required_props(json_object *jsonSchema, int all_valid_bits)
 {
+	char *path __attribute__((cleanup(freep))) = NULL;
+
 	//properties
 	json_object *properties =
 		json_object_object_get(jsonSchema, "properties");
@@ -134,17 +137,16 @@ int iterate_make_required_props(json_object *jsonSchema, int all_valid_bits)
 			}
 			size_t size =
 				strlen(LIBCPER_JSON_SPEC) + strlen(ref_str);
-			char *path = (char *)malloc(size);
+
+			path = (char *)malloc(size);
 			int n = snprintf(path, size, "%s%s", LIBCPER_JSON_SPEC,
 					 ref_str + 1);
 			if (n != (int)size - 1) {
 				cper_print_log("Failed concat filepath: %s\n",
 					       ref_str);
-				free(path);
 				return -1;
 			}
 			json_object *ref_obj = json_object_from_file(path);
-			free(path);
 			if (ref_obj == NULL) {
 				cper_print_log("Failed to parse file: %s\n",
 					       ref_str);
@@ -204,6 +206,8 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 			      int all_valid_bits)
 {
 	const char *schema_file;
+	char *schema_path __attribute__((cleanup(freep))) = NULL;
+
 	if (single_section) {
 		schema_file = "cper-json-section-log.json";
 	} else {
@@ -211,36 +215,30 @@ int schema_validate_from_file(json_object *to_test, int single_section,
 	}
 	printf("start schema_validate_from_file\n");
 	int size = strlen(schema_file) + 1 + strlen(LIBCPER_JSON_SPEC) + 1;
-	char *schema_path = malloc(size);
+	schema_path = malloc(size);
 	snprintf(schema_path, size, "%s/%s", LIBCPER_JSON_SPEC, schema_file);
 
-	json_object *schema = json_object_from_file(schema_path);
+	json_object *schema __attribute__((cleanup(free_json_object)));
+	schema = json_object_from_file(schema_path);
 
 	if (schema == NULL) {
 		cper_print_log("Could not parse schema file: %s", schema_path);
-		free(schema_path);
 		return 0;
 	}
 	printf("end iterate_make_required_props\n");
 	if (iterate_make_required_props(schema, all_valid_bits) < 0) {
 		cper_print_log("Failed to make required props\n");
-		json_object_put(schema);
-		free(schema_path);
 		return -1;
 	}
 	printf("start schemavalidator_validate\n");
 	int err = schemavalidator_validate(to_test, schema);
 	if (err == SCHEMAVALIDATOR_ERR_VALID) {
 		cper_print_log("validation ok\n");
-		json_object_put(schema);
-		free(schema_path);
 		return 1;
 	}
 	printf("end schemavalidator_validate\n");
 	cper_print_log("validate failed %d: %s\n", err,
 		       schemavalidator_errorstr(err));
 
-	json_object_put(schema);
-	free(schema_path);
 	return 0;
 }

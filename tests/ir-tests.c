@@ -40,26 +40,29 @@ struct file_info {
 	char *json_out;
 };
 
-void free_file_info(struct file_info *info)
+void free_file_info(struct file_info **info)
 {
 	if (info == NULL) {
 		return;
 	}
-	free(info->cper_out);
-	free(info->json_out);
-	free(info);
+	if (*info == NULL) {
+		return;
+	}
+	free((*info)->cper_out);
+	free((*info)->json_out);
+	free(*info);
 }
 
 struct file_info *file_info_init(const char *section_name)
 {
-	struct file_info *info = NULL;
-	char *buf = NULL;
+	struct file_info *info __attribute__((cleanup(free_file_info))) = NULL;
+	char *buf __attribute__((cleanup(freep))) = NULL;
 	size_t size;
 	int ret;
 
 	info = (struct file_info *)calloc(1, sizeof(struct file_info));
 	if (info == NULL) {
-		goto fail;
+		return NULL;
 	}
 
 	size = strlen(LIBCPER_EXAMPLES) + 1 + strlen(section_name) + 1 +
@@ -69,7 +72,7 @@ struct file_info *file_info_init(const char *section_name)
 		       section_name, cper_ext);
 	if (ret != (int)size - 1) {
 		printf("snprintf0 failed\n");
-		goto fail;
+		return NULL;
 	}
 	size = strlen(LIBCPER_EXAMPLES) + 1 + strlen(section_name) + 1 +
 	       strlen(json_ext) + 1;
@@ -78,15 +81,19 @@ struct file_info *file_info_init(const char *section_name)
 		       section_name, json_ext);
 	if (ret != (int)size - 1) {
 		printf("snprintf3 failed\n");
-		goto fail;
+		return NULL;
 	}
-	free(buf);
-	return info;
+	struct file_info *ret_info = info;
+	info = NULL;
+	return ret_info;
+}
 
-fail:
-	free(buf);
-	free_file_info(info);
-	return NULL;
+void fclose_cleanup(FILE **file)
+{
+	if (file == NULL) {
+		return;
+	}
+	fclose(*file);
 }
 
 void cper_create_examples(const char *section_name)
@@ -95,13 +102,14 @@ void cper_create_examples(const char *section_name)
 	json_object *ir = NULL;
 	size_t size;
 	size_t file_size;
-	FILE *outFile = NULL;
+	FILE *outFile __attribute__((cleanup(fclose_cleanup))) = NULL;
 	unsigned char *file_data;
-	FILE *record = NULL;
-	char *buf = NULL;
-	struct file_info *info = file_info_init(section_name);
+	FILE *record __attribute__((cleanup(fclose_cleanup))) = NULL;
+	char *buf __attribute__((cleanup(freep))) = NULL;
+	struct file_info *info __attribute__((cleanup(free_file_info))) =
+		file_info_init(section_name);
 	if (info == NULL) {
-		goto done;
+		return;
 	}
 
 	record = generate_record_memstream(&section_name, 1, &buf, &size, 0,
@@ -112,7 +120,7 @@ void cper_create_examples(const char *section_name)
 	if (outFile == NULL) {
 		printf("Failed to create/open CPER output file: %s\n",
 		       info->cper_out);
-		goto done;
+		return;
 	}
 
 	fseek(record, 0, SEEK_END);
@@ -121,11 +129,8 @@ void cper_create_examples(const char *section_name)
 	file_data = malloc(file_size);
 	if (fread(file_data, 1, file_size, record) != file_size) {
 		printf("Failed to read CPER data from memstream.");
-		fclose(outFile);
-		outFile = NULL;
 		assert(0);
-
-		goto done;
+		return;
 	}
 	for (size_t index = 0; index < file_size; index++) {
 		char hex_str[3];
@@ -133,15 +138,13 @@ void cper_create_examples(const char *section_name)
 				   file_data[index]);
 		if (out != 2) {
 			printf("snprintf1 failed\n");
-			goto done;
+			return;
 		}
 		fwrite(hex_str, sizeof(char), 2, outFile);
 		if (index % 30 == 29) {
 			fwrite("\n", sizeof(char), 1, outFile);
 		}
 	}
-	fclose(outFile);
-	outFile = NULL;
 
 	//Convert to IR, free resources.
 	rewind(record);
@@ -149,22 +152,12 @@ void cper_create_examples(const char *section_name)
 	if (ir == NULL) {
 		printf("Empty JSON from CPER bin2\n");
 		assert(0);
-		goto done;
+		return;
 	}
 
 	//Write json output to disk
 	json_object_to_file_ext(info->json_out, ir, JSON_C_TO_STRING_PRETTY);
 	json_object_put(ir);
-
-done:
-	free_file_info(info);
-	if (record != NULL) {
-		fclose(record);
-	}
-	if (outFile != NULL) {
-		fclose(outFile);
-	}
-	free(buf);
 }
 
 int hex2int(char ch)
@@ -218,7 +211,8 @@ void cper_example_section_ir_test(const char *section_name)
 	printf("cper_example_section_ir_test: %s\n", section_name);
 	//Open CPER record for the given type.
 	printf("Testing: %s\n", section_name);
-	struct file_info *info = file_info_init(section_name);
+	struct file_info *info __attribute__((cleanup(free_file_info))) =
+		file_info_init(section_name);
 	if (info == NULL) {
 		return;
 	}
@@ -226,7 +220,6 @@ void cper_example_section_ir_test(const char *section_name)
 	FILE *cper_file = fopen(info->cper_out, "rb");
 	if (cper_file == NULL) {
 		printf("Failed to open CPER file: %s\n", info->cper_out);
-		free_file_info(info);
 		assert(0);
 		return;
 	}
@@ -235,13 +228,11 @@ void cper_example_section_ir_test(const char *section_name)
 	fseek(cper_file, 0, SEEK_SET);
 	char *buffer = (char *)malloc(length);
 	if (!buffer) {
-		free_file_info(info);
 		return;
 	}
 	if (fread(buffer, 1, length, cper_file) != length) {
 		printf("Failed to read CPER file: %s\n", info->cper_out);
 		free(buffer);
-		free_file_info(info);
 		return;
 	}
 	fclose(cper_file);
@@ -250,7 +241,6 @@ void cper_example_section_ir_test(const char *section_name)
 	int cper_bin_len = string_to_binary(buffer, length, &cper_bin);
 	if (cper_bin_len <= 0) {
 		free(buffer);
-		free_file_info(info);
 		assert(0);
 		return;
 	}
@@ -263,7 +253,6 @@ void cper_example_section_ir_test(const char *section_name)
 		printf("Empty JSON from CPER bin3\n");
 		free(cper_bin);
 		free(buffer);
-		free_file_info(info);
 		assert(0);
 		return;
 	}
@@ -277,7 +266,6 @@ void cper_example_section_ir_test(const char *section_name)
 	if (expected == NULL) {
 		free(buffer);
 		free(cper_bin);
-		free_file_info(info);
 		const char *str = json_object_to_json_string(ir);
 
 		const char *expected_str = json_object_to_json_string(expected);
@@ -297,7 +285,6 @@ void cper_example_section_ir_test(const char *section_name)
 	free(cper_bin);
 	json_object_put(ir);
 	json_object_put(expected);
-	free_file_info(info);
 }
 
 //Tests a single randomly generated CPER section of the given type to ensure CPER-JSON IR validity.
@@ -305,10 +292,11 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 			      GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate full CPER record for the given type.
-	char *buf;
-	size_t size;
-	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
-						 single_section, validBitsType);
+	char *buf __attribute__((cleanup(freep))) = NULL;
+	size_t size = 0;
+	FILE *record __attribute__((cleanup(fclose_cleanup)));
+	record = generate_record_memstream(&section_name, 1, &buf, &size,
+					   single_section, validBitsType);
 
 	//Convert to IR, free resources.
 	json_object *ir;
@@ -317,9 +305,6 @@ void cper_log_section_ir_test(const char *section_name, int single_section,
 	} else {
 		ir = cper_to_ir(record);
 	}
-
-	fclose(record);
-	free(buf);
 
 	//Validate against schema.
 	int valid = schema_validate_from_file(ir, single_section,
@@ -399,8 +384,8 @@ void cper_log_section_binary_test(const char *section_name, int single_section,
 				  GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	//Generate CPER record for the given type.
-	char *buf;
-	size_t size;
+	char *buf = NULL;
+	size_t size = 0;
 	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
 						 single_section, validBitsType);
 	if (record == NULL) {

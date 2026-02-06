@@ -649,13 +649,15 @@ json_object *
 cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 				 const UINT8 **cur_pos, UINT32 *remaining_size)
 {
+	json_object *context_ir __attribute__((cleanup(free_json_object)));
+
 	if (header->RegisterArraySize > *remaining_size) {
 		cper_print_log(
 			"Invalid CPER file: Invalid processor context info num.\n");
 		return NULL;
 	}
 
-	json_object *context_ir = json_object_new_object();
+	context_ir = json_object_new_object();
 
 	//Version.
 	add_int(context_ir, "version", header->Version);
@@ -679,13 +681,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		if (*remaining_size < sizeof(EFI_ARM_V8_AARCH32_GPR)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_V8_AARCH32_GPR)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch32 gpr\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
@@ -697,13 +699,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		    sizeof(EFI_ARM_AARCH32_EL1_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_AARCH32_EL1_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch32 el1\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
@@ -716,13 +718,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		    sizeof(EFI_ARM_AARCH32_EL2_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_AARCH32_EL2_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch32 el2\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
@@ -743,7 +745,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		    sizeof(EFI_ARM_AARCH32_SECURE_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch32 secure\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct_to_ir(
 			(UINT32 *)*cur_pos,
@@ -755,13 +757,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		if (*remaining_size < sizeof(EFI_ARM_V8_AARCH64_GPR)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_V8_AARCH64_GPR)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch64 gpr\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
@@ -773,13 +775,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		    sizeof(EFI_ARM_AARCH64_EL1_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_AARCH64_EL1_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch64 el1\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
@@ -792,13 +794,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		    sizeof(EFI_ARM_AARCH64_EL2_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_AARCH64_EL2_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch64 el2\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
@@ -811,13 +813,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		    sizeof(EFI_ARM_AARCH64_EL3_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_AARCH64_EL3_CONTEXT_REGISTERS)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for aarch64 el3\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = uniform_struct64_to_ir(
 			(UINT64 *)*cur_pos,
@@ -829,13 +831,13 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		if (*remaining_size < sizeof(EFI_ARM_MISC_CONTEXT_REGISTER)) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		if (header->RegisterArraySize <
 		    sizeof(EFI_ARM_MISC_CONTEXT_REGISTER)) {
 			cper_print_log(
 				"Invalid CPER file: Not enough bytes for misc\n");
-			goto fail;
+			return NULL;
 		}
 		register_array = cper_arm_misc_register_array_to_ir(
 			(EFI_ARM_MISC_CONTEXT_REGISTER *)*cur_pos);
@@ -844,7 +846,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 		if (*remaining_size < header->RegisterArraySize) {
 			cper_print_log(
 				"Invalid CPER file: Invalid processor context info num.\n");
-			goto fail;
+			return NULL;
 		}
 		//Unknown register array type, add as base64 data instead.
 		register_array = json_object_new_object();
@@ -859,11 +861,7 @@ cper_arm_processor_context_to_ir(EFI_ARM_CONTEXT_INFORMATION_HEADER *header,
 	*cur_pos = (UINT8 *)(*cur_pos) + header->RegisterArraySize;
 	*remaining_size -= header->RegisterArraySize;
 
-	return context_ir;
-
-fail:
-	json_object_put(context_ir);
-	return NULL;
+	return json_object_get(context_ir);
 }
 
 //Converts a single CPER ARM miscellaneous register array to JSON IR format.

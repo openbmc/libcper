@@ -28,9 +28,9 @@ void ir_section_to_cper(json_object *section,
 void ir_to_cper(json_object *ir, FILE *out)
 {
 	//Create the CPER header.
-	EFI_COMMON_ERROR_RECORD_HEADER *header =
-		(EFI_COMMON_ERROR_RECORD_HEADER *)calloc(
-			1, sizeof(EFI_COMMON_ERROR_RECORD_HEADER));
+	EFI_COMMON_ERROR_RECORD_HEADER *header __attribute__((cleanup(freep)));
+	header = (EFI_COMMON_ERROR_RECORD_HEADER *)calloc(
+		1, sizeof(EFI_COMMON_ERROR_RECORD_HEADER));
 	ir_header_to_cper(json_object_object_get(ir, "header"), header);
 	fwrite(header, sizeof(EFI_COMMON_ERROR_RECORD_HEADER), 1, out);
 	fflush(out);
@@ -74,7 +74,6 @@ void ir_to_cper(json_object *ir, FILE *out)
 	}
 
 	//Free all remaining resources.
-	free(header);
 	for (int i = 0; i < amt_descriptors; i++) {
 		free(descriptors[i]);
 	}

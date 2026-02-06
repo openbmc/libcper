@@ -537,9 +537,12 @@ void add_string_len(json_object *register_ir, const char *field_name,
 			       json_object_new_string_len(value, len));
 }
 
-void free_char_ptr(char **char_ptr)
+void free_json_object(json_object **obj)
 {
-	free(*char_ptr);
+	if (obj == NULL || *obj == NULL) {
+		return;
+	}
+	json_object_put(*obj);
 }
 
 void add_binary_base64(json_object *register_ir, const char *field_name,
@@ -549,7 +552,7 @@ void add_binary_base64(json_object *register_ir, const char *field_name,
 		return;
 	}
 	int32_t encoded_len = 0;
-	char *encoded __attribute__((cleanup(free_char_ptr))) =
+	char *encoded __attribute__((cleanup(freep))) =
 		base64_encode(value, len, &encoded_len);
 	if (encoded == NULL) {
 		return;
@@ -702,7 +705,8 @@ void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
 	}
 
 	size_t hex_len = byte_len * 2;
-	char *hex_buf = (char *)malloc(hex_len + 1);
+	char *hex_buf __attribute__((cleanup(freep))) = NULL;
+	hex_buf = (char *)malloc(hex_len + 1);
 	if (hex_buf == NULL) {
 		return;
 	}
@@ -715,7 +719,6 @@ void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
 	json_object_object_add(obj, field_name,
 			       json_object_new_string_len(hex_buf,
 							  (int)hex_len));
-	free(hex_buf);
 }
 
 // Convert hex character to nibble value, returns -1 on invalid input
