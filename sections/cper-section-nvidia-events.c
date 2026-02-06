@@ -406,12 +406,19 @@ static inline json_object *get_event_context_n_data_ir(json_object *event_ir,
 }
 
 // Parses CPU-specific event info structure into JSON IR format.
-// Extracts socket number, architecture, ECID array, and instance base.
+// Extracts socket number, architecture (decoded), ECID array, and instance base.
 /*
  * Example JSON IR "data" output:
  * {
  *   "SocketNum": 0,
- *   "Architecture": 2684420096,
+ *   "Architecture": {
+ *     "hidFam": 7,
+ *     "majorRev": 1,
+ *     "chipId": 65,
+ *     "minorRev": 1,
+ *     "preSiPlatform": { "raw": 0, "value": "Silicon" },
+ *     "einjTag": false
+ *   },
  *   "Ecid1": 1234567890123456789,
  *   "Ecid2": 9876543210987654321,
  *   "Ecid3": 5555555555555555555,
@@ -441,7 +448,32 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	}
 
 	add_uint(event_info_ir, "SocketNum", cpu_event_info->SocketNum);
-	add_uint(event_info_ir, "Architecture", cpu_event_info->Architecture);
+
+	// Decode Architecture field into components
+	UINT32 arch = cpu_event_info->Architecture;
+	json_object *arch_ir = json_object_new_object();
+	json_object_object_add(arch_ir, "hidFam",
+			       json_object_new_int((arch >> 0) & 0xF));
+	json_object_object_add(arch_ir, "majorRev",
+			       json_object_new_int((arch >> 4) & 0xF));
+	json_object_object_add(arch_ir, "chipId",
+			       json_object_new_int((arch >> 8) & 0xFF));
+	json_object_object_add(arch_ir, "minorRev",
+			       json_object_new_int((arch >> 16) & 0xF));
+
+	// preSiPlatform: 0 = Silicon, non-zero = PreSilicon
+	UINT8 pre_si = (arch >> 20) & 0x1F;
+	json_object *pre_si_ir = json_object_new_object();
+	json_object_object_add(pre_si_ir, "raw", json_object_new_int(pre_si));
+	json_object_object_add(
+		pre_si_ir, "value",
+		json_object_new_string(pre_si == 0 ? "Silicon" : "PreSilicon"));
+	json_object_object_add(arch_ir, "preSiPlatform", pre_si_ir);
+
+	json_object_object_add(arch_ir, "einjTag",
+			       json_object_new_boolean((arch >> 31) & 0x1));
+	json_object_object_add(event_info_ir, "Architecture", arch_ir);
+
 	add_uint(event_info_ir, "Ecid1", cpu_event_info->Ecid[0]);
 	add_uint(event_info_ir, "Ecid2", cpu_event_info->Ecid[1]);
 	add_uint(event_info_ir, "Ecid3", cpu_event_info->Ecid[2]);
@@ -449,7 +481,7 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	add_uint(event_info_ir, "InstanceBase", cpu_event_info->InstanceBase);
 }
 // Converts CPU-specific event info from JSON IR to CPER binary format.
-// Writes socket number, architecture, ECID array, and instance base.
+// Writes socket number, architecture (reconstructed), ECID array, instance base.
 // Returns the number of bytes written.
 /*
  * ┌─────────────────────────────────────────────────────────────────────────┐
@@ -470,8 +502,32 @@ static size_t parse_cpu_info_to_bin(json_object *event_info_ir, FILE *out)
 	EFI_NVIDIA_CPU_EVENT_INFO cpu_event_info = { 0 };
 	cpu_event_info.SocketNum = json_object_get_int64(
 		json_object_object_get(event_info_ir, "SocketNum"));
-	cpu_event_info.Architecture = json_object_get_int64(
-		json_object_object_get(event_info_ir, "Architecture"));
+
+	// Reconstruct Architecture from decoded components
+	json_object *arch_ir =
+		json_object_object_get(event_info_ir, "Architecture");
+	UINT32 hid_fam =
+		json_object_get_int(json_object_object_get(arch_ir, "hidFam"));
+	UINT32 major_rev = json_object_get_int(
+		json_object_object_get(arch_ir, "majorRev"));
+	UINT32 chip_id =
+		json_object_get_int(json_object_object_get(arch_ir, "chipId"));
+	UINT32 minor_rev = json_object_get_int(
+		json_object_object_get(arch_ir, "minorRev"));
+	json_object *pre_si_ir =
+		json_object_object_get(arch_ir, "preSiPlatform");
+	UINT32 pre_si =
+		json_object_get_int(json_object_object_get(pre_si_ir, "raw"));
+	UINT32 einj_tag = json_object_get_boolean(
+				  json_object_object_get(arch_ir, "einjTag")) ?
+				  1 :
+				  0;
+
+	cpu_event_info.Architecture =
+		(hid_fam & 0xF) | ((major_rev & 0xF) << 4) |
+		((chip_id & 0xFF) << 8) | ((minor_rev & 0xF) << 16) |
+		((pre_si & 0x1F) << 20) | ((einj_tag & 0x1) << 31);
+
 	cpu_event_info.Ecid[0] = json_object_get_uint64(
 		json_object_object_get(event_info_ir, "Ecid1"));
 	cpu_event_info.Ecid[1] = json_object_get_uint64(
@@ -1388,7 +1444,14 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
  *   "eventInfo": {
  *     "version": 0,
  *     "SocketNum": 0,
- *     "Architecture": 2684420096,
+ *     "Architecture": {
+ *       "hidFam": 7,
+ *       "majorRev": 1,
+ *       "chipId": 65,
+ *       "minorRev": 1,
+ *       "preSiPlatform": { "raw": 0, "value": "Silicon" },
+ *       "einjTag": false
+ *     },
  *     "Ecid1": 1234567890123456789,
  *     "Ecid2": 9876543210987654321,
  *     "Ecid3": 5555555555555555555,

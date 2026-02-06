@@ -27,10 +27,18 @@
                     "minimum": 0
                 },
                 "sourceDeviceType": {
-                    "type": "integer",
-                    "description": "Source device type",
-                    "minimum": 0,
-                    "maximum": 5
+                    "type": "object",
+                    "required": ["raw"],
+                    "properties": {
+                        "raw": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 5
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
                 },
                 "type": {
                     "type": "integer",
