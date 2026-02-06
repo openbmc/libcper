@@ -69,7 +69,17 @@
                 "eventInfo": {
                     "version": 1,
                     "SocketNum": 2,
-                    "Architecture": 286331153,
+                    "Architecture": {
+                        "hidFam": 1,
+                        "majorRev": 1,
+                        "chipId": 17,
+                        "minorRev": 1,
+                        "preSiPlatform": {
+                            "raw": 17,
+                            "value": "PreSilicon"
+                        },
+                        "einjTag": false
+                    },
                     "Ecid1": 572662306,
                     "Ecid2": 858993459,
                     "Ecid3": 1145324612,
