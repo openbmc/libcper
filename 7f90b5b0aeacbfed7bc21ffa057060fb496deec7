@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62627899_b48ce042",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-02-06T00:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "026cc13f_adb10e4a",
+      "revId": "7f90b5b0aeacbfed7bc21ffa057060fb496deec7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a524e4d5_29e31573",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-02-04T00:23:08Z",
       "side": 1,
       "message": "You\u0027re missing a range check here.  DataSize comes from the user, and doesn\u0027t necessarily fit in the buffer.",
+      "revId": "7f90b5b0aeacbfed7bc21ffa057060fb496deec7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c810c52d_90cf33fe",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-02-06T00:18:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a524e4d5_29e31573",
       "revId": "7f90b5b0aeacbfed7bc21ffa057060fb496deec7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
