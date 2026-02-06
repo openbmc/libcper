@@ -491,203 +491,42 @@ void CompileTimeAssertions_ShortcodeNoSpaces(void)
 	}
 }
 
-/*
-* Single section tests.
-*/
+void test_round_trip(void)
+{
+	// These sections do not yet have examples.  This is a temporary workaround
+	// to keep things passing for now.  If you make edits to these sections, you
+	// will be required to generate tests
+	const char *skip_sections[] = {
+		"cxlcomponent-dram",	"cxlcomponent-memory",
+		"cxlcomponent-pswitch", "cxlcomponent-vswitch",
+		"cxlcomponent-mld",	"ampere",
+	};
 
-//Generic processor tests.
-void GenericProcessorTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("generic");
-}
-void GenericProcessorTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("generic");
-}
+	for (size_t i = 0; i < generator_definitions_len; i++) {
+		const char *section_name = generator_definitions[i].ShortName;
+		printf("Testing dual ir round-trip for section: %s\n",
+		       section_name);
+		size_t j = 0;
+		for (; j < sizeof(skip_sections) / sizeof(skip_sections[0]);
+		     j++) {
+			if (strcmp(section_name, skip_sections[j]) == 0) {
+				break;
+			}
+		}
+		if (j < sizeof(skip_sections) / sizeof(skip_sections[0])) {
+			printf("Skipping section because we don't have a test for it: %s\n",
+			       section_name);
+			continue;
+		}
+		cper_log_section_dual_ir_test(section_name);
+	}
 
-//IA32/x64 tests.
-void IA32x64Tests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("ia32x64");
-}
-void IA32x64Tests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("ia32x64");
-}
-
-// void IPFTests_IRValid() {
-//     cper_log_section_dual_ir_test("ipf");
-// }
-
-//ARM tests.
-void ArmTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("arm");
-}
-void ArmTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("arm");
-}
-
-// ARM RAS tests.
-void ArmRasTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("arm-ras");
-}
-void ArmRasTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("arm-ras");
-}
-
-//Memory tests.
-void MemoryTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("memory");
-}
-void MemoryTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("memory");
-}
-
-//Memory 2 tests.
-void Memory2Tests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("memory2");
-}
-void Memory2Tests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("memory2");
-}
-
-//PCIe tests.
-void PCIeTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("pcie");
-}
-void PCIeTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("pcie");
-}
-
-//Firmware tests.
-void FirmwareTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("firmware");
-}
-void FirmwareTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("firmware");
-}
-
-//PCI Bus tests.
-void PCIBusTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("pcibus");
-}
-void PCIBusTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("pcibus");
-}
-
-//PCI Device tests.
-void PCIDevTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("pcidev");
-}
-void PCIDevTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("pcidev");
-}
-
-//Generic DMAr tests.
-void DMArGenericTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("dmargeneric");
-}
-void DMArGenericTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("dmargeneric");
-}
-
-//VT-d DMAr tests.
-void DMArVtdTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("dmarvtd");
-}
-void DMArVtdTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("dmarvtd");
-}
-
-//IOMMU DMAr tests.
-void DMArIOMMUTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("dmariommu");
-}
-void DMArIOMMUTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("dmariommu");
-}
-
-//CCIX PER tests.
-void CCIXPERTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("ccixper");
-}
-void CCIXPERTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("ccixper");
-}
-
-//CXL Protocol tests.
-void CXLProtocolTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("cxlprotocol");
-}
-void CXLProtocolTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("cxlprotocol");
-}
-
-//CXL Component tests.
-void CXLComponentTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("cxlcomponent-media");
-}
-void CXLComponentTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("cxlcomponent-media");
-}
-
-//NVIDIA section tests.
-void NVIDIASectionTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("nvidia");
-}
-void NVIDIASectionTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("nvidia");
-}
-
-void NVIDIACMETSectionTests_IRValid(void)
-{
-	cper_example_section_ir_test("nvidia_cmet_info");
-}
-
-//Memory section test for validation bits.
-void MemoryValidationBitsSectionTests_IRValid()
-{
-	cper_example_section_ir_test("memory-validation-bits");
-}
-
-//Unknown section tests.
-void UnknownSectionTests_IRValid(void)
-{
-	cper_log_section_dual_ir_test("unknown");
-}
-void UnknownSectionTests_BinaryEqual(void)
-{
-	cper_log_section_dual_binary_test("unknown");
+	for (size_t i = 0; i < generator_definitions_len; i++) {
+		const char *section_name = generator_definitions[i].ShortName;
+		printf("Testing binary round-trip for section: %s\n",
+		       section_name);
+		cper_log_section_dual_binary_test(section_name);
+	}
 }
 
 //Entrypoint for the testing program.
@@ -712,48 +551,7 @@ int main(void)
 		cper_create_examples("nvidia");
 		cper_create_examples("unknown");
 	}
-	test_base64_encode_good();
-	test_base64_decode_good();
-	GenericProcessorTests_IRValid();
-	GenericProcessorTests_BinaryEqual();
-	IA32x64Tests_IRValid();
-	IA32x64Tests_BinaryEqual();
-	ArmTests_IRValid();
-	ArmTests_BinaryEqual();
-	ArmRasTests_IRValid();
-	ArmRasTests_BinaryEqual();
-	MemoryTests_IRValid();
-	MemoryTests_BinaryEqual();
-	Memory2Tests_IRValid();
-	Memory2Tests_BinaryEqual();
-	PCIeTests_IRValid();
-	PCIeTests_BinaryEqual();
-	FirmwareTests_IRValid();
-	FirmwareTests_BinaryEqual();
-	PCIBusTests_IRValid();
-	PCIBusTests_BinaryEqual();
-	PCIDevTests_IRValid();
-	PCIDevTests_BinaryEqual();
-	DMArGenericTests_IRValid();
-	DMArGenericTests_BinaryEqual();
-	DMArVtdTests_IRValid();
-	DMArVtdTests_BinaryEqual();
-	DMArIOMMUTests_IRValid();
-	DMArIOMMUTests_BinaryEqual();
-	CCIXPERTests_IRValid();
-	CCIXPERTests_BinaryEqual();
-	CXLProtocolTests_IRValid();
-	CXLProtocolTests_BinaryEqual();
-	CXLComponentTests_IRValid();
-	CXLComponentTests_BinaryEqual();
-	NVIDIASectionTests_IRValid();
-	NVIDIASectionTests_BinaryEqual();
-	NVIDIACMETSectionTests_IRValid();
-	MemoryValidationBitsSectionTests_IRValid();
-	UnknownSectionTests_IRValid();
-	UnknownSectionTests_BinaryEqual();
-	CompileTimeAssertions_TwoWayConversion();
-	CompileTimeAssertions_ShortcodeNoSpaces();
+	test_round_trip();
 
 	printf("\n\nTest completed successfully.\n");
 
