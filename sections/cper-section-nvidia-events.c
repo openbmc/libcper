@@ -388,13 +388,6 @@ static inline json_object *get_event_context_n_ir(json_object *event_ir,
 		return json_object_array_get_idx(event_contexts_ir, n);
 	}
 
-	// Handle object structure with indexed keys (eventContext0, eventContext1, etc.)
-	if (json_object_is_type(event_contexts_ir, json_type_object)) {
-		char key[64];
-		snprintf(key, sizeof(key), "eventContext%zu", n);
-		return json_object_object_get(event_contexts_ir, key);
-	}
-
 	return NULL;
 }
 
@@ -1470,8 +1463,8 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
  *     "Ecid4": 1111111111111111111,
  *     "InstanceBase": 281474976710656
  *   },
- *   "eventContexts": {
- *     "eventContext0": {
+ *   "eventContexts": [
+ *     {
  *       "version": 0,
  *       "dataFormatType": 1,
  *       "dataFormatVersion": 0,
@@ -1482,7 +1475,7 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
  *         ]
  *       }
  *     }
- *   }
+ *   ]
  * }
  */
 json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
@@ -1732,6 +1725,17 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 		}
 	}
 
+	// Get event contexts and count them before writing header
+	// (EventContextCount must be set before fwrite)
+	json_object *event_contexts_ir =
+		json_object_object_get(section, "eventContexts");
+	size_t ctx_count = 0;
+	if (event_contexts_ir != NULL &&
+	    json_object_is_type(event_contexts_ir, json_type_array)) {
+		ctx_count = json_object_array_length(event_contexts_ir);
+		event_header.EventContextCount = ctx_count;
+	}
+
 	fwrite(&event_header, sizeof(EFI_NVIDIA_EVENT_HEADER), 1, out);
 
 	json_object *event_info_ir =
@@ -1777,9 +1781,6 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 
 	write_padding_to_16_byte_alignment(bytes_written, out);
 
-	json_object *event_contexts_ir =
-		json_object_object_get(section, "eventContexts");
-
 	// Check if eventContexts field exists before iterating
 	if (event_contexts_ir == NULL) {
 		cper_print_log(
@@ -1787,30 +1788,10 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 		return;
 	}
 
-	// Determine the number of contexts based on whether it's an array or object
-	size_t ctx_count = 0;
-	bool is_array = json_object_is_type(event_contexts_ir, json_type_array);
-	if (is_array) {
-		ctx_count = json_object_array_length(event_contexts_ir);
-	} else if (json_object_is_type(event_contexts_ir, json_type_object)) {
-		// Backward compatibility with old object format
-		ctx_count = json_object_object_length(event_contexts_ir);
-	}
-	event_header.EventContextCount = ctx_count;
-
 	for (size_t ctx_instance = 0; ctx_instance < ctx_count;
 	     ctx_instance++) {
-		json_object *value = NULL;
-		if (is_array) {
-			value = json_object_array_get_idx(event_contexts_ir,
-							  ctx_instance);
-		} else {
-			// Backward compatibility: get by key name
-			char key[64];
-			snprintf(key, sizeof(key), "eventContext%zu",
-				 ctx_instance);
-			value = json_object_object_get(event_contexts_ir, key);
-		}
+		json_object *value = json_object_array_get_idx(
+			event_contexts_ir, ctx_instance);
 		if (value == NULL) {
 			continue;
 		}
