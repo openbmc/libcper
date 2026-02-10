@@ -16,6 +16,24 @@
       "message": "@ed@tanous.net @prachotan.bathi@arm.com I noticed today that this commit introduces new format-truncation warnings.  Building pldm with a libcper subproject for instance fails now:\n\n`../subprojects/libcper/sections/cper-section-arm-ras.c:41:52: error: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 495 [-Werror\u003dformat-truncation\u003d]\n   41 |                                  \"ARM RAS (empty): %s\",\n      |                                                    ^~\n......\n   58 |                 arm_ras_set_desc_string_invalid(reason, desc_string);\n      |   \n`   \n      \nElsewhere the return value from snprintf is checked for overflow which avoids the warning.",
       "revId": "e1cba52dd4aeaeca17ec229251a8afc7be891d00",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09a3926b_18b1241b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-10T23:19:10Z",
+      "side": 1,
+      "message": "@prachotan.bathi@arm.com can you please look to fix so we don\u0027t have to revert?",
+      "parentUuid": "7e291289_d0eaa052",
+      "revId": "e1cba52dd4aeaeca17ec229251a8afc7be891d00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
