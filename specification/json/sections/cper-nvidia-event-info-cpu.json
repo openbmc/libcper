@@ -1,10 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "cper-json-nvidia-event-info-cpu",
     "type": "object",
     "description": "CPU-specific event information for NVIDIA events",
     "required": [
-        "version",
         "SocketNum",
         "Architecture",
         "Ecid1",
@@ -13,13 +11,12 @@
         "Ecid4",
         "InstanceBase"
     ],
+    "additionalProperties": false,
     "properties": {
-        "version": {
+        "SocketNum": {
             "type": "integer",
-            "description": "Event info version",
             "minimum": 0
         },
-        "SocketNum": { "type": "integer", "minimum": 0 },
         "Architecture": {
             "type": "object",
             "required": [
@@ -72,10 +69,25 @@
                 }
             }
         },
-        "Ecid1": { "type": "integer", "minimum": 0 },
-        "Ecid2": { "type": "integer", "minimum": 0 },
-        "Ecid3": { "type": "integer", "minimum": 0 },
-        "Ecid4": { "type": "integer", "minimum": 0 },
-        "InstanceBase": { "type": "integer", "minimum": 0 }
+        "Ecid1": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{8}$"
+        },
+        "Ecid2": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{8}$"
+        },
+        "Ecid3": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{8}$"
+        },
+        "Ecid4": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{8}$"
+        },
+        "InstanceBase": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{16}$"
+        }
     }
 }

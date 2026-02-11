@@ -1,0 +1,156 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "GPU metadata context data (GPU dataFormatType=0x8000)",
+    "additionalProperties": false,
+    "required": [
+        "deviceName",
+        "firmwareVersion",
+        "pfDriverMicrocodeVersion",
+        "pfDriverVersion",
+        "vfDriverVersion",
+        "configuration",
+        "pdi",
+        "architectureId",
+        "hardwareInfoType"
+    ],
+    "properties": {
+        "deviceName": {
+            "type": "string",
+            "description": "GPU device name"
+        },
+        "firmwareVersion": {
+            "type": "string",
+            "description": "GPU firmware version"
+        },
+        "pfDriverMicrocodeVersion": {
+            "type": "string",
+            "description": "PF driver microcode version"
+        },
+        "pfDriverVersion": {
+            "type": "string",
+            "description": "PF driver version"
+        },
+        "vfDriverVersion": {
+            "type": "string",
+            "description": "VF driver version"
+        },
+        "configuration": {
+            "type": "string",
+            "description": "GPU configuration flags",
+            "pattern": "^0x[0-9a-fA-F]{16}$"
+        },
+        "pdi": {
+            "type": "string",
+            "description": "Physical device identifier (MAC-style)",
+            "pattern": "^[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){7}$"
+        },
+        "architectureId": {
+            "type": "object",
+            "description": "GPU architecture identifier (NV_PMC_BOOT_42 bitfield)",
+            "required": ["raw"],
+            "properties": {
+                "raw": {
+                    "type": "string",
+                    "description": "Raw architecture ID value",
+                    "pattern": "^0x[0-9a-fA-F]{8}$"
+                },
+                "architecture": {
+                    "type": "object",
+                    "description": "GPU architecture family",
+                    "required": ["raw"],
+                    "properties": {
+                        "raw": {
+                            "type": "string",
+                            "description": "Architecture enum value (bits 29:24)",
+                            "pattern": "^0x[0-9a-fA-F]{2}$"
+                        },
+                        "value": {
+                            "type": "string",
+                            "description": "Architecture name (e.g. Turing, Ampere, Blackwell)"
+                        }
+                    }
+                }
+            }
+        },
+        "hardwareInfoType": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+        },
+        "pciInfo": {
+            "type": "object",
+            "description": "PCI device info (present when hardwareInfoType=0)",
+            "additionalProperties": false,
+            "required": [
+                "class",
+                "subclass",
+                "rev",
+                "vendorId",
+                "deviceId",
+                "subsystemVendorId",
+                "subsystemId",
+                "bar0Start",
+                "bar0Size",
+                "bar1Start",
+                "bar1Size",
+                "bar2Start",
+                "bar2Size"
+            ],
+            "properties": {
+                "class": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{2}$"
+                },
+                "subclass": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{2}$"
+                },
+                "rev": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{2}$"
+                },
+                "vendorId": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{4}$"
+                },
+                "deviceId": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{4}$"
+                },
+                "subsystemVendorId": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{4}$"
+                },
+                "subsystemId": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{4}$"
+                },
+                "bar0Start": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                },
+                "bar0Size": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                },
+                "bar1Start": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                },
+                "bar1Size": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                },
+                "bar2Start": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                },
+                "bar2Size": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                }
+            }
+        }
+    }
+}

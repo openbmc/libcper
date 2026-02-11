@@ -41,29 +41,37 @@
                     }
                 },
                 "type": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "Event type code",
-                    "minimum": 0
+                    "pattern": "^0x[0-9a-fA-F]{4}$"
                 },
                 "subtype": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "Event subtype code",
-                    "minimum": 0
+                    "pattern": "^0x[0-9a-fA-F]{4}$"
                 },
                 "linkId": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "Event link identifier for correlation",
-                    "minimum": 0
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
                 }
             }
         },
         "eventInfo": {
             "type": "object",
             "description": "Device-specific event information structure (varies by sourceDeviceType)",
-            "oneOf": [
-                { "$ref": "./sections/cper-nvidia-event-info-cpu.json" },
-                { "$ref": "./sections/cper-nvidia-event-info-gpu.json" }
-            ]
+            "required": ["version"],
+            "additionalProperties": false,
+            "properties": {
+                "version": {
+                    "type": "integer",
+                    "description": "Event info version",
+                    "minimum": 0
+                },
+                "cpu": { "$ref": "./sections/cper-nvidia-event-info-cpu.json" },
+                "gpu": { "$ref": "./sections/cper-nvidia-event-info-gpu.json" }
+            },
+            "oneOf": [{ "required": ["cpu"] }, { "required": ["gpu"] }]
         },
         "eventContexts": {
             "type": "array",
@@ -81,36 +89,52 @@
                 "additionalProperties": false,
                 "properties": {
                     "version": { "type": "integer", "minimum": 0 },
-                    "dataFormatType": { "type": "integer", "minimum": 0 },
+                    "dataFormatType": {
+                        "type": "string",
+                        "pattern": "^0x[0-9a-fA-F]{4}$"
+                    },
                     "dataFormatVersion": { "type": "integer", "minimum": 0 },
                     "dataSize": { "type": "integer", "minimum": 0 },
                     "data": {
                         "type": "object",
-                        "oneOf": [
-                            {
+                        "description": "Context data (varies by dataFormatType and sourceDeviceType)",
+                        "required": [],
+                        "additionalProperties": false,
+                        "properties": {
+                            "opaque": {
                                 "$ref": "./sections/cper-nvidia-event-data-opaque.json"
                             },
-                            {
+                            "type1": {
                                 "$ref": "./sections/cper-nvidia-event-data-type1.json"
                             },
-                            {
+                            "type2": {
                                 "$ref": "./sections/cper-nvidia-event-data-type2.json"
                             },
-                            {
+                            "type3": {
                                 "$ref": "./sections/cper-nvidia-event-data-type3.json"
                             },
-                            {
+                            "type4": {
                                 "$ref": "./sections/cper-nvidia-event-data-type4.json"
                             },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-gpu-metadata.json"
+                            "gpuInitMetadata": {
+                                "$ref": "./sections/cper-nvidia-event-data-gpu-init-metadata.json"
                             },
-                            {
+                            "gpuLegacyXid": {
                                 "$ref": "./sections/cper-nvidia-event-data-gpu-legacy-xid.json"
                             },
-                            {
+                            "gpuRecommendedActions": {
                                 "$ref": "./sections/cper-nvidia-event-data-gpu-recommended-actions.json"
                             }
+                        },
+                        "oneOf": [
+                            { "required": ["opaque"] },
+                            { "required": ["type1"] },
+                            { "required": ["type2"] },
+                            { "required": ["type3"] },
+                            { "required": ["type4"] },
+                            { "required": ["gpuInitMetadata"] },
+                            { "required": ["gpuLegacyXid"] },
+                            { "required": ["gpuRecommendedActions"] }
                         ]
                     }
                 }

@@ -690,6 +690,16 @@ void NVIDIAEVENTALLTYPESSectionTests_IRValid(void)
 	cper_example_section_ir_test("nvidia_event_all_types");
 }
 
+void NVIDIAEVENTGPUINITSectionTests_IRValid(void)
+{
+	cper_example_section_ir_test("nvidia_event_gpu_init");
+}
+
+void NVIDIAEVENTGPUUCEECCSectionTests_IRValid(void)
+{
+	cper_example_section_ir_test("nvidia_event_gpu_uce_ecc");
+}
+
 void NVIDIAEventSectionTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("nvidiaevent");
@@ -918,6 +928,8 @@ int main(void)
 	NVIDIAEventSectionTests_BinaryEqual();
 	NVIDIACMETSectionTests_IRValid();
 	NVIDIAEVENTALLTYPESSectionTests_IRValid();
+	NVIDIAEVENTGPUINITSectionTests_IRValid();
+	NVIDIAEVENTGPUUCEECCSectionTests_IRValid();
 	NVIDIAEVENTEventHeaderVersionMismatch_IRValid();
 	NVIDIAEVENTEventHeaderVersionMismatch_BinaryEqual();
 	MemoryValidationBitsSectionTests_IRValid();
