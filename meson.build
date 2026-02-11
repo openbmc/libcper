@@ -45,6 +45,7 @@ libcper_parse_sources = files(
     'sections/cper-section-firmware.c',
     'sections/cper-section-generic.c',
     'sections/cper-section-ia32x64.c',
+    'sections/cper-section-info-ppr.c',
     'sections/cper-section-ipf.c',
     'sections/cper-section-memory.c',
     'sections/cper-section-nvidia-events.c',
@@ -53,14 +54,17 @@ libcper_parse_sources = files(
     'sections/cper-section-pci-dev.c',
     'sections/cper-section-pcie.c',
     'sections/cper-section.c',
+    'sections/cpad-section-os-generic.c',
+    'sections/cpad-section.c',
 )
 
-edk_sources = files('Cper.c')
+edk_sources = files('Cper.c', 'Cpad-guid.c')
 
-libcper_generate_sources = files(
+libcper_generate_cper_sources = files(
     'generator/sections/gen-section-ampere.c',
     'generator/sections/gen-section-arm-ras.c',
     'generator/sections/gen-section-arm.c',
+    'generator/sections/gen-section-custom.c',  //FIXME check that this is needed
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',
     'generator/sections/gen-section-cxl-protocol.c',
@@ -77,6 +81,11 @@ libcper_generate_sources = files(
     'generator/sections/gen-section.c',
 )
 
+libcper_generate_cpad_sources = files(
+    'generator/sections/gen-cpad-section-os-generic.c',
+    'generator/sections/gen-cpad-section.c',
+)
+
 cc = meson.get_compiler('c')
 
 json_c = dependency('json-c', default_options: {'warning_level': '0'})
@@ -91,8 +100,10 @@ libcper_parse_sources += files(
     'base64.c',
     'common-utils.c',
     'cper-parse.c',
+    'cpad-parse.c',
     'cper-utils.c',
     'ir-parse.c',
+    'ir-parse-cpad.c',
     'log.c',
 )
 
@@ -115,23 +126,45 @@ libcper_parse_dep = declare_dependency(
     link_with: [libcper_parse],
 )
 
-libcper_generate_sources += files(
+libcper_generate_cper_sources += files(
     'generator/cper-generate.c',
     'generator/gen-utils.c',
 )
 
 libcper_generate = library(
     'cper-generate',
-    libcper_generate_sources,
+    libcper_generate_cper_sources,
     version: meson.project_version(),
     include_directories: libcper_include_dir,
     dependencies: [json_c_dep],
     link_with: [libcper_parse],
     install: install,
 )
+
 libcper_generate_dep = declare_dependency(
     include_directories: libcper_include_dir,
     link_with: libcper_generate,
+)
+
+# FIXME: This creates a libcper cpad-generate library, should I combine the CPER and CPAD libraries?
+libcper_generate_cpad_sources += files(
+    'generator/cpad-generate.c',
+    'generator/gen-utils.c',
+)
+
+libcper_generate_cpad = library(
+    'cpad-generate',
+    libcper_generate_cpad_sources,
+    version: meson.project_version(),
+    include_directories: libcper_include_dir,
+    dependencies: [json_c_dep],
+    link_with: [libcper_parse],
+    install: install,
+)
+
+libcper_generate_cpad_dep = declare_dependency(
+    include_directories: libcper_include_dir,
+    link_with: libcper_generate_cpad,
 )
 
 if get_option('pkgconfig').allowed()
@@ -155,11 +188,31 @@ if get_option('utility').allowed()
     )
 
     executable(
+        'cpad-convert',
+        'cli-app/cpad-convert.c',
+        include_directories: libcper_include_dir,
+        dependencies: [json_c_dep],
+        link_with: [libcper_parse, libcper_generate],
+        install: install,
+        install_dir: get_option('bindir'),
+    )
+
+    executable(
         'cper-generate',
         'generator/cper-generate-cli.c',
         edk_sources,
         include_directories: libcper_include_dir,
         link_with: [libcper_parse, libcper_generate],
+        install: install,
+        install_dir: get_option('bindir'),
+    )
+
+    executable(
+        'cpad-generate',
+        'generator/cpad-generate-cli.c',
+        edk_sources,
+        include_directories: libcper_include_dir,
+        link_with: [libcper_parse, libcper_generate_cpad],
         install: install,
         install_dir: get_option('bindir'),
     )

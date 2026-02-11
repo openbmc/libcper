@@ -2,6 +2,7 @@
  * Utility functions to assist in generating pseudo-random CPER sections.
  *
  * Author: Lawrence.Tang@arm.com
+ *         drewwalton@microsoft.com
  **/
 #include <stdlib.h>
 #include <time.h>
@@ -22,6 +23,15 @@ UINT32 cper_rand(void)
 	lfsr ^= lfsr >> 17;
 	lfsr ^= (lfsr & 0x07ffffff) << 5;
 	return lfsr;
+}
+
+UINT64 cper_rand64()
+{
+	UINT64 result = (UINT64)cper_rand();
+	result = result << 32;
+	result |= (UINT64)cper_rand();
+
+	return result;
 }
 
 //Generates a random section of the given byte size, saving the result to the given location.
@@ -51,17 +61,52 @@ void generate_random_printable_string(char *dest, size_t length)
 	dest[length - 1] = 0;
 }
 
-//Creates a valid common CPER error section, given the start of the error section.
-//Clears reserved bits.
-void create_valid_error_section(UINT8 *start)
+//Creates a valid common CPER Error Status Field, given the start of the Error Status.
+//This Error Status Field is defined in section N.2.1.2 of the CPER specification Version 2.9
+
+//Clears reserved bits.//Clears reserved bits.
+void create_valid_error_status(UINT8 *error_status_field)
 {
-	//Fix reserved bits.
-	UINT64 *error_section = (UINT64 *)start;
-	*error_section &= ~0xFF;    //Reserved bits 0-7.
-	*error_section &= 0x7FFFFF; //Reserved bits 23-63
+	//Fix reserved bits
+	UINT64 *error_status64 = (UINT64 *)error_status_field;
+	*error_status64 &= 0x7FFF00; //Zero out reserved bits 0-7 and 23-63
 
 	//Ensure error type has a valid value.
-	*(start + 1) = CPER_ERROR_TYPES_KEYS[cper_rand() %
+	*(error_status_field + 1) = CPER_ERROR_TYPES_KEYS[cper_rand() %
 					     (sizeof(CPER_ERROR_TYPES_KEYS) /
 					      sizeof(int))];
 }
+
+EFI_GUID generate_random_guid()
+{
+    EFI_GUID guid;
+    guid.Data1 = cper_rand();
+    guid.Data2 = (UINT16)cper_rand();
+    guid.Data3 = (UINT16)cper_rand();
+    for(int i=0; i<8; i++) {
+        guid.Data4[i] = (UINT8)cper_rand();
+    }
+    return guid;
+}
+
+void generate_random_timestamp(EFI_ERROR_TIME_STAMP *timestamp)
+{
+    timestamp->Century = int_to_bcd(cper_rand() % 100);
+    timestamp->Year = int_to_bcd(cper_rand() % 100);
+    timestamp->Month = int_to_bcd(cper_rand() % 12 + 1);
+    timestamp->Day = int_to_bcd(cper_rand() % 31 + 1);
+    timestamp->Hours = int_to_bcd(cper_rand() % 24 + 1);
+    timestamp->Seconds = int_to_bcd(cper_rand() % 60);
+    timestamp->Flag = cper_rand() % 2; // Randomly set precise bit
+}
+
+// Generates a random null-terminated string of printable ASCII characters.
+void generate_random_string(char *buffer, size_t buffer_size)
+{
+    for (size_t i = 0; i < buffer_size - 1; i++) {
+        // Printable ASCII range: 0x20 (space) to 0x7E (~)
+        buffer[i] = (char)(cper_rand() % (0x7E - 0x20 + 1) + 0x20);
+    }
+    buffer[buffer_size-1] = '\0';
+}
+

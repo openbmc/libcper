@@ -47,15 +47,20 @@ void generate_cper_record(char **types, UINT16 num_sections, FILE *out,
 	header->SignatureEnd = 0xFFFFFFFF;
 	header->Flags = 4; //HW_ERROR_FLAGS_SIMULATED
 	header->RecordID = (UINT64)rand();
-	header->ErrorSeverity = rand() % 4;
+	
+	//FIXME: Probably want to delete this.
+	//Set header severity to 3 (informational) if any section is info-ppr
+	int has_info_ppr = 0;
+	for (int i = 0; i < num_sections; i++) {
+		if (strcmp(types[i], "info-ppr") == 0) {
+			has_info_ppr = 1;
+			break;
+		}
+	}
+	header->ErrorSeverity = has_info_ppr ? 3 : (rand() % 4);
 
 	//Generate a valid timestamp.
-	header->TimeStamp.Century = int_to_bcd(rand() % 100);
-	header->TimeStamp.Year = int_to_bcd(rand() % 100);
-	header->TimeStamp.Month = int_to_bcd(rand() % 12 + 1);
-	header->TimeStamp.Day = int_to_bcd(rand() % 31 + 1);
-	header->TimeStamp.Hours = int_to_bcd(rand() % 24 + 1);
-	header->TimeStamp.Seconds = int_to_bcd(rand() % 60);
+	generate_random_timestamp(&header->TimeStamp);
 
 	//Turn all validation bits on.
 	header->ValidationBits = 0x3;
@@ -131,11 +136,23 @@ EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 	descriptor->Resv1 = 0;
 	descriptor->SectionFlags &= 0xFF;
 
+	//For info-ppr section, set bit 31 (actionSuccess) to true
+	// FIXME: Probably want to delete this.
+	if (strcmp(type, "info-ppr") == 0) {
+		descriptor->SectionFlags |= 0x80000000; //Set bit 31
+	}
+
 	//Validation bits all set to 'on'.
 	descriptor->SecValidMask = 0x3;
 
 	//Set severity.
-	descriptor->Severity = rand() % 4;
+	//For "info-ppr" section, use severity 3 (informational).
+	// FIXME Probably want to delete this.
+	if (strcmp(type, "info-ppr") == 0) {
+		descriptor->Severity = 3; //EFI_GENERIC_ERROR_INFO
+	} else {
+		descriptor->Severity = rand() % 4;
+	}
 
 	//Set length, offset from base record.
 	descriptor->SectionLength = (UINT32)lengths[index];

@@ -74,6 +74,23 @@ typedef struct {
 	UINT8 Data4[8];
 } EFI_GUID;
 
+///
+/// The timestamp correlates to the time when the error information was collected
+/// by the system software and may not necessarily represent the time of the error
+/// event. The timestamp contains the local time in BCD format.
+///
+typedef struct {
+	UINT8 Seconds;
+	UINT8 Minutes;
+	UINT8 Hours;
+	UINT8 Flag;
+	UINT8 Day;
+	UINT8 Month;
+	UINT8 Year;
+	UINT8 Century;
+} EFI_ERROR_TIME_STAMP;
+
+
 /**
   Returns a 16-bit signature built from 2 ASCII characters.
 

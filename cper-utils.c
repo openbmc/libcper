@@ -1,22 +1,40 @@
 /**
- * Describes utility functions for parsing CPER into JSON IR.
+ *  Utility functions for parsing CPERs and CPADs into JSON IR.
  *
  * Author: Lawrence.Tang@arm.com
+ * 		   drewwalton@microsoft.com
  **/
 
 #include <ctype.h>
 #include <stdio.h>
 #include <json.h>
 #include <string.h>
+#include <libcper/Cpad.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/log.h>
 
-//The available severity types for CPER.
-const char *CPER_SEVERITY_TYPES[4] = { "Recoverable", "Fatal", "Corrected",
-				       "Informational" };
+/******************************************/
+/* CPER-specific utility functions        */
 
-//Converts the given generic CPER error status to JSON IR.
+//The available severity types for CPER.
+const char *CPER_SEVERITY_TYPES[] = {
+    [EFI_GENERIC_ERROR_RECOVERABLE] = "Recoverable",
+    [EFI_GENERIC_ERROR_FATAL]       = "Fatal",
+    [EFI_GENERIC_ERROR_CORRECTED]   = "Corrected",
+    [EFI_GENERIC_ERROR_INFO]        = "Informational"
+};
+
+//Returns the appropriate string for the given integer severity.
+const char *severity_to_string(UINT32 severity)
+{
+	return severity < sizeof(CPER_SEVERITY_TYPES) / 
+				sizeof(CPER_SEVERITY_TYPES[0]) ?
+		       	CPER_SEVERITY_TYPES[severity] :
+		       	"Unknown";
+}
+
+//Converts the given CPER Error Status to JSON IR.
 json_object *
 cper_generic_error_status_to_ir(EFI_GENERIC_ERROR_STATUS *error_status)
 {
@@ -78,6 +96,61 @@ void ir_generic_error_status_to_cper(
 	error_status_cper->OverflowNotLogged = json_object_get_boolean(
 		json_object_object_get(error_status, "overflowDroppedLogs"));
 }
+
+/******************************************/
+/* CPAD-specific utility functions        */
+
+//Converts a CPAD Urgency field to JSON IR.
+json_object *
+cpad_urgency_to_ir(CPAD_URGENCY_BITFIELD *urgency)
+{
+	json_object *urgency_ir = json_object_new_object();
+
+	//Boolean bit fields.
+	json_object_object_add(
+		urgency_ir, "urgent",
+		json_object_new_boolean(urgency->Urgent));
+	return urgency_ir;
+}
+
+//Converts a CPAD JSON Urgency section into a CPAD Urgency field.
+void ir_cpad_urgency_to_cper(
+	json_object *urgency_ir, CPAD_URGENCY_BITFIELD *urgency_cper)
+{
+	urgency_cper->Urgent = json_object_get_boolean(
+		json_object_object_get(urgency_ir, "urgent"));
+}
+
+// CPAD Actions
+//The available severity types for CPER.
+const char *CPAD_ACTION_NAMES[] = {
+    [CPAD_ACTION_DO_NOTHING] 			= "Do Nothing",  // Can be used for testing CPAD routing
+    [CPAD_ACTION_RESET_NO_POWER_CYCLE]  = "Reset",
+    [CPAD_ACTION_POWER_CYCLE]   		= "Power Cycle",
+    [CPAD_ACTION_RESEAT_PART]   		= "Reseat Part",
+    [CPAD_ACTION_SHUFFLE_PART]  		= "Shuffle Part",
+    [CPAD_ACTION_REPLACE_PART]  		= "Replace Part"
+};
+
+//Returns the appropriate string for the given integer severity.
+const char *action_to_string(UINT16 action)
+{
+	if (action >= FIRST_PROPRIETARY_ACTION_ID) {
+		// These are vendor specific actions
+		// and are not defined in the CPAD specification
+		return "Proprietary Action";
+	}
+
+	return action < sizeof(CPAD_ACTION_NAMES) / 
+				sizeof(CPAD_ACTION_NAMES[0]) ?
+		       	CPAD_ACTION_NAMES[action] :
+		       	"Unknown";
+}
+
+
+
+/******************************************/
+/* Common utility functions               */
 
 //Converts a single uniform struct of UINT64s into intermediate JSON IR format, given names for each field in byte order.
 json_object *uniform_struct64_to_ir(UINT64 *start, int len, const char *names[])
@@ -315,11 +388,7 @@ json_object *revision_to_ir(UINT16 revision)
 	return revision_info;
 }
 
-//Returns the appropriate string for the given integer severity.
-const char *severity_to_string(UINT32 severity)
-{
-	return severity < 4 ? CPER_SEVERITY_TYPES[severity] : "Unknown";
-}
+
 
 //Converts a single EFI timestamp to string, at the given output.
 //Output must be at least TIMESTAMP_LENGTH bytes long.
@@ -580,6 +649,8 @@ void add_int_hex_24(json_object *register_ir, const char *field_name,
 	add_int_hex_common(register_ir, field_name, value, 6);
 }
 
+// FIXME - this function was add_int_hex_64
+//         Are there any calls that actually need 64 bits?
 void add_int_hex_32(json_object *register_ir, const char *field_name,
 		    UINT64 value)
 {

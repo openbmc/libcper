@@ -22,13 +22,14 @@ extern "C" {
 			  "latentError",                                       \
 			  "propagated",                                        \
 			  "overflow" }
+#define CPER_SECTION_DESCRIPTOR_FLAGS_NAMES_COUNT 8
 #define CPER_HEADER_FLAG_TYPES_KEYS (int[]){ 1, 2, 4 }
 #define CPER_HEADER_FLAG_TYPES_VALUES                                          \
 	(const char *[]){ "HW_ERROR_FLAGS_RECOVERED",                          \
 			  "HW_ERROR_FLAGS_PREVERR",                            \
 			  "HW_ERROR_FLAGS_SIMULATED" }
 
-int header_valid(const char *cper_buf, size_t size);
+int cper_header_valid(const char *cper_buf, size_t size);
 
 json_object *cper_to_ir(FILE *cper_file);
 json_object *cper_buf_to_ir(const unsigned char *cper_buf, size_t size);

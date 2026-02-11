@@ -1,7 +1,8 @@
 /**
- * Describes functions for parsing JSON IR CPER data into binary CPER format.
+ * Describes functions for parsing JSON IR CPAD data into binary CPAD format.
  *
  * Author: Lawrence.Tang@arm.com
+ * Author: drewwalton@microsoft.com
  **/
 
 #include <stdio.h>
@@ -9,48 +10,48 @@
 #include <json.h>
 #include <libcper/log.h>
 #include <libcper/base64.h>
-#include <libcper/Cper.h>
-#include <libcper/cper-parse.h>
-#include <libcper/cper-utils.h>
-#include <libcper/sections/cper-section.h>
+#include <libcper/Cpad.h>
+#include <libcper/cpad-parse.h>
+#include <libcper/cper-utils.h>  // these are general and apply to both CPER and CPAD
+#include <libcper/sections/cpad-section.h>
 
 //Private pre-declarations.
-void ir_header_to_cper(json_object *header_ir,
-		       EFI_COMMON_ERROR_RECORD_HEADER *header);
-void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
-				   EFI_ERROR_SECTION_DESCRIPTOR *descriptor);
-void ir_section_to_cper(json_object *section,
-			EFI_ERROR_SECTION_DESCRIPTOR *descriptor, FILE *out);
+void ir_header_to_cpad(json_object *header_ir,
+		       CPAD_HEADER *header);
+void ir_section_descriptor_to_cpad(json_object *section_descriptor_ir,
+				   CPAD_SECTION_DESCRIPTOR *descriptor);
+void ir_section_to_cpad(json_object *section,
+			CPAD_SECTION_DESCRIPTOR *descriptor, FILE *out);
 
-//Converts the given JSON IR CPER representation into CPER binary format, piped to the provided file stream.
-//This function performs no validation of the IR against the CPER-JSON specification. To ensure a safe call,
+//Converts the given JSON IR CPAD representation into CPAD binary format, piped to the provided file stream.
+//This function performs no validation of the IR against the CPAD-JSON specification. To ensure a safe call,
 //use validate_schema() from json-schema.h before attempting to call this function.
-void ir_to_cper(json_object *ir, FILE *out)
+void ir_to_cpad(json_object *ir, FILE *out)
 {
-	//Create the CPER header.
-	EFI_COMMON_ERROR_RECORD_HEADER *header =
-		(EFI_COMMON_ERROR_RECORD_HEADER *)calloc(
-			1, sizeof(EFI_COMMON_ERROR_RECORD_HEADER));
-	ir_header_to_cper(json_object_object_get(ir, "header"), header);
-	fwrite(header, sizeof(EFI_COMMON_ERROR_RECORD_HEADER), 1, out);
+	//Create the CPAD header.
+	CPAD_HEADER *header =
+		(CPAD_HEADER *)calloc(
+			1, sizeof(CPAD_HEADER));
+	ir_header_to_cpad(json_object_object_get(ir, "header"), header);
+	fwrite(header, sizeof(CPAD_HEADER), 1, out);
 	fflush(out);
 
 	//Create the CPER section descriptors.
 	json_object *section_descriptors =
 		json_object_object_get(ir, "sectionDescriptors");
 	if (section_descriptors == NULL) {
-		cper_print_log("Invalid CPER file: No section descriptors.\n");
+		cper_print_log("Invalid CPAD file: No section descriptors.\n");
 		return;
 	}
 	int amt_descriptors = json_object_array_length(section_descriptors);
-	EFI_ERROR_SECTION_DESCRIPTOR *descriptors[amt_descriptors];
+	CPAD_SECTION_DESCRIPTOR *descriptors[amt_descriptors];
 	for (int i = 0; i < amt_descriptors; i++) {
-		descriptors[i] = (EFI_ERROR_SECTION_DESCRIPTOR *)calloc(
-			1, sizeof(EFI_ERROR_SECTION_DESCRIPTOR));
-		ir_section_descriptor_to_cper(
+		descriptors[i] = (CPAD_SECTION_DESCRIPTOR *)calloc(
+			1, sizeof(CPAD_SECTION_DESCRIPTOR));
+		ir_section_descriptor_to_cpad(
 			json_object_array_get_idx(section_descriptors, i),
 			descriptors[i]);
-		fwrite(descriptors[i], sizeof(EFI_ERROR_SECTION_DESCRIPTOR), 1,
+		fwrite(descriptors[i], sizeof(CPAD_SECTION_DESCRIPTOR), 1,
 		       out);
 		fflush(out);
 	}
@@ -58,7 +59,7 @@ void ir_to_cper(json_object *ir, FILE *out)
 	//Run through each section in turn.
 	json_object *sections = json_object_object_get(ir, "sections");
 	if (sections == NULL) {
-		cper_print_log("Invalid CPER file: No sections.\n");
+		cper_print_log("Invalid CPAD file: No sections.\n");
 		return;
 	}
 	int amt_sections = json_object_array_length(sections);
@@ -69,7 +70,7 @@ void ir_to_cper(json_object *ir, FILE *out)
 				json_object_array_get_idx(sections, i);
 
 			//Convert.
-			ir_section_to_cper(section, descriptors[i], out);
+			ir_section_to_cpad(section, descriptors[i], out);
 		}
 	}
 
@@ -80,11 +81,17 @@ void ir_to_cper(json_object *ir, FILE *out)
 	}
 }
 
-//Converts a CPER-JSON IR header to a CPER header structure.
-void ir_header_to_cper(json_object *header_ir,
-		       EFI_COMMON_ERROR_RECORD_HEADER *header)
+//Converts a CPAD-JSON IR header to a CPAD header structure.
+void ir_header_to_cpad(json_object *header_ir,
+		       CPAD_HEADER *header)
 {
-	header->SignatureStart = 0x52455043; //CPER
+    // FIXME: Shouldn't this use the CPAD_SIGNATURE_START define?
+    //        But the byte order is reversed below.
+	header->SignatureStart = 0x44415043; //CPAD
+
+    // Is the byte order wrong below?
+    // header->SignatureStart = CPAD_SIGNATURE_START;
+
 
 	//Revision.
 	json_object *revision = json_object_object_get(header_ir, "revision");
@@ -94,17 +101,20 @@ void ir_header_to_cper(json_object *header_ir,
 		json_object_get_int(json_object_object_get(revision, "major"));
 	header->Revision = minor + (major << 8);
 
-	header->SignatureEnd = 0xFFFFFFFF;
+	header->SignatureEnd = CPAD_SIGNATURE_END;
 
 	//Section count.
 	int section_count = json_object_get_int(
 		json_object_object_get(header_ir, "sectionCount"));
 	header->SectionCount = (UINT16)section_count;
 
-	//Error severity.
-	json_object *severity = json_object_object_get(header_ir, "severity");
-	header->ErrorSeverity = (UINT32)json_object_get_uint64(
-		json_object_object_get(severity, "code"));
+	//CPAD Urgency - field is shown in json raw as code and is also decoded.
+	json_object *urgency = json_object_object_get(header_ir, "urgency");
+	ir_cpad_urgency_to_cper(urgency, (CPAD_URGENCY_BITFIELD *)&header->Urgency);
+
+	//CPAD Confidence.
+	UINT64 confidence = json_object_get_uint64(json_object_object_get(header_ir, "confidence"));
+	header->Confidence = (UINT8)confidence;
 
 	//Validation bits.
 	ValidationTypes ui32Type = { UINT_32T, .value.ui32 = 0 };
@@ -124,7 +134,7 @@ void ir_header_to_cper(json_object *header_ir,
 				json_object_object_get(header_ir,
 						       "timestampIsPrecise"));
 		}
-		add_to_valid_bitfield(&ui32Type, 1);  // FIXME: Should '1' be CPER_HEADER_TIME_STAMP_VALID?
+		add_to_valid_bitfield(&ui32Type, CPAD_HEADER_TIME_STAMP_VALID);
 	}
 
 	//Various GUIDs.
@@ -135,12 +145,12 @@ void ir_header_to_cper(json_object *header_ir,
 	if (platform_id != NULL) {
 		string_to_guid(&header->PlatformID,
 			       json_object_get_string(platform_id));
-		add_to_valid_bitfield(&ui32Type, 0); // FIXME: Should '0' be CPER_HEADER_PLATFORM_ID_VALID?
+		add_to_valid_bitfield(&ui32Type, CPAD_HEADER_PLATFORM_ID_VALID);
 	}
 	if (partition_id != NULL) {
 		string_to_guid(&header->PartitionID,
 			       json_object_get_string(partition_id));
-		add_to_valid_bitfield(&ui32Type, 2); // FIXME: Should '2' be CPER_HEADER_PARTITION_ID_VALID?
+		add_to_valid_bitfield(&ui32Type, CPAD_HEADER_PARTITION_ID_VALID);
 	}
 	string_to_guid(&header->CreatorID,
 		       json_object_get_string(
@@ -153,34 +163,31 @@ void ir_header_to_cper(json_object *header_ir,
 		       json_object_get_string(json_object_object_get(
 			       notification_type, "guid")));
 
-	//Record ID, persistence info.
+	//Record ID
 	header->RecordID = json_object_get_uint64(
 		json_object_object_get(header_ir, "recordID"));
-	header->PersistenceInfo = json_object_get_uint64(
-		json_object_object_get(header_ir, "persistenceInfo"));
 
-	//Flags.  Flags are not parsed by this library, are read as uint32.
-	json_object *flags = json_object_object_get(header_ir, "flags");
+	//Flags.  Currently a reserved field, are read as uint32.
 	header->Flags = (UINT32)json_object_get_uint64(
-		json_object_object_get(flags, "value"));
+		json_object_object_get(header_ir, "flags"));
 
 	header->ValidationBits = ui32Type.value.ui32;
 }
 
 //Converts a single given IR section into CPER, outputting to the given stream.
-void ir_section_to_cper(json_object *section,
-			EFI_ERROR_SECTION_DESCRIPTOR *descriptor, FILE *out)
+void ir_section_to_cpad(json_object *section,
+			CPAD_SECTION_DESCRIPTOR *descriptor, FILE *out)
 {
 	json_object *ir = NULL;
 
 	//Find the correct section type, and parse.
-	CPER_SECTION_DEFINITION *definition =
-		select_section_by_guid(&descriptor->SectionType);
+	CPAD_SECTION_DEFINITION *definition =
+		cpad_select_section_by_guid(&descriptor->SectionType);
 	if (definition == NULL) {
-		cper_print_log("Unknown section type guid\n");
+		cper_print_log("Unknown CPAD section type guid\n");
 	} else {
 		ir = json_object_object_get(section, definition->ShortName);
-		definition->ToCPER(ir, out);
+		definition->ToCPAD(ir, out);
 	}
 
 	//If unknown GUID, so read as a base64 unknown section.
@@ -195,7 +202,7 @@ void ir_section_to_cper(json_object *section,
 			json_object_get_string_len(encoded), &decoded_len);
 		if (decoded == NULL) {
 			cper_print_log(
-				"Failed to allocate decode output buffer. \n");
+				"Failed to allocate CPAD decode output buffer. \n");
 		} else {
 			fwrite(decoded, decoded_len, 1, out);
 			free(decoded);
@@ -203,9 +210,9 @@ void ir_section_to_cper(json_object *section,
 	}
 }
 
-//Converts a single CPER-JSON IR section descriptor into a CPER structure.
-void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
-				   EFI_ERROR_SECTION_DESCRIPTOR *descriptor)
+//Converts a single CPAD-JSON IR section descriptor into a CPAD structure.
+void ir_section_descriptor_to_cpad(json_object *section_descriptor_ir,
+				   CPAD_SECTION_DESCRIPTOR *descriptor)
 {
 	//Section offset, length.
 	descriptor->SectionOffset = (UINT32)json_object_get_uint64(
@@ -222,24 +229,16 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 		json_object_get_int(json_object_object_get(revision, "major"));
 	descriptor->Revision = minor + (major << 8);
 
-	//Validation bits, flags.
-	ValidationTypes ui8Type = { UINT_8T, .value.ui8 = 0 };
-	struct json_object *obj = NULL;
 
-	descriptor->SectionFlags = ir_to_bitfield(
-		json_object_object_get(section_descriptor_ir, "flags"), 8,
-		CPER_SECTION_DESCRIPTOR_FLAGS_BITFIELD_NAMES);
+	//Validation bits, flags
+	ValidationTypes ui8Type = { UINT_8T, .value.ui8 = 0 };
 	
-	//Handle actionSuccess (bit 31) separately
-	// FIXME: I don't think this matches the latest direction with CPADs
-	// Need to create a standard CPER for CPAD action results
-	json_object *flags_ir = json_object_object_get(section_descriptor_ir, "flags");
-	if (flags_ir != NULL) {
-		json_object *action_success = json_object_object_get(flags_ir, "actionSuccess");
-		if (action_success != NULL && json_object_get_boolean(action_success)) {
-			descriptor->SectionFlags |= 0x80000000; //Set bit 31
-		}
-	}
+	//Flags.  Currently a reserved field, are read as uint32.
+	descriptor->Flags = (UINT32)json_object_get_uint64(
+		json_object_object_get(section_descriptor_ir, "flags"));
+
+
+	struct json_object *obj = NULL;
 
 	//Section type.
 	json_object *section_type =
@@ -254,15 +253,18 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 		if (fru_id != NULL) {
 			string_to_guid(&descriptor->FruId,
 				       json_object_get_string(fru_id));
-			add_to_valid_bitfield(&ui8Type, 0);  // FIXME: Should '0' be CPER_SECTION_FRU_ID_VALID?
+			add_to_valid_bitfield(&ui8Type, CPAD_SECTION_FRU_ID_VALID);
 		}
 	}
 
-	//Severity code.
-	json_object *severity =
-		json_object_object_get(section_descriptor_ir, "severity");
-	descriptor->Severity = (UINT32)json_object_get_uint64(
-		json_object_object_get(severity, "code"));
+	//CPAD Urgency - field is shown in json raw as code and is also decoded.
+	json_object *urgency = json_object_object_get(section_descriptor_ir, "urgency");
+	ir_cpad_urgency_to_cper(urgency, (CPAD_URGENCY_BITFIELD *)&descriptor->Urgency);
+
+
+	//CPAD Confidence.
+	int confidence = (int)json_object_get_int(json_object_object_get(section_descriptor_ir, "confidence"));
+	descriptor->Confidence = (UINT8)confidence;
 
 	//FRU text, if present.
 	if (json_object_object_get_ex(section_descriptor_ir, "fruText", &obj)) {
@@ -274,26 +276,34 @@ void ir_section_descriptor_to_cper(json_object *section_descriptor_ir,
 			descriptor
 				->FruString[sizeof(descriptor->FruString) - 1] =
 				'\0';
-			add_to_valid_bitfield(&ui8Type, 1);
+			add_to_valid_bitfield(&ui8Type, CPAD_SECTION_FRU_STRING_VALID);
 		}
 	}
+
+	//ActionId - only looks at the "code" field and ignores "name".
+	json_object *action_id = json_object_object_get(section_descriptor_ir, "actionID");
+	const char *action_code_str = json_object_get_string(
+		json_object_object_get(action_id, "code"));
+	descriptor->ActionID = (UINT16)strtoul(action_code_str, NULL, 16);
+
+
 	descriptor->SecValidMask = ui8Type.value.ui8;
 }
 
 //Converts IR for a given single section format CPER record into CPER binary.
-void ir_single_section_to_cper(json_object *ir, FILE *out)
+void ir_single_section_to_cpad(json_object *ir, FILE *out)
 {
 	//Create & write a section descriptor to file.
-	EFI_ERROR_SECTION_DESCRIPTOR section_descriptor;
+	CPAD_SECTION_DESCRIPTOR section_descriptor;
 	memset(&section_descriptor, 0, sizeof(section_descriptor));
 
-	ir_section_descriptor_to_cper(
+	ir_section_descriptor_to_cpad(
 		json_object_object_get(ir, "sectionDescriptor"),
 		&section_descriptor);
 	fwrite(&section_descriptor, sizeof(section_descriptor), 1, out);
 
 	//Write section to file.
-	ir_section_to_cper(json_object_object_get(ir, "section"),
+	ir_section_to_cpad(json_object_object_get(ir, "section"),
 			   &section_descriptor, out);
 
 	fflush(out);

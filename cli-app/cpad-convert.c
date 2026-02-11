@@ -3,6 +3,7 @@
  * conversion between CPER and CPER-JSON formats.
  *
  * Author: Lawrence.Tang@arm.com
+ *         drewwalton@microsoft.com
  **/
 
 #include <stdio.h>
@@ -11,16 +12,16 @@
 #include <limits.h>
 #include <json.h>
 #include <libcper/log.h>
-#include <libcper/cper-parse.h>
+#include <libcper/cpad-parse.h>
 #include <libcper/json-schema.h>
-#include <libcper/Cper.h>
+#include <libcper/Cpad.h>
 #include <libcper/base64.h>
 
-void cper_to_json(char *in_file, char *out_file, int is_single_section);
-void json_to_cper(const char *in_file, const char *out_file);
+void cpad_to_json(char *in_file, char *out_file, int is_single_section);
+void json_to_cpad(const char *in_file, const char *out_file);
 void print_help(void);
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	cper_set_log_stdio();
 	//Print help if requested.
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
 
 	//Ensure at least two arguments are present.
 	if (argc < 3) {
-		printf("Invalid number of arguments. See 'cper-convert --help' for command information.\n");
+		printf("Invalid number of arguments. See 'cpad-convert --help' for command information.\n");
 		return -1;
 	}
 
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 			//Debug output on.
 			debug = 1;
 		} else {
-			printf("Unrecognised argument '%s'. See 'cper-convert --help' for command information.\n",
+			printf("Unrecognised argument '%s'. See 'cpad-convert --help' for command information.\n",
 			       argv[i]);
 		}
 	}
@@ -71,13 +72,13 @@ int main(int argc, char *argv[])
 	(void)specification_file;
 	//Run the requested command.
 	if (strcmp(argv[1], "to-json") == 0) {
-		cper_to_json(input_file, output_file, 0);
+		cpad_to_json(input_file, output_file, 0);
 	} else if (strcmp(argv[1], "to-json-section") == 0) {
-		cper_to_json(input_file, output_file, 1);
-	} else if (strcmp(argv[1], "to-cper") == 0) {
-		json_to_cper(input_file, output_file);
+		cpad_to_json(input_file, output_file, 1);
+	} else if (strcmp(argv[1], "to-cpad") == 0) {
+		json_to_cpad(input_file, output_file);
 	} else {
-		printf("Unrecognised argument '%s'. See 'cper-convert --help' for command information.\n",
+		printf("Unrecognised argument '%s'. See 'cpad-convert --help' for command information.\n",
 		       argv[1]);
 		return -1;
 	}
@@ -85,42 +86,42 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-//Command for converting a provided CPER log file or CPER single section file into JSON.
-void cper_to_json(char *in_file, char *out_file, int is_single_section)
+//Command for converting a provided CPAD log file or CPAD single section file into JSON.
+void cpad_to_json(char *in_file, char *out_file, int is_single_section)
 {
 	//Get a handle for the log file.
-	FILE *cper_file = fopen(in_file, "r");
-	if (cper_file == NULL) {
-		printf("Could not open provided CPER file '%s', file handle returned null.\n",
+	FILE *cpad_file = fopen(in_file, "r");
+	if (cpad_file == NULL) {
+		printf("Could not open provided CPAD file '%s', file handle returned null.\n",
 		       in_file);
 		return;
 	}
 
-	fseek(cper_file, 0, SEEK_END);
-	long fsize = ftell(cper_file);
-	fseek(cper_file, 0, SEEK_SET);
+	fseek(cpad_file, 0, SEEK_END);
+	long fsize = ftell(cpad_file);
+	fseek(cpad_file, 0, SEEK_SET);
 
 	char *fbuff = malloc(fsize);
-	size_t readsize = fread(fbuff, 1, (long)fsize, cper_file);
+	size_t readsize = fread(fbuff, 1, (long)fsize, cpad_file);
 	if (readsize != (size_t)fsize) {
-		printf("Could not read CPER file '%s', read returned %zu bytes.\n",
+		printf("Could not read CPAD file '%s', read returned %zu bytes.\n",
 		       in_file, readsize);
 		return;
 	}
 
-	if (!is_single_section && !cper_header_valid(fbuff, readsize)) {
+	if (!cpad_header_valid(fbuff, readsize)) {
 		// Check if it's base64 encoded
 		int32_t decoded_len = 0;
 		UINT8 *decoded = base64_decode(fbuff, readsize, &decoded_len);
 		if (decoded == NULL) {
-			printf("base64 decode failed for CPER file '%s'.\n",
+			printf("base64 decode failed for CPAD file '%s'.\n",
 			       in_file);
 			free(fbuff);
 			free(decoded);
 			return;
 		}
-		if (!cper_header_valid((const char *)decoded, decoded_len)) {
-			printf("Invalid CPER file '%s'.\n", in_file);
+		if (!cpad_header_valid((const char *)decoded, decoded_len)) {
+			printf("Invalid CPAD	 file '%s'.\n", in_file);
 			free(fbuff);
 			free(decoded);
 			return;
@@ -136,11 +137,11 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 	//Convert.
 	json_object *ir;
 	if (is_single_section) {
-		ir = cper_buf_single_section_to_ir((UINT8 *)fbuff, readsize);
+		ir = cpad_buf_single_section_to_ir((UINT8 *)fbuff, readsize);
 	} else {
-		ir = cper_buf_to_ir((UINT8 *)fbuff, fsize);
+		ir = cpad_buf_to_ir((UINT8 *)fbuff, fsize);
 	}
-	fclose(cper_file);
+	fclose(cpad_file);
 
 	//Output to string.
 	const char *json_output =
@@ -166,12 +167,12 @@ void cper_to_json(char *in_file, char *out_file, int is_single_section)
 	fclose(json_file);
 }
 
-//Command for converting a provided CPER-JSON JSON file to CPER binary.
-void json_to_cper(const char *in_file, const char *out_file)
+//Command for converting a provided CPAD-JSON JSON file to CPAD binary.
+void json_to_cpad(const char *in_file, const char *out_file)
 {
 	//Verify output file exists.
 	if (out_file == NULL) {
-		printf("No output file provided for 'to-cper'. See 'cper-convert --help' for command information.\n");
+		printf("No output file provided for 'to-cpad'. See 'cpad-convert --help' for command information.\n");
 		return;
 	}
 
@@ -184,8 +185,8 @@ void json_to_cper(const char *in_file, const char *out_file)
 	}
 
 	//Open a read for the output file.
-	FILE *cper_file = fopen(out_file, "w");
-	if (cper_file == NULL) {
+	FILE *cpad_file = fopen(out_file, "w");
+	if (cpad_file == NULL) {
 		printf("Could not open output file '%s', file handle returned null.\n",
 		       out_file);
 		json_object_put(ir);
@@ -195,31 +196,31 @@ void json_to_cper(const char *in_file, const char *out_file)
 	//Detect the type of CPER (full log, single section) from the IR given.
 	//Run the converter accordingly.
 	if (json_object_object_get(ir, "header") != NULL) {
-		ir_to_cper(ir, cper_file);
+		ir_to_cpad(ir, cpad_file);
 	} else {
-		ir_single_section_to_cper(ir, cper_file);
+		ir_single_section_to_cpad(ir, cpad_file);
 	}
-	fclose(cper_file);
+	fclose(cpad_file);
 	json_object_put(ir);
 }
 
 //Command for printing help information.
 void print_help(void)
 {
-	printf(":: to-json cper.file [--out file.name]\n");
-	printf("\tConverts the provided CPER log file into JSON, by default writing to stdout. If '--out' is specified,\n");
+	printf(":: to-json cpad.file [--out file.name]\n");
+	printf("\tConverts the provided CPAD log file into JSON, by default writing to stdout. If '--out' is specified,\n");
 	printf("\tThe outputted JSON will be written to the provided file name instead.\n");
-	printf("\n:: to-json-section cper.section.file [--out file.name]\n");
-	printf("\tConverts the provided single CPER section descriptor & section file into JSON, by default writing to stdout.\n");
+	printf("\n:: to-json-section cpad.section.file [--out file.name]\n");
+	printf("\tConverts the provided single CPAD section descriptor & section file into JSON, by default writing to stdout.\n");
 	printf("\tOtherwise behaves the same as 'to-json'.\n");
-	printf("\n:: to-cper cper.json --out file.name [--no-validate] [--debug] [--specification some/spec/path.json]\n");
-	printf("\tConverts the provided CPER-JSON JSON file into CPER binary. An output file must be specified with '--out'.\n");
+	printf("\n:: to-cpad cpad.json --out file.name [--no-validate] [--debug] [--specification some/spec/path.json]\n");
+	printf("\tConverts the provided CPAD-JSON JSON file into CPAD binary. An output file must be specified with '--out'.\n");
 	printf("\tWill automatically detect whether the JSON passed is a single section, or a whole file,\n");
 	printf("\tand output binary accordingly.\n\n");
 	printf("\tBy default, the provided JSON will try to be validated against a specification. If no specification file path\n");
-	printf("\tis provided with '--specification', then it will default to 'argv[0] + /specification/cper-json.json'.\n");
+	printf("\tis provided with '--specification', then it will default to 'argv[0] + /specification/cpad-json.json'.\n");
 	printf("\tIf the '--no-validate' argument is set, then the provided JSON will not be validated. Be warned, this may cause\n");
-	printf("\tpremature exit/unexpected behaviour in CPER output.\n\n");
+	printf("\tpremature exit/unexpected behaviour in CPAD output.\n\n");
 	printf("\tIf '--debug' is set, then debug output for JSON specification parsing will be printed to stdout.\n");
 	printf("\n:: --help\n");
 	printf("\tDisplays help information to the console.\n");
