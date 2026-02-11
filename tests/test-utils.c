@@ -26,10 +26,10 @@ static const char *optional_props[] = {
 	"header",
 
 	// Each section is optional
-	"GenericProcessor", "Ia32x64Processor", "ArmProcessor", "Memory",
-	"Memory2", "Pcie", "PciBus", "PciComponent", "Firmware", "GenericDmar",
-	"VtdDmar", "IommuDmar", "CcixPer", "CxlProtocol", "CxlComponent",
-	"Nvidia", "Ampere", "Unknown",
+	"GenericProcessor", "Ia32x64Processor", "ArmProcessor", "ArmRas",
+	"Memory", "Memory2", "Pcie", "PciBus", "PciComponent", "Firmware",
+	"GenericDmar", "VtdDmar", "IommuDmar", "CcixPer", "CxlProtocol",
+	"CxlComponent", "Nvidia", "Ampere", "Unknown",
 
 	// CXL?  might have a bug?
 	"partitionID",

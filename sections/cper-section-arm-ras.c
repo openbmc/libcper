@@ -13,20 +13,22 @@
 #include <libcper/sections/cper-section-arm-ras.h>
 #include <libcper/log.h>
 
-/*
- * Fixed-size fields in EFI_ARM_RAS_NODE.
- *
- * IPInstance: 16 bytes, serialized as a 32-character hex string.
- * IPType:     24 bytes, serialized as a 48-character hex string.
- * UserData:   16 bytes, but we emit up to 15 chars to keep a terminator.
- */
 static void arm_ras_set_desc_string_valid(char **desc_string)
 {
+	int outstr_len = 0;
 	if (desc_string) {
 		*desc_string = malloc(SECTION_DESC_STRING_SIZE);
 		if (*desc_string) {
-			snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
-				 "ARM RAS error occured");
+			outstr_len = snprintf(*desc_string,
+					      SECTION_DESC_STRING_SIZE,
+					      "ARM RAS error occured");
+			if (outstr_len < 0) {
+				cper_print_log(
+					"Error: Could not write to ARM RAS description string\n");
+			} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+				cper_print_log(
+					"Error: ARM RAS description string truncated\n");
+			}
 		}
 	}
 }
@@ -34,12 +36,21 @@ static void arm_ras_set_desc_string_valid(char **desc_string)
 static void arm_ras_set_desc_string_invalid(const char *reason,
 					    char **desc_string)
 {
+	int outstr_len = 0;
 	if (desc_string) {
 		*desc_string = malloc(SECTION_DESC_STRING_SIZE);
 		if (*desc_string) {
-			snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
-				 "ARM RAS (empty): %s",
-				 reason ? reason : "unspecified");
+			outstr_len = snprintf(*desc_string,
+					      SECTION_DESC_STRING_SIZE,
+					      "ARM RAS (empty): %s",
+					      reason ? reason : "unspecified");
+			if (outstr_len < 0) {
+				cper_print_log(
+					"Error: Could not write to ARM RAS description string\n");
+			} else if (outstr_len > SECTION_DESC_STRING_SIZE) {
+				cper_print_log(
+					"Error: ARM RAS description string truncated\n");
+			}
 		}
 	}
 }
@@ -611,21 +622,27 @@ static void arm_ras_build_aux_contexts(UINT8 *builtAux, UINT16 ctxCount,
 		json_object_object_get_ex(flagsObj,
 					  "addressSpaceIdentifierScope",
 					  &addressSpaceIdentifierScopeObj);
-		const char *scope =
-			json_object_get_string(addressSpaceIdentifierScopeObj);
-		if (strcmp(scope, "LocalAddressSpace") == 0) {
-			ch->AddressSpaceIdentifierScope = 1;
+
+		if (addressSpaceIdentifierScopeObj) {
+			const char *scope = json_object_get_string(
+				addressSpaceIdentifierScopeObj);
+			if (scope && strcmp(scope, "LocalAddressSpace") == 0) {
+				ch->AddressSpaceIdentifierScope = 1;
+			} else {
+				ch->AddressSpaceIdentifierScope = 0;
+			}
+		} else {
+			continue;
 		}
-		ch->AddressSpaceIdentifierScope =
-			addressSpaceIdentifierScopeObj ?
-				(UINT8)json_object_get_int(
-					addressSpaceIdentifierScopeObj) :
-				0;
 		ch->Reserved0 = 0;
 		ch->RegisterArrayEntryCount = regCount;
 		json_object *asidObj = NULL;
 		json_object_object_get_ex(ctx, "addressSpaceIdentifier",
 					  &asidObj);
+		if (asidObj) {
+			ch->AddressSpaceIdentifier =
+				(UINT64)json_object_get_int(asidObj);
+		}
 		memset(ch->Reserved1, 0, sizeof(ch->Reserved1));
 		EFI_ARM_RAS_AUX_MM_REG_ENTRY *regEntries =
 			(EFI_ARM_RAS_AUX_MM_REG_ENTRY

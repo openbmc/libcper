@@ -869,6 +869,7 @@ int main(void)
 	if (GEN_EXAMPLES) {
 		cper_create_examples("generic");
 		cper_create_examples("arm");
+		cper_create_examples("arm-ras");
 		cper_create_examples("ia32x64");
 		cper_create_examples("memory");
 		cper_create_examples("memory2");
