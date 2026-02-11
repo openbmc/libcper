@@ -1,177 +1,187 @@
 {
-    "header": {
-        "revision": {
-            "major": 1,
-            "minor": 1
-        },
-        "sectionCount": 1,
-        "severity": {
-            "code": 1,
-            "name": "Fatal"
-        },
-        "recordLength": 568,
-        "creatorID": "a901e478-1173-11ef-96a8-5fa6bef5eea4",
-        "notificationType": {
-            "guid": "3d61a466-ab40-409a-a698-f362d464b38f",
-            "type": "Boot"
-        },
-        "recordID": 19,
-        "flags": {
-            "value": 0,
-            "name": "Unknown"
-        },
-        "persistenceInfo": 0
+  "header": {
+    "revision": {
+      "major": 1,
+      "minor": 1
     },
-    "sectionDescriptors": [
-        {
-            "sectionOffset": 200,
-            "sectionLength": 240,
-            "revision": {
-                "major": 0,
-                "minor": 0
+    "sectionCount": 1,
+    "severity": {
+      "code": 1,
+      "name": "Fatal"
+    },
+    "recordLength": 568,
+    "creatorID": "a901e478-1173-11ef-96a8-5fa6bef5eea4",
+    "notificationType": {
+      "guid": "3d61a466-ab40-409a-a698-f362d464b38f",
+      "type": "Boot"
+    },
+    "recordID": 19,
+    "flags": {
+      "value": 0,
+      "name": "Unknown"
+    },
+    "persistenceInfo": 0
+  },
+  "sectionDescriptors": [
+    {
+      "sectionOffset": 200,
+      "sectionLength": 240,
+      "revision": {
+        "major": 0,
+        "minor": 0
+      },
+      "flags": {
+        "primary": false,
+        "containmentWarning": false,
+        "reset": false,
+        "errorThresholdExceeded": false,
+        "resourceNotAccessible": false,
+        "latentError": false,
+        "propagated": false,
+        "overflow": false
+      },
+      "sectionType": {
+        "data": "9068e568-6ca0-11f0-aeaf-159343591eac",
+        "type": "NvidiaEvent"
+      },
+      "fruID": "cc4f334a-c563-11eb-8f88-9f7ac76c6f0c",
+      "severity": {
+        "code": 1,
+        "name": "Fatal"
+      }
+    }
+  ],
+  "sections": [
+    {
+      "message": "A TEST-EVT Nvidia Event occurred",
+      "NvidiaEvent": {
+        "eventHeader": {
+          "signature": "TEST-EVT",
+          "version": 1,
+          "sourceDeviceType": {
+            "raw": 0,
+            "value": "CPU"
+          },
+          "type": "0x0100",
+          "subtype": "0x0200",
+          "linkId": "0x1122334455667788"
+        },
+        "eventInfo": {
+          "version": 1,
+          "cpu": {
+            "SocketNum": 2,
+            "Architecture": {
+              "hidFam": 1,
+              "majorRev": 1,
+              "chipId": 17,
+              "minorRev": 1,
+              "preSiPlatform": {
+                "raw": 17,
+                "value": "PreSilicon"
+              },
+              "einjTag": false
             },
-            "flags": {
-                "primary": false,
-                "containmentWarning": false,
-                "reset": false,
-                "errorThresholdExceeded": false,
-                "resourceNotAccessible": false,
-                "latentError": false,
-                "propagated": false,
-                "overflow": false
-            },
-            "sectionType": {
-                "data": "9068e568-6ca0-11f0-aeaf-159343591eac",
-                "type": "NvidiaEvent"
-            },
-            "fruID": "cc4f334a-c563-11eb-8f88-9f7ac76c6f0c",
-            "severity": {
-                "code": 1,
-                "name": "Fatal"
-            }
-        }
-    ],
-    "sections": [
-        {
-            "message": "A TEST-EVT Nvidia Event occurred",
-            "NvidiaEvent": {
-                "eventHeader": {
-                    "signature": "TEST-EVT",
-                    "version": 1,
-                    "sourceDeviceType": {
-                        "raw": 0,
-                        "value": "CPU"
-                    },
-                    "type": 256,
-                    "subtype": 512,
-                    "linkId": 1234605616436508552
-                },
-                "eventInfo": {
-                    "version": 1,
-                    "SocketNum": 2,
-                    "Architecture": {
-                        "hidFam": 1,
-                        "majorRev": 1,
-                        "chipId": 17,
-                        "minorRev": 1,
-                        "preSiPlatform": {
-                            "raw": 17,
-                            "value": "PreSilicon"
-                        },
-                        "einjTag": false
-                    },
-                    "Ecid1": 572662306,
-                    "Ecid2": 858993459,
-                    "Ecid3": 1145324612,
-                    "Ecid4": 1431655765,
-                    "InstanceBase": 12302652056939934532
-                },
-                "eventContexts": [
-                    {
-                        "version": 1,
-                        "dataFormatType": 1,
-                        "dataFormatVersion": 1,
-                        "dataSize": 32,
-                        "data": {
-                            "keyValArray64": [
-                                {
-                                    "key64": 1229782938247303441,
-                                    "val64": 12297829382473034410
-                                },
-                                {
-                                    "key64": 2459565876494606882,
-                                    "val64": 13527612320720337851
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "version": 1,
-                        "dataFormatType": 2,
-                        "dataFormatVersion": 1,
-                        "dataSize": 16,
-                        "data": {
-                            "keyValArray32": [
-                                {
-                                    "key32": 858993459,
-                                    "val32": 3435973836
-                                },
-                                {
-                                    "key32": 1145324612,
-                                    "val32": 3722304989
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "version": 1,
-                        "dataFormatType": 3,
-                        "dataFormatVersion": 1,
-                        "dataSize": 16,
-                        "data": {
-                            "valArray64": [
-                                {
-                                    "val64": 6148914691236517205
-                                },
-                                {
-                                    "val64": 7378697629483820646
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "version": 1,
-                        "dataFormatType": 4,
-                        "dataFormatVersion": 1,
-                        "dataSize": 16,
-                        "data": {
-                            "valArray32": [
-                                {
-                                    "val32": 4008636142
-                                },
-                                {
-                                    "val32": 4294967295
-                                },
-                                {
-                                    "val32": 2004318071
-                                },
-                                {
-                                    "val32": 2290649224
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "version": 1,
-                        "dataFormatType": 0,
-                        "dataFormatVersion": 1,
-                        "dataSize": 16,
-                        "data": {
-                            "data": "deadbeefcafebabe0123456789abcdef"
-                        }
-                    }
+            "Ecid1": "0x22222222",
+            "Ecid2": "0x33333333",
+            "Ecid3": "0x44444444",
+            "Ecid4": "0x55555555",
+            "InstanceBase": "0xAABBCCDD11223344"
+          }
+        },
+        "eventContexts": [
+          {
+            "version": 1,
+            "dataFormatType": "0x0001",
+            "dataFormatVersion": 1,
+            "dataSize": 32,
+            "data": {
+              "type1": {
+                "keyValArray64": [
+                  {
+                    "key64": "0x1111111111111111",
+                    "val64": "0xAAAAAAAAAAAAAAAA"
+                  },
+                  {
+                    "key64": "0x2222222222222222",
+                    "val64": "0xBBBBBBBBBBBBBBBB"
+                  }
                 ]
+              }
             }
-        }
-    ]
+          },
+          {
+            "version": 1,
+            "dataFormatType": "0x0002",
+            "dataFormatVersion": 1,
+            "dataSize": 16,
+            "data": {
+              "type2": {
+                "keyValArray32": [
+                  {
+                    "key32": "0x33333333",
+                    "val32": "0xCCCCCCCC"
+                  },
+                  {
+                    "key32": "0x44444444",
+                    "val32": "0xDDDDDDDD"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "version": 1,
+            "dataFormatType": "0x0003",
+            "dataFormatVersion": 1,
+            "dataSize": 16,
+            "data": {
+              "type3": {
+                "valArray64": [
+                  {
+                    "val64": "0x5555555555555555"
+                  },
+                  {
+                    "val64": "0x6666666666666666"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "version": 1,
+            "dataFormatType": "0x0004",
+            "dataFormatVersion": 1,
+            "dataSize": 16,
+            "data": {
+              "type4": {
+                "valArray32": [
+                  {
+                    "val32": "0xEEEEEEEE"
+                  },
+                  {
+                    "val32": "0xFFFFFFFF"
+                  },
+                  {
+                    "val32": "0x77777777"
+                  },
+                  {
+                    "val32": "0x88888888"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "version": 1,
+            "dataFormatType": "0x0000",
+            "dataFormatVersion": 1,
+            "dataSize": 16,
+            "data": {
+              "opaque": "deadbeefcafebabe0123456789abcdef"
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
