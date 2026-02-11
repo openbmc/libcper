@@ -1,6 +1,5 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "cper-json-nvidia-event-data-type3",
     "type": "object",
     "description": "Type 3 context data (dataFormatType=3) - 64-bit value array",
     "additionalProperties": false,
@@ -13,10 +12,16 @@
                 "required": ["val64"],
                 "additionalProperties": false,
                 "properties": {
-                    "val64": { "type": "integer", "minimum": 0 }
+                    "val64": {
+                        "type": "string",
+                        "pattern": "^0x[0-9a-fA-F]{16}$"
+                    }
                 }
             }
         },
-        "data": { "type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$" }
+        "data": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]*={0,2}$"
+        }
     }
 }

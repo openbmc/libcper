@@ -629,9 +629,35 @@ void get_value_hex_8(json_object *obj, const char *field_name, UINT8 *value_out)
 	*value_out = byte;
 }
 
+void get_value_hex_16(json_object *obj, const char *field_name, void *value_out)
+{
+	json_object *value = json_object_object_get(obj, field_name);
+	if (!value) {
+		return;
+	}
+	const char *hex_string = json_object_get_string(value);
+	if (!hex_string) {
+		return;
+	}
+	UINT8 bytes[2];
+	size_t hex_string_len = strlen(hex_string);
+	if (hex_string_len != 6) {
+		return;
+	}
+	if (hex_string[0] != '0' || hex_string[1] != 'x') {
+		return;
+	}
+
+	if (hex_string_to_bytes(hex_string + 2, hex_string_len - 2, bytes,
+				sizeof(bytes)) != 2) {
+		return;
+	}
+	UINT16 val = (UINT16)bytes[0] << 8 | (UINT16)bytes[1];
+	memcpy(value_out, &val, sizeof(val));
+}
+
 // TODO, deduplicate with get_value_hex_64
-void get_value_hex_32(json_object *obj, const char *field_name,
-		      UINT32 *value_out)
+void get_value_hex_32(json_object *obj, const char *field_name, void *value_out)
 {
 	json_object *value = json_object_object_get(obj, field_name);
 	if (!value) {
@@ -654,12 +680,12 @@ void get_value_hex_32(json_object *obj, const char *field_name,
 				sizeof(bytes)) != 4) {
 		return;
 	}
-	*value_out = (UINT32)bytes[0] << 24 | (UINT32)bytes[1] << 16 |
+	UINT32 val = (UINT32)bytes[0] << 24 | (UINT32)bytes[1] << 16 |
 		     (UINT32)bytes[2] << 8 | (UINT32)bytes[3];
+	memcpy(value_out, &val, sizeof(val));
 }
 
-void get_value_hex_64(json_object *obj, const char *field_name,
-		      UINT64 *value_out)
+void get_value_hex_64(json_object *obj, const char *field_name, void *value_out)
 {
 	json_object *value = json_object_object_get(obj, field_name);
 	if (!value) {
@@ -682,10 +708,11 @@ void get_value_hex_64(json_object *obj, const char *field_name,
 				sizeof(bytes)) != 8) {
 		return;
 	}
-	*value_out = (UINT64)bytes[0] << 56 | (UINT64)bytes[1] << 48 |
+	UINT64 val = (UINT64)bytes[0] << 56 | (UINT64)bytes[1] << 48 |
 		     (UINT64)bytes[2] << 40 | (UINT64)bytes[3] << 32 |
 		     (UINT64)bytes[4] << 24 | (UINT64)bytes[5] << 16 |
 		     (UINT64)bytes[6] << 8 | (UINT64)bytes[7];
+	memcpy(value_out, &val, sizeof(val));
 }
 
 void add_int_hex_64(json_object *register_ir, const char *field_name,

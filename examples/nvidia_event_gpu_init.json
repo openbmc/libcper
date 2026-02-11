@@ -1,0 +1,120 @@
+{
+    "header": {
+        "revision": {
+            "major": 1,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 3,
+            "name": "Informational"
+        },
+        "recordLength": 456,
+        "timestamp": "0000-00-00T19:44:12+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "12345678-1234-5678-aabb-ccddeeff0011",
+        "creatorID": "4e564944-4941-0001-0000-000000000001",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1152921504606846977,
+        "flags": {
+            "value": 0,
+            "name": "Unknown"
+        },
+        "persistenceInfo": 0
+    },
+    "sectionDescriptors": [
+        {
+            "sectionOffset": 200,
+            "sectionLength": 256,
+            "revision": {
+                "major": 1,
+                "minor": 0
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": false,
+                "overflow": false
+            },
+            "sectionType": {
+                "data": "9068e568-6ca0-11f0-aeaf-159343591eac",
+                "type": "NvidiaEvent"
+            },
+            "fruID": "44556677-8899-aabb-ccdd-eeff00112233",
+            "fruText": "699-2G525-0220",
+            "severity": {
+                "code": 3,
+                "name": "Informational"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "message": "A GPU-Core Nvidia Event occurred",
+            "NvidiaEvent": {
+                "eventHeader": {
+                    "signature": "GPU-Core",
+                    "version": 1,
+                    "sourceDeviceType": "GPU",
+                    "type": "0x0001",
+                    "subtype": "0x0001"
+                },
+                "eventInfo": {
+                    "version": "1.0",
+                    "gpu": {
+                        "EventOriginator": "PF_GSP_FW",
+                        "SourcePartition": 0,
+                        "SourceSubPartition": 0,
+                        "Pdi": "11:22:33:44:55:66:77:88"
+                    }
+                },
+                "eventContexts": [
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x8000",
+                        "dataFormatVersion": 256,
+                        "dataSize": 192,
+                        "data": {
+                            "gpuInitMetadata": {
+                                "deviceName": "NVIDIA B200",
+                                "firmwareVersion": "997.00.88.00.0F",
+                                "pfDriverMicrocodeVersion": "605.32.04",
+                                "pfDriverVersion": "605.32.04",
+                                "vfDriverVersion": "",
+                                "configuration": "0x0000000000000001",
+                                "pdi": "11:22:33:44:55:66:77:88",
+                                "architectureId": {
+                                    "raw": "0x1A0A1000",
+                                    "architecture": "Blackwell"
+                                },
+                                "hardwareInfoType": 0,
+                                "pciInfo": {
+                                    "class": "0x03",
+                                    "subclass": "0x02",
+                                    "rev": "0xA1",
+                                    "vendorId": "0x10DE",
+                                    "deviceId": "0x2920",
+                                    "subsystemVendorId": "0x10DE",
+                                    "subsystemId": "0x197F",
+                                    "bar0Start": "0x00000000C0000000",
+                                    "bar0Size": "0x0000000004000000",
+                                    "bar1Start": "0x000000D000000000",
+                                    "bar1Size": "0x0000004000000000",
+                                    "bar2Start": "0x0000000000000000",
+                                    "bar2Size": "0x0000000000000000"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

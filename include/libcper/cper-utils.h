@@ -70,11 +70,14 @@ size_t hex_string_to_bytes(const char *hex_string, size_t hex_string_len,
 void get_value_hex_8(json_object *obj, const char *field_name,
 		     UINT8 *value_out);
 
+void get_value_hex_16(json_object *obj, const char *field_name,
+		      void *value_out);
+
 void get_value_hex_32(json_object *obj, const char *field_name,
-		      UINT32 *value_out);
+		      void *value_out);
 
 void get_value_hex_64(json_object *obj, const char *field_name,
-		      UINT64 *value_out);
+		      void *value_out);
 
 void add_untrusted_string(json_object *ir, const char *field_name,
 			  const char *str, int len);
