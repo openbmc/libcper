@@ -1,24 +1,41 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "cper-json-nvidia-event-info-gpu",
-    "type": "object",
-    "description": "GPU-specific event information for NVIDIA events",
-    "required": [
-        "version",
-        "EventOriginator",
-        "SourcePartition",
-        "SourceSubPartition",
-        "Pdi"
-    ],
-    "properties": {
-        "version": {
-            "type": "integer",
-            "description": "Event info version",
-            "minimum": 0
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "description": "GPU-specific event information for NVIDIA events",
+  "required": [
+    "EventOriginator",
+    "SourcePartition",
+    "SourceSubPartition",
+    "Pdi"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "EventOriginator": {
+      "type": "object",
+      "description": "Event originator device type",
+      "required": ["raw"],
+      "properties": {
+        "raw": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
         },
-        "EventOriginator": { "type": "integer", "minimum": 0 },
-        "SourcePartition": { "type": "integer", "minimum": 0 },
-        "SourceSubPartition": { "type": "integer", "minimum": 0 },
-        "Pdi": { "type": "integer", "minimum": 0 }
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "SourcePartition": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "SourceSubPartition": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "Pdi": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{16}$"
     }
+  }
 }

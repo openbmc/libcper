@@ -95,22 +95,30 @@ EFI_GUID gEfiNvidiaEventErrorSectionGuid = { 0x9068e568,
  * NVIDIA Event JSON IR Structure:
  *
  * Maps binary structures (above) to JSON using the field name constants (below).
+ * Device-specific eventInfo is nested under a variant key ("cpu"/"gpu").
+ * Context data is nested under a variant key (e.g., "type1", "gpuMetadata").
  *
  * {
  *   "eventHeader": { ... }           → EFI_NVIDIA_EVENT_HEADER
- *   "eventInfo": { ... }             → EFI_NVIDIA_EVENT_INFO_*
- *   "eventContexts": [               → Array of contexts            ("eventContext"*)
+ *   "eventInfo": {                   → EFI_NVIDIA_EVENT_INFO_*
+ *     "version": 1,
+ *     "cpu": { ... }                 → variant: EFI_NVIDIA_CPU_EVENT_INFO (or "gpu")
+ *   },
+ *   "eventContexts": [               → Array of contexts
  *     {
  *       "data": {                    → EFI_NVIDIA_EVENT_CTX_DATA_*
- *         "keyValArray64": [ ... ]   → TYPE_1 (16 bytes each: key64, val64)
- *         "keyValArray32": [ ... ]   → TYPE_2 ( 8 bytes each: key32, val32)
- *         "valArray64":  [ ... ]     → TYPE_3 ( 8 bytes each: val64)
- *         "valArray32":  [ ... ]     → TYPE_4 ( 4 bytes each: val32)
+ *         "type1": {                 → variant key for data
+ *           "keyValArray64": [ ... ] → TYPE_1 (16 bytes each: key64, val64)
+ *         }
  *       }
  *     },
  *     { ... }
  *   ]
  * }
+ *
+ * Data variant keys: "opaque" (TYPE_0), "type1" (TYPE_1), "type2" (TYPE_2),
+ *   "type3" (TYPE_3), "type4" (TYPE_4), "gpuMetadata", "gpuLegacyXid",
+ *   "gpuRecommendedActions"
  */
 
 // ============================================================================
@@ -323,6 +331,57 @@ NV_EVENT_CTX_CALLBACKS event_ctx_handlers[] = {
 	  &parse_gpu_ctx_recommended_actions_to_bin }
 };
 
+// Returns the JSON variant key for a given event info device type.
+// e.g., CPU → "cpu", GPU → "gpu"
+static const char *event_info_variant_key(NVIDIA_EVENT_SRC_DEV dev)
+{
+	switch (dev) {
+	case CPU:
+		return "cpu";
+	case GPU:
+		return "gpu";
+	default:
+		return NULL;
+	}
+}
+
+// Returns the JSON variant key for a given context data format type and device.
+// Device-specific handlers (GPU metadata, legacy XID, recommended actions) take
+// priority; common types fall through to the standard keys.
+// e.g., TYPE_1 → "type1", GPU_INIT_METADATA → "gpuMetadata"
+static const char *
+event_ctx_data_variant_key(NVIDIA_EVENT_SRC_DEV dev,
+			   NVIDIA_EVENT_CTX_DATA_TYPE data_format_type)
+{
+	// Device-specific overrides
+	if (dev == GPU) {
+		switch (data_format_type) {
+		case GPU_INIT_METADATA:
+			return "gpuMetadata";
+		case GPU_EVENT_LEGACY_XID:
+			return "gpuLegacyXid";
+		case GPU_RECOMMENDED_ACTIONS:
+			return "gpuRecommendedActions";
+		default:
+			break;
+		}
+	}
+
+	// Common data format types
+	switch (data_format_type) {
+	case TYPE_1:
+		return "type1";
+	case TYPE_2:
+		return "type2";
+	case TYPE_3:
+		return "type3";
+	case TYPE_4:
+		return "type4";
+	default:
+		return "opaque";
+	}
+}
+
 // Retrieves a pointer to the nth event context within an NVIDIA event structure.
 // Walks through the event header, event info, and variable-sized contexts with bounds checking.
 // Returns NULL if the index is out of bounds or if buffer overflow would occur.
@@ -407,8 +466,9 @@ static inline json_object *get_event_context_n_data_ir(json_object *event_ir,
 
 // Parses CPU-specific event info structure into JSON IR format.
 // Extracts socket number, architecture (decoded), ECID array, and instance base.
+// Output is placed inside the "cpu" variant within eventInfo.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside eventInfo.cpu):
  * {
  *   "SocketNum": 0,
  *   "Architecture": {
@@ -419,11 +479,11 @@ static inline json_object *get_event_context_n_data_ir(json_object *event_ir,
  *     "preSiPlatform": { "raw": 0, "value": "Silicon" },
  *     "einjTag": false
  *   },
- *   "Ecid1": 1234567890123456789,
- *   "Ecid2": 9876543210987654321,
- *   "Ecid3": 5555555555555555555,
- *   "Ecid4": 1111111111111111111,
- *   "InstanceBase": 281474976710656
+ *   "Ecid1": "0x499602d2",
+ *   "Ecid2": "0x89abcdef",
+ *   "Ecid3": "0x4d2b0ca3",
+ *   "Ecid4": "0x0f6b75c7",
+ *   "InstanceBase": "0x0000ffff00000000"
  * }
  */
 static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
@@ -474,11 +534,12 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 			       json_object_new_boolean((arch >> 31) & 0x1));
 	json_object_object_add(event_info_ir, "Architecture", arch_ir);
 
-	add_uint(event_info_ir, "Ecid1", cpu_event_info->Ecid[0]);
-	add_uint(event_info_ir, "Ecid2", cpu_event_info->Ecid[1]);
-	add_uint(event_info_ir, "Ecid3", cpu_event_info->Ecid[2]);
-	add_uint(event_info_ir, "Ecid4", cpu_event_info->Ecid[3]);
-	add_uint(event_info_ir, "InstanceBase", cpu_event_info->InstanceBase);
+	add_int_hex_32(event_info_ir, "Ecid1", cpu_event_info->Ecid[0]);
+	add_int_hex_32(event_info_ir, "Ecid2", cpu_event_info->Ecid[1]);
+	add_int_hex_32(event_info_ir, "Ecid3", cpu_event_info->Ecid[2]);
+	add_int_hex_32(event_info_ir, "Ecid4", cpu_event_info->Ecid[3]);
+	add_int_hex_64(event_info_ir, "InstanceBase",
+		       cpu_event_info->InstanceBase);
 }
 // Converts CPU-specific event info from JSON IR to CPER binary format.
 // Writes socket number, architecture (reconstructed), ECID array, instance base.
@@ -528,29 +589,26 @@ static size_t parse_cpu_info_to_bin(json_object *event_info_ir, FILE *out)
 		((chip_id & 0xFF) << 8) | ((minor_rev & 0xF) << 16) |
 		((pre_si & 0x1F) << 20) | ((einj_tag & 0x1) << 31);
 
-	cpu_event_info.Ecid[0] = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "Ecid1"));
-	cpu_event_info.Ecid[1] = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "Ecid2"));
-	cpu_event_info.Ecid[2] = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "Ecid3"));
-	cpu_event_info.Ecid[3] = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "Ecid4"));
-	cpu_event_info.InstanceBase = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "InstanceBase"));
+	get_value_hex_32(event_info_ir, "Ecid1", &cpu_event_info.Ecid[0]);
+	get_value_hex_32(event_info_ir, "Ecid2", &cpu_event_info.Ecid[1]);
+	get_value_hex_32(event_info_ir, "Ecid3", &cpu_event_info.Ecid[2]);
+	get_value_hex_32(event_info_ir, "Ecid4", &cpu_event_info.Ecid[3]);
+	get_value_hex_64(event_info_ir, "InstanceBase",
+			 &cpu_event_info.InstanceBase);
 	return fwrite(&cpu_event_info, 1, sizeof(EFI_NVIDIA_CPU_EVENT_INFO),
 		      out);
 }
 
 // Parses GPU-specific event info structure into JSON IR format.
-// Extracts version, size, event originator, partitions, and PDI.
+// Extracts event originator, partitions, and PDI.
+// Output is placed inside the "gpu" variant within eventInfo.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside eventInfo.gpu):
  * {
- *   "EventOriginator": 2,
+ *   "EventOriginator": { "raw": 2, "value": "PF_GSP_FW" },
  *   "SourcePartition": 1,
  *   "SourceSubPartition": 0,
- *   "Pdi": 9876543210987654321
+ *   "Pdi": "0x893456789ABCDEF1"
  * }
  */
 static void parse_gpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
@@ -574,10 +632,31 @@ static void parse_gpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 		return;
 	}
 
-	add_uint(event_info_ir, "EventOriginator", info->EventOriginator);
+	// EventOriginator: {raw, value} dictionary
+	static const char *event_originator_names[] = {
+		[0] = "Invalid",   [2] = "PF_GSP_FW", [3] = "VF_GSP_FW",
+		[4] = "PF_DRIVER", [5] = "VF_DRIVER",
+	};
+	static const size_t event_originator_names_count =
+		sizeof(event_originator_names) /
+		sizeof(event_originator_names[0]);
+	json_object *originator_ir = json_object_new_object();
+	json_object_object_add(originator_ir, "raw",
+			       json_object_new_int(info->EventOriginator));
+	if (info->EventOriginator < event_originator_names_count &&
+	    event_originator_names[info->EventOriginator] != NULL) {
+		json_object_object_add(
+			originator_ir, "value",
+			json_object_new_string(
+				event_originator_names[info->EventOriginator]));
+	} else {
+		json_object_object_add(originator_ir, "value",
+				       json_object_new_string("Unknown"));
+	}
+	json_object_object_add(event_info_ir, "EventOriginator", originator_ir);
 	add_uint(event_info_ir, "SourcePartition", info->SourcePartition);
 	add_uint(event_info_ir, "SourceSubPartition", info->SourceSubPartition);
-	add_uint(event_info_ir, "Pdi", info->Pdi);
+	add_int_hex_64(event_info_ir, "Pdi", info->Pdi);
 }
 
 // Converts GPU-specific event info from JSON IR to CPER binary format.
@@ -597,14 +676,22 @@ static size_t parse_gpu_info_to_bin(json_object *event_info_ir, FILE *out)
 {
 	EFI_NVIDIA_GPU_EVENT_INFO gpu_event_info = { 0 };
 
-	gpu_event_info.EventOriginator = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "EventOriginator"));
+	// EventOriginator: {raw, value} dictionary - extract raw
+	json_object *originator_obj =
+		json_object_object_get(event_info_ir, "EventOriginator");
+	if (originator_obj != NULL) {
+		json_object *raw_obj =
+			json_object_object_get(originator_obj, "raw");
+		if (raw_obj != NULL) {
+			gpu_event_info.EventOriginator =
+				(UINT8)json_object_get_int(raw_obj);
+		}
+	}
 	gpu_event_info.SourcePartition = json_object_get_int64(
 		json_object_object_get(event_info_ir, "SourcePartition"));
 	gpu_event_info.SourceSubPartition = json_object_get_int64(
 		json_object_object_get(event_info_ir, "SourceSubPartition"));
-	gpu_event_info.Pdi = json_object_get_uint64(
-		json_object_object_get(event_info_ir, "Pdi"));
+	get_value_hex_64(event_info_ir, "Pdi", &gpu_event_info.Pdi);
 
 	return fwrite(&gpu_event_info, 1, sizeof(EFI_NVIDIA_GPU_EVENT_INFO),
 		      out);
@@ -612,34 +699,38 @@ static size_t parse_gpu_info_to_bin(json_object *event_info_ir, FILE *out)
 
 // GPU Context Data Handlers
 
-// Parses GPU Initialization Metadata (0x1000) context data to JSON IR.
+// Parses GPU Initialization Metadata (0x8000) context data to JSON IR.
 // Extracts device info, firmware versions, PCI info, etc.
+// Output is placed inside the "gpuMetadata" variant within data.
 /*
- * Example JSON IR "data" output (numeric fields in decimal):
+ * Example JSON IR (inside data.gpuMetadata):
  * {
  *   "deviceName": "NVIDIA H100 80GB HBM3",
  *   "firmwareVersion": "96.00.5B.00.01",
  *   "pfDriverMicrocodeVersion": "535.183.01",
  *   "pfDriverVersion": "535.183.01",
  *   "vfDriverVersion": "535.183.01",
- *   "configuration": 123456789012345,
- *   "pdi": 9876543210987654321,
- *   "architectureId": 2684420096,
+ *   "configuration": "0x00007048860DEB39",
+ *   "pdi": "12:34:56:78:9A:BC:DE:F0",
+ *   "architectureId": {
+ *     "raw": "0x1A200000",
+ *     "architecture": { "raw": "0x1A", "value": "Blackwell" }
+ *   },
  *   "hardwareInfoType": 0,
  *   "pciInfo": {
- *     "class": 3,
- *     "subclass": 2,
- *     "rev": 161,
- *     "vendorId": 4318,
- *     "deviceId": 8711,
- *     "subsystemVendorId": 4318,
- *     "subsystemId": 5145,
- *     "bar0Start": 3758096384,
- *     "bar0Size": 16777216,
- *     "bar1Start": 2415919104,
- *     "bar1Size": 536870912,
- *     "bar2Start": 2416128000,
- *     "bar2Size": 33554432
+ *     "class": "0x03",
+ *     "subclass": "0x02",
+ *     "rev": "0xA1",
+ *     "vendorId": "0x10DE",
+ *     "deviceId": "0x2207",
+ *     "subsystemVendorId": "0x10DE",
+ *     "subsystemId": "0x1419",
+ *     "bar0Start": "0x00000000E0000000",
+ *     "bar0Size": "0x0000000001000000",
+ *     "bar1Start": "0x9000000000000000",
+ *     "bar1Size": "0x0000000020000000",
+ *     "bar2Start": "0x9002000000000000",
+ *     "bar2Size": "0x0000000002000000"
  *   }
  * }
  */
@@ -657,40 +748,113 @@ static void parse_gpu_ctx_metadata_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	EFI_NVIDIA_GPU_CTX_METADATA *metadata =
 		(EFI_NVIDIA_GPU_CTX_METADATA *)ctx->Data;
 
-	// String fields - use json_object_new_string to stop at first null (no null padding in JSON)
-	add_string(output_data_ir, "deviceName", metadata->DeviceName);
-	add_string(output_data_ir, "firmwareVersion",
-		   metadata->FirmwareVersion);
-	add_string(output_data_ir, "pfDriverMicrocodeVersion",
-		   metadata->PfDriverMicrocodeVersion);
-	add_string(output_data_ir, "pfDriverVersion",
-		   metadata->PfDriverVersion);
-	add_string(output_data_ir, "vfDriverVersion",
-		   metadata->VfDriverVersion);
+	// String fields: default to "" then override with add_untrusted_string.
+	// add_untrusted_string safely bounds reads and rejects non-printable or
+	// unterminated strings, leaving the "" default in place for invalid data.
+	add_string(output_data_ir, "deviceName", "");
+	add_untrusted_string(output_data_ir, "deviceName", metadata->DeviceName,
+			     sizeof(metadata->DeviceName));
+	add_string(output_data_ir, "firmwareVersion", "");
+	add_untrusted_string(output_data_ir, "firmwareVersion",
+			     metadata->FirmwareVersion,
+			     sizeof(metadata->FirmwareVersion));
+	add_string(output_data_ir, "pfDriverMicrocodeVersion", "");
+	add_untrusted_string(output_data_ir, "pfDriverMicrocodeVersion",
+			     metadata->PfDriverMicrocodeVersion,
+			     sizeof(metadata->PfDriverMicrocodeVersion));
+	add_string(output_data_ir, "pfDriverVersion", "");
+	add_untrusted_string(output_data_ir, "pfDriverVersion",
+			     metadata->PfDriverVersion,
+			     sizeof(metadata->PfDriverVersion));
+	add_string(output_data_ir, "vfDriverVersion", "");
+	add_untrusted_string(output_data_ir, "vfDriverVersion",
+			     metadata->VfDriverVersion,
+			     sizeof(metadata->VfDriverVersion));
 
 	// Numeric fields
-	add_uint(output_data_ir, "configuration", metadata->Configuration);
-	add_uint(output_data_ir, "pdi", metadata->Pdi);
-	add_int(output_data_ir, "architectureId", metadata->ArchitectureId);
+	add_int_hex_64(output_data_ir, "configuration",
+		       metadata->Configuration);
+
+	// PDI: MAC-style 8-byte string XX:XX:XX:XX:XX:XX:XX:XX (MSB first)
+	// e.g., PDI 0x123456789ABCDEF0 → "12:34:56:78:9A:BC:DE:F0"
+	{
+		UINT64 pdi_val = metadata->Pdi;
+		UINT8 pdi_bytes[8];
+		memcpy(pdi_bytes, &pdi_val, sizeof(pdi_bytes));
+		char pdi_str[24]; // "XX:XX:XX:XX:XX:XX:XX:XX\0"
+		snprintf(pdi_str, sizeof(pdi_str),
+			 "%02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X",
+			 pdi_bytes[7], pdi_bytes[6], pdi_bytes[5], pdi_bytes[4],
+			 pdi_bytes[3], pdi_bytes[2], pdi_bytes[1],
+			 pdi_bytes[0]);
+		json_object_object_add(output_data_ir, "pdi",
+				       json_object_new_string(pdi_str));
+	}
+
+	// ArchitectureId: decomposed {raw, architecture} object
+	// Bitfield layout (NV_PMC_BOOT_42):
+	//   bits 29:24 = architecture
+	{
+		static const char *arch_names[] = {
+			[0x16] = "Turing",    [0x17] = "Ampere",
+			[0x18] = "Hopper",    [0x19] = "Ada",
+			[0x1A] = "Blackwell", [0x1B] = "Blackwell2",
+			[0x1C] = "Rubin",
+		};
+		static const size_t arch_names_count =
+			sizeof(arch_names) / sizeof(arch_names[0]);
+		UINT32 arch_id = metadata->ArchitectureId;
+		UINT8 architecture = (arch_id >> 24) & 0x3F;
+
+		json_object *arch_ir = json_object_new_object();
+		add_int_hex_32(arch_ir, "raw", arch_id);
+
+		json_object *arch_family_ir = json_object_new_object();
+		add_int_hex_8(arch_family_ir, "raw", architecture);
+		if (architecture < arch_names_count &&
+		    arch_names[architecture] != NULL) {
+			json_object_object_add(
+				arch_family_ir, "value",
+				json_object_new_string(
+					arch_names[architecture]));
+		} else {
+			json_object_object_add(
+				arch_family_ir, "value",
+				json_object_new_string("Unknown"));
+		}
+		json_object_object_add(arch_ir, "architecture", arch_family_ir);
+		json_object_object_add(output_data_ir, "architectureId",
+				       arch_ir);
+	}
+
 	add_int(output_data_ir, "hardwareInfoType", metadata->HardwareInfoType);
 
 	// PCI Info (if HardwareInfoType == 0)
 	if (metadata->HardwareInfoType == 0) {
 		json_object *pci_info = json_object_new_object();
-		add_int(pci_info, "class", metadata->PciInfo.Class);
-		add_int(pci_info, "subclass", metadata->PciInfo.Subclass);
-		add_int(pci_info, "rev", metadata->PciInfo.Rev);
-		add_int(pci_info, "vendorId", metadata->PciInfo.VendorId);
-		add_int(pci_info, "deviceId", metadata->PciInfo.DeviceId);
-		add_int(pci_info, "subsystemVendorId",
-			metadata->PciInfo.SubsystemVendorId);
-		add_int(pci_info, "subsystemId", metadata->PciInfo.SubsystemId);
-		add_uint(pci_info, "bar0Start", metadata->PciInfo.Bar0Start);
-		add_uint(pci_info, "bar0Size", metadata->PciInfo.Bar0Size);
-		add_uint(pci_info, "bar1Start", metadata->PciInfo.Bar1Start);
-		add_uint(pci_info, "bar1Size", metadata->PciInfo.Bar1Size);
-		add_uint(pci_info, "bar2Start", metadata->PciInfo.Bar2Start);
-		add_uint(pci_info, "bar2Size", metadata->PciInfo.Bar2Size);
+		add_int_hex_8(pci_info, "class", metadata->PciInfo.Class);
+		add_int_hex_8(pci_info, "subclass", metadata->PciInfo.Subclass);
+		add_int_hex_8(pci_info, "rev", metadata->PciInfo.Rev);
+		add_int_hex_16(pci_info, "vendorId",
+			       metadata->PciInfo.VendorId);
+		add_int_hex_16(pci_info, "deviceId",
+			       metadata->PciInfo.DeviceId);
+		add_int_hex_16(pci_info, "subsystemVendorId",
+			       metadata->PciInfo.SubsystemVendorId);
+		add_int_hex_16(pci_info, "subsystemId",
+			       metadata->PciInfo.SubsystemId);
+		add_int_hex_64(pci_info, "bar0Start",
+			       metadata->PciInfo.Bar0Start);
+		add_int_hex_64(pci_info, "bar0Size",
+			       metadata->PciInfo.Bar0Size);
+		add_int_hex_64(pci_info, "bar1Start",
+			       metadata->PciInfo.Bar1Start);
+		add_int_hex_64(pci_info, "bar1Size",
+			       metadata->PciInfo.Bar1Size);
+		add_int_hex_64(pci_info, "bar2Start",
+			       metadata->PciInfo.Bar2Start);
+		add_int_hex_64(pci_info, "bar2Size",
+			       metadata->PciInfo.Bar2Size);
 		json_object_object_add(output_data_ir, "pciInfo", pci_info);
 	}
 }
@@ -726,6 +890,13 @@ static size_t parse_gpu_ctx_metadata_to_bin(json_object *event_ir,
 		get_event_context_n_data_ir(event_ir, ctx_instance);
 	if (event_context_data_ir == NULL) {
 		return 0;
+	}
+
+	// Unwrap from "gpuMetadata" variant
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "gpuMetadata");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
 	}
 
 	EFI_NVIDIA_GPU_CTX_METADATA metadata = { 0 };
@@ -768,12 +939,40 @@ static size_t parse_gpu_ctx_metadata_to_bin(json_object *event_ir,
 	}
 
 	// Numeric fields
-	metadata.Configuration = json_object_get_uint64(
-		json_object_object_get(event_context_data_ir, "configuration"));
-	metadata.Pdi = json_object_get_uint64(
-		json_object_object_get(event_context_data_ir, "pdi"));
-	metadata.ArchitectureId = json_object_get_int64(json_object_object_get(
-		event_context_data_ir, "architectureId"));
+	get_value_hex_64(event_context_data_ir, "configuration",
+			 &metadata.Configuration);
+
+	// PDI: MAC-style string XX:XX:XX:XX:XX:XX:XX:XX (MSB first) → UINT64
+	// e.g., "12:34:56:78:9A:BC:DE:F0" → PDI 0x123456789ABCDEF0
+	{
+		const char *pdi_str = json_object_get_string(
+			json_object_object_get(event_context_data_ir, "pdi"));
+		if (pdi_str != NULL) {
+			UINT8 pdi_bytes[8] = { 0 };
+			unsigned int b[8] = { 0 };
+			if (sscanf(pdi_str,
+				   "%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x",
+				   &b[0], &b[1], &b[2], &b[3], &b[4], &b[5],
+				   &b[6], &b[7]) == 8) {
+				for (int k = 0; k < 8; k++) {
+					pdi_bytes[k] = (UINT8)b[7 - k];
+				}
+				memcpy(&metadata.Pdi, pdi_bytes,
+				       sizeof(metadata.Pdi));
+			}
+		}
+	}
+
+	// ArchitectureId: decomposed {raw, architecture} → extract raw
+	{
+		json_object *arch_obj = json_object_object_get(
+			event_context_data_ir, "architectureId");
+		if (arch_obj != NULL) {
+			get_value_hex_32(arch_obj, "raw",
+					 &metadata.ArchitectureId);
+		}
+	}
+
 	metadata.HardwareInfoType = json_object_get_int64(
 		json_object_object_get(event_context_data_ir,
 				       "hardwareInfoType"));
@@ -782,42 +981,41 @@ static size_t parse_gpu_ctx_metadata_to_bin(json_object *event_ir,
 	json_object *pci_info =
 		json_object_object_get(event_context_data_ir, "pciInfo");
 	if (pci_info != NULL && metadata.HardwareInfoType == 0) {
-		metadata.PciInfo.Class = json_object_get_int64(
-			json_object_object_get(pci_info, "class"));
-		metadata.PciInfo.Subclass = json_object_get_int64(
-			json_object_object_get(pci_info, "subclass"));
-		metadata.PciInfo.Rev = json_object_get_int64(
-			json_object_object_get(pci_info, "rev"));
-		metadata.PciInfo.VendorId = json_object_get_int64(
-			json_object_object_get(pci_info, "vendorId"));
-		metadata.PciInfo.DeviceId = json_object_get_int64(
-			json_object_object_get(pci_info, "deviceId"));
-		metadata.PciInfo.SubsystemVendorId = json_object_get_int64(
-			json_object_object_get(pci_info, "subsystemVendorId"));
-		metadata.PciInfo.SubsystemId = json_object_get_int64(
-			json_object_object_get(pci_info, "subsystemId"));
-		metadata.PciInfo.Bar0Start = json_object_get_uint64(
-			json_object_object_get(pci_info, "bar0Start"));
-		metadata.PciInfo.Bar0Size = json_object_get_uint64(
-			json_object_object_get(pci_info, "bar0Size"));
-		metadata.PciInfo.Bar1Start = json_object_get_uint64(
-			json_object_object_get(pci_info, "bar1Start"));
-		metadata.PciInfo.Bar1Size = json_object_get_uint64(
-			json_object_object_get(pci_info, "bar1Size"));
-		metadata.PciInfo.Bar2Start = json_object_get_uint64(
-			json_object_object_get(pci_info, "bar2Start"));
-		metadata.PciInfo.Bar2Size = json_object_get_uint64(
-			json_object_object_get(pci_info, "bar2Size"));
+		get_value_hex_8(pci_info, "class", &metadata.PciInfo.Class);
+		get_value_hex_8(pci_info, "subclass",
+				&metadata.PciInfo.Subclass);
+		get_value_hex_8(pci_info, "rev", &metadata.PciInfo.Rev);
+		get_value_hex_16(pci_info, "vendorId",
+				 &metadata.PciInfo.VendorId);
+		get_value_hex_16(pci_info, "deviceId",
+				 &metadata.PciInfo.DeviceId);
+		get_value_hex_16(pci_info, "subsystemVendorId",
+				 &metadata.PciInfo.SubsystemVendorId);
+		get_value_hex_16(pci_info, "subsystemId",
+				 &metadata.PciInfo.SubsystemId);
+		get_value_hex_64(pci_info, "bar0Start",
+				 &metadata.PciInfo.Bar0Start);
+		get_value_hex_64(pci_info, "bar0Size",
+				 &metadata.PciInfo.Bar0Size);
+		get_value_hex_64(pci_info, "bar1Start",
+				 &metadata.PciInfo.Bar1Start);
+		get_value_hex_64(pci_info, "bar1Size",
+				 &metadata.PciInfo.Bar1Size);
+		get_value_hex_64(pci_info, "bar2Start",
+				 &metadata.PciInfo.Bar2Start);
+		get_value_hex_64(pci_info, "bar2Size",
+				 &metadata.PciInfo.Bar2Size);
 	}
 
 	return fwrite(&metadata, 1, sizeof(EFI_NVIDIA_GPU_CTX_METADATA),
 		      output_file_stream);
 }
 
-// Parses GPU Event Legacy Xid (0x1001) context data to JSON IR.
+// Parses GPU Event Legacy Xid (0x8001) context data to JSON IR.
 // Extracts Xid code and message string.
+// Output is placed inside the "gpuLegacyXid" variant within data.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside data.gpuLegacyXid):
  * {
  *   "xidCode": 79,
  *   "message": "GPU has fallen off the bus"
@@ -838,8 +1036,11 @@ parse_gpu_ctx_legacy_xid_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 		(EFI_NVIDIA_GPU_CTX_LEGACY_XID *)ctx->Data;
 
 	add_int(output_data_ir, "xidCode", xid->XidCode);
-	// Use json_object_new_string to stop at first null terminator (no null padding in JSON)
-	add_string(output_data_ir, "message", xid->Message);
+	// Default to "" then override with add_untrusted_string (safe for
+	// unterminated or non-printable binary data).
+	add_string(output_data_ir, "message", "");
+	add_untrusted_string(output_data_ir, "message", xid->Message,
+			     sizeof(xid->Message));
 }
 
 // Converts GPU Event Legacy Xid from JSON IR to binary.
@@ -862,6 +1063,13 @@ static size_t parse_gpu_ctx_legacy_xid_to_bin(json_object *event_ir,
 		return 0;
 	}
 
+	// Unwrap from "gpuLegacyXid" variant
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "gpuLegacyXid");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
 	EFI_NVIDIA_GPU_CTX_LEGACY_XID xid = { 0 };
 
 	xid.XidCode = json_object_get_int64(
@@ -878,12 +1086,13 @@ static size_t parse_gpu_ctx_legacy_xid_to_bin(json_object *event_ir,
 		      output_file_stream);
 }
 
-// Parses GPU Recommended Actions (0x1002) context data to JSON IR.
+// Parses GPU Recommended Actions (0x8002) context data to JSON IR.
 // Extracts flags, recovery action, and diagnostic flow code.
+// Output is placed inside the "gpuRecommendedActions" variant within data.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside data.gpuRecommendedActions):
  * {
- *   "flags": 3,
+ *   "flags": "0x03",
  *   "recoveryAction": 2,
  *   "diagnosticFlow": 0
  * }
@@ -901,7 +1110,7 @@ static void parse_gpu_ctx_recommended_actions_to_ir(
 	EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS *actions =
 		(EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS *)ctx->Data;
 
-	add_int(output_data_ir, "flags", actions->Flags);
+	add_int_hex_8(output_data_ir, "flags", actions->Flags);
 	add_int(output_data_ir, "recoveryAction", actions->RecoveryAction);
 	add_int(output_data_ir, "diagnosticFlow", actions->DiagnosticFlow);
 }
@@ -929,10 +1138,16 @@ static size_t parse_gpu_ctx_recommended_actions_to_bin(json_object *event_ir,
 		return 0;
 	}
 
+	// Unwrap from "gpuRecommendedActions" variant
+	json_object *inner = json_object_object_get(event_context_data_ir,
+						    "gpuRecommendedActions");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
 	EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS actions = { 0 };
 
-	actions.Flags = json_object_get_int64(
-		json_object_object_get(event_context_data_ir, "flags"));
+	get_value_hex_8(event_context_data_ir, "flags", &actions.Flags);
 	actions.RecoveryAction = json_object_get_int64(json_object_object_get(
 		event_context_data_ir, "recoveryAction"));
 	actions.DiagnosticFlow = json_object_get_int64(json_object_object_get(
@@ -945,16 +1160,15 @@ static size_t parse_gpu_ctx_recommended_actions_to_bin(json_object *event_ir,
 
 // Parses event context data type 0: Opaque data.
 // Extracts the opaque data from the context data.
+// Output is placed as a direct hex string under the "opaque" variant key.
 /*
- * Example JSON IR "data" output:
- * {
- *   "data": "deadbeefcafebabe..."
- * }
+ * Example JSON IR (data.opaque is a hex string, not an object):
+ *   "opaque": "deadbeefcafebabe..."
  */
 static void parse_common_ctx_type0_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 					 size_t total_event_size,
 					 size_t ctx_instance,
-					 json_object *output_data_ir)
+					 json_object *data_ir)
 {
 	// Get the nth context
 	EFI_NVIDIA_EVENT_CTX_HEADER *ctx = get_event_context_n(
@@ -984,10 +1198,12 @@ static void parse_common_ctx_type0_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	UINT8 *opaque_data = (UINT8 *)ctx + sizeof(EFI_NVIDIA_EVENT_CTX_HEADER);
 	UINT32 data_size = ctx->DataSize;
 
-	// Add the hex-encoded opaque data to JSON output
-	add_bytes_hex(output_data_ir, "data", opaque_data, data_size);
+	// Add the hex-encoded opaque data directly under the "opaque" key.
+	// Unlike other variants which are objects, opaque is a flat hex string.
+	add_bytes_hex(data_ir, "opaque", opaque_data, data_size);
 }
 // Converts opaque context data from JSON IR to binary.
+// The "opaque" variant is a flat hex string (not a nested object).
 // Returns the number of bytes written.
 /*
  * ┌─────────────────────────────────────────────────────────────────────────┐
@@ -1011,12 +1227,31 @@ static size_t parse_common_ctx_type0_to_bin(json_object *event_ir,
 		return 0;
 	}
 
-	// Decode the hex data from the "data" field
-	size_t decoded_len = 0;
-	UINT8 *decoded =
-		get_bytes_hex(event_context_data_ir, "data", &decoded_len);
+	// "opaque" is a direct hex string, not a nested object
+	json_object *opaque_str =
+		json_object_object_get(event_context_data_ir, "opaque");
+	if (opaque_str == NULL) {
+		cper_print_log("Error: missing 'opaque' key in data\n");
+		return 0;
+	}
+
+	const char *hex_string = json_object_get_string(opaque_str);
+	if (hex_string == NULL) {
+		cper_print_log("Error: opaque value is not a string\n");
+		return 0;
+	}
+
+	size_t hex_len = strlen(hex_string);
+	size_t decoded_len = hex_len / 2;
+	UINT8 *decoded = malloc(decoded_len);
 	if (decoded == NULL) {
+		return 0;
+	}
+
+	if (hex_string_to_bytes(hex_string, hex_len, decoded, decoded_len) !=
+	    decoded_len) {
 		cper_print_log("Error: hex decode of opaque data failed\n");
+		free(decoded);
 		return 0;
 	}
 
@@ -1029,12 +1264,13 @@ static size_t parse_common_ctx_type0_to_bin(json_object *event_ir,
 }
 // Parses event context data type 1: 64-bit key/value pairs.
 // Extracts an array of UINT64 key-value pairs from the context data.
+// Output is placed inside the "type1" variant within data.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside data.type1):
  * {
  *   "keyValArray64": [
- *     { "key64": 1234567890123456789, "val64": 9876543210987654321 },
- *     { "key64": 5555555555555555555, "val64": 1111111111111111111 }
+ *     { "key64": "0x112210f47de98115", "val64": "0x893456789abcdef1" },
+ *     { "key64": "0x4d2b0ca3d3a2f9c3", "val64": "0x0f6b75c7f1a7b3c7" }
  *   ]
  * }
  */
@@ -1068,8 +1304,8 @@ static void parse_common_ctx_type1_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type1++) {
 		json_object *kv = NULL;
 		kv = json_object_new_object();
-		add_uint(kv, "key64", data_type1->Key);
-		add_uint(kv, "val64", data_type1->Value);
+		add_int_hex_64(kv, "key64", data_type1->Key);
+		add_int_hex_64(kv, "val64", data_type1->Value);
 
 		json_object_array_add(kv64arr, kv);
 	}
@@ -1097,6 +1333,13 @@ static size_t parse_common_ctx_type1_to_bin(json_object *event_ir,
 		return 0;
 	}
 
+	// Unwrap from "type1" variant
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "type1");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
 	// Get the kv64-array that was created by parse_common_ctx_type1_to_ir
 	json_object *kv64arr =
 		json_object_object_get(event_context_data_ir, "keyValArray64");
@@ -1116,10 +1359,8 @@ static size_t parse_common_ctx_type1_to_bin(json_object *event_ir,
 
 		// Create and populate the binary structure
 		EFI_NVIDIA_EVENT_CTX_DATA_TYPE_1 data_type1 = { 0 };
-		data_type1.Key = json_object_get_uint64(
-			json_object_object_get(kv, "key64"));
-		data_type1.Value = json_object_get_uint64(
-			json_object_object_get(kv, "val64"));
+		get_value_hex_64(kv, "key64", &data_type1.Key);
+		get_value_hex_64(kv, "val64", &data_type1.Value);
 
 		// Write to binary file
 		bytes_written +=
@@ -1131,12 +1372,13 @@ static size_t parse_common_ctx_type1_to_bin(json_object *event_ir,
 }
 // Parses event context data type 2: 32-bit key/value pairs.
 // Extracts an array of UINT32 key-value pairs from the context data.
+// Output is placed inside the "type2" variant within data.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside data.type2):
  * {
  *   "keyValArray32": [
- *     { "key32": 123456789, "val32": 987654321 },
- *     { "key32": 555555555, "val32": 111111111 }
+ *     { "key32": "0x075bcd15", "val32": "0x3ade68b1" },
+ *     { "key32": "0x211d1ae3", "val32": "0x069f6bc7" }
  *   ]
  * }
  */
@@ -1170,8 +1412,8 @@ static void parse_common_ctx_type2_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type2++) {
 		json_object *kv = NULL;
 		kv = json_object_new_object();
-		add_uint(kv, "key32", data_type2->Key);
-		add_uint(kv, "val32", data_type2->Value);
+		add_int_hex_32(kv, "key32", data_type2->Key);
+		add_int_hex_32(kv, "val32", data_type2->Value);
 
 		json_object_array_add(kv32arr, kv);
 	}
@@ -1199,6 +1441,13 @@ static size_t parse_common_ctx_type2_to_bin(json_object *event_ir,
 		return 0;
 	}
 
+	// Unwrap from "type2" variant
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "type2");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
 	// Get the kv32-array that was created by parse_common_ctx_type2_to_ir
 	json_object *kv32arr =
 		json_object_object_get(event_context_data_ir, "keyValArray32");
@@ -1218,10 +1467,8 @@ static size_t parse_common_ctx_type2_to_bin(json_object *event_ir,
 
 		// Create and populate the binary structure
 		EFI_NVIDIA_EVENT_CTX_DATA_TYPE_2 data_type2 = { 0 };
-		data_type2.Key = json_object_get_uint64(
-			json_object_object_get(kv, "key32"));
-		data_type2.Value = json_object_get_uint64(
-			json_object_object_get(kv, "val32"));
+		get_value_hex_32(kv, "key32", &data_type2.Key);
+		get_value_hex_32(kv, "val32", &data_type2.Value);
 
 		// Write to binary file
 		bytes_written +=
@@ -1233,12 +1480,13 @@ static size_t parse_common_ctx_type2_to_bin(json_object *event_ir,
 }
 // Parses event context data type 3: 64-bit values only.
 // Extracts an array of UINT64 values (no keys) from the context data.
+// Output is placed inside the "type3" variant within data.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside data.type3):
  * {
  *   "valArray64": [
- *     { "val64": 1234567890123456789 },
- *     { "val64": 9876543210987654321 }
+ *     { "val64": "0x112210f47de98115" },
+ *     { "val64": "0x893456789abcdef1" }
  *   ]
  * }
  */
@@ -1272,7 +1520,7 @@ static void parse_common_ctx_type3_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type3++) {
 		json_object *v = NULL;
 		v = json_object_new_object();
-		add_uint(v, "val64", data_type3->Value);
+		add_int_hex_64(v, "val64", data_type3->Value);
 
 		json_object_array_add(val64arr, v);
 	}
@@ -1299,6 +1547,13 @@ static size_t parse_common_ctx_type3_to_bin(json_object *event_ir,
 		return 0;
 	}
 
+	// Unwrap from "type3" variant
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "type3");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
 	// Get the v64-array that was created by parse_common_ctx_type3_to_ir
 	json_object *v64arr =
 		json_object_object_get(event_context_data_ir, "valArray64");
@@ -1318,8 +1573,7 @@ static size_t parse_common_ctx_type3_to_bin(json_object *event_ir,
 
 		// Create and populate the binary structure
 		EFI_NVIDIA_EVENT_CTX_DATA_TYPE_3 data_type3 = { 0 };
-		data_type3.Value = json_object_get_uint64(
-			json_object_object_get(v, "val64"));
+		get_value_hex_64(v, "val64", &data_type3.Value);
 
 		// Write to binary file
 		bytes_written +=
@@ -1331,12 +1585,13 @@ static size_t parse_common_ctx_type3_to_bin(json_object *event_ir,
 }
 // Parses event context data type 4: 32-bit values only.
 // Extracts an array of UINT32 values (no keys) from the context data.
+// Output is placed inside the "type4" variant within data.
 /*
- * Example JSON IR "data" output:
+ * Example JSON IR (inside data.type4):
  * {
  *   "valArray32": [
- *     { "val32": 123456789 },
- *     { "val32": 987654321 }
+ *     { "val32": "0x075bcd15" },
+ *     { "val32": "0x3ade68b1" }
  *   ]
  * }
  */
@@ -1370,7 +1625,7 @@ static void parse_common_ctx_type4_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	for (int i = 0; i < num_elements; i++, data_type4++) {
 		json_object *v = NULL;
 		v = json_object_new_object();
-		add_uint(v, "val32", data_type4->Value);
+		add_int_hex_32(v, "val32", data_type4->Value);
 
 		json_object_array_add(val32arr, v);
 	}
@@ -1397,6 +1652,13 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
 		return 0;
 	}
 
+	// Unwrap from "type4" variant
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "type4");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
 	// Get the v32-array that was created by parse_common_ctx_type4_to_ir
 	json_object *v32arr =
 		json_object_object_get(event_context_data_ir, "valArray32");
@@ -1416,8 +1678,7 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
 
 		// Create and populate the binary structure
 		EFI_NVIDIA_EVENT_CTX_DATA_TYPE_4 data_type4 = { 0 };
-		data_type4.Value = json_object_get_uint64(
-			json_object_object_get(v, "val32"));
+		get_value_hex_32(v, "val32", &data_type4.Value);
 
 		// Write to binary file
 		bytes_written +=
@@ -1436,38 +1697,42 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
  *   "eventHeader": {
  *     "signature": "CPU-FAULT",
  *     "version": 1,
- *     "sourceDeviceType": 0,
- *     "type": 100,
- *     "subtype": 200,
- *     "linkId": 0
+ *     "sourceDeviceType": { "raw": 0, "value": "CPU" },
+ *     "type": "0x0064",
+ *     "subtype": "0x00C8",
+ *     "linkId": "0x0000000000000000"
  *   },
  *   "eventInfo": {
- *     "version": 0,
- *     "SocketNum": 0,
- *     "Architecture": {
- *       "hidFam": 7,
- *       "majorRev": 1,
- *       "chipId": 65,
- *       "minorRev": 1,
- *       "preSiPlatform": { "raw": 0, "value": "Silicon" },
- *       "einjTag": false
- *     },
- *     "Ecid1": 1234567890123456789,
- *     "Ecid2": 9876543210987654321,
- *     "Ecid3": 5555555555555555555,
- *     "Ecid4": 1111111111111111111,
- *     "InstanceBase": 281474976710656
+ *     "version": 1,
+ *     "cpu": {
+ *       "SocketNum": 0,
+ *       "Architecture": {
+ *         "hidFam": 7,
+ *         "majorRev": 1,
+ *         "chipId": 65,
+ *         "minorRev": 1,
+ *         "preSiPlatform": { "raw": 0, "value": "Silicon" },
+ *         "einjTag": false
+ *       },
+ *       "Ecid1": "0x499602d2",
+ *       "Ecid2": "0x89abcdef",
+ *       "Ecid3": "0x4d2b0ca3",
+ *       "Ecid4": "0x0f6b75c7",
+ *       "InstanceBase": "0x0000ffff00000000"
+ *     }
  *   },
  *   "eventContexts": [
  *     {
  *       "version": 0,
- *       "dataFormatType": 1,
+ *       "dataFormatType": "0x0001",
  *       "dataFormatVersion": 0,
  *       "dataSize": 32,
  *       "data": {
- *         "keyValArray64": [
- *           { "key64": 1234567890123456789, "val64": 9876543210987654321 }
- *         ]
+ *         "type1": {
+ *           "keyValArray64": [
+ *             { "key64": "0x112210f47de98115", "val64": "0x893456789abcdef1" }
+ *           ]
+ *         }
  *       }
  *     }
  *   ]
@@ -1521,10 +1786,11 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 	add_dict(event_header_ir, "sourceDeviceType",
 		 event_header->SourceDeviceType, sourceDeviceType,
 		 sizeof(sourceDeviceType) / sizeof(sourceDeviceType[0]));
-	add_int(event_header_ir, "type", event_header->EventType);
-	add_int(event_header_ir, "subtype", event_header->EventSubtype);
+	add_int_hex_16(event_header_ir, "type", event_header->EventType);
+	add_int_hex_16(event_header_ir, "subtype", event_header->EventSubtype);
 	if (event_header->EventLinkId != 0) {
-		add_uint(event_header_ir, "linkId", event_header->EventLinkId);
+		add_int_hex_64(event_header_ir, "linkId",
+			       event_header->EventLinkId);
 	}
 
 	// Parse event info structure
@@ -1539,10 +1805,12 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 	UINT8 info_major = get_info_major_version(event_info_header);
 
 	// Call device-specific handler to parse additional event info fields
+	// Device-specific fields are nested under a variant key (e.g., "cpu", "gpu")
+	NVIDIA_EVENT_SRC_DEV src_dev =
+		(NVIDIA_EVENT_SRC_DEV)event_header->SourceDeviceType;
 	for (size_t i = 0;
 	     i < sizeof(nv_event_types) / sizeof(nv_event_types[0]); i++) {
-		if ((NVIDIA_EVENT_SRC_DEV)event_header->SourceDeviceType ==
-		    nv_event_types[i].srcDev) {
+		if (src_dev == nv_event_types[i].srcDev) {
 			// Check version compatibility
 			if (!check_info_major_version(
 				    info_major, info_minor,
@@ -1550,7 +1818,12 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 				    "parsing")) {
 				break;
 			}
-			nv_event_types[i].callback(event_header, event_info_ir);
+			const char *variant = event_info_variant_key(src_dev);
+			json_object *device_info_ir = json_object_new_object();
+			json_object_object_add(event_info_ir, variant,
+					       device_info_ir);
+			nv_event_types[i].callback(event_header,
+						   device_info_ir);
 			break;
 		}
 	}
@@ -1569,28 +1842,43 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 		// Add context to array
 		json_object_array_add(event_contexts_ir, event_context_ir);
 		add_int(event_context_ir, "version", ctx->CtxVersion);
-		add_int(event_context_ir, "dataFormatType",
-			ctx->DataFormatType);
+		add_int_hex_16(event_context_ir, "dataFormatType",
+			       ctx->DataFormatType);
 		add_int(event_context_ir, "dataFormatVersion",
 			ctx->DataFormatVersion);
 		add_int(event_context_ir, "dataSize", ctx->DataSize);
 		json_object *data_ir = json_object_new_object();
 		json_object_object_add(event_context_ir, "data", data_ir);
-		// Check for device/format-specific custom handler
+
+		// Opaque (type0) is a flat hex string under "opaque" key,
+		// all other variants are objects under their variant key.
+		if (ctx->DataFormatType == OPAQUE) {
+			// Opaque adds "opaque": "<hex>" directly to data_ir
+			parse_common_ctx_type0_to_ir(event_header, size, i,
+						     data_ir);
+			continue;
+		}
+
+		// Context data is nested under a variant key (e.g., "type1", "gpuMetadata")
+		const char *variant = event_ctx_data_variant_key(
+			src_dev, ctx->DataFormatType);
+		json_object *inner_data_ir = json_object_new_object();
+		json_object_object_add(data_ir, variant, inner_data_ir);
+
+		// Check for device/format-specific custom handler first
 		bool handler_override_found = false;
 		for (size_t handler_idx = 0;
 		     handler_idx <
 		     sizeof(event_ctx_handlers) / sizeof(event_ctx_handlers[0]);
 		     handler_idx++) {
-			if (event_ctx_handlers[handler_idx].srcDev ==
-				    (NVIDIA_EVENT_SRC_DEV)
-					    event_header->SourceDeviceType &&
+			if (event_ctx_handlers[handler_idx].srcDev == src_dev &&
 			    event_ctx_handlers[handler_idx].dataFormatType ==
 				    ctx->DataFormatType) {
 				if (event_ctx_handlers[handler_idx].callback !=
 				    NULL) {
 					event_ctx_handlers[handler_idx].callback(
-						event_header, size, i, data_ir);
+						event_header, size, i,
+						inner_data_ir);
 					handler_override_found = true;
 					break;
 				}
@@ -1603,19 +1891,19 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 		switch (ctx->DataFormatType) {
 		case TYPE_1:
 			parse_common_ctx_type1_to_ir(event_header, size, i,
-						     data_ir);
+						     inner_data_ir);
 			break;
 		case TYPE_2:
 			parse_common_ctx_type2_to_ir(event_header, size, i,
-						     data_ir);
+						     inner_data_ir);
 			break;
 		case TYPE_3:
 			parse_common_ctx_type3_to_ir(event_header, size, i,
-						     data_ir);
+						     inner_data_ir);
 			break;
 		case TYPE_4:
 			parse_common_ctx_type4_to_ir(event_header, size, i,
-						     data_ir);
+						     inner_data_ir);
 			break;
 		default:
 			parse_common_ctx_type0_to_ir(event_header, size, i,
@@ -1679,12 +1967,10 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 	}
 
 	event_header.Reserved1 = 0;
-	event_header.EventType = json_object_get_int64(
-		json_object_object_get(event_header_ir, "type"));
-	event_header.EventSubtype = json_object_get_int64(
-		json_object_object_get(event_header_ir, "subtype"));
-	event_header.EventLinkId = json_object_get_uint64(
-		json_object_object_get(event_header_ir, "linkId"));
+	get_value_hex_16(event_header_ir, "type", &event_header.EventType);
+	get_value_hex_16(event_header_ir, "subtype",
+			 &event_header.EventSubtype);
+	get_value_hex_64(event_header_ir, "linkId", &event_header.EventLinkId);
 
 	// Signature is optional - only copy if present
 	json_object *signature_obj =
@@ -1757,9 +2043,17 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 	size_t bytes_written = fwrite(&event_info_header, 1,
 				      sizeof(EFI_NVIDIA_EVENT_INFO_HEADER),
 				      out);
-	// Call device-specific handler to parse additional event info fields
+	// Unwrap device-specific fields from variant key (e.g., "cpu", "gpu")
+	const char *variant = event_info_variant_key(
+		(NVIDIA_EVENT_SRC_DEV)event_header.SourceDeviceType);
+	json_object *device_info_ir =
+		json_object_object_get(event_info_ir, variant);
+	if (device_info_ir == NULL) {
+		// Fallback: try flat format for backward compatibility
+		device_info_ir = event_info_ir;
+	}
 	bytes_written +=
-		nv_event_info_callback->callback_bin(event_info_ir, out);
+		nv_event_info_callback->callback_bin(device_info_ir, out);
 
 	write_padding_to_16_byte_alignment(bytes_written, out);
 
@@ -1781,8 +2075,7 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 		EFI_NVIDIA_EVENT_CTX_HEADER ctx = { 0 };
 		ctx.CtxVersion = (uint16_t)json_object_get_int64(
 			json_object_object_get(value, "version"));
-		ctx.DataFormatType = (uint16_t)json_object_get_int64(
-			json_object_object_get(value, "dataFormatType"));
+		get_value_hex_16(value, "dataFormatType", &ctx.DataFormatType);
 		ctx.DataFormatVersion = (uint16_t)json_object_get_int64(
 			json_object_object_get(value, "dataFormatVersion"));
 		ctx.DataSize = json_object_get_int(

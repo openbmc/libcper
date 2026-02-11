@@ -1,120 +1,144 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "type": "object",
-    "description": "Nvidia Event Section - Structured event format for NVIDIA devices",
-    "required": ["eventHeader", "eventInfo", "eventContexts"],
-    "additionalProperties": false,
-    "properties": {
-        "eventHeader": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "description": "Nvidia Event Section - Structured event format for NVIDIA devices",
+  "required": ["eventHeader", "eventInfo", "eventContexts"],
+  "additionalProperties": false,
+  "properties": {
+    "eventHeader": {
+      "type": "object",
+      "description": "Event header containing event metadata and identification",
+      "required": [
+        "signature",
+        "version",
+        "sourceDeviceType",
+        "type",
+        "subtype"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "signature": {
+          "type": "string",
+          "description": "Event signature string"
+        },
+        "version": {
+          "type": "integer",
+          "description": "Event header version number",
+          "minimum": 0
+        },
+        "sourceDeviceType": {
+          "type": "object",
+          "required": ["raw"],
+          "properties": {
+            "raw": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "description": "Event type code",
+          "pattern": "^0x[0-9a-fA-F]{4}$"
+        },
+        "subtype": {
+          "type": "string",
+          "description": "Event subtype code",
+          "pattern": "^0x[0-9a-fA-F]{4}$"
+        },
+        "linkId": {
+          "type": "string",
+          "description": "Event link identifier for correlation",
+          "pattern": "^0x[0-9a-fA-F]{16}$"
+        }
+      }
+    },
+    "eventInfo": {
+      "type": "object",
+      "description": "Device-specific event information structure (varies by sourceDeviceType)",
+      "required": ["version"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer",
+          "description": "Event info version",
+          "minimum": 0
+        },
+        "cpu": { "$ref": "./sections/cper-nvidia-event-info-cpu.json" },
+        "gpu": { "$ref": "./sections/cper-nvidia-event-info-gpu.json" }
+      },
+      "oneOf": [{ "required": ["cpu"] }, { "required": ["gpu"] }]
+    },
+    "eventContexts": {
+      "type": "array",
+      "description": "Array of event context objects containing error details",
+      "items": {
+        "type": "object",
+        "description": "Individual event context with header and data",
+        "required": [
+          "version",
+          "dataFormatType",
+          "dataFormatVersion",
+          "dataSize",
+          "data"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "dataFormatType": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{4}$"
+          },
+          "dataFormatVersion": { "type": "integer", "minimum": 0 },
+          "dataSize": { "type": "integer", "minimum": 0 },
+          "data": {
             "type": "object",
-            "description": "Event header containing event metadata and identification",
-            "required": [
-                "signature",
-                "version",
-                "sourceDeviceType",
-                "type",
-                "subtype"
-            ],
+            "description": "Context data (varies by dataFormatType and sourceDeviceType)",
+            "required": [],
             "additionalProperties": false,
             "properties": {
-                "signature": {
-                    "type": "string",
-                    "description": "Event signature string"
-                },
-                "version": {
-                    "type": "integer",
-                    "description": "Event header version number",
-                    "minimum": 0
-                },
-                "sourceDeviceType": {
-                    "type": "object",
-                    "required": ["raw"],
-                    "properties": {
-                        "raw": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 5
-                        },
-                        "value": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "type": {
-                    "type": "integer",
-                    "description": "Event type code",
-                    "minimum": 0
-                },
-                "subtype": {
-                    "type": "integer",
-                    "description": "Event subtype code",
-                    "minimum": 0
-                },
-                "linkId": {
-                    "type": "integer",
-                    "description": "Event link identifier for correlation",
-                    "minimum": 0
-                }
-            }
-        },
-        "eventInfo": {
-            "type": "object",
-            "description": "Device-specific event information structure (varies by sourceDeviceType)",
+              "opaque": {
+                "$ref": "./sections/cper-nvidia-event-data-opaque.json"
+              },
+              "type1": {
+                "$ref": "./sections/cper-nvidia-event-data-type1.json"
+              },
+              "type2": {
+                "$ref": "./sections/cper-nvidia-event-data-type2.json"
+              },
+              "type3": {
+                "$ref": "./sections/cper-nvidia-event-data-type3.json"
+              },
+              "type4": {
+                "$ref": "./sections/cper-nvidia-event-data-type4.json"
+              },
+              "gpuMetadata": {
+                "$ref": "./sections/cper-nvidia-event-data-gpu-metadata.json"
+              },
+              "gpuLegacyXid": {
+                "$ref": "./sections/cper-nvidia-event-data-gpu-legacy-xid.json"
+              },
+              "gpuRecommendedActions": {
+                "$ref": "./sections/cper-nvidia-event-data-gpu-recommended-actions.json"
+              }
+            },
             "oneOf": [
-                { "$ref": "./sections/cper-nvidia-event-info-cpu.json" },
-                { "$ref": "./sections/cper-nvidia-event-info-gpu.json" }
+              { "required": ["opaque"] },
+              { "required": ["type1"] },
+              { "required": ["type2"] },
+              { "required": ["type3"] },
+              { "required": ["type4"] },
+              { "required": ["gpuMetadata"] },
+              { "required": ["gpuLegacyXid"] },
+              { "required": ["gpuRecommendedActions"] }
             ]
-        },
-        "eventContexts": {
-            "type": "array",
-            "description": "Array of event context objects containing error details",
-            "items": {
-                "type": "object",
-                "description": "Individual event context with header and data",
-                "required": [
-                    "version",
-                    "dataFormatType",
-                    "dataFormatVersion",
-                    "dataSize",
-                    "data"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "version": { "type": "integer", "minimum": 0 },
-                    "dataFormatType": { "type": "integer", "minimum": 0 },
-                    "dataFormatVersion": { "type": "integer", "minimum": 0 },
-                    "dataSize": { "type": "integer", "minimum": 0 },
-                    "data": {
-                        "type": "object",
-                        "oneOf": [
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-opaque.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-type1.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-type2.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-type3.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-type4.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-gpu-metadata.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-gpu-legacy-xid.json"
-                            },
-                            {
-                                "$ref": "./sections/cper-nvidia-event-data-gpu-recommended-actions.json"
-                            }
-                        ]
-                    }
-                }
-            }
+          }
         }
+      }
     }
+  }
 }
