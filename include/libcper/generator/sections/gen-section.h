@@ -52,6 +52,8 @@ size_t generate_section_nvidia_events(void **location,
 				      GEN_VALID_BITS_TEST_TYPE validBitsType);
 size_t generate_section_ampere(void **location,
 			       GEN_VALID_BITS_TEST_TYPE validBitsType);
+size_t generate_section_info_ppr(void **location,
+				GEN_VALID_BITS_TEST_TYPE validBitsType);
 
 //Definition structure for a single CPER section generator.
 typedef struct {

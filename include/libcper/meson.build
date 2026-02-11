@@ -1,8 +1,11 @@
 install_headers(
     'BaseTypes.h',
     'Cper.h',
+    'Cpad.h',
     'cper-parse.h',
     'cper-parse-str.h',
+    'cpad-parse.h',
+    'cpad-parse-str.h',
     'cper-utils.h',
     'common-utils.h',
     subdir: 'libcper',

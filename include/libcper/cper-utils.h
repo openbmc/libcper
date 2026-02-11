@@ -10,6 +10,7 @@ extern "C" {
 
 #include <libcper/common-utils.h>
 #include <libcper/Cper.h>
+#include <libcper/Cpad.h>
 #include <json.h>
 #include <stdbool.h>
 
@@ -25,10 +26,20 @@ typedef struct {
 	} value;
 } ValidationTypes;
 
+// CPER-specific utility functions
 json_object *
 cper_generic_error_status_to_ir(EFI_GENERIC_ERROR_STATUS *error_status);
 void ir_generic_error_status_to_cper(
 	json_object *error_status, EFI_GENERIC_ERROR_STATUS *error_status_cper);
+const char *severity_to_string(UINT32 severity);
+
+// CPAD-specific utility functions
+json_object *cpad_urgency_to_ir(CPAD_URGENCY_BITFIELD *urgency);
+void ir_cpad_urgency_to_cper(
+	json_object *urgency_ir, CPAD_URGENCY_BITFIELD *urgency_cper);
+const char *action_to_string(UINT16 action);
+
+// Common utility functions
 json_object *uniform_struct_to_ir(UINT32 *start, int len, const char *names[]);
 json_object *uniform_struct64_to_ir(UINT64 *start, int len,
 				    const char *names[]);
@@ -53,7 +64,6 @@ void add_to_valid_bitfield(ValidationTypes *val, int vbit_idx);
 void print_val(ValidationTypes *val);
 json_object *uint64_array_to_ir_array(UINT64 *array, int len);
 json_object *revision_to_ir(UINT16 revision);
-const char *severity_to_string(UINT32 severity);
 int timestamp_to_string(char *out, int out_len,
 			EFI_ERROR_TIME_STAMP *timestamp);
 void string_to_timestamp(EFI_ERROR_TIME_STAMP *out, const char *timestamp);
@@ -110,6 +120,7 @@ void add_dict(json_object *register_ir, const char *field_name, UINT64 value,
 
 //The available severity types for CPER.
 extern const char *CPER_SEVERITY_TYPES[4];
+extern const char *CPER_URGENCY_TYPES[1];
 
 #ifdef __cplusplus
 }
