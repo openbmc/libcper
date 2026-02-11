@@ -1,0 +1,194 @@
+{
+    "header": {
+        "revision": {
+            "major": 1,
+            "minor": 0
+        },
+        "sectionCount": 2,
+        "severity": {
+            "code": 0,
+            "name": "Recoverable"
+        },
+        "recordLength": 816,
+        "timestamp": "0000-00-00T19:44:12+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "12345678-1234-5678-aabb-ccddeeff0011",
+        "creatorID": "4e564944-4941-0001-0000-000000000002",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1152921504606846978,
+        "flags": {
+            "value": 0,
+            "name": "Unknown"
+        },
+        "persistenceInfo": 0
+    },
+    "sectionDescriptors": [
+        {
+            "sectionOffset": 272,
+            "sectionLength": 352,
+            "revision": {
+                "major": 1,
+                "minor": 0
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": false,
+                "overflow": false
+            },
+            "sectionType": {
+                "data": "9068e568-6ca0-11f0-aeaf-159343591eac",
+                "type": "NvidiaEvent"
+            },
+            "fruID": "aabbccdd-eeff-0011-2233-445566778899",
+            "fruText": "699-2G525-0220",
+            "severity": {
+                "code": 0,
+                "name": "Recoverable"
+            }
+        },
+        {
+            "sectionOffset": 624,
+            "sectionLength": 192,
+            "revision": {
+                "major": 1,
+                "minor": 0
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": false,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": false,
+                "overflow": false
+            },
+            "sectionType": {
+                "data": "9068e568-6ca0-11f0-aeaf-159343591eac",
+                "type": "NvidiaEvent"
+            },
+            "fruID": "aabbccdd-eeff-0011-2233-445566778899",
+            "fruText": "699-2G525-0220",
+            "severity": {
+                "code": 0,
+                "name": "Recoverable"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "message": "A GPU-MemSys Nvidia Event occurred",
+            "NvidiaEvent": {
+                "eventHeader": {
+                    "signature": "GPU-MemSys",
+                    "version": 1,
+                    "sourceDeviceType": "GPU",
+                    "type": "0x0200",
+                    "subtype": "0x0002",
+                    "linkId": "0x1000000000000001"
+                },
+                "eventInfo": {
+                    "version": "1.0",
+                    "gpu": {
+                        "EventOriginator": "PF_GSP_FW",
+                        "SourcePartition": 1,
+                        "SourceSubPartition": 2,
+                        "Pdi": "99:88:77:66:55:44:33:22"
+                    }
+                },
+                "eventContexts": [
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x8001",
+                        "dataFormatVersion": 256,
+                        "dataSize": 144,
+                        "data": {
+                            "gpuLegacyXid": {
+                                "xidCode": 48,
+                                "message": "An uncorrectable double bit error (DBE) has been detected on GPU in the framebuffer at physAddr 0x10557e05e0 partition 31, sub-partition 0."
+                            }
+                        }
+                    },
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x8001",
+                        "dataFormatVersion": 256,
+                        "dataSize": 81,
+                        "data": {
+                            "gpuLegacyXid": {
+                                "xidCode": 171,
+                                "message": "HBM, Uncorrectable DRAM error in FBPA 31 supartition 0 physAddr 0x10557e05e0"
+                            }
+                        }
+                    },
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x0000",
+                        "dataFormatVersion": 256,
+                        "dataSize": 16,
+                        "data": {
+                            "opaque": "e0057e55100000001f00000000000000"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "message": "A GPU-MemSys Nvidia Event occurred",
+            "NvidiaEvent": {
+                "eventHeader": {
+                    "signature": "GPU-MemSys",
+                    "version": 1,
+                    "sourceDeviceType": "GPU",
+                    "type": "0x0200",
+                    "subtype": "0x0003",
+                    "linkId": "0x1000000000000001"
+                },
+                "eventInfo": {
+                    "version": "1.0",
+                    "gpu": {
+                        "EventOriginator": "PF_GSP_FW",
+                        "SourcePartition": 1,
+                        "SourceSubPartition": 2,
+                        "Pdi": "99:88:77:66:55:44:33:22"
+                    }
+                },
+                "eventContexts": [
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x8001",
+                        "dataFormatVersion": 256,
+                        "dataSize": 92,
+                        "data": {
+                            "gpuLegacyXid": {
+                                "xidCode": 63,
+                                "message": "Row Remapper: New row (0x00000010557e05e0) marked for remapping, reset gpu to activate."
+                            }
+                        }
+                    },
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x8002",
+                        "dataFormatVersion": 256,
+                        "dataSize": 16,
+                        "data": {
+                            "gpuRecommendedActions": {
+                                "flags": "0x00",
+                                "recoveryAction": 2,
+                                "diagnosticFlow": 0
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

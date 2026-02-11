@@ -58,116 +58,119 @@
                 "eventHeader": {
                     "signature": "TEST-EVT",
                     "version": 1,
-                    "sourceDeviceType": {
-                        "raw": 0,
-                        "value": "CPU"
-                    },
-                    "type": 256,
-                    "subtype": 512,
-                    "linkId": 1234605616436508552
+                    "sourceDeviceType": "CPU",
+                    "type": "0x0100",
+                    "subtype": "0x0200",
+                    "linkId": "0x1122334455667788"
                 },
                 "eventInfo": {
-                    "version": 1,
-                    "SocketNum": 2,
-                    "Architecture": {
-                        "hidFam": 1,
-                        "majorRev": 1,
-                        "chipId": 17,
-                        "minorRev": 1,
-                        "preSiPlatform": {
-                            "raw": 17,
-                            "value": "PreSilicon"
+                    "version": "0.1",
+                    "cpu": {
+                        "SocketNum": 2,
+                        "Architecture": {
+                            "hidFam": "0x01",
+                            "revision": "1.1",
+                            "chipId": "0x11",
+                            "preSiPlatform": "PreSilicon",
+                            "errorInjection": false
                         },
-                        "einjTag": false
-                    },
-                    "Ecid1": 572662306,
-                    "Ecid2": 858993459,
-                    "Ecid3": 1145324612,
-                    "Ecid4": 1431655765,
-                    "InstanceBase": 12302652056939934532
+                        "Ecid1": "0x22222222",
+                        "Ecid2": "0x33333333",
+                        "Ecid3": "0x44444444",
+                        "Ecid4": "0x55555555",
+                        "InstanceBase": "0xAABBCCDD11223344"
+                    }
                 },
                 "eventContexts": [
                     {
                         "version": 1,
-                        "dataFormatType": 1,
+                        "dataFormatType": "0x0001",
                         "dataFormatVersion": 1,
                         "dataSize": 32,
                         "data": {
-                            "keyValArray64": [
-                                {
-                                    "key64": 1229782938247303441,
-                                    "val64": 12297829382473034410
-                                },
-                                {
-                                    "key64": 2459565876494606882,
-                                    "val64": 13527612320720337851
-                                }
-                            ]
+                            "type1": {
+                                "keyValArray64": [
+                                    {
+                                        "key64": "0x1111111111111111",
+                                        "val64": "0xAAAAAAAAAAAAAAAA"
+                                    },
+                                    {
+                                        "key64": "0x2222222222222222",
+                                        "val64": "0xBBBBBBBBBBBBBBBB"
+                                    }
+                                ]
+                            }
                         }
                     },
                     {
                         "version": 1,
-                        "dataFormatType": 2,
+                        "dataFormatType": "0x0002",
                         "dataFormatVersion": 1,
                         "dataSize": 16,
                         "data": {
-                            "keyValArray32": [
-                                {
-                                    "key32": 858993459,
-                                    "val32": 3435973836
-                                },
-                                {
-                                    "key32": 1145324612,
-                                    "val32": 3722304989
-                                }
-                            ]
+                            "type2": {
+                                "keyValArray32": [
+                                    {
+                                        "key32": "0x33333333",
+                                        "val32": "0xCCCCCCCC"
+                                    },
+                                    {
+                                        "key32": "0x44444444",
+                                        "val32": "0xDDDDDDDD"
+                                    }
+                                ]
+                            }
                         }
                     },
                     {
                         "version": 1,
-                        "dataFormatType": 3,
+                        "dataFormatType": "0x0003",
                         "dataFormatVersion": 1,
                         "dataSize": 16,
                         "data": {
-                            "valArray64": [
-                                {
-                                    "val64": 6148914691236517205
-                                },
-                                {
-                                    "val64": 7378697629483820646
-                                }
-                            ]
+                            "type3": {
+                                "valArray64": [
+                                    {
+                                        "val64": "0x5555555555555555"
+                                    },
+                                    {
+                                        "val64": "0x6666666666666666"
+                                    }
+                                ]
+                            }
                         }
                     },
                     {
                         "version": 1,
-                        "dataFormatType": 4,
+                        "dataFormatType": "0x0004",
                         "dataFormatVersion": 1,
                         "dataSize": 16,
                         "data": {
-                            "valArray32": [
-                                {
-                                    "val32": 4008636142
-                                },
-                                {
-                                    "val32": 4294967295
-                                },
-                                {
-                                    "val32": 2004318071
-                                },
-                                {
-                                    "val32": 2290649224
-                                }
-                            ]
+                            "type4": {
+                                "valArray32": [
+                                    {
+                                        "val32": "0xEEEEEEEE"
+                                    },
+                                    {
+                                        "val32": "0xFFFFFFFF"
+                                    },
+                                    {
+                                        "val32": "0x77777777"
+                                    },
+                                    {
+                                        "val32": "0x88888888"
+                                    }
+                                ]
+                            }
                         }
                     },
                     {
                         "version": 1,
-                        "dataFormatType": 0,
+                        "dataFormatType": "0x0000",
                         "dataFormatVersion": 1,
                         "dataSize": 16,
                         "data": {
-                            "data": "deadbeefcafebabe0123456789abcdef"
+                            "opaque": "deadbeefcafebabe0123456789abcdef"
                         }
                     }
                 ]

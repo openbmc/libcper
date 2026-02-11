@@ -94,7 +94,7 @@ typedef struct __attribute__((packed)) {
 	UINT64 Bar1Size;
 	UINT64 Bar2Start;
 	UINT64 Bar2Size;
-} EFI_NVIDIA_GPU_CTX_METADATA_PCI_INFO;
+} EFI_NVIDIA_GPU_CTX_INIT_METADATA_PCI_INFO;
 
 typedef struct __attribute__((packed)) {
 	CHAR8 DeviceName[48];
@@ -107,10 +107,10 @@ typedef struct __attribute__((packed)) {
 	UINT32 ArchitectureId;
 	UINT8 HardwareInfoType;
 	union {
-		EFI_NVIDIA_GPU_CTX_METADATA_PCI_INFO PciInfo;
+		EFI_NVIDIA_GPU_CTX_INIT_METADATA_PCI_INFO PciInfo;
 		UINT8 Reserved[59];
 	};
-} EFI_NVIDIA_GPU_CTX_METADATA;
+} EFI_NVIDIA_GPU_CTX_INIT_METADATA;
 
 typedef struct __attribute__((packed)) {
 	UINT32 XidCode;
