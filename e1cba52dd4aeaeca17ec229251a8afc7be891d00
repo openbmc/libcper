@@ -34,6 +34,24 @@
       "parentUuid": "7e291289_d0eaa052",
       "revId": "e1cba52dd4aeaeca17ec229251a8afc7be891d00",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72642778_0a88c16e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-11T03:12:30Z",
+      "side": 1,
+      "message": "Please see: https://gerrit.openbmc.org/c/openbmc/libcper/+/87362\nAdded snprintf return value validation, alongside other fixes for roundtrip conversion.",
+      "parentUuid": "09a3926b_18b1241b",
+      "revId": "e1cba52dd4aeaeca17ec229251a8afc7be891d00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
