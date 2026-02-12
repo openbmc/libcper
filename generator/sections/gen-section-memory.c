@@ -33,7 +33,7 @@ size_t generate_section_memory(void **location,
 	*(bytes + 72) = cper_rand() % 16; //Memory error type
 
 	//Fix error status.
-	create_valid_error_section(bytes + 8);
+	create_valid_error_status(bytes + 8);
 
 	//Set return values, exit.
 	*location = bytes;
@@ -65,7 +65,7 @@ size_t generate_section_memory2(void **location,
 	*(bytes + 62) = cper_rand() % 2;  //Status
 
 	//Fix error status.
-	create_valid_error_section(bytes + 8);
+	create_valid_error_status(bytes + 8);
 
 	//Set return values, exit.
 	*location = bytes;

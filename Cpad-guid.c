@@ -16,9 +16,15 @@
  **/
 #include <libcper/Cpad.h>
 
-
+// Note that section bodies for CPADs are generally intended to be opaque, containing
+// whatever data is needed for a particular RAS API endpoint to take the action. There
+// will be very few standard CPAD section bodies.  Almost all of them are expected to
+// be proprietary.
 
 //Action section GUIDs.
+
+// Section for passing a message from the RAS API endpoint to the host OS
+// e.g. Tell the OS to map out a memory page
 EFI_GUID gEfiCpadOsGenericSectionGuid = { 0x6acbe736,
     0xdae8,
     0x11f0,

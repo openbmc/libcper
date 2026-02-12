@@ -42,7 +42,7 @@ size_t generate_section_pci_dev(void **location,
 	*io_number_field = num_io_pairs;
 
 	//Fix error status.
-	create_valid_error_section(bytes + 8);
+	create_valid_error_status(bytes + 8);
 
 	//Set return values, exit.
 	*location = bytes;

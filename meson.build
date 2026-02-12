@@ -64,7 +64,7 @@ libcper_generate_cper_sources = files(
     'generator/sections/gen-section-ampere.c',
     'generator/sections/gen-section-arm-ras.c',
     'generator/sections/gen-section-arm.c',
-    'generator/sections/gen-section-custom.c',  //FIXME check that this is needed
+    'generator/sections/gen-section-custom.c',  #FIXME check that this is needed
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',
     'generator/sections/gen-section-cxl-protocol.c',

@@ -27,7 +27,6 @@ void create_valid_error_status(UINT8 *error_status_field);
 
 EFI_GUID generate_random_guid();
 void generate_random_timestamp(EFI_ERROR_TIME_STAMP *timestamp);
-void generate_random_string(char *buffer, size_t length);
 
 #ifdef __cplusplus
 }

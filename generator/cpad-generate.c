@@ -141,7 +141,7 @@ CPAD_SECTION_DESCRIPTOR *generate_cpad_section_descriptor(char *type,
     descriptor->FruId = generate_random_guid();
     descriptor->Urgency = generate_random_urgency();
     descriptor->Confidence = generate_random_confidence(); 
-    generate_random_string(descriptor->FruString, sizeof(descriptor->FruString));
+    generate_random_printable_string(descriptor->FruString, sizeof(descriptor->FruString));
     descriptor->ActionID = action_id;
 
 	//Set length, offset from base record.

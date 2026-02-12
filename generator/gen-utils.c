@@ -25,7 +25,7 @@ UINT32 cper_rand(void)
 	return lfsr;
 }
 
-UINT64 cper_rand64()
+UINT64 cper_rand64(void)
 {
 	UINT64 result = (UINT64)cper_rand();
 	result = result << 32;
@@ -100,13 +100,4 @@ void generate_random_timestamp(EFI_ERROR_TIME_STAMP *timestamp)
     timestamp->Flag = cper_rand() % 2; // Randomly set precise bit
 }
 
-// Generates a random null-terminated string of printable ASCII characters.
-void generate_random_string(char *buffer, size_t buffer_size)
-{
-    for (size_t i = 0; i < buffer_size - 1; i++) {
-        // Printable ASCII range: 0x20 (space) to 0x7E (~)
-        buffer[i] = (char)(cper_rand() % (0x7E - 0x20 + 1) + 0x20);
-    }
-    buffer[buffer_size-1] = '\0';
-}
 
