@@ -1,7 +1,7 @@
 /**
- * Functions for generating pseudo-random CPER info-ppr error sections.
+ * Functions for generating pseudo-random CPER platform-action-event error sections.
  *
- * Author: Custom Section Generator
+ * Author: drewwalton@microsoft.com
  **/
 
 #include <stdlib.h>
@@ -9,9 +9,9 @@
 #include <libcper/generator/gen-utils.h>
 #include <libcper/generator/sections/gen-section.h>
 
-//Generates a single pseudo-random info-ppr error section, saving the resulting address to the given
+//Generates a single pseudo-random platform-action-event error section, saving the resulting address to the given
 //location. Returns the size of the newly created section.
-size_t generate_section_info_ppr(void **location,
+size_t generate_section_platform_action_event(void **location,
 				 GEN_VALID_BITS_TEST_TYPE validBitsType)
 {
 	(void)validBitsType;

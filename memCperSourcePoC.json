@@ -1,0 +1,101 @@
+{
+    "header": {
+        "creatorID": "11111111-2222-3333-4444-5555555555555",
+        "flags": {
+            "name": "HW_ERROR_FLAGS_SIMULATED",
+            "value": 4
+        },
+        "notificationType": {
+            "guid": "2dce8bb1-bdd7-450e-b9ad-9cf4ebd4f890",
+            "type": "Corrected Machine Check (CMC)"
+        },
+        "persistenceInfo": 0,
+        "platformID": "990f8820-bd4d-5064-58cc-961a053dea79",
+        "recordID": 123456789,
+        "recordLength": 296,
+        "revision": {
+            "major": 1,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 2,
+            "name": "Corrected"
+        },
+        "timestamp": "2025-06-27T12:00:00+00:00",
+        "timestampIsPrecise": true
+    },
+    "sectionDescriptors": [
+        {
+            "flags": {
+                "containmentWarning": false,
+                "errorThresholdExceeded": false,
+                "latentError": false,
+                "overflow": false,
+                "primary": true,
+                "propagated": false,
+                "reset": false,
+                "resourceNotAccessible": false
+            },
+            "fruID": "75824856-bd36-2cc8-61f4-39bb3276da2a",
+            "fruText": "DIMM A1",
+            "revision": {
+                "major": 1,
+                "minor": 0
+            },
+            "sectionLength": 96,
+            "sectionOffset": 200,
+            "sectionType": {
+                "data": "61ec04fc-48e6-d813-25c9-8daa44750b12",
+                "type": "Platform Memory 2"
+            },
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "Memory2": {
+                "bank": {
+                    "value": 0
+                },
+                "card": 0,
+                "cardSmbiosHandle": 0,
+                "chipID": 0,
+                "errorStatus": {
+                    "addressSignal": false,
+                    "controlSignal": false,
+                    "dataSignal": true,
+                    "detectedByRequester": true,
+                    "detectedByResponder": false,
+                    "errorType": {
+                        "description": "Single correctable error",
+                        "name": "ERR_MEM",
+                        "value": 4
+                    },
+                    "firstError": true,
+                    "overflowDroppedLogs": false
+                },
+                "physicalAddress": 7584754002385014651,
+                "physicalAddressHex": "0x6942759454E18F7B",
+                "physicalAddressMask": 8823605043237379382,
+                "device" : 0,
+                "rank": 0,
+                "responderID": 4028408744142317612,
+                "row": 1234,
+                "column": 567,
+                "bitPosition": 3,
+                "memoryErrorType": {
+                    "name": "Single-bit ECC",
+                    "value": 2
+                },
+                "status": {
+                    "state": "Corrected",
+                    "value": 0
+                }
+            }
+        }
+    ]
+}

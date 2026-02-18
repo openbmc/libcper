@@ -45,7 +45,7 @@ libcper_parse_sources = files(
     'sections/cper-section-firmware.c',
     'sections/cper-section-generic.c',
     'sections/cper-section-ia32x64.c',
-    'sections/cper-section-info-ppr.c',
+    'sections/cper-section-platform-action-event.c',
     'sections/cper-section-ipf.c',
     'sections/cper-section-memory.c',
     'sections/cper-section-nvidia-events.c',
@@ -64,7 +64,7 @@ libcper_generate_cper_sources = files(
     'generator/sections/gen-section-ampere.c',
     'generator/sections/gen-section-arm-ras.c',
     'generator/sections/gen-section-arm.c',
-    'generator/sections/gen-section-custom.c',  #FIXME check that this is needed
+    'generator/sections/gen-section-platform-action-event.c',  #FIXME check that this is needed
     'generator/sections/gen-section-ccix-per.c',
     'generator/sections/gen-section-cxl-component.c',
     'generator/sections/gen-section-cxl-protocol.c',

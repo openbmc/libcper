@@ -8,12 +8,12 @@
 #include <string.h>
 #include <json.h>
 #include <libcper/Cper.h>
-#include <libcper/sections/cper-section-info-ppr.h>
+#include <libcper/sections/cper-section-platform-action-event.h>
 #include <libcper/cper-utils.h>
 #include <libcper/base64.h>
 
 //Converts the given Info-action-ppr CPER section into JSON IR.
-json_object *cper_section_info_ppr_to_ir(const UINT8 *section, UINT32 size)
+json_object *cper_section_platform_action_event_to_ir(const UINT8 *section, UINT32 size)
 {
 	json_object *section_ir = json_object_new_object();
 	
@@ -29,7 +29,7 @@ json_object *cper_section_info_ppr_to_ir(const UINT8 *section, UINT32 size)
 }
 
 //Converts a single Info-action-ppr JSON IR section into CPER binary, outputting to the given stream.
-void ir_section_info_ppr_to_cper(json_object *section, FILE *out)
+void ir_section_platform_action_event_to_cper(json_object *section, FILE *out)
 {
 	//For now, decode from base64. You can add specific field handling here later.
 	json_object *encoded = json_object_object_get(section, "data");

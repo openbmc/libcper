@@ -49,15 +49,15 @@ void generate_cper_record(char **types, UINT16 num_sections, FILE *out,
 	header->RecordID = (UINT64)rand();
 	
 	//FIXME: Probably want to delete this.
-	//Set header severity to 3 (informational) if any section is info-ppr
-	int has_info_ppr = 0;
+	//Set header severity to 3 (informational) if any section is platform-action-event
+	int has_platform_action_event = 0;
 	for (int i = 0; i < num_sections; i++) {
-		if (strcmp(types[i], "info-ppr") == 0) {
-			has_info_ppr = 1;
+		if (strcmp(types[i], "platform-action-event") == 0) {
+			has_platform_action_event = 1;
 			break;
 		}
 	}
-	header->ErrorSeverity = has_info_ppr ? 3 : (rand() % 4);
+	header->ErrorSeverity = has_platform_action_event ? 3 : (rand() % 4);
 
 	//Generate a valid timestamp.
 	generate_random_timestamp(&header->TimeStamp);
@@ -136,9 +136,9 @@ EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 	descriptor->Resv1 = 0;
 	descriptor->SectionFlags &= 0xFF;
 
-	//For info-ppr section, set bit 31 (actionSuccess) to true
+	//For platform-action-event section, set bit 31 (actionSuccess) to true
 	// FIXME: Probably want to delete this.
-	if (strcmp(type, "info-ppr") == 0) {
+	if (strcmp(type, "platform-action-event") == 0) {
 		descriptor->SectionFlags |= 0x80000000; //Set bit 31
 	}
 
@@ -146,9 +146,9 @@ EFI_ERROR_SECTION_DESCRIPTOR *generate_section_descriptor(char *type,
 	descriptor->SecValidMask = 0x3;
 
 	//Set severity.
-	//For "info-ppr" section, use severity 3 (informational).
+	//For "platform-action-event" section, use severity 3 (informational).
 	// FIXME Probably want to delete this.
-	if (strcmp(type, "info-ppr") == 0) {
+	if (strcmp(type, "platform-action-event") == 0) {
 		descriptor->Severity = 3; //EFI_GENERIC_ERROR_INFO
 	} else {
 		descriptor->Severity = rand() % 4;

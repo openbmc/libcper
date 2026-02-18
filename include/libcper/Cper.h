@@ -1433,7 +1433,7 @@ typedef struct {
 } __attribute__((packed)) EFI_AMPERE_ERROR_DATA;
 
 extern EFI_GUID gEfiAmpereErrorSectionGuid;
-extern EFI_GUID gEfiPprActionGuid;  //FIXME: Delete this
+extern EFI_GUID gEfiPlatformActionEvent;  //FIXME: Delete this
 
 ///
 /// Arm Error Record Section
