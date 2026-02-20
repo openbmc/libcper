@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "459d77fe_de5c4dbe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-20T21:59:39Z",
+      "side": 1,
+      "message": "Can you please turn on the round trip unit tests for these sections?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 60
+      },
+      "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c2d0e24d_7bac4d00",
@@ -14,6 +37,46 @@
       "writtenOn": "2026-02-12T15:00:25Z",
       "side": 1,
       "message": "I\u0027ve not done a review of this but I did pull it and verify it fixes the warnings.",
+      "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d91b4ce1_a4d19521",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-20T21:59:39Z",
+      "side": 1,
+      "message": "generally we don\u0027t print when keys are missing.  otherwise there would be lots of prints.",
+      "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6e1b95b_677d5e42",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-02-20T21:59:39Z",
+      "side": 1,
+      "message": "Remove. The buffers are zero initialized, this line does nothing.",
+      "range": {
+        "startLine": 648,
+        "startChar": 7,
+        "endLine": 648,
+        "endChar": 29
+      },
       "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
