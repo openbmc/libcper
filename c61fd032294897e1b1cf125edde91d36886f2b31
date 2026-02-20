@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbd8f5b1_376bf18b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-20T23:16:40Z",
+      "side": 1,
+      "message": "I\u0027ve added the cper_create_examples call for arm-ras and added it to the optional_props list. Is there anything else that needs to be done to enable roundtrip tests?",
+      "parentUuid": "459d77fe_de5c4dbe",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 60
+      },
+      "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c2d0e24d_7bac4d00",
@@ -58,6 +82,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de0faca9_7479fc53",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-20T23:16:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d91b4ce1_a4d19521",
+      "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6e1b95b_677d5e42",
@@ -71,6 +113,30 @@
       "writtenOn": "2026-02-20T21:59:39Z",
       "side": 1,
       "message": "Remove. The buffers are zero initialized, this line does nothing.",
+      "range": {
+        "startLine": 648,
+        "startChar": 7,
+        "endLine": 648,
+        "endChar": 29
+      },
+      "revId": "c61fd032294897e1b1cf125edde91d36886f2b31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18d4b40e_0525512c",
+        "filename": "sections/cper-section-arm-ras.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-02-20T23:16:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6e1b95b_677d5e42",
       "range": {
         "startLine": 648,
         "startChar": 7,
