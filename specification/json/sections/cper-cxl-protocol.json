@@ -12,7 +12,7 @@
         },
         "cxlAgentAddress": {
             "type": "object",
-            "description": "CXL Agent depedent address to uniquely identify the component",
+            "description": "CXL Agent dependent address to uniquely identify the component",
             "oneOf": [
                 {
                     "$id": "cper-json-cxlagentaddress0",

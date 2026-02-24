@@ -42,7 +42,7 @@ UINT8 *generate_random_bytes(size_t size)
 	return bytes;
 }
 
-// Generates a null terminated string of printable chracters
+// Generates a null terminated string of printable characters
 void generate_random_printable_string(char *dest, size_t length)
 {
 	for (size_t i = 0; i < length; i++) {

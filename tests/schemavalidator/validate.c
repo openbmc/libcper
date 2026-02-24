@@ -15,7 +15,7 @@ static char *schemavalidator_errstr[SCHEMAVALIDATOR_ERR_MAX] = {
 	"GENERAL ERROR",
 	"JSON FILE NOT FOUND",
 	"SCHEMA FILE NOT FOUND",
-	"WRONG ARGUEMNTS GIVEN",
+	"WRONG ARGUMENTS GIVEN",
 	"SCHEMA ERROR",
 	"INVALID",
 	"REGEX MISMATCH",
@@ -186,7 +186,7 @@ int _schemavalidator_check_required(json_object *jobj, json_object *jschema,
 		const char *key = json_object_get_string(iobj);
 		if (key) {
 			//printf("%s\n", key);
-			// use json_object_object_get_ex becuase of json_type_null types
+			// use json_object_object_get_ex because of json_type_null types
 			json_object *required_object = NULL;
 			int err = json_object_object_get_ex(jobj, key,
 							    &required_object);

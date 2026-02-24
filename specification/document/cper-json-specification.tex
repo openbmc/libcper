@@ -192,7 +192,7 @@ This structure describes the enabled flags on a given CPER section descriptor.
 \jsontable{table:sectiondescriptorflagsstructure}
 primary & boolean & If true, indicates the section body should be associated with the error condition.\\
 \hline
-containmentWarning & boolean & If true, the error was not contained within the processor or memory heirarchy, and may have propagated elsewhere.\\
+containmentWarning & boolean & If true, the error was not contained within the processor or memory hierarchy, and may have propagated elsewhere.\\
 \hline
 reset & boolean & If true, indicates the component has been reset and must be re-initialised or re-enabled by the operating system.\\
 \hline
@@ -457,7 +457,7 @@ transactionType.name & string & The human readable name, if available, of the ty
 operation.value & uint64 & The raw value of the type of bus operation that caused the error.\\
 operation.name & string & The human readable name, if available, of the type of bus operation that caused the error.\\
 \hline
-level & uint64 & The bus heirarchy level at which the error occurred.\\
+level & uint64 & The bus hierarchy level at which the error occurred.\\
 \hline
 processorContextCorrupt & boolean & Whether the processor context might have been corrupted.\\
 \hline
@@ -1820,7 +1820,7 @@ faultInformation & uint64 & Fault information field as defined in the VT-d speci
 \hline
 sourceIdentifier & uint64 & Identifier of the source of the VT-d fault.\\
 \hline
-privelegeModeRequested & boolean & Whether privelege mode was requested.\\
+privelegeModeRequested & boolean & Whether privilege mode was requested.\\
 \hline
 executePermissionRequested & boolean & Whether execute permission was requested.\\
 \hline

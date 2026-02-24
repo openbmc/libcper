@@ -26,7 +26,7 @@ static void arm_ras_set_desc_string_valid(char **desc_string)
 		*desc_string = malloc(SECTION_DESC_STRING_SIZE);
 		if (*desc_string) {
 			snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
-				 "ARM RAS error occured");
+				 "ARM RAS error occurred");
 		}
 	}
 }
