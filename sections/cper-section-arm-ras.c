@@ -21,7 +21,7 @@ static void arm_ras_set_desc_string_valid(char **desc_string)
 		if (*desc_string) {
 			outstr_len = snprintf(*desc_string,
 					      SECTION_DESC_STRING_SIZE,
-					      "ARM RAS error occured");
+					      "ARM RAS error occurred");
 			if (outstr_len < 0) {
 				cper_print_log(
 					"Error: Could not write to ARM RAS description string\n");

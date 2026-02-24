@@ -57,7 +57,7 @@
     ],
     "sections": [
         {
-            "message": "ARM RAS error occured",
+            "message": "ARM RAS error occurred",
             "ArmRas": {
                 "revision": 1,
                 "componentType": {
