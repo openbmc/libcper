@@ -409,7 +409,7 @@ get_event_context_n(EFI_NVIDIA_EVENT_HEADER *event_header, size_t n,
 		}
 		EFI_NVIDIA_EVENT_CTX_HEADER *ctx =
 			(EFI_NVIDIA_EVENT_CTX_HEADER *)ptr;
-		if (ptr + ctx->CtxSize > end) {
+		if (ctx->CtxSize == 0 || ptr + ctx->CtxSize > end) {
 			return NULL;
 		}
 		ptr += ctx->CtxSize;
@@ -1863,6 +1863,15 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
 json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 					      char **desc_string)
 {
+	if (size < sizeof(EFI_NVIDIA_EVENT_HEADER) +
+			   sizeof(EFI_NVIDIA_EVENT_INFO_HEADER)) {
+		cper_print_log("NVIDIA Events section too small: %u < %zu",
+			       size,
+			       sizeof(EFI_NVIDIA_EVENT_HEADER) +
+				       sizeof(EFI_NVIDIA_EVENT_INFO_HEADER));
+		return NULL;
+	}
+
 	EFI_NVIDIA_EVENT_HEADER *event_header =
 		(EFI_NVIDIA_EVENT_HEADER *)section;
 	// Check event header version compatibility
@@ -1926,6 +1935,15 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 	// Parse event info structure
 	EFI_NVIDIA_EVENT_INFO_HEADER *event_info_header =
 		get_event_info_header(event_header);
+	if (sizeof(EFI_NVIDIA_EVENT_HEADER) + event_info_header->InfoSize >
+	    size) {
+		cper_print_log(
+			"NVIDIA Events info extends past section: %zu + %u > %u",
+			sizeof(EFI_NVIDIA_EVENT_HEADER),
+			event_info_header->InfoSize, size);
+		json_object_put(event_ir);
+		return NULL;
+	}
 	json_object *event_info_ir = json_object_new_object();
 	json_object_object_add(event_ir, "eventInfo", event_info_ir);
 	// Format version as "major.minor" string (high byte = major, low byte = minor)
@@ -1964,7 +1982,18 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 	json_object *event_contexts_ir = json_object_new_array();
 	json_object_object_add(event_ir, "eventContexts", event_contexts_ir);
 
-	for (size_t i = 0; i < (size_t)event_header->EventContextCount; i++) {
+	size_t max_contexts = (size - sizeof(EFI_NVIDIA_EVENT_HEADER) -
+			       sizeof(EFI_NVIDIA_EVENT_INFO_HEADER)) /
+			      sizeof(EFI_NVIDIA_EVENT_CTX_HEADER);
+	UINT8 ctx_count = event_header->EventContextCount;
+	if (ctx_count > max_contexts) {
+		cper_print_log(
+			"NVIDIA Events context count %u exceeds maximum %zu for section size %u",
+			ctx_count, max_contexts, size);
+		ctx_count = (UINT8)max_contexts;
+	}
+
+	for (size_t i = 0; i < (size_t)ctx_count; i++) {
 		EFI_NVIDIA_EVENT_CTX_HEADER *ctx =
 			get_event_context_n(event_header, i, size);
 		if (ctx == NULL) {
