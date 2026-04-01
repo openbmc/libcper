@@ -312,7 +312,8 @@ arm_ras_aux_parse_contexts(json_object *auxStructured, const UINT8 *aux_ptr,
 		UINT64 needed = sizeof(EFI_ARM_RAS_AUX_CONTEXT_HEADER) +
 				(UINT64)ctx->RegisterArrayEntryCount *
 					sizeof(EFI_ARM_RAS_AUX_MM_REG_ENTRY);
-		if (ctx->Length < needed || needed > remaining) {
+		if (ctx->Length < needed || ctx->Length > remaining ||
+		    needed > remaining) {
 			ok = false;
 			cper_print_log(
 				"ARM RAS Auxiliary Context length too small or exceeds remaining data");
