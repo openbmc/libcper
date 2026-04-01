@@ -303,18 +303,23 @@ arm_ras_aux_parse_contexts(json_object *auxStructured, const UINT8 *aux_ptr,
 				sizeof(EFI_ARM_RAS_AUX_CONTEXT_HEADER));
 			break;
 		}
-		UINT32 needed = sizeof(EFI_ARM_RAS_AUX_CONTEXT_HEADER) +
-				ctx->RegisterArrayEntryCount *
+		if (ctx->Length > remaining) {
+			ok = false;
+			cper_print_log(
+				"ARM RAS Auxiliary Context length exceeds remaining data");
+			break;
+		}
+		UINT64 needed = sizeof(EFI_ARM_RAS_AUX_CONTEXT_HEADER) +
+				(UINT64)ctx->RegisterArrayEntryCount *
 					sizeof(EFI_ARM_RAS_AUX_MM_REG_ENTRY);
 		if (ctx->Length < needed || needed > remaining) {
 			ok = false;
 			cper_print_log(
-				"ARM RAS Auxiliary Context length too small or exceeds remaining data: %u < %u or %u > %u",
-				ctx->Length, needed, needed, remaining);
+				"ARM RAS Auxiliary Context length too small or exceeds remaining data");
 			break;
 		}
-		UINT32 afterCtxOffset =
-			(UINT32)(cursor - aux_ptr) + ctx->Length;
+		UINT32 ctxOffset = (UINT32)(cursor - aux_ptr);
+		UINT64 afterCtxOffset = (UINT64)ctxOffset + ctx->Length;
 		if (afterCtxOffset > auxHdr->KeyValuePairArrayOffset) {
 			ok = false;
 			cper_print_log(
