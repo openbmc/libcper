@@ -366,6 +366,8 @@ arm_ras_aux_parse_contexts(json_object *auxStructured, const UINT8 *aux_ptr,
 
 	if (ok) {
 		json_object_object_add(auxStructured, "contexts", contexts);
+	} else {
+		json_object_put(contexts);
 	}
 
 	return ok;
