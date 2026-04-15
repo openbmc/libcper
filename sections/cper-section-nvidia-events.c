@@ -399,7 +399,8 @@ get_event_context_n(EFI_NVIDIA_EVENT_HEADER *event_header, size_t n,
 
 	EFI_NVIDIA_EVENT_INFO_HEADER *info_header =
 		(EFI_NVIDIA_EVENT_INFO_HEADER *)ptr;
-	if (ptr + info_header->InfoSize > end) {
+	if (info_header->InfoSize < sizeof(EFI_NVIDIA_EVENT_INFO_HEADER) ||
+	    ptr + info_header->InfoSize > end) {
 		return NULL;
 	}
 	ptr += info_header->InfoSize;
@@ -409,7 +410,8 @@ get_event_context_n(EFI_NVIDIA_EVENT_HEADER *event_header, size_t n,
 		}
 		EFI_NVIDIA_EVENT_CTX_HEADER *ctx =
 			(EFI_NVIDIA_EVENT_CTX_HEADER *)ptr;
-		if (ctx->CtxSize == 0 || ptr + ctx->CtxSize > end) {
+		if (ctx->CtxSize < sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) ||
+		    ptr + ctx->CtxSize > end) {
 			return NULL;
 		}
 		ptr += ctx->CtxSize;
@@ -1420,11 +1422,11 @@ static void parse_common_ctx_type1_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 
 	EFI_NVIDIA_EVENT_CTX_DATA_TYPE_1 *data_type1 =
 		(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_1 *)ctx->Data;
-	UINT8 num_elements =
+	UINT32 num_elements =
 		ctx->DataSize / sizeof(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_1);
 
 	json_object *kv64arr = json_object_new_array();
-	for (int i = 0; i < num_elements; i++, data_type1++) {
+	for (UINT32 i = 0; i < num_elements; i++, data_type1++) {
 		json_object *kv = NULL;
 		kv = json_object_new_object();
 		add_int_hex_64(kv, "key64", data_type1->Key);
@@ -1528,11 +1530,11 @@ static void parse_common_ctx_type2_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 
 	EFI_NVIDIA_EVENT_CTX_DATA_TYPE_2 *data_type2 =
 		(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_2 *)ctx->Data;
-	UINT8 num_elements =
+	UINT32 num_elements =
 		ctx->DataSize / sizeof(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_2);
 
 	json_object *kv32arr = json_object_new_array();
-	for (int i = 0; i < num_elements; i++, data_type2++) {
+	for (UINT32 i = 0; i < num_elements; i++, data_type2++) {
 		json_object *kv = NULL;
 		kv = json_object_new_object();
 		add_int_hex_32(kv, "key32", data_type2->Key);
@@ -1636,11 +1638,11 @@ static void parse_common_ctx_type3_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 
 	EFI_NVIDIA_EVENT_CTX_DATA_TYPE_3 *data_type3 =
 		(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_3 *)ctx->Data;
-	UINT8 num_elements =
+	UINT32 num_elements =
 		ctx->DataSize / sizeof(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_3);
 
 	json_object *val64arr = json_object_new_array();
-	for (int i = 0; i < num_elements; i++, data_type3++) {
+	for (UINT32 i = 0; i < num_elements; i++, data_type3++) {
 		json_object *v = NULL;
 		v = json_object_new_object();
 		add_int_hex_64(v, "val64", data_type3->Value);
@@ -1741,11 +1743,11 @@ static void parse_common_ctx_type4_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 
 	EFI_NVIDIA_EVENT_CTX_DATA_TYPE_4 *data_type4 =
 		(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_4 *)ctx->Data;
-	UINT8 num_elements =
+	UINT32 num_elements =
 		ctx->DataSize / sizeof(EFI_NVIDIA_EVENT_CTX_DATA_TYPE_4);
 
 	json_object *val32arr = json_object_new_array();
-	for (int i = 0; i < num_elements; i++, data_type4++) {
+	for (UINT32 i = 0; i < num_elements; i++, data_type4++) {
 		json_object *v = NULL;
 		v = json_object_new_object();
 		add_int_hex_32(v, "val32", data_type4->Value);
@@ -1935,10 +1937,12 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 	// Parse event info structure
 	EFI_NVIDIA_EVENT_INFO_HEADER *event_info_header =
 		get_event_info_header(event_header);
-	if (sizeof(EFI_NVIDIA_EVENT_HEADER) + event_info_header->InfoSize >
-	    size) {
+	if (event_info_header->InfoSize <
+		    sizeof(EFI_NVIDIA_EVENT_INFO_HEADER) ||
+	    sizeof(EFI_NVIDIA_EVENT_HEADER) + event_info_header->InfoSize >
+		    size) {
 		cper_print_log(
-			"NVIDIA Events info extends past section: %zu + %u > %u",
+			"NVIDIA Events info invalid or extends past section: %zu + %u > %u",
 			sizeof(EFI_NVIDIA_EVENT_HEADER),
 			event_info_header->InfoSize, size);
 		json_object_put(event_ir);

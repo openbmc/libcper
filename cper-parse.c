@@ -188,6 +188,11 @@ json_object *cper_to_ir(FILE *cper_file)
 	}
 	fseek(cper_file, -sizeof(EFI_COMMON_ERROR_RECORD_HEADER), SEEK_CUR);
 	unsigned char *cper_buf = malloc(header.RecordLength);
+	if (cper_buf == NULL) {
+		cper_print_log("Failed to allocate %u bytes for CPER record.\n",
+			       header.RecordLength);
+		return NULL;
+	}
 	int bytes_read = fread(cper_buf, 1, header.RecordLength, cper_file);
 	if (bytes_read < 0) {
 		cper_print_log("File read failed with code %u\n", bytes_read);
@@ -548,6 +553,12 @@ json_object *cper_single_section_to_ir(FILE *cper_section_file)
 	fseek(cper_section_file, base_pos + section_descriptor.SectionOffset,
 	      SEEK_SET);
 	void *section = malloc(section_descriptor.SectionLength);
+	if (section == NULL) {
+		cper_print_log("Failed to allocate %u bytes for section.\n",
+			       section_descriptor.SectionLength);
+		json_object_put(ir);
+		return NULL;
+	}
 	if (fread(section, section_descriptor.SectionLength, 1,
 		  cper_section_file) != 1) {
 		cper_print_log(
