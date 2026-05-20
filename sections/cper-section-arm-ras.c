@@ -112,6 +112,8 @@ static const char *componentType[] = {
 	"ProxyErrorNode",
 };
 
+static const char *ipTypeFormat[] = { "PE", "SMMU_IIDR", "GIC_IIDR", "PIDR" };
+
 static void arm_ras_add_fixed_fields(json_object *root,
 				     const EFI_ARM_RAS_NODE *node)
 {
@@ -124,6 +126,9 @@ static void arm_ras_add_fixed_fields(json_object *root,
 	add_dict(root, "ipInstanceFormat", node->IPInstanceFormat,
 		 ipInstanceFormat,
 		 sizeof(ipInstanceFormat) / sizeof(ipInstanceFormat[0]));
+
+	add_dict(root, "ipTypeFormat", node->IPTypeFormat, ipTypeFormat,
+		 sizeof(ipTypeFormat) / sizeof(ipTypeFormat[0]));
 
 	json_object *ipInstance = json_object_new_object();
 	switch (node->IPInstanceFormat) {
@@ -145,15 +150,14 @@ static void arm_ras_add_fixed_fields(json_object *root,
 			node->IPInstance.localAddressIdentifier.BaseAddress);
 		break;
 	case 3:
-		add_string(ipInstance, "socSpecificIpIdentifier",
-			   "<OpaqueData>");
+		add_bytes_hex(ipInstance, "socSpecificIpIdentifier",
+			      node->IPInstance.socSpecificIpIdentifier
+				      .SocSpecificIPIdentifier,
+			      sizeof(node->IPInstance.socSpecificIpIdentifier
+					     .SocSpecificIPIdentifier));
 		break;
 	}
 	json_object_object_add(root, "ipInstance", ipInstance);
-
-	const char *ipTypeFormat[] = { "PE", "SMMU_IIDR", "GIC_IIDR", "PIDR" };
-	add_dict(root, "ipTypeFormat", node->IPTypeFormat, ipTypeFormat,
-		 sizeof(ipTypeFormat) / sizeof(ipTypeFormat[0]));
 
 	json_object *ipType = json_object_new_object();
 	switch (node->IPTypeFormat) {
@@ -166,10 +170,11 @@ static void arm_ras_add_fixed_fields(json_object *root,
 			       node->IPType.smmuIidr.AIDR_EL1);
 		break;
 	case 1:
+	case 2:
 		add_int_hex_32(ipType, "iidr", node->IPType.gicIidr.IIDR);
 		add_int_hex_32(ipType, "aidr", node->IPType.gicIidr.AIDR);
 		break;
-	case 2:
+	case 3:
 		add_int_hex_8(ipType, "pidr3", node->IPType.pidr.PIDR3);
 		add_int_hex_8(ipType, "pidr2", node->IPType.pidr.PIDR2);
 		add_int_hex_8(ipType, "pidr1", node->IPType.pidr.PIDR1);
@@ -519,37 +524,78 @@ static void arm_ras_fill_node_identifiers(EFI_ARM_RAS_NODE *node,
 {
 	json_object *obj = NULL;
 	if (json_object_object_get_ex(section, "ipInstance", &obj)) {
-		get_value_hex_64(obj, "mpidrEl1",
-				 &node->IPInstance.pe.MPIDR_EL1);
-		get_value_hex_64(obj, "systemPhysicalAddress",
-				 &node->IPInstance.systemPhysicalAddress
-					  .SystemPhysicalAddress);
-		get_value_hex_64(obj, "localAddressIdentifier",
-				 &node->IPInstance.localAddressIdentifier
-					  .SocSpecificLocalAddressSpace);
-		get_value_hex_64(
-			obj, "baseAddress",
-			&node->IPInstance.localAddressIdentifier.BaseAddress);
-
-		//get_value_hex_64(obj, "socSpecificIpIdentifier", &node->IPInstance.socSpecificIpIdentifier.SocSpecificIPIdentifier);
+		switch (node->IPInstanceFormat) {
+		case 0:
+			get_value_hex_64(obj, "mpidrEl1",
+					 &node->IPInstance.pe.MPIDR_EL1);
+			break;
+		case 1:
+			get_value_hex_64(obj, "systemPhysicalAddress",
+					 &node->IPInstance.systemPhysicalAddress
+						  .SystemPhysicalAddress);
+			break;
+		case 2:
+			get_value_hex_64(
+				obj, "localAddressIdentifier",
+				&node->IPInstance.localAddressIdentifier
+					 .SocSpecificLocalAddressSpace);
+			get_value_hex_64(
+				obj, "baseAddress",
+				&node->IPInstance.localAddressIdentifier
+					 .BaseAddress);
+			break;
+		case 3: {
+			size_t len = 0;
+			UINT8 *socSpecificIpIdentifier = get_bytes_hex(
+				obj, "socSpecificIpIdentifier", &len);
+			if (!socSpecificIpIdentifier) {
+				break;
+			}
+			if (len !=
+			    sizeof(node->IPInstance.socSpecificIpIdentifier
+					   .SocSpecificIPIdentifier)) {
+				cper_print_log(
+					"ARM RAS socSpecificIpIdentifier invalid len=%zu",
+					len);
+				free(socSpecificIpIdentifier);
+				break;
+			}
+			memcpy(node->IPInstance.socSpecificIpIdentifier
+				       .SocSpecificIPIdentifier,
+			       socSpecificIpIdentifier, len);
+			free(socSpecificIpIdentifier);
+			break;
+		}
+		}
 	}
 	if (json_object_object_get_ex(section, "ipType", &obj)) {
-		get_value_hex_64(obj, "midrEl1",
-				 &node->IPType.smmuIidr.MIDR_EL1);
-		get_value_hex_64(obj, "revidrEl1",
-				 &node->IPType.smmuIidr.REVIDR_EL1);
-		get_value_hex_64(obj, "aidrEl1",
-				 &node->IPType.smmuIidr.AIDR_EL1);
-		get_value_hex_32(obj, "iidr", &node->IPType.gicIidr.IIDR);
-		get_value_hex_32(obj, "aidr", &node->IPType.gicIidr.AIDR);
-		get_value_hex_8(obj, "pidr3", &node->IPType.pidr.PIDR3);
-		get_value_hex_8(obj, "pidr2", &node->IPType.pidr.PIDR2);
-		get_value_hex_8(obj, "pidr1", &node->IPType.pidr.PIDR1);
-		get_value_hex_8(obj, "pidr0", &node->IPType.pidr.PIDR0);
-		get_value_hex_8(obj, "pidr7", &node->IPType.pidr.PIDR7);
-		get_value_hex_8(obj, "pidr6", &node->IPType.pidr.PIDR6);
-		get_value_hex_8(obj, "pidr5", &node->IPType.pidr.PIDR5);
-		get_value_hex_8(obj, "pidr4", &node->IPType.pidr.PIDR4);
+		switch (node->IPTypeFormat) {
+		case 0:
+			get_value_hex_64(obj, "midrEl1",
+					 &node->IPType.smmuIidr.MIDR_EL1);
+			get_value_hex_64(obj, "revidrEl1",
+					 &node->IPType.smmuIidr.REVIDR_EL1);
+			get_value_hex_64(obj, "aidrEl1",
+					 &node->IPType.smmuIidr.AIDR_EL1);
+			break;
+		case 1:
+		case 2:
+			get_value_hex_32(obj, "iidr",
+					 &node->IPType.gicIidr.IIDR);
+			get_value_hex_32(obj, "aidr",
+					 &node->IPType.gicIidr.AIDR);
+			break;
+		case 3:
+			get_value_hex_8(obj, "pidr3", &node->IPType.pidr.PIDR3);
+			get_value_hex_8(obj, "pidr2", &node->IPType.pidr.PIDR2);
+			get_value_hex_8(obj, "pidr1", &node->IPType.pidr.PIDR1);
+			get_value_hex_8(obj, "pidr0", &node->IPType.pidr.PIDR0);
+			get_value_hex_8(obj, "pidr7", &node->IPType.pidr.PIDR7);
+			get_value_hex_8(obj, "pidr6", &node->IPType.pidr.PIDR6);
+			get_value_hex_8(obj, "pidr5", &node->IPType.pidr.PIDR5);
+			get_value_hex_8(obj, "pidr4", &node->IPType.pidr.PIDR4);
+			break;
+		}
 	}
 }
 
