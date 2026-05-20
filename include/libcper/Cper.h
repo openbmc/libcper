@@ -1747,8 +1747,9 @@ typedef struct {
 		} smmuIidr;
 		struct {
 			UINT32 IIDR;
+			UINT32 Reserved0;
 			UINT32 AIDR;
-			UINT64 Reserved1;
+			UINT32 Reserved1;
 			UINT64 Reserved2;
 		} gicIidr;
 		struct {
