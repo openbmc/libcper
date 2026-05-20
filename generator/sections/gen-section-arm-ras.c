@@ -25,6 +25,9 @@ enum {
 	ARM_RAS_IP_TYPE_FORMAT_INVALID = 255
 };
 
+static const UINT8 ipTypeFormatChoices[] = { PE, SMMU_IIDR, GIC_IIDR, PIDR,
+					     ARM_RAS_IP_TYPE_FORMAT_INVALID };
+
 /* Auxiliary context generation metadata */
 typedef struct {
 	UINT16 regCount;
@@ -59,14 +62,14 @@ static UINT32 gen_arm_ras_contexts_region_size(const GEN_CTX_META *ctxMeta,
 }
 
 static bool gen_arm_ras_fill_node_fields(EFI_ARM_RAS_NODE *node,
-					 UINT8 legacyType,
-					 const UINT8 ipTypeFormatChoices[5])
+					 UINT8 legacyType)
 {
 	node->Revision = 1;
-	/* Randomly select IPTypeFormat sometimes 255 (invalid/ignored => zero-filled IPType) */
-	// intentionally avoid soc specific identifier because it's not implemented
-	node->IPInstanceFormat = (UINT8)(cper_rand() % 3);
-	node->IPTypeFormat = ipTypeFormatChoices[cper_rand() % 5];
+	node->IPInstanceFormat = (UINT8)(cper_rand() % 4);
+	node->IPTypeFormat =
+		ipTypeFormatChoices[cper_rand() %
+				    (sizeof(ipTypeFormatChoices) /
+				     sizeof(ipTypeFormatChoices[0]))];
 	node->ComponentType = legacyType;
 	UINT8 *tmp = NULL;
 
@@ -103,12 +106,14 @@ static bool gen_arm_ras_fill_node_fields(EFI_ARM_RAS_NODE *node,
 		node->IPType.smmuIidr.AIDR_EL1 = cper_rand();
 		break;
 	case 1:
+	case 2:
 		node->IPType.gicIidr.IIDR = cper_rand();
 		node->IPType.gicIidr.AIDR = cper_rand();
+		node->IPType.gicIidr.Reserved0 = 0;
 		node->IPType.gicIidr.Reserved1 = 0;
 		node->IPType.gicIidr.Reserved2 = 0;
 		break;
-	case 2:
+	case 3:
 		node->IPType.pidr.PIDR3 = cper_rand();
 		node->IPType.pidr.PIDR2 = cper_rand();
 		node->IPType.pidr.PIDR1 = cper_rand();
@@ -238,9 +243,6 @@ size_t generate_section_arm_ras(void **location,
 	/* Always generate structured auxiliary data per Tables 22-26 */
 	UINT16 ctxCount = (UINT16)((cper_rand() % 3) + 1); /* 1..3 contexts */
 	UINT16 kvCount = (UINT16)(cper_rand() % 4); /* 0..3 key-value pairs */
-	/* Use enum values: 0..3 are valid formats, 255 is invalid */
-	const UINT8 ipTypeFormatChoices[5] = { PE, SMMU_IIDR, GIC_IIDR, PIDR,
-					       ARM_RAS_IP_TYPE_FORMAT_INVALID };
 	/* Pre-determine each context's register count & metadata to keep sizes consistent */
 	GEN_CTX_META *ctxMeta =
 		(GEN_CTX_META *)calloc(ctxCount, sizeof(GEN_CTX_META));
@@ -266,8 +268,7 @@ size_t generate_section_arm_ras(void **location,
 		return 0;
 	}
 	EFI_ARM_RAS_NODE *node = (EFI_ARM_RAS_NODE *)buf;
-	if (!gen_arm_ras_fill_node_fields(node, legacyType,
-					  ipTypeFormatChoices)) {
+	if (!gen_arm_ras_fill_node_fields(node, legacyType)) {
 		free(ctxMeta);
 		free(buf);
 		return 0;
