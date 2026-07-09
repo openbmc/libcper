@@ -5,6 +5,7 @@
   (C) Copyright 2016 Hewlett Packard Enterprise Development LP<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
+
   @par Revision Reference:
   GUIDs defined in UEFI 2.7 Specification.
 
