@@ -34,6 +34,24 @@
       "parentUuid": "897d5889_68ccfcba",
       "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b46ade93_f807c45a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-07-15T19:48:55Z",
+      "side": 1,
+      "message": "main seems to build fine, but when I apply this patch, something starts failing unit tests.  If I revert the changes in generator/sections/gen-section-arm-ras.c, the tests pass again, which makes very little sense.",
+      "parentUuid": "85793cee_9cbf7acd",
+      "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
