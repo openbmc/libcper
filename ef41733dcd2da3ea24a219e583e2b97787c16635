@@ -52,6 +52,41 @@
       "parentUuid": "85793cee_9cbf7acd",
       "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "332ec4a5_a35413e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-07-16T04:13:16Z",
+      "side": 1,
+      "message": "tldr; NVIDIA event generation later gets different random inputs.\n\nThose new inputs expose an existing NVIDIA event round-trip bug: the generator writes unpadded context sizes, but the writer pads contexts to 16-byte alignment. Main passes only because its old random sequence does not hit that failing NVIDIA case.",
+      "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6062232f_52aa6793",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-07-16T04:13:16Z",
+      "side": 1,
+      "message": "With help from my AI friend:\n\n\nThe ARM RAS generator change is not directly breaking NVIDIA event parsing. It changes the shared deterministic RNG stream.\n\n  cper_rand() is backed by one global lfsr in generator/gen-utils.c:11. The test suite does not reseed between section tests. ArmRasTests_* run before NVIDIAEventSectionTests_BinaryEqual() in\n  tests/ir-tests.c:901. So changing ARM RAS generation changes the later generated NVIDIA event. Reverting gen-section-arm-ras.c just restores the old RNG path and hides the NVIDIA bug again.\n\n  The actual NVIDIA failure is here:\n\n  - Generated NVIDIA event size: 332\n  - Round-tripped NVIDIA event size: 344\n  - Failure: tests/ir-tests.c:443\n\n Root cause: NVIDIA event generator writes context sizes without 16-byte padding:\n\n  generator/sections/gen-section-nvidia-events.c:147\n\n  context_total_sizes[i] \u003d sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) + context_data_sizes[i];\n\n  and:\n\n  generator/sections/gen-section-nvidia-events.c:237\n\n  size_t ctx_size \u003d sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) + context_data_sizes[i];\n\n  But the JSON-to-CPER writer rounds CtxSize up to 16-byte alignment:\n\n  sections/cper-section-nvidia-events.c:2257\n\n  ctx.CtxSize \u003d (raw + 15) \u0026 ~(UINT32)15;\n\n  The failing generated NVIDIA event has two contexts:\n\n  - DataSize \u003d 12: raw context size 16 + 12 \u003d 28, writer rounds to 32, adds 4\n  - DataSize \u003d 24: raw context size 16 + 24 \u003d 40, writer rounds to 48, adds 8\n\n  Total expansion: 12 bytes. That exactly explains 332 -\u003e 344.",
+      "parentUuid": "b46ade93_f807c45a",
+      "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
