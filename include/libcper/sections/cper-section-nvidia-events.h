@@ -34,9 +34,22 @@ typedef struct __attribute__((packed)) {
 #define EFI_NVIDIA_CPU_EVENT_INFO_MAJ 0
 #define EFI_NVIDIA_CPU_EVENT_INFO_MIN 0
 
+// Packed layout of the CPU Architecture field. PreSiPlatform is five bits
+// wide, but the IR records only whether it is zero (Silicon) or non-zero
+// (PreSilicon).
+typedef struct __attribute__((packed)) {
+	UINT32 HidFam : 4;	   // [3:0]
+	UINT32 MajorRev : 4;	   // [7:4]
+	UINT32 ChipId : 8;	   // [15:8]
+	UINT32 MinorRev : 4;	   // [19:16]
+	UINT32 PreSiPlatform : 5;  // [24:20]
+	UINT32 Reserved : 6;	   // [30:25]
+	UINT32 ErrorInjection : 1; // [31]
+} EFI_NVIDIA_CPU_ARCHITECTURE;
+
 typedef struct __attribute__((packed)) {
 	UINT8 SocketNum;
-	UINT32 Architecture;
+	EFI_NVIDIA_CPU_ARCHITECTURE Architecture;
 	UINT32 Ecid[4];
 	UINT64 InstanceBase;
 } EFI_NVIDIA_CPU_EVENT_INFO;

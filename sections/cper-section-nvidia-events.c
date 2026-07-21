@@ -509,39 +509,40 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 	add_uint(event_info_ir, "SocketNum", cpu_event_info->SocketNum);
 
 	// Decode Architecture field into components
-	UINT32 arch = cpu_event_info->Architecture;
+	const EFI_NVIDIA_CPU_ARCHITECTURE *arch = &cpu_event_info->Architecture;
 	json_object *arch_ir = json_object_new_object();
 
-	// hidFam: bits [3:0], 2-digit hex
+	// hidFam: 2-digit hex
 	char hid_fam_str[8];
-	snprintf(hid_fam_str, sizeof(hid_fam_str), "0x%02X", (arch >> 0) & 0xF);
+	snprintf(hid_fam_str, sizeof(hid_fam_str), "0x%02X",
+		 (UINT32)arch->HidFam);
 	json_object_object_add(arch_ir, "hidFam",
 			       json_object_new_string(hid_fam_str));
 
-	// revision: "majorRev.minorRev" (bits [7:4] . bits [19:16])
-	UINT8 major_rev = (arch >> 4) & 0xF;
-	UINT8 minor_rev = (arch >> 16) & 0xF;
+	// revision: "majorRev.minorRev"
+	UINT8 major_rev = arch->MajorRev;
+	UINT8 minor_rev = arch->MinorRev;
 	char revision_str[8];
 	snprintf(revision_str, sizeof(revision_str), "%u.%u", major_rev,
 		 minor_rev);
 	json_object_object_add(arch_ir, "revision",
 			       json_object_new_string(revision_str));
 
-	// chipId: bits [15:8], 2-digit hex
+	// chipId: 2-digit hex
 	char chip_id_str[8];
 	snprintf(chip_id_str, sizeof(chip_id_str), "0x%02X",
-		 (arch >> 8) & 0xFF);
+		 (UINT32)arch->ChipId);
 	json_object_object_add(arch_ir, "chipId",
 			       json_object_new_string(chip_id_str));
 
 	// preSiPlatform: 0 = Silicon, non-zero = PreSilicon
-	UINT8 pre_si = (arch >> 20) & 0x1F;
-	json_object_object_add(
-		arch_ir, "preSiPlatform",
-		json_object_new_string(pre_si == 0 ? "Silicon" : "PreSilicon"));
+	json_object_object_add(arch_ir, "preSiPlatform",
+			       json_object_new_string(arch->PreSiPlatform == 0 ?
+							      "Silicon" :
+							      "PreSilicon"));
 
 	json_object_object_add(arch_ir, "errorInjection",
-			       json_object_new_boolean((arch >> 31) & 0x1));
+			       json_object_new_boolean(arch->ErrorInjection));
 	json_object_object_add(event_info_ir, "Architecture", arch_ir);
 
 	add_int_hex_32(event_info_ir, "Ecid1", cpu_event_info->Ecid[0]);
@@ -612,10 +613,12 @@ static size_t parse_cpu_info_to_bin(json_object *event_info_ir, FILE *out)
 				  1 :
 				  0;
 
-	cpu_event_info.Architecture =
-		(hid_fam & 0xF) | ((major_rev & 0xF) << 4) |
-		((chip_id & 0xFF) << 8) | ((minor_rev & 0xF) << 16) |
-		((pre_si & 0x1F) << 20) | ((einj_tag & 0x1) << 31);
+	cpu_event_info.Architecture.HidFam = hid_fam;
+	cpu_event_info.Architecture.MajorRev = major_rev;
+	cpu_event_info.Architecture.ChipId = chip_id;
+	cpu_event_info.Architecture.MinorRev = minor_rev;
+	cpu_event_info.Architecture.PreSiPlatform = pre_si;
+	cpu_event_info.Architecture.ErrorInjection = einj_tag;
 
 	get_value_hex_32(event_info_ir, "Ecid1", &cpu_event_info.Ecid[0]);
 	get_value_hex_32(event_info_ir, "Ecid2", &cpu_event_info.Ecid[1]);
