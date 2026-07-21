@@ -18,6 +18,24 @@
 #define NVIDIA_CTX_TYPE_3      0x0003
 #define NVIDIA_CTX_TYPE_4      0x0004
 
+// Bit masks for the CPU Architecture field sub-fields the IR decodes
+// (see cper_section_nvidia_events_to_ir). preSiPlatform occupies bits
+// [24:20] on the wire but the IR keeps only a zero/non-zero flag, so
+// the encoder rebuilds at most bit [20]; the remaining bits are not
+// preserved across a round trip.
+#define NVIDIA_CPU_ARCH_HID_FAM_MASK   0x0000000FU // bits [3:0]
+#define NVIDIA_CPU_ARCH_MAJOR_REV_MASK 0x000000F0U // bits [7:4]
+#define NVIDIA_CPU_ARCH_CHIP_ID_MASK   0x0000FF00U // bits [15:8]
+#define NVIDIA_CPU_ARCH_MINOR_REV_MASK 0x000F0000U // bits [19:16]
+#define NVIDIA_CPU_ARCH_PRE_SI_MASK    0x00100000U // bit [20] (flag only)
+#define NVIDIA_CPU_ARCH_ERR_INJ_MASK   0x80000000U // bit [31]
+
+// Bits that survive a CPER -> IR -> CPER round trip unchanged.
+#define NVIDIA_CPU_ARCH_ROUNDTRIP_MASK                                         \
+	(NVIDIA_CPU_ARCH_HID_FAM_MASK | NVIDIA_CPU_ARCH_MAJOR_REV_MASK |       \
+	 NVIDIA_CPU_ARCH_CHIP_ID_MASK | NVIDIA_CPU_ARCH_MINOR_REV_MASK |       \
+	 NVIDIA_CPU_ARCH_PRE_SI_MASK | NVIDIA_CPU_ARCH_ERR_INJ_MASK)
+
 static const char signatures[][16 + 1] = {
 	"SOCHUB\0\0\0\0\0\0\0\0\0\0",	 "PCIe\0\0\0\0\0\0\0\0\0\0\0\0",
 	"L0 RESET\0\0\0\0\0\0\0\0",	 "L1 RESET\0\0\0\0\0\0\0\0",
@@ -125,7 +143,7 @@ size_t generate_section_nvidia_events(void **location,
 	UINT16 ctx_types[5];
 	UINT32 ctx_num_elements[5];
 	size_t context_data_sizes[5] = { 0 };
-	size_t context_total_sizes[5] = { 0 }; // header + data (no padding)
+	size_t context_total_sizes[5] = { 0 }; // header + data, 16-byte aligned
 	size_t total_context_size = 0;
 
 	for (UINT32 i = 0; i < contextCount; i++) {
@@ -144,9 +162,11 @@ size_t generate_section_nvidia_events(void **location,
 		context_data_sizes[i] = get_context_data_size(
 			ctx_types[i], ctx_num_elements[i]);
 
-		// Context size = header + data (no padding between contexts)
-		context_total_sizes[i] = sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) +
-					 context_data_sizes[i];
+		// Context size = header + data, rounded up to 16-byte
+		// alignment so the reader can advance with ptr += CtxSize
+		size_t raw_size = sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) +
+				  context_data_sizes[i];
+		context_total_sizes[i] = (raw_size + 15) & ~(size_t)15;
 		total_context_size += context_total_sizes[i];
 	}
 
@@ -209,7 +229,12 @@ size_t generate_section_nvidia_events(void **location,
 		EFI_NVIDIA_CPU_EVENT_INFO *cpu_info =
 			(EFI_NVIDIA_CPU_EVENT_INFO *)current;
 		cpu_info->SocketNum = cper_rand() % 8;
-		cpu_info->Architecture = cper_rand();
+		// Architecture is a packed bitfield. The IR decodes only some
+		// of its sub-fields and drops the rest, so a fully random value
+		// would not survive the binary round-trip test. Keep only the
+		// bits the IR preserves.
+		cpu_info->Architecture = cper_rand() &
+					 NVIDIA_CPU_ARCH_ROUNDTRIP_MASK;
 		cpu_info->Ecid[0] = cper_rand();
 		cpu_info->Ecid[1] = cper_rand();
 		cpu_info->Ecid[2] = cper_rand();
@@ -234,11 +259,8 @@ size_t generate_section_nvidia_events(void **location,
 		EFI_NVIDIA_EVENT_CTX_HEADER *ctx_header =
 			(EFI_NVIDIA_EVENT_CTX_HEADER *)current;
 
-		// CtxSize = header + data (NOT including padding)
-		size_t ctx_size = sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) +
-				  context_data_sizes[i];
-
-		ctx_header->CtxSize = (UINT32)ctx_size;
+		// CtxSize includes the 16-byte alignment padding
+		ctx_header->CtxSize = (UINT32)context_total_sizes[i];
 		ctx_header->CtxVersion = 0;
 		ctx_header->Reserved1 = 0;
 		ctx_header->DataFormatType = ctx_types[i];
@@ -250,7 +272,9 @@ size_t generate_section_nvidia_events(void **location,
 		// Fill context data based on type
 		fill_context_data(current, ctx_types[i], ctx_num_elements[i]);
 
-		current += context_data_sizes[i];
+		// Skip past data plus zeroed (calloc) alignment padding
+		current += context_total_sizes[i] -
+			   sizeof(EFI_NVIDIA_EVENT_CTX_HEADER);
 	}
 
 	// Set return values
