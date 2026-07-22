@@ -22,6 +22,46 @@
       },
       "revId": "516430dbe11767528b8ca056366888c4b3e4fce6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6be3a927_37e2b88c",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-07-22T19:04:34Z",
+      "side": 1,
+      "message": "I have no idea what this means.  Maybe reword to be more clear?",
+      "revId": "516430dbe11767528b8ca056366888c4b3e4fce6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18d891a4_4c5d520c",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-07-22T19:04:34Z",
+      "side": 1,
+      "message": "Magic number?",
+      "range": {
+        "startLine": 218,
+        "startChar": 41,
+        "endLine": 218,
+        "endChar": 51
+      },
+      "revId": "516430dbe11767528b8ca056366888c4b3e4fce6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
