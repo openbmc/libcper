@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1abe6b8c_3d0e0359",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-07-22T19:03:08Z",
+      "side": 1,
+      "message": "Update commit message to avoid \"Conventional Commits\" style.",
+      "parentUuid": "aa4bf6f6_764b9cd8",
+      "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "897d5889_68ccfcba",
@@ -120,6 +138,24 @@
       "side": 1,
       "message": "Yep, that would make sense.  we\u0027ll need to get that fixed.",
       "parentUuid": "6062232f_52aa6793",
+      "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "779063f3_2b05427b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2026-07-22T19:03:08Z",
+      "side": 1,
+      "message": "How should we go ahead? Do you want me to get that patch in first?",
+      "parentUuid": "5235f1e1_c782d9a9",
       "revId": "ef41733dcd2da3ea24a219e583e2b97787c16635",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
