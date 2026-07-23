@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03a61dbc_62aa316b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-07-23T15:24:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d56068f8_85c9e01d",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 19
+      },
+      "revId": "516430dbe11767528b8ca056366888c4b3e4fce6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6be3a927_37e2b88c",
@@ -41,6 +65,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fbfeb05_86d58200",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-07-23T15:24:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6be3a927_37e2b88c",
+      "revId": "516430dbe11767528b8ca056366888c4b3e4fce6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18d891a4_4c5d520c",
@@ -54,6 +96,30 @@
       "writtenOn": "2026-07-22T19:04:34Z",
       "side": 1,
       "message": "Magic number?",
+      "range": {
+        "startLine": 218,
+        "startChar": 41,
+        "endLine": 218,
+        "endChar": 51
+      },
+      "revId": "516430dbe11767528b8ca056366888c4b3e4fce6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a73e403_9216e3b2",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-07-23T15:24:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18d891a4_4c5d520c",
       "range": {
         "startLine": 218,
         "startChar": 41,
