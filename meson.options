@@ -19,6 +19,11 @@ option(
 )
 option('install', type: 'feature', value: 'enabled', description: 'Install')
 option(
+    'bindings-cxx',
+    type: 'feature',
+    description: 'Build C++ (nlohmann::json) bindings',
+)
+option(
     'pkgconfig',
     type: 'feature',
     value: 'enabled',
