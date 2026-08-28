@@ -4,6 +4,10 @@ test_sources = files('base64_test.c', 'hex_test.c', 'test-utils.c')
 
 test_include_dirs = ['.', '../include']
 
+if opt_bindings_cxx.allowed()
+    subdir('cxx')
+endif
+
 cper_tests = executable(
     'cper-tests',
     'ir-tests.c',

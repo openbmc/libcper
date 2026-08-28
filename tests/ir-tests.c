@@ -23,6 +23,7 @@
 #include <libcper/sections/cper-section-nvidia-events.h>
 
 #include "base64_test.h"
+#include "cper-example-sections.h"
 #include "hex_test.h"
 
 /*
@@ -34,6 +35,11 @@ static const int GEN_EXAMPLES = 0;
 
 static const char *cper_ext = "cperhex";
 static const char *json_ext = "json";
+
+//Fixed CPER examples (binary + golden JSON) shared with the C++ test suite.
+static const char *const example_sections[] = { CPER_EXAMPLE_SECTIONS };
+static const size_t example_sections_len =
+	sizeof(example_sections) / sizeof(example_sections[0]);
 
 struct file_info {
 	char *cper_out;
@@ -463,9 +469,6 @@ void cper_log_section_dual_ir_test(const char *section_name)
 	// Test with buffer based APIs
 	cper_buf_log_section_ir_test(section_name, 0, allValidbitsSet);
 	cper_buf_log_section_ir_test(section_name, 1, allValidbitsSet);
-
-	//Validate against examples
-	cper_example_section_ir_test(section_name);
 }
 
 //Tests randomly generated CPER sections for binary compatibility of a given type, in both single section mode and full CPER log mode.
@@ -679,27 +682,6 @@ void NVIDIASectionTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("nvidia");
 }
-
-void NVIDIACMETSectionTests_IRValid(void)
-{
-	cper_example_section_ir_test("nvidia_cmet_info");
-}
-
-void NVIDIAEVENTALLTYPESSectionTests_IRValid(void)
-{
-	cper_example_section_ir_test("nvidia_event_all_types");
-}
-
-void NVIDIAEVENTGPUINITSectionTests_IRValid(void)
-{
-	cper_example_section_ir_test("nvidia_event_gpu_init");
-}
-
-void NVIDIAEVENTGPUUCEECCSectionTests_IRValid(void)
-{
-	cper_example_section_ir_test("nvidia_event_gpu_uce_ecc");
-}
-
 void NVIDIAEventSectionTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("nvidiaevent");
@@ -847,12 +829,6 @@ void NVIDIAEVENTEventHeaderVersionMismatch_BinaryEqual(void)
 	}
 }
 
-//Memory section test for validation bits.
-void MemoryValidationBitsSectionTests_IRValid()
-{
-	cper_example_section_ir_test("memory-validation-bits");
-}
-
 //Unknown section tests.
 void UnknownSectionTests_IRValid(void)
 {
@@ -927,17 +903,18 @@ int main(void)
 	NVIDIASectionTests_IRValid();
 	NVIDIASectionTests_BinaryEqual();
 	NVIDIAEventSectionTests_BinaryEqual();
-	NVIDIACMETSectionTests_IRValid();
-	NVIDIAEVENTALLTYPESSectionTests_IRValid();
-	NVIDIAEVENTGPUINITSectionTests_IRValid();
-	NVIDIAEVENTGPUUCEECCSectionTests_IRValid();
 	NVIDIAEVENTEventHeaderVersionMismatch_IRValid();
 	NVIDIAEVENTEventHeaderVersionMismatch_BinaryEqual();
-	MemoryValidationBitsSectionTests_IRValid();
 	UnknownSectionTests_IRValid();
 	UnknownSectionTests_BinaryEqual();
 	CompileTimeAssertions_TwoWayConversion();
 	CompileTimeAssertions_ShortcodeNoSpaces();
+
+	//Validate the fixed examples (binary + golden JSON) shared with the
+	//C++ bindings test suite.
+	for (size_t i = 0; i < example_sections_len; i++) {
+		cper_example_section_ir_test(example_sections[i]);
+	}
 
 	printf("\n\nTest completed successfully.\n");
 

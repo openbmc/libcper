@@ -51,6 +51,10 @@ json_object* cper_to_ir(FILE* cper_file);
 void ir_to_cper(json_object* ir, FILE* out);
 ```
 
+There is also a C++ binding (`libcper-cxx`) that returns the IR as
+`nlohmann::json` via `<libcper.hpp>`. It builds by default; pass
+`-Dbindings-cxx=disabled` to omit it.
+
 ## Specification
 
 The specification for this project's CPER-JSON format can be found in
