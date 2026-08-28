@@ -23,4 +23,4 @@ specification/document/*.*gz
 specification/document/*aux
 
 subprojects/*
--subprojects/*.wrap
+!subprojects/*.wrap

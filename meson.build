@@ -5,6 +5,7 @@ project(
     meson_version: '>=1.2.0',
     default_options: [
         'c_std=c18',
+        'cpp_std=c++23',
         'tests=' + (meson.is_subproject() ? 'disabled' : 'enabled'),
         'warning_level=2',
         'werror=true',
@@ -25,6 +26,19 @@ add_project_arguments(
 )
 
 library_is_share = get_option('default_library') == 'shared'
+
+opt_bindings_cxx = get_option('bindings-cxx')
+
+if opt_bindings_cxx.allowed()
+    add_languages('cpp')
+    add_project_arguments(
+        [
+            '-DLIBCPER_EXAMPLES="' + example_dir + '"',
+            '-DLIBCPER_JSON_SPEC="' + spec_dir + '"',
+        ],
+        language: 'cpp',
+    )
+endif
 
 if get_option('output-all-properties').enabled()
     add_project_arguments('-DOUTPUT_ALL_PROPERTIES', language: 'c')
@@ -84,6 +98,9 @@ json_c_dep = declare_dependency(
     include_directories: include_directories('subprojects'),
     dependencies: json_c,
 )
+if opt_bindings_cxx.allowed()
+    nlohmann_json_dep = dependency('nlohmann_json', include_type: 'system')
+endif
 libcper_include = ['include']
 libcper_include_dir = include_directories(libcper_include, is_system: true)
 
@@ -133,6 +150,10 @@ libcper_generate_dep = declare_dependency(
     include_directories: libcper_include_dir,
     link_with: libcper_generate,
 )
+
+if opt_bindings_cxx.allowed()
+    subdir('bindings')
+endif
 
 if get_option('pkgconfig').allowed()
     import('pkgconfig').generate(
