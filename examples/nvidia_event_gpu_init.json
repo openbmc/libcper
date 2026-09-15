@@ -9,7 +9,7 @@
             "code": 3,
             "name": "Informational"
         },
-        "recordLength": 456,
+        "recordLength": 520,
         "timestamp": "0000-00-00T19:44:12+00:00",
         "timestampIsPrecise": false,
         "platformID": "12345678-1234-5678-aabb-ccddeeff0011",
@@ -28,7 +28,7 @@
     "sectionDescriptors": [
         {
             "sectionOffset": 200,
-            "sectionLength": 256,
+            "sectionLength": 320,
             "revision": {
                 "major": 1,
                 "minor": 0
@@ -64,22 +64,21 @@
                     "version": 1,
                     "sourceDeviceType": "GPU",
                     "type": "0x0001",
+                    "typeName": "Timeout",
                     "subtype": "0x0001"
                 },
                 "eventInfo": {
                     "version": "1.0",
                     "gpu": {
                         "EventOriginator": "PF_GSP_FW",
-                        "SourcePartition": 0,
-                        "SourceSubPartition": 0,
                         "Pdi": "11:22:33:44:55:66:77:88"
                     }
                 },
                 "eventContexts": [
                     {
                         "version": 0,
-                        "dataFormatType": "0x8000",
-                        "dataFormatVersion": 256,
+                        "dataFormatType": "0xA001",
+                        "dataFormatVersion": "1.0",
                         "dataSize": 192,
                         "data": {
                             "gpuInitMetadata": {
@@ -110,6 +109,19 @@
                                     "bar2Start": "0x0000000000000000",
                                     "bar2Size": "0x0000000000000000"
                                 }
+                            }
+                        }
+                    },
+                    {
+                        "version": 0,
+                        "dataFormatType": "0x9001",
+                        "dataFormatVersion": "1.0",
+                        "dataSize": 33,
+                        "data": {
+                            "gpuTimeoutData": {
+                                "timeoutNs": "0x000000012A05F200",
+                                "elapsedNs": "0x00000001312D0000",
+                                "waitTarget": "GSP RPC response"
                             }
                         }
                     }

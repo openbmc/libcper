@@ -1,0 +1,56 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "GPU EVENT_INFO version 2.0 (R620+). Bytes 4-7 of the 13-byte device-specific payload contain ModuleInstance, ChipletId, MigAttribution, and EventScope.",
+    "required": [
+        "EventOriginator",
+        "moduleInstance",
+        "chipletId",
+        "migAttribution",
+        "eventScope",
+        "Pdi"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "EventOriginator": {
+            "type": "string",
+            "description": "Event originator names implemented by the current GPU driver: 0=Invalid, 2=PF GSP Firmware, 3=VF GSP Firmware, 4=PF Driver, and 5=VF Driver. Undefined values render as Unknown.",
+            "enum": [
+                "Invalid",
+                "PF_GSP_FW",
+                "VF_GSP_FW",
+                "PF_DRIVER",
+                "VF_DRIVER",
+                "Unknown"
+            ]
+        },
+        "moduleInstance": {
+            "type": "integer",
+            "description": "Physical module/engine instance",
+            "minimum": 0,
+            "maximum": 255
+        },
+        "chipletId": {
+            "type": "integer",
+            "description": "Chiplet/die index (0 = N/A or first)",
+            "minimum": 0,
+            "maximum": 255
+        },
+        "migAttribution": {
+            "type": "string",
+            "description": "MIG attribution as 'GpuInstance:ComputeInstance' (high nibble : low nibble), or 'N/A' for the raw value 0xFF",
+            "pattern": "^(N/A|[0-9]+:[0-9]+)$"
+        },
+        "eventScope": {
+            "type": "integer",
+            "description": "Scope / blast radius of the event (values TBD in spec)",
+            "minimum": 0,
+            "maximum": 255
+        },
+        "Pdi": {
+            "type": "string",
+            "description": "Globally unique 64-bit per-device identifier, MAC-style formatted",
+            "pattern": "^[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){7}$"
+        }
+    }
+}

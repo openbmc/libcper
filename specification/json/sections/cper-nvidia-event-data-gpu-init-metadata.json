@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "description": "GPU metadata context data (GPU dataFormatType=0x8000)",
+    "description": "GPU metadata context data (GPU dataFormatType=0xA001)",
     "additionalProperties": false,
     "required": [
         "deviceName",
@@ -65,6 +65,11 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 255
+        },
+        "opaqueHardwareInfo": {
+            "type": "string",
+            "description": "Raw 59 bytes of the reserved hardware-info union, hex-encoded. Present when hardwareInfoType != 0 (future/unknown formats) so data round-trips losslessly.",
+            "pattern": "^[0-9a-fA-F]{118}$"
         },
         "pciInfo": {
             "type": "object",
