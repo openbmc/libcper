@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "GPU EVENT_INFO version 1.0 (R610-R615). The two former Source Partition fields at bytes 4-7 are reserved, ignored while decoding, and zeroed while encoding.",
+    "required": ["EventOriginator", "Pdi"],
+    "additionalProperties": false,
+    "properties": {
+        "EventOriginator": {
+            "type": "string",
+            "description": "Event originator names implemented by the current GPU driver: 0=Invalid, 2=PF GSP Firmware, 3=VF GSP Firmware, 4=PF Driver, and 5=VF Driver. Undefined values render as Unknown.",
+            "enum": [
+                "Invalid",
+                "PF_GSP_FW",
+                "VF_GSP_FW",
+                "PF_DRIVER",
+                "VF_DRIVER",
+                "Unknown"
+            ]
+        },
+        "Pdi": {
+            "type": "string",
+            "description": "Globally unique 64-bit per-device identifier, MAC-style formatted",
+            "pattern": "^[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){7}$"
+        }
+    }
+}

@@ -21,7 +21,7 @@ typedef struct __attribute__((packed)) {
 	CHAR8 Reserved1;
 	UINT16 EventType;
 	UINT16 EventSubtype;
-	UINT64 EventLinkId;
+	UINT64 EventTraceId;
 	CHAR8 Signature[16];
 } EFI_NVIDIA_EVENT_HEADER;
 
@@ -54,16 +54,39 @@ typedef struct __attribute__((packed)) {
 	UINT64 InstanceBase;
 } EFI_NVIDIA_CPU_EVENT_INFO;
 
-// GPU Event Info structure version
-#define EFI_NVIDIA_GPU_EVENT_INFO_MAJ 1
-#define EFI_NVIDIA_GPU_EVENT_INFO_MIN 0
+// GPU Event Info structure version 1.0 (R610-R615).
+// The former SourcePartition and SourceSubPartition words were never used and
+// are reserved. Readers must not assign meaning to them; writers emit zero.
+#define EFI_NVIDIA_GPU_EVENT_INFO_V1_MAJ 1
+#define EFI_NVIDIA_GPU_EVENT_INFO_V1_MIN 0
 
 typedef struct __attribute__((packed)) {
 	UINT8 EventOriginator;
-	UINT16 SourcePartition;
-	UINT16 SourceSubPartition;
+	UINT16 SourcePartition; // Reserved; readers ignore, writers emit zero.
+	UINT16 SourceSubPartition; // Reserved; readers ignore, writers emit zero.
 	UINT64 Pdi;
-} EFI_NVIDIA_GPU_EVENT_INFO;
+} EFI_NVIDIA_GPU_EVENT_INFO_V1;
+
+// Deprecated source-compatibility aliases for the original v1.0 API.
+// New code should use the explicitly versioned constants and type above.
+#define EFI_NVIDIA_GPU_EVENT_INFO_MAJ EFI_NVIDIA_GPU_EVENT_INFO_V1_MAJ
+#define EFI_NVIDIA_GPU_EVENT_INFO_MIN EFI_NVIDIA_GPU_EVENT_INFO_V1_MIN
+typedef EFI_NVIDIA_GPU_EVENT_INFO_V1 EFI_NVIDIA_GPU_EVENT_INFO
+	__attribute__((deprecated("use EFI_NVIDIA_GPU_EVENT_INFO_V1")));
+
+// GPU Event Info structure version 2.0 (R620+).
+// Version 2.0 reassigns bytes 4-7 of the full EVENT_INFO to four UINT8 fields.
+#define EFI_NVIDIA_GPU_EVENT_INFO_V2_MAJ 2
+#define EFI_NVIDIA_GPU_EVENT_INFO_V2_MIN 0
+
+typedef struct __attribute__((packed)) {
+	UINT8 EventOriginator;
+	UINT8 ModuleInstance;
+	UINT8 ChipletId;
+	UINT8 MigAttribution; // high 4 bits = GPU instance, low 4 bits = compute instance; 0xFF = N/A
+	UINT8 EventScope;
+	UINT64 Pdi;
+} EFI_NVIDIA_GPU_EVENT_INFO_V2;
 
 typedef struct __attribute__((packed)) {
 	UINT32 CtxSize;
@@ -129,6 +152,14 @@ typedef struct __attribute__((packed)) {
 	UINT32 XidCode;
 	CHAR8 Message[236];
 } EFI_NVIDIA_GPU_CTX_LEGACY_XID;
+
+#define EFI_NVIDIA_GPU_CTX_TIMEOUT_WAIT_TARGET_MAX 31
+
+typedef struct __attribute__((packed)) {
+	UINT64 TimeoutNs;
+	UINT64 ElapsedNs;
+	CHAR8 WaitTarget[0];
+} EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA;
 
 typedef struct __attribute__((packed)) {
 	UINT8 Flags;

@@ -700,9 +700,336 @@ void NVIDIAEVENTGPUUCEECCSectionTests_IRValid(void)
 	cper_example_section_ir_test("nvidia_event_gpu_uce_ecc");
 }
 
+void NVIDIAEventSectionTests_IRValid(void)
+{
+	// Unlike the older section types, NVIDIA Event has several named example
+	// vectors instead of examples/nvidiaevent.{cperhex,json}.
+	cper_log_section_ir_test("nvidiaevent", 0, allValidbitsSet);
+	cper_log_section_ir_test("nvidiaevent", 1, allValidbitsSet);
+	cper_buf_log_section_ir_test("nvidiaevent", 0, allValidbitsSet);
+	cper_buf_log_section_ir_test("nvidiaevent", 1, allValidbitsSet);
+}
+
 void NVIDIAEventSectionTests_BinaryEqual(void)
 {
 	cper_log_section_dual_binary_test("nvidiaevent");
+}
+
+// Verify that the identical-size GPU v1.0 and v2.0 wire layouts are selected
+// by InfoVersion rather than inferred from payload contents.
+void NVIDIAEVENTGPUInfoVersions_BinaryEqual(void)
+{
+	printf("Testing GPU EVENT_INFO v1.0 and v2.0 decoding...\n");
+	assert(sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V1) ==
+	       sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V2));
+
+	UINT8 section[sizeof(EFI_NVIDIA_EVENT_HEADER) +
+		      sizeof(EFI_NVIDIA_EVENT_INFO_HEADER) +
+		      sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V1)] = { 0 };
+	EFI_NVIDIA_EVENT_HEADER *event_header =
+		(EFI_NVIDIA_EVENT_HEADER *)section;
+	EFI_NVIDIA_EVENT_INFO_HEADER *info_header =
+		(EFI_NVIDIA_EVENT_INFO_HEADER *)(section +
+						 sizeof(*event_header));
+
+	event_header->EventVersion = EFI_NVIDIA_EVENT_HEADER_VERSION;
+	event_header->SourceDeviceType = 1; // GPU
+	event_header->EventType = 0x0002;
+	event_header->EventSubtype = 0x0002;
+	memcpy(event_header->Signature, "GPU-V1", 6);
+	info_header->InfoVersion = (EFI_NVIDIA_GPU_EVENT_INFO_V1_MAJ << 8) |
+				   EFI_NVIDIA_GPU_EVENT_INFO_V1_MIN;
+	info_header->InfoSize =
+		sizeof(*info_header) + sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V1);
+	EFI_NVIDIA_GPU_EVENT_INFO_V1 *v1 =
+		(EFI_NVIDIA_GPU_EVENT_INFO_V1 *)(info_header + 1);
+	v1->EventOriginator = 2;
+	v1->SourcePartition = 0x1234;
+	v1->SourceSubPartition = 0x5678;
+	v1->Pdi = 0x1122334455667788ULL;
+
+	char *desc_string = NULL;
+	json_object *ir = cper_section_nvidia_events_to_ir(
+		section, sizeof(section), &desc_string);
+	assert(ir != NULL);
+	json_object *event_info = json_object_object_get(ir, "eventInfo");
+	json_object *gpu = json_object_object_get(event_info, "gpu");
+	json_object *event_header_ir =
+		json_object_object_get(ir, "eventHeader");
+	assert(strcmp(json_object_get_string(json_object_object_get(
+			      event_header_ir, "typeName")),
+		      "MemoryIntegrityError") == 0);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(event_info, "version")),
+		      "1.0") == 0);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(gpu, "EventOriginator")),
+		      "PF_GSP_FW") == 0);
+	assert(strcmp(json_object_get_string(json_object_object_get(gpu, "Pdi")),
+		      "11:22:33:44:55:66:77:88") == 0);
+	json_object *unused = NULL;
+	assert(!json_object_object_get_ex(gpu, "SourcePartition", &unused));
+	assert(!json_object_object_get_ex(gpu, "SourceSubPartition", &unused));
+	assert(!json_object_object_get_ex(gpu, "moduleInstance", &unused));
+	assert(!json_object_object_get_ex(gpu, "chipletId", &unused));
+	assert(!json_object_object_get_ex(gpu, "migAttribution", &unused));
+	assert(!json_object_object_get_ex(gpu, "eventScope", &unused));
+
+	char *output = NULL;
+	size_t output_size = 0;
+	FILE *stream = open_memstream(&output, &output_size);
+	assert(stream != NULL);
+	ir_section_nvidia_events_to_cper(ir, stream);
+	fclose(stream);
+	assert(output_size == sizeof(section));
+	EFI_NVIDIA_EVENT_INFO_HEADER *output_info_header =
+		(EFI_NVIDIA_EVENT_INFO_HEADER *)(output +
+						 sizeof(*event_header));
+	EFI_NVIDIA_GPU_EVENT_INFO_V1 *output_v1 =
+		(EFI_NVIDIA_GPU_EVENT_INFO_V1 *)(output_info_header + 1);
+	assert(output_info_header->InfoVersion == info_header->InfoVersion);
+	assert(output_v1->EventOriginator == v1->EventOriginator);
+	assert(output_v1->SourcePartition == 0);
+	assert(output_v1->SourceSubPartition == 0);
+	assert(output_v1->Pdi == v1->Pdi);
+	free(output);
+	free(desc_string);
+	json_object_put(ir);
+
+	// Values not implemented by the current GPU driver remain unnamed.
+	const UINT8 undefined_originators[] = { 1, 6 };
+	for (size_t i = 0; i < sizeof(undefined_originators) /
+				       sizeof(undefined_originators[0]);
+	     i++) {
+		v1->EventOriginator = undefined_originators[i];
+		desc_string = NULL;
+		ir = cper_section_nvidia_events_to_ir(section, sizeof(section),
+						      &desc_string);
+		assert(ir != NULL);
+		event_info = json_object_object_get(ir, "eventInfo");
+		gpu = json_object_object_get(event_info, "gpu");
+		assert(strcmp(json_object_get_string(json_object_object_get(
+				      gpu, "EventOriginator")),
+			      "Unknown") == 0);
+		free(desc_string);
+		json_object_put(ir);
+	}
+
+	memset(section, 0, sizeof(section));
+	event_header = (EFI_NVIDIA_EVENT_HEADER *)section;
+	info_header = (EFI_NVIDIA_EVENT_INFO_HEADER *)(section +
+						       sizeof(*event_header));
+	event_header->EventVersion = EFI_NVIDIA_EVENT_HEADER_VERSION;
+	event_header->SourceDeviceType = 1; // GPU
+	event_header->EventType = 0x0002;
+	event_header->EventSubtype = 0x0003;
+	event_header->EventTraceId = 0x1020304050607080ULL;
+	memcpy(event_header->Signature, "GPU-V2", 6);
+	info_header->InfoVersion = (EFI_NVIDIA_GPU_EVENT_INFO_V2_MAJ << 8) |
+				   EFI_NVIDIA_GPU_EVENT_INFO_V2_MIN;
+	info_header->InfoSize =
+		sizeof(*info_header) + sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V2);
+	EFI_NVIDIA_GPU_EVENT_INFO_V2 *v2 =
+		(EFI_NVIDIA_GPU_EVENT_INFO_V2 *)(info_header + 1);
+	v2->EventOriginator = 4;
+	v2->ModuleInstance = 3;
+	v2->ChipletId = 1;
+	v2->MigAttribution = 0x23;
+	v2->EventScope = 2;
+	v2->Pdi = 0x99AABBCCDDEEFF00ULL;
+
+	desc_string = NULL;
+	ir = cper_section_nvidia_events_to_ir(section, sizeof(section),
+					      &desc_string);
+	assert(ir != NULL);
+	event_info = json_object_object_get(ir, "eventInfo");
+	gpu = json_object_object_get(event_info, "gpu");
+	event_header_ir = json_object_object_get(ir, "eventHeader");
+	assert(strcmp(json_object_get_string(json_object_object_get(
+			      event_header_ir, "typeName")),
+		      "MemoryIntegrityError") == 0);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(event_info, "version")),
+		      "2.0") == 0);
+	assert(json_object_get_int(
+		       json_object_object_get(gpu, "moduleInstance")) == 3);
+	assert(json_object_get_int(json_object_object_get(gpu, "chipletId")) ==
+	       1);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(gpu, "migAttribution")),
+		      "2:3") == 0);
+	assert(json_object_get_int(json_object_object_get(gpu, "eventScope")) ==
+	       2);
+
+	output = NULL;
+	output_size = 0;
+	stream = open_memstream(&output, &output_size);
+	assert(stream != NULL);
+	ir_section_nvidia_events_to_cper(ir, stream);
+	fclose(stream);
+	assert(output_size == sizeof(section));
+	assert(memcmp(output, section, sizeof(section)) == 0);
+	free(output);
+	free(desc_string);
+	json_object_put(ir);
+}
+
+// Verify the driver-defined GPU context IDs and the category fallback:
+// 0xA001 is Init Metadata, 0x9001 is structured Timeout Data, and unknown
+// future 0x900x values remain byte-exact opaque data.
+void NVIDIAEVENTGPUContextTypes_BinaryEqual(void)
+{
+	printf("Testing GPU context IDs and category fallback...\n");
+	enum {
+		INIT_CONTEXT_SIZE = 208,
+		TIMEOUT_CONTEXT_SIZE = 64,
+		OPAQUE_CONTEXT_SIZE = 32,
+	};
+	UINT8 section[sizeof(EFI_NVIDIA_EVENT_HEADER) +
+		      sizeof(EFI_NVIDIA_EVENT_INFO_HEADER) +
+		      sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V2) + INIT_CONTEXT_SIZE +
+		      TIMEOUT_CONTEXT_SIZE + OPAQUE_CONTEXT_SIZE] = { 0 };
+	EFI_NVIDIA_EVENT_HEADER *event_header =
+		(EFI_NVIDIA_EVENT_HEADER *)section;
+	EFI_NVIDIA_EVENT_INFO_HEADER *info_header =
+		(EFI_NVIDIA_EVENT_INFO_HEADER *)(event_header + 1);
+	EFI_NVIDIA_GPU_EVENT_INFO_V2 *gpu_info =
+		(EFI_NVIDIA_GPU_EVENT_INFO_V2 *)(info_header + 1);
+
+	event_header->EventVersion = EFI_NVIDIA_EVENT_HEADER_VERSION;
+	event_header->EventContextCount = 3;
+	event_header->SourceDeviceType = 1; // GPU
+	event_header->EventType = 0x0002;
+	event_header->EventSubtype = 0x0004;
+	memcpy(event_header->Signature, "GPU-CONTEXT", 11);
+	info_header->InfoVersion = (EFI_NVIDIA_GPU_EVENT_INFO_V2_MAJ << 8) |
+				   EFI_NVIDIA_GPU_EVENT_INFO_V2_MIN;
+	info_header->InfoSize = sizeof(*info_header) + sizeof(*gpu_info);
+	gpu_info->EventOriginator = 2;
+	gpu_info->Pdi = 0x1122334455667788ULL;
+
+	UINT8 *context_cursor =
+		section + sizeof(*event_header) + info_header->InfoSize;
+	EFI_NVIDIA_EVENT_CTX_HEADER *init_ctx =
+		(EFI_NVIDIA_EVENT_CTX_HEADER *)context_cursor;
+	init_ctx->CtxSize = INIT_CONTEXT_SIZE;
+	init_ctx->DataFormatType = 0xA001;
+	init_ctx->DataFormatVersion = 0x0100;
+	init_ctx->DataSize = sizeof(EFI_NVIDIA_GPU_CTX_INIT_METADATA);
+	EFI_NVIDIA_GPU_CTX_INIT_METADATA *metadata =
+		(EFI_NVIDIA_GPU_CTX_INIT_METADATA *)init_ctx->Data;
+	memcpy(metadata->DeviceName, "Vera test GPU", 14);
+	memcpy(metadata->FirmwareVersion, "1.2.3", 6);
+	metadata->Pdi = gpu_info->Pdi;
+	metadata->ArchitectureId = 0x1A0A1000;
+	metadata->PciInfo.VendorId = 0x10DE;
+
+	context_cursor += init_ctx->CtxSize;
+	EFI_NVIDIA_EVENT_CTX_HEADER *timeout_ctx =
+		(EFI_NVIDIA_EVENT_CTX_HEADER *)context_cursor;
+	timeout_ctx->CtxSize = TIMEOUT_CONTEXT_SIZE;
+	timeout_ctx->DataFormatType = 0x9001;
+	timeout_ctx->DataFormatVersion = 0x0100;
+	timeout_ctx->DataSize = sizeof(EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA) + 17;
+	EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA *timeout =
+		(EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA *)timeout_ctx->Data;
+	timeout->TimeoutNs = 5000000000ULL;
+	timeout->ElapsedNs = 5120000000ULL;
+	memcpy(timeout->WaitTarget, "GSP RPC response", 17);
+
+	context_cursor += timeout_ctx->CtxSize;
+	EFI_NVIDIA_EVENT_CTX_HEADER *future_ctx =
+		(EFI_NVIDIA_EVENT_CTX_HEADER *)context_cursor;
+	future_ctx->CtxSize = OPAQUE_CONTEXT_SIZE;
+	future_ctx->DataFormatType = 0x9002;
+	future_ctx->DataFormatVersion = 0x0100;
+	future_ctx->DataSize = 5;
+	const UINT8 future_data[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0x42 };
+	memcpy(future_ctx->Data, future_data, sizeof(future_data));
+
+	char *desc_string = NULL;
+	json_object *ir = cper_section_nvidia_events_to_ir(
+		section, sizeof(section), &desc_string);
+	assert(ir != NULL);
+	json_object *contexts = json_object_object_get(ir, "eventContexts");
+	assert(json_object_array_length(contexts) == 3);
+
+	json_object *context = json_object_array_get_idx(contexts, 0);
+	json_object *data = json_object_object_get(context, "data");
+	assert(json_object_object_get(data, "gpuInitMetadata") != NULL);
+
+	context = json_object_array_get_idx(contexts, 1);
+	data = json_object_object_get(context, "data");
+	json_object *timeout_ir =
+		json_object_object_get(data, "gpuTimeoutData");
+	assert(timeout_ir != NULL);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(timeout_ir, "timeoutNs")),
+		      "0x000000012A05F200") == 0);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(timeout_ir, "elapsedNs")),
+		      "0x00000001312D0000") == 0);
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(timeout_ir, "waitTarget")),
+		      "GSP RPC response") == 0);
+
+	context = json_object_array_get_idx(contexts, 2);
+	data = json_object_object_get(context, "data");
+	assert(strcmp(json_object_get_string(
+			      json_object_object_get(data, "opaque")),
+		      "deadbeef42") == 0);
+
+	char *output = NULL;
+	size_t output_size = 0;
+	FILE *stream = open_memstream(&output, &output_size);
+	assert(stream != NULL);
+	ir_section_nvidia_events_to_cper(ir, stream);
+	fclose(stream);
+	assert(output_size == sizeof(section));
+	assert(memcmp(output, section, sizeof(section)) == 0);
+
+	free(output);
+	free(desc_string);
+	json_object_put(ir);
+}
+
+void NVIDIAEVENTSchemaCompatibility_IRValid(void)
+{
+	printf("Testing NVIDIA Event schema compatibility...\n");
+	json_object *record = json_object_from_file(
+		LIBCPER_EXAMPLES "/nvidia_event_all_types.json");
+	assert(record != NULL);
+	json_object *sections = json_object_object_get(record, "sections");
+	json_object *section = json_object_array_get_idx(sections, 0);
+	json_object *event = json_object_object_get(section, "NvidiaEvent");
+	json_object *event_header =
+		json_object_object_get(event, "eventHeader");
+	json_object *trace_id = NULL;
+	assert(json_object_object_get_ex(event_header, "traceId", &trace_id));
+	json_object_get(trace_id);
+	json_object_object_del(event_header, "traceId");
+	json_object_object_add(event_header, "linkId", trace_id);
+	assert(schema_validate_from_file(record, 0, 0) > 0);
+	json_object_put(record);
+
+	record = json_object_from_file(LIBCPER_EXAMPLES
+				       "/nvidia_event_gpu_init.json");
+	assert(record != NULL);
+	sections = json_object_object_get(record, "sections");
+	section = json_object_array_get_idx(sections, 0);
+	event = json_object_object_get(section, "NvidiaEvent");
+	json_object *contexts = json_object_object_get(event, "eventContexts");
+	json_object *unknown_context = json_object_array_get_idx(contexts, 1);
+	json_object_object_add(unknown_context, "dataFormatType",
+			       json_object_new_string("0x9002"));
+	json_object_object_add(unknown_context, "dataSize",
+			       json_object_new_int(5));
+	json_object *opaque_data = json_object_new_object();
+	json_object_object_add(opaque_data, "opaque",
+			       json_object_new_string("deadbeef42"));
+	json_object_object_add(unknown_context, "data", opaque_data);
+	assert(schema_validate_from_file(record, 0, 0) > 0);
+	json_object_put(record);
 }
 
 // Test Event Header version mismatch during IR to CPER conversion (should error and skip)
@@ -926,7 +1253,11 @@ int main(void)
 	CXLComponentTests_BinaryEqual();
 	NVIDIASectionTests_IRValid();
 	NVIDIASectionTests_BinaryEqual();
+	NVIDIAEventSectionTests_IRValid();
 	NVIDIAEventSectionTests_BinaryEqual();
+	NVIDIAEVENTGPUInfoVersions_BinaryEqual();
+	NVIDIAEVENTGPUContextTypes_BinaryEqual();
+	NVIDIAEVENTSchemaCompatibility_IRValid();
 	NVIDIACMETSectionTests_IRValid();
 	NVIDIAEVENTALLTYPESSectionTests_IRValid();
 	NVIDIAEVENTGPUINITSectionTests_IRValid();

@@ -91,16 +91,15 @@
                     "signature": "GPU-MemSys",
                     "version": 1,
                     "sourceDeviceType": "GPU",
-                    "type": "0x0200",
+                    "type": "0x0002",
+                    "typeName": "MemoryIntegrityError",
                     "subtype": "0x0002",
-                    "linkId": "0x1000000000000001"
+                    "traceId": "0x1000000000000001"
                 },
                 "eventInfo": {
                     "version": "1.0",
                     "gpu": {
                         "EventOriginator": "PF_GSP_FW",
-                        "SourcePartition": 1,
-                        "SourceSubPartition": 2,
                         "Pdi": "99:88:77:66:55:44:33:22"
                     }
                 },
@@ -108,7 +107,7 @@
                     {
                         "version": 0,
                         "dataFormatType": "0x8001",
-                        "dataFormatVersion": 256,
+                        "dataFormatVersion": "1.0",
                         "dataSize": 144,
                         "data": {
                             "gpuLegacyXid": {
@@ -120,7 +119,7 @@
                     {
                         "version": 0,
                         "dataFormatType": "0x8001",
-                        "dataFormatVersion": 256,
+                        "dataFormatVersion": "1.0",
                         "dataSize": 81,
                         "data": {
                             "gpuLegacyXid": {
@@ -132,7 +131,7 @@
                     {
                         "version": 0,
                         "dataFormatType": "0x0000",
-                        "dataFormatVersion": 256,
+                        "dataFormatVersion": "1.0",
                         "dataSize": 16,
                         "data": {
                             "opaque": "e0057e55100000001f00000000000000"
@@ -148,16 +147,15 @@
                     "signature": "GPU-MemSys",
                     "version": 1,
                     "sourceDeviceType": "GPU",
-                    "type": "0x0200",
+                    "type": "0x0002",
+                    "typeName": "MemoryIntegrityError",
                     "subtype": "0x0003",
-                    "linkId": "0x1000000000000001"
+                    "traceId": "0x1000000000000001"
                 },
                 "eventInfo": {
                     "version": "1.0",
                     "gpu": {
                         "EventOriginator": "PF_GSP_FW",
-                        "SourcePartition": 1,
-                        "SourceSubPartition": 2,
                         "Pdi": "99:88:77:66:55:44:33:22"
                     }
                 },
@@ -165,7 +163,7 @@
                     {
                         "version": 0,
                         "dataFormatType": "0x8001",
-                        "dataFormatVersion": 256,
+                        "dataFormatVersion": "1.0",
                         "dataSize": 92,
                         "data": {
                             "gpuLegacyXid": {
@@ -177,12 +175,17 @@
                     {
                         "version": 0,
                         "dataFormatType": "0x8002",
-                        "dataFormatVersion": 256,
+                        "dataFormatVersion": "1.0",
                         "dataSize": 16,
                         "data": {
                             "gpuRecommendedActions": {
-                                "flags": "0x00",
-                                "recoveryAction": 2,
+                                "flags": {
+                                    "raw": "0x00",
+                                    "recoveryPerformed": false,
+                                    "immediateActionRequired": false,
+                                    "recoveryActionAmbiguous": false
+                                },
+                                "recoveryAction": "GpuFlr",
                                 "diagnosticFlow": 0
                             }
                         }

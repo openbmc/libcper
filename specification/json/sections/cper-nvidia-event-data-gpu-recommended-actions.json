@@ -1,24 +1,57 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
-    "description": "GPU recommended actions context data (GPU dataFormatType=0x8002)",
+    "description": "GPU recommended actions context data (GPU dataFormatType=0x8002) per spec v0.6.",
     "additionalProperties": false,
     "required": ["flags", "recoveryAction", "diagnosticFlow"],
     "properties": {
         "flags": {
-            "type": "string",
-            "description": "Action flags",
-            "pattern": "^0x[0-9a-fA-F]{2}$"
+            "description": "Decoded action flags. 'raw' preserves all 8 bits; bit 0 = recoveryPerformed, bit 1 = immediateActionRequired, bit 2 = recoveryActionAmbiguous; bits 3-7 reserved.",
+            "oneOf": [
+                {
+                    "type": "object",
+                    "required": ["raw"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "raw": {
+                            "type": "string",
+                            "pattern": "^0x[0-9a-fA-F]{2}$"
+                        },
+                        "recoveryPerformed": { "type": "boolean" },
+                        "immediateActionRequired": { "type": "boolean" },
+                        "recoveryActionAmbiguous": { "type": "boolean" }
+                    }
+                },
+                {
+                    "type": "string",
+                    "description": "Legacy: raw 8-bit hex string. New producers should emit the decomposed object.",
+                    "pattern": "^0x[0-9a-fA-F]{2}$"
+                }
+            ]
         },
         "recoveryAction": {
-            "type": "integer",
-            "description": "Recovery action code",
-            "minimum": 0
+            "description": "Recommended recovery action (spec v0.6: 0=Ignore, 1=DriverReload, 2=GpuFlr, 3=GpuHotReset, 4=GpuWarmReset, 5=GpuColdReset, 6=NodeReset, 7-65535 reserved).",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "Ignore",
+                        "DriverReload",
+                        "GpuFlr",
+                        "GpuHotReset",
+                        "GpuWarmReset",
+                        "GpuColdReset",
+                        "NodeReset"
+                    ]
+                },
+                { "type": "integer", "minimum": 0, "maximum": 65535 }
+            ]
         },
         "diagnosticFlow": {
             "type": "integer",
             "description": "Diagnostic flow code (0=Unspecified)",
-            "minimum": 0
+            "minimum": 0,
+            "maximum": 65535
         }
     }
 }

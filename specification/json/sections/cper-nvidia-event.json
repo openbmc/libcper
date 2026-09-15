@@ -35,14 +35,46 @@
                     "description": "Event type code",
                     "pattern": "^0x[0-9a-fA-F]{4}$"
                 },
+                "typeName": {
+                    "type": "string",
+                    "description": "Decoded GPU event category name when the type code is recognized.",
+                    "enum": [
+                        "Timeout",
+                        "MemoryIntegrityError",
+                        "InterconnectError",
+                        "CorruptionDetected",
+                        "SecurityError",
+                        "PowerError",
+                        "ThermalError",
+                        "FirmwareFault",
+                        "EngineError",
+                        "ResourceExhausted",
+                        "TranslationFault",
+                        "UnclassifiedError",
+                        "Initialization",
+                        "Shutdown",
+                        "StateChanged",
+                        "ConfigChanged",
+                        "ResourceRetirement",
+                        "ResourceThreshold",
+                        "Telemetry",
+                        "Debug"
+                    ]
+                },
                 "subtype": {
                     "type": "string",
                     "description": "Event subtype code",
                     "pattern": "^0x[0-9a-fA-F]{4}$"
                 },
+                "traceId": {
+                    "type": "string",
+                    "description": "Event Trace ID (spec byte offset 8, 8 bytes). When non-zero, refers to a group of related events all sharing the same Trace ID.",
+                    "pattern": "^0x[0-9a-fA-F]{16}$"
+                },
                 "linkId": {
                     "type": "string",
-                    "description": "Event link identifier for correlation",
+                    "description": "Deprecated alias for traceId, retained for encoding existing libCPER JSON.",
+                    "deprecated": true,
                     "pattern": "^0x[0-9a-fA-F]{16}$"
                 }
             }
@@ -58,10 +90,41 @@
                     "description": "Event info version as major.minor (high byte = major, low byte = minor)",
                     "pattern": "^[0-9]+\\.[0-9]+$"
                 },
-                "cpu": { "$ref": "./sections/cper-nvidia-event-info-cpu.json" },
-                "gpu": { "$ref": "./sections/cper-nvidia-event-info-gpu.json" }
+                "cpu": { "type": "object" },
+                "gpu": { "type": "object" }
             },
-            "oneOf": [{ "required": ["cpu"] }, { "required": ["gpu"] }]
+            "oneOf": [
+                {
+                    "required": ["cpu"],
+                    "not": { "required": ["gpu"] },
+                    "properties": {
+                        "version": { "pattern": "^0\\.[0-9]+$" },
+                        "cpu": {
+                            "$ref": "./sections/cper-nvidia-event-info-cpu.json"
+                        }
+                    }
+                },
+                {
+                    "required": ["gpu"],
+                    "not": { "required": ["cpu"] },
+                    "properties": {
+                        "version": { "const": "1.0" },
+                        "gpu": {
+                            "$ref": "./sections/cper-nvidia-event-info-gpu-v1.json"
+                        }
+                    }
+                },
+                {
+                    "required": ["gpu"],
+                    "not": { "required": ["cpu"] },
+                    "properties": {
+                        "version": { "const": "2.0" },
+                        "gpu": {
+                            "$ref": "./sections/cper-nvidia-event-info-gpu-v2.json"
+                        }
+                    }
+                }
+            ]
         },
         "eventContexts": {
             "type": "array",
@@ -81,9 +144,19 @@
                     "version": { "type": "integer", "minimum": 0 },
                     "dataFormatType": {
                         "type": "string",
+                        "description": "Context format identifier. Unknown category-specific 0x900x and event-specific 0xAxxx formats are preserved in data.opaque.",
                         "pattern": "^0x[0-9a-fA-F]{4}$"
                     },
-                    "dataFormatVersion": { "type": "integer", "minimum": 0 },
+                    "dataFormatVersion": {
+                        "description": "Data format version as 'major.minor' per spec v0.6.",
+                        "oneOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^[0-9]+\\.[0-9]+$"
+                            },
+                            { "type": "integer", "minimum": 0 }
+                        ]
+                    },
                     "dataSize": { "type": "integer", "minimum": 0 },
                     "data": {
                         "type": "object",
@@ -114,6 +187,9 @@
                             },
                             "gpuRecommendedActions": {
                                 "$ref": "./sections/cper-nvidia-event-data-gpu-recommended-actions.json"
+                            },
+                            "gpuTimeoutData": {
+                                "$ref": "./sections/cper-nvidia-event-data-gpu-timeout.json"
                             }
                         },
                         "oneOf": [
@@ -124,7 +200,8 @@
                             { "required": ["type4"] },
                             { "required": ["gpuInitMetadata"] },
                             { "required": ["gpuLegacyXid"] },
-                            { "required": ["gpuRecommendedActions"] }
+                            { "required": ["gpuRecommendedActions"] },
+                            { "required": ["gpuTimeoutData"] }
                         ]
                     }
                 }

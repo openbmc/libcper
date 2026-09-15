@@ -3,13 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <limits.h>
 #include <string.h>
 #include <json.h>
 #include <libcper/Cper.h>
 #include <libcper/cper-utils.h>
 #include <libcper/sections/cper-section-nvidia-events.h>
 #include <libcper/log.h>
-#include <string.h>
 
 // NVIDIA Event Section GUID
 EFI_GUID gEfiNvidiaEventErrorSectionGuid = { 0x9068e568,
@@ -32,7 +33,7 @@ EFI_GUID gEfiNvidiaEventErrorSectionGuid = { 0x9068e568,
  * │   CHAR8   Reserved1                                                     │
  * │   UINT16  EventType                                                     │
  * │   UINT16  EventSubtype                                                  │
- * │   UINT64  EventLinkId                                                   │
+ * │   UINT64  EventTraceId                                                  │
  * │   CHAR8   Signature[16]                                                 │
  * └─────────────────────────────────────────────────────────────────────────┘
  * ┌─────────────────────────────────────────────────────────────────────────┐
@@ -53,7 +54,7 @@ EFI_GUID gEfiNvidiaEventErrorSectionGuid = { 0x9068e568,
  * ┌─────────────────────────────────────────────────────────────────────────┐
  * │ EFI_NVIDIA_EVENT_CTX_HEADER (Context 0)                      (16 bytes) │
  * ├─────────────────────────────────────────────────────────────────────────┤
- * │   UINT32  CtxSize                ← Total size of this context           │
+ * │   UINT32  CtxSize                ← header + data + padding, 16B-aligned │
  * │   UINT16  CtxVersion                                                    │
  * │   UINT16  Reserved1                                                     │
  * │   UINT16  DataFormatType         ← OPAQUE(0)/TYPE_1(1)/TYPE_2(2)/etc.   │
@@ -80,15 +81,16 @@ EFI_GUID gEfiNvidiaEventErrorSectionGuid = { 0x9068e568,
  * │   OPAQUE: Device-specific binary format                                 │
  * └─────────────────────────────────────────────────────────────────────────┘
  * ┌─────────────────────────────────────────────────────────────────────────┐
- * │ PADDING (if needed)                        (align to 16-byte boundary)  │
+ * │ PADDING (if needed)               ← counted inside CtxSize above        │
  * └─────────────────────────────────────────────────────────────────────────┘
  * ┌─────────────────────────────────────────────────────────────────────────┐
- * │ EFI_NVIDIA_EVENT_CTX_HEADER (Context 1)                       (8 bytes) │
+ * │ EFI_NVIDIA_EVENT_CTX_HEADER (Context 1)                      (16 bytes) │
  * │   ... (same structure as Context 0)                                     │
  * └─────────────────────────────────────────────────────────────────────────┘
  *     ... repeat for EventContextCount total contexts ...
  *
- * Note: Each context is padded to 16-byte alignment before the next context begins.
+ * Note: CtxSize is header + data + padding, rounded up to a 16-byte boundary,
+ *       so readers advance to the next context with ptr += CtxSize.
  */
 
 /**
@@ -118,7 +120,7 @@ EFI_GUID gEfiNvidiaEventErrorSectionGuid = { 0x9068e568,
  *
  * Data variant keys: "opaque" (TYPE_0), "type1" (TYPE_1), "type2" (TYPE_2),
  *   "type3" (TYPE_3), "type4" (TYPE_4), "gpuInitMetadata", "gpuLegacyXid",
- *   "gpuRecommendedActions"
+ *   "gpuRecommendedActions", "gpuTimeoutData"
  */
 
 // ============================================================================
@@ -130,9 +132,10 @@ typedef enum {
 	TYPE_3 = 3,
 	TYPE_4 = 4,
 	// GPU-specific context data types
-	GPU_INIT_METADATA = 0x8000,
 	GPU_EVENT_LEGACY_XID = 0x8001,
-	GPU_RECOMMENDED_ACTIONS = 0x8002
+	GPU_RECOMMENDED_ACTIONS = 0x8002,
+	GPU_TIMEOUT_DATA = 0x9001,
+	GPU_INIT_METADATA = 0xA001
 } NVIDIA_EVENT_CTX_DATA_TYPE;
 
 typedef enum {
@@ -143,6 +146,46 @@ typedef enum {
 	SWX = 4,
 	BMC = 5
 } NVIDIA_EVENT_SRC_DEV;
+
+typedef struct {
+	UINT16 type;
+	const char *name;
+} NVIDIA_GPU_EVENT_TYPE_NAME;
+
+static const NVIDIA_GPU_EVENT_TYPE_NAME gpu_event_type_names[] = {
+	{ 0x0001, "Timeout" },
+	{ 0x0002, "MemoryIntegrityError" },
+	{ 0x0003, "InterconnectError" },
+	{ 0x0004, "CorruptionDetected" },
+	{ 0x0005, "SecurityError" },
+	{ 0x0006, "PowerError" },
+	{ 0x0007, "ThermalError" },
+	{ 0x0008, "FirmwareFault" },
+	{ 0x0009, "EngineError" },
+	{ 0x000A, "ResourceExhausted" },
+	{ 0x000B, "TranslationFault" },
+	{ 0x7FFF, "UnclassifiedError" },
+	{ 0x8000, "Initialization" },
+	{ 0x8001, "Shutdown" },
+	{ 0x8002, "StateChanged" },
+	{ 0x8003, "ConfigChanged" },
+	{ 0x8004, "ResourceRetirement" },
+	{ 0x8005, "ResourceThreshold" },
+	{ 0xFFFE, "Telemetry" },
+	{ 0xFFFF, "Debug" },
+};
+
+static const char *gpu_event_type_name(UINT16 event_type)
+{
+	for (size_t i = 0;
+	     i < sizeof(gpu_event_type_names) / sizeof(gpu_event_type_names[0]);
+	     i++) {
+		if (gpu_event_type_names[i].type == event_type) {
+			return gpu_event_type_names[i].name;
+		}
+	}
+	return NULL;
+}
 
 // Callback structures
 typedef struct {
@@ -169,9 +212,12 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 static size_t parse_cpu_info_to_bin(json_object *event_info_ir, FILE *out);
 
 // GPU info formatters
-static void parse_gpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
-				 json_object *event_info_ir);
-static size_t parse_gpu_info_to_bin(json_object *event_info_ir, FILE *out);
+static void parse_gpu_info_v1_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
+				    json_object *event_info_ir);
+static size_t parse_gpu_info_v1_to_bin(json_object *event_info_ir, FILE *out);
+static void parse_gpu_info_v2_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
+				    json_object *event_info_ir);
+static size_t parse_gpu_info_v2_to_bin(json_object *event_info_ir, FILE *out);
 
 // GPU context data formatters
 static void
@@ -193,6 +239,13 @@ static void parse_gpu_ctx_recommended_actions_to_ir(
 	size_t ctx_instance, json_object *output_data_ir);
 static size_t parse_gpu_ctx_recommended_actions_to_bin(
 	json_object *event_ir, size_t ctx_instance, FILE *output_file_stream);
+static void
+parse_gpu_ctx_timeout_data_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
+				 size_t total_event_size, size_t ctx_instance,
+				 json_object *output_data_ir);
+static size_t parse_gpu_ctx_timeout_data_to_bin(json_object *event_ir,
+						size_t ctx_instance,
+						FILE *output_file_stream);
 
 // Common context data type0 formatters
 static void parse_common_ctx_type0_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
@@ -266,20 +319,6 @@ static inline UINT8 get_info_minor_version(EFI_NVIDIA_EVENT_INFO_HEADER *header)
 	return (UINT8)(header->InfoVersion & 0xFF);
 }
 
-// Helper: Check if info major version matches - returns false and logs on mismatch
-static bool check_info_major_version(UINT8 maj, UINT8 min, UINT8 exp_maj,
-				     const char *operation)
-{
-	if (maj != exp_maj) {
-		cper_print_log(
-			"Error: NVIDIA Event Info major version mismatch: "
-			"expected %d.x, got %d.%d. Skipping event info %s.\n",
-			(int)exp_maj, (int)maj, (int)min, operation);
-		return false;
-	}
-	return true;
-}
-
 // Helper: Check if event header version matches - returns false and logs on mismatch
 static bool check_event_header_version(UINT16 ver, UINT16 exp_ver,
 				       const char *operation)
@@ -310,9 +349,12 @@ NV_EVENT_INFO_CALLBACKS nv_event_types[] = {
 	{ CPU, EFI_NVIDIA_CPU_EVENT_INFO_MAJ, EFI_NVIDIA_CPU_EVENT_INFO_MIN,
 	  &parse_cpu_info_to_ir, &parse_cpu_info_to_bin,
 	  sizeof(EFI_NVIDIA_CPU_EVENT_INFO) },
-	{ GPU, EFI_NVIDIA_GPU_EVENT_INFO_MAJ, EFI_NVIDIA_GPU_EVENT_INFO_MIN,
-	  &parse_gpu_info_to_ir, &parse_gpu_info_to_bin,
-	  sizeof(EFI_NVIDIA_GPU_EVENT_INFO) }
+	{ GPU, EFI_NVIDIA_GPU_EVENT_INFO_V1_MAJ,
+	  EFI_NVIDIA_GPU_EVENT_INFO_V1_MIN, &parse_gpu_info_v1_to_ir,
+	  &parse_gpu_info_v1_to_bin, sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V1) },
+	{ GPU, EFI_NVIDIA_GPU_EVENT_INFO_V2_MAJ,
+	  EFI_NVIDIA_GPU_EVENT_INFO_V2_MIN, &parse_gpu_info_v2_to_ir,
+	  &parse_gpu_info_v2_to_bin, sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V2) }
 };
 
 // Event context handler callbacks for device-specific opaque data formats.
@@ -328,7 +370,9 @@ NV_EVENT_CTX_CALLBACKS event_ctx_handlers[] = {
 	  &parse_gpu_ctx_legacy_xid_to_bin },
 	{ GPU, GPU_RECOMMENDED_ACTIONS,
 	  &parse_gpu_ctx_recommended_actions_to_ir,
-	  &parse_gpu_ctx_recommended_actions_to_bin }
+	  &parse_gpu_ctx_recommended_actions_to_bin },
+	{ GPU, GPU_TIMEOUT_DATA, &parse_gpu_ctx_timeout_data_to_ir,
+	  &parse_gpu_ctx_timeout_data_to_bin }
 };
 
 // Returns the JSON variant key for a given event info device type.
@@ -362,6 +406,8 @@ event_ctx_data_variant_key(NVIDIA_EVENT_SRC_DEV dev,
 			return "gpuLegacyXid";
 		case GPU_RECOMMENDED_ACTIONS:
 			return "gpuRecommendedActions";
+		case GPU_TIMEOUT_DATA:
+			return "gpuTimeoutData";
 		default:
 			break;
 		}
@@ -464,6 +510,83 @@ static inline json_object *get_event_context_n_data_ir(json_object *event_ir,
 	return json_object_object_get(event_context_ir, "data");
 }
 
+// GPU EVENT_INFO originator names shared by v1 and v2 parsers. Match the
+// values currently implemented by the GPU driver; all other values are
+// reported as Unknown.
+static const char *gpu_event_originator_names[] = {
+	[0] = "Invalid",   [2] = "PF_GSP_FW", [3] = "VF_GSP_FW",
+	[4] = "PF_DRIVER", [5] = "VF_DRIVER",
+};
+static const size_t gpu_event_originator_names_count =
+	sizeof(gpu_event_originator_names) /
+	sizeof(gpu_event_originator_names[0]);
+
+// Format an originator enum value as a JSON string ("Invalid"/"PF_GSP_FW"/.../"Unknown").
+static void add_gpu_event_originator(json_object *ir, const char *field,
+				     UINT8 value)
+{
+	if (value < gpu_event_originator_names_count &&
+	    gpu_event_originator_names[value] != NULL) {
+		json_object_object_add(
+			ir, field,
+			json_object_new_string(
+				gpu_event_originator_names[value]));
+	} else {
+		json_object_object_add(ir, field,
+				       json_object_new_string("Unknown"));
+	}
+}
+
+// Reverse lookup: match originator string to its numeric value (0 on no match).
+static UINT8 gpu_event_originator_from_string(const char *name)
+{
+	if (name == NULL) {
+		return 0;
+	}
+	for (size_t i = 0; i < gpu_event_originator_names_count; i++) {
+		if (gpu_event_originator_names[i] != NULL &&
+		    strcmp(name, gpu_event_originator_names[i]) == 0) {
+			return (UINT8)i;
+		}
+	}
+	return 0;
+}
+
+// PDI is represented in the IR as an eight-byte, MSB-first identifier.
+static void add_gpu_pdi(json_object *ir, UINT64 pdi)
+{
+	UINT8 pdi_bytes[8];
+	char pdi_str[24]; // "XX:XX:XX:XX:XX:XX:XX:XX\0"
+
+	memcpy(pdi_bytes, &pdi, sizeof(pdi_bytes));
+	snprintf(pdi_str, sizeof(pdi_str),
+		 "%02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X", pdi_bytes[7],
+		 pdi_bytes[6], pdi_bytes[5], pdi_bytes[4], pdi_bytes[3],
+		 pdi_bytes[2], pdi_bytes[1], pdi_bytes[0]);
+	json_object_object_add(ir, "Pdi", json_object_new_string(pdi_str));
+}
+
+static void get_gpu_pdi(json_object *ir, UINT64 *pdi)
+{
+	const char *pdi_str =
+		json_object_get_string(json_object_object_get(ir, "Pdi"));
+	if (pdi_str == NULL) {
+		return;
+	}
+
+	unsigned int b[8] = { 0 };
+	if (sscanf(pdi_str, "%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x", &b[0],
+		   &b[1], &b[2], &b[3], &b[4], &b[5], &b[6], &b[7]) != 8) {
+		return;
+	}
+
+	UINT8 pdi_bytes[8];
+	for (int k = 0; k < 8; k++) {
+		pdi_bytes[k] = (UINT8)b[7 - k];
+	}
+	memcpy(pdi, pdi_bytes, sizeof(*pdi));
+}
+
 // Parses CPU-specific event info structure into JSON IR format.
 // Extracts socket number, architecture (decoded), ECID array, and instance base.
 // Output is placed inside the "cpu" variant within eventInfo.
@@ -557,10 +680,10 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 // Returns the number of bytes written.
 /*
  * ┌─────────────────────────────────────────────────────────────────────────┐
- * │ EFI_NVIDIA_CPU_EVENT_INFO                                    (32 bytes) │
+ * │ EFI_NVIDIA_CPU_EVENT_INFO              (29 bytes device-specific,       │
+ * │                                         plus 3-byte shared info header) │
  * ├─────────────────────────────────────────────────────────────────────────┤
  * │   UINT8   SocketNum                                                     │
- * │   [padding - 3 bytes]                                                   │
  * │   UINT32  Architecture                                                  │
  * │   UINT32  Ecid[0]                                                       │
  * │   UINT32  Ecid[1]                                                       │
@@ -568,6 +691,8 @@ static void parse_cpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
  * │   UINT32  Ecid[3]                                                       │
  * │   UINT64  InstanceBase                                                  │
  * └─────────────────────────────────────────────────────────────────────────┘
+ * Note: __attribute__((packed)) removes natural alignment padding between
+ *       SocketNum and Architecture; the byte layout is contiguous.
  */
 static size_t parse_cpu_info_to_bin(json_object *event_info_ir, FILE *out)
 {
@@ -630,147 +755,184 @@ static size_t parse_cpu_info_to_bin(json_object *event_info_ir, FILE *out)
 		      out);
 }
 
-// Parses GPU-specific event info structure into JSON IR format.
-// Extracts event originator, partitions, and PDI.
-// Output is placed inside the "gpu" variant within eventInfo.
-/*
- * Example JSON IR (inside eventInfo.gpu):
- * {
- *   "EventOriginator": "PF_GSP_FW",
- *   "SourcePartition": 1,
- *   "SourceSubPartition": 0,
- *   "Pdi": "89:34:56:78:9A:BC:DE:F1"
- * }
- */
-static void parse_gpu_info_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
-				 json_object *event_info_ir)
+// Parses GPU EVENT_INFO v1.0 into JSON IR. The two 16-bit words between
+// EventOriginator and Pdi are reserved; they are intentionally not exposed in
+// the IR because they never carried defined SourcePartition semantics.
+static void parse_gpu_info_v1_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
+				    json_object *event_info_ir)
 {
-	// Verify InfoSize is large enough for GPU event info
 	EFI_NVIDIA_EVENT_INFO_HEADER *info_header =
 		get_event_info_header(event_header);
 	size_t required_size = sizeof(EFI_NVIDIA_EVENT_INFO_HEADER) +
-			       sizeof(EFI_NVIDIA_GPU_EVENT_INFO);
+			       sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V1);
 	if (info_header->InfoSize < required_size) {
 		cper_print_log(
-			"Error: GPU event info size too small: got %d, need %zu\n",
+			"Error: GPU v1 event info size too small: got %d, need %zu\n",
 			info_header->InfoSize, required_size);
 		return;
 	}
 
-	EFI_NVIDIA_GPU_EVENT_INFO *info =
-		(EFI_NVIDIA_GPU_EVENT_INFO *)get_event_info(event_header);
+	EFI_NVIDIA_GPU_EVENT_INFO_V1 *info =
+		(EFI_NVIDIA_GPU_EVENT_INFO_V1 *)get_event_info(event_header);
 	if (info == NULL) {
 		return;
 	}
 
-	// EventOriginator: flat enum string
-	static const char *event_originator_names[] = {
-		[0] = "Invalid",   [1] = "Reserved1", [2] = "PF_GSP_FW",
-		[3] = "VF_GSP_FW", [4] = "PF_DRIVER", [5] = "VF_DRIVER",
-	};
-	static const size_t event_originator_names_count =
-		sizeof(event_originator_names) /
-		sizeof(event_originator_names[0]);
-	if (info->EventOriginator < event_originator_names_count &&
-	    event_originator_names[info->EventOriginator] != NULL) {
-		json_object_object_add(
-			event_info_ir, "EventOriginator",
-			json_object_new_string(
-				event_originator_names[info->EventOriginator]));
-	} else {
-		json_object_object_add(event_info_ir, "EventOriginator",
-				       json_object_new_string("Unknown"));
-	}
-	add_uint(event_info_ir, "SourcePartition", info->SourcePartition);
-	add_uint(event_info_ir, "SourceSubPartition", info->SourceSubPartition);
+	add_gpu_event_originator(event_info_ir, "EventOriginator",
+				 info->EventOriginator);
+	add_gpu_pdi(event_info_ir, info->Pdi);
+}
 
-	// PDI: MAC-style 8-byte string XX:XX:XX:XX:XX:XX:XX:XX (MSB first)
-	// e.g., PDI 0x123456789ABCDEF0 → "12:34:56:78:9A:BC:DE:F0"
-	{
-		UINT64 pdi_val = info->Pdi;
-		UINT8 pdi_bytes[8];
-		memcpy(pdi_bytes, &pdi_val, sizeof(pdi_bytes));
-		char pdi_str[24]; // "XX:XX:XX:XX:XX:XX:XX:XX\0"
-		snprintf(pdi_str, sizeof(pdi_str),
-			 "%02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X",
-			 pdi_bytes[7], pdi_bytes[6], pdi_bytes[5], pdi_bytes[4],
-			 pdi_bytes[3], pdi_bytes[2], pdi_bytes[1],
-			 pdi_bytes[0]);
-		json_object_object_add(event_info_ir, "Pdi",
-				       json_object_new_string(pdi_str));
+// Emits GPU EVENT_INFO v1.0. Reserved words are always written as zero.
+static size_t parse_gpu_info_v1_to_bin(json_object *event_info_ir, FILE *out)
+{
+	EFI_NVIDIA_GPU_EVENT_INFO_V1 info = { 0 };
+	json_object *originator_obj =
+		json_object_object_get(event_info_ir, "EventOriginator");
+	if (originator_obj != NULL) {
+		info.EventOriginator = gpu_event_originator_from_string(
+			json_object_get_string(originator_obj));
 	}
+	UINT64 pdi = 0;
+	get_gpu_pdi(event_info_ir, &pdi);
+	info.Pdi = pdi;
+
+	return fwrite(&info, 1, sizeof(info), out);
+}
+
+// Parses GPU EVENT_INFO v2.0 into JSON IR.
+// Extracts event originator, module instance, chiplet id, MIG attribution,
+// event scope, and PDI. Output is placed inside the "gpu" variant in eventInfo.
+/*
+ * Example JSON IR (inside eventInfo.gpu):
+ * {
+ *   "EventOriginator": "PF_GSP_FW",
+ *   "moduleInstance": 3,
+ *   "chipletId": 1,
+ *   "migAttribution": "2:3",
+ *   "eventScope": 0,
+ *   "Pdi": "89:34:56:78:9A:BC:DE:F1"
+ * }
+ *
+ * MigAttribution encodes as "GpuInstance:ComputeInstance" (high nibble : low
+ * nibble). The raw value 0xFF means "N/A".
+ */
+static void parse_gpu_info_v2_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
+				    json_object *event_info_ir)
+{
+	// Verify InfoSize is large enough for GPU v2 event info
+	EFI_NVIDIA_EVENT_INFO_HEADER *info_header =
+		get_event_info_header(event_header);
+	size_t required_size = sizeof(EFI_NVIDIA_EVENT_INFO_HEADER) +
+			       sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V2);
+	if (info_header->InfoSize < required_size) {
+		cper_print_log(
+			"Error: GPU v2 event info size too small: got %d, need %zu\n",
+			info_header->InfoSize, required_size);
+		return;
+	}
+
+	EFI_NVIDIA_GPU_EVENT_INFO_V2 *info =
+		(EFI_NVIDIA_GPU_EVENT_INFO_V2 *)get_event_info(event_header);
+	if (info == NULL) {
+		return;
+	}
+
+	add_gpu_event_originator(event_info_ir, "EventOriginator",
+				 info->EventOriginator);
+	add_uint(event_info_ir, "moduleInstance", info->ModuleInstance);
+	add_uint(event_info_ir, "chipletId", info->ChipletId);
+
+	// MIG Attribution: 0xFF = "N/A", otherwise "GpuInstance:ComputeInstance"
+	// (high nibble : low nibble).
+	{
+		char mig_str[8];
+		if (info->MigAttribution == 0xFF) {
+			snprintf(mig_str, sizeof(mig_str), "N/A");
+		} else {
+			snprintf(mig_str, sizeof(mig_str), "%u:%u",
+				 (info->MigAttribution >> 4) & 0xF,
+				 info->MigAttribution & 0xF);
+		}
+		json_object_object_add(event_info_ir, "migAttribution",
+				       json_object_new_string(mig_str));
+	}
+
+	add_uint(event_info_ir, "eventScope", info->EventScope);
+
+	add_gpu_pdi(event_info_ir, info->Pdi);
 }
 
 // Converts GPU-specific event info from JSON IR to CPER binary format.
-// Writes version, size, event originator, partitions, and PDI.
-// Returns the number of bytes written.
+// Writes event originator, module instance, chiplet id, MIG attribution,
+// event scope, and PDI. Returns the number of bytes written.
 /*
  * ┌─────────────────────────────────────────────────────────────────────────┐
- * │ EFI_NVIDIA_GPU_EVENT_INFO                                    (16 bytes) │
+ * │ EFI_NVIDIA_GPU_EVENT_INFO_V2             (13 bytes device-specific,     │
+ * │                                           plus 3-byte shared info hdr)  │
  * ├─────────────────────────────────────────────────────────────────────────┤
  * │   UINT8   EventOriginator                                               │
- * │   UINT16  SourcePartition                                               │
- * │   UINT16  SourceSubPartition                                            │
+ * │   UINT8   ModuleInstance                                                │
+ * │   UINT8   ChipletId                                                     │
+ * │   UINT8   MigAttribution      ← high 4 bits : low 4 bits, 0xFF = N/A    │
+ * │   UINT8   EventScope                                                    │
  * │   UINT64  Pdi                                                           │
  * └─────────────────────────────────────────────────────────────────────────┘
  */
-static size_t parse_gpu_info_to_bin(json_object *event_info_ir, FILE *out)
+static size_t parse_gpu_info_v2_to_bin(json_object *event_info_ir, FILE *out)
 {
-	EFI_NVIDIA_GPU_EVENT_INFO gpu_event_info = { 0 };
+	EFI_NVIDIA_GPU_EVENT_INFO_V2 gpu_event_info = { 0 };
 
 	// EventOriginator: flat enum string - reverse lookup
 	json_object *originator_obj =
 		json_object_object_get(event_info_ir, "EventOriginator");
 	if (originator_obj != NULL) {
-		const char *orig_str = json_object_get_string(originator_obj);
-		static const char *event_originator_names[] = {
-			[0] = "Invalid",   [1] = "Reserved1", [2] = "PF_GSP_FW",
-			[3] = "VF_GSP_FW", [4] = "PF_DRIVER", [5] = "VF_DRIVER",
-		};
-		for (size_t i = 0;
-		     i < sizeof(event_originator_names) /
-				 sizeof(event_originator_names[0]);
-		     i++) {
-			if (event_originator_names[i] != NULL &&
-			    strcmp(orig_str, event_originator_names[i]) == 0) {
-				gpu_event_info.EventOriginator = (UINT8)i;
-				break;
-			}
-		}
+		gpu_event_info.EventOriginator =
+			gpu_event_originator_from_string(
+				json_object_get_string(originator_obj));
 	}
-	gpu_event_info.SourcePartition = json_object_get_int64(
-		json_object_object_get(event_info_ir, "SourcePartition"));
-	gpu_event_info.SourceSubPartition = json_object_get_int64(
-		json_object_object_get(event_info_ir, "SourceSubPartition"));
 
-	// PDI: MAC-style string XX:XX:XX:XX:XX:XX:XX:XX (MSB first) → UINT64
-	// e.g., "12:34:56:78:9A:BC:DE:F0" → PDI 0x123456789ABCDEF0
+	gpu_event_info.ModuleInstance = (UINT8)json_object_get_int64(
+		json_object_object_get(event_info_ir, "moduleInstance"));
+	gpu_event_info.ChipletId = (UINT8)json_object_get_int64(
+		json_object_object_get(event_info_ir, "chipletId"));
+
+	// MIG Attribution: "N/A" -> 0xFF, else "GpuInstance:ComputeInstance"
+	// (high nibble : low nibble). Missing field defaults to 0xFF (N/A).
 	{
-		const char *pdi_str = json_object_get_string(
-			json_object_object_get(event_info_ir, "Pdi"));
-		if (pdi_str != NULL) {
-			UINT8 pdi_bytes[8] = { 0 };
-			unsigned int b[8] = { 0 };
-			if (sscanf(pdi_str,
-				   "%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x",
-				   &b[0], &b[1], &b[2], &b[3], &b[4], &b[5],
-				   &b[6], &b[7]) == 8) {
-				for (int k = 0; k < 8; k++) {
-					pdi_bytes[k] = (UINT8)b[7 - k];
-				}
-				memcpy(&gpu_event_info.Pdi, pdi_bytes,
-				       sizeof(gpu_event_info.Pdi));
+		const char *mig_str = json_object_get_string(
+			json_object_object_get(event_info_ir,
+					       "migAttribution"));
+		if (mig_str == NULL || strcmp(mig_str, "N/A") == 0) {
+			gpu_event_info.MigAttribution = 0xFF;
+		} else {
+			unsigned int gpu_inst = 0;
+			unsigned int comp_inst = 0;
+			if (sscanf(mig_str, "%u:%u", &gpu_inst, &comp_inst) ==
+			    2) {
+				gpu_event_info.MigAttribution =
+					(UINT8)(((gpu_inst & 0xF) << 4) |
+						(comp_inst & 0xF));
+			} else {
+				gpu_event_info.MigAttribution = 0xFF;
 			}
 		}
 	}
 
-	return fwrite(&gpu_event_info, 1, sizeof(EFI_NVIDIA_GPU_EVENT_INFO),
+	gpu_event_info.EventScope = (UINT8)json_object_get_int64(
+		json_object_object_get(event_info_ir, "eventScope"));
+
+	UINT64 pdi = 0;
+	get_gpu_pdi(event_info_ir, &pdi);
+	gpu_event_info.Pdi = pdi;
+
+	return fwrite(&gpu_event_info, 1, sizeof(EFI_NVIDIA_GPU_EVENT_INFO_V2),
 		      out);
 }
 
 // GPU Context Data Handlers
 
-// Parses GPU Initialization Metadata (0x8000) context data to JSON IR.
+// Parses GPU Initialization Metadata (0xA001) context data to JSON IR.
 // Extracts device info, firmware versions, PCI info, etc.
 // Output is placed inside the "gpuInitMetadata" variant within data.
 /*
@@ -908,7 +1070,9 @@ parse_gpu_ctx_init_metadata_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 
 	add_int(output_data_ir, "hardwareInfoType", metadata->HardwareInfoType);
 
-	// PCI Info (if HardwareInfoType == 0)
+	// PCI Info (if HardwareInfoType == 0). For any other type, round-trip the
+	// 59 reserved bytes as an "opaqueHardwareInfo" hex string so data is not
+	// lost across parse/emit while future types are still undefined in spec.
 	if (metadata->HardwareInfoType == 0) {
 		json_object *pci_info = json_object_new_object();
 		add_int_hex_8(pci_info, "class", metadata->PciInfo.Class);
@@ -935,6 +1099,10 @@ parse_gpu_ctx_init_metadata_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
 		add_int_hex_64(pci_info, "bar2Size",
 			       metadata->PciInfo.Bar2Size);
 		json_object_object_add(output_data_ir, "pciInfo", pci_info);
+	} else {
+		const UINT8 *reserved = (const UINT8 *)&metadata->PciInfo;
+		add_bytes_hex(output_data_ir, "opaqueHardwareInfo", reserved,
+			      sizeof(metadata->PciInfo));
 	}
 }
 
@@ -1056,7 +1224,9 @@ static size_t parse_gpu_ctx_init_metadata_to_bin(json_object *event_ir,
 		json_object_object_get(event_context_data_ir,
 				       "hardwareInfoType"));
 
-	// PCI Info (if present and HardwareInfoType == 0)
+	// PCI Info (if present and HardwareInfoType == 0). For any other type,
+	// read back the reserved bytes through the "opaqueHardwareInfo" key
+	// (populated by the round-trip parser path above).
 	json_object *pci_info =
 		json_object_object_get(event_context_data_ir, "pciInfo");
 	if (pci_info != NULL && metadata.HardwareInfoType == 0) {
@@ -1084,6 +1254,19 @@ static size_t parse_gpu_ctx_init_metadata_to_bin(json_object *event_ir,
 				 &metadata.PciInfo.Bar2Start);
 		get_value_hex_64(pci_info, "bar2Size",
 				 &metadata.PciInfo.Bar2Size);
+	} else if (metadata.HardwareInfoType != 0) {
+		size_t opaque_len = 0;
+		UINT8 *opaque_bytes = get_bytes_hex(event_context_data_ir,
+						    "opaqueHardwareInfo",
+						    &opaque_len);
+		if (opaque_bytes != NULL) {
+			size_t copy_len = opaque_len;
+			if (copy_len > sizeof(metadata.PciInfo)) {
+				copy_len = sizeof(metadata.PciInfo);
+			}
+			memcpy(&metadata.PciInfo, opaque_bytes, copy_len);
+			free(opaque_bytes);
+		}
 	}
 
 	return fwrite(&metadata, 1, sizeof(EFI_NVIDIA_GPU_CTX_INIT_METADATA),
@@ -1201,14 +1384,63 @@ static size_t parse_gpu_ctx_legacy_xid_to_bin(json_object *event_ir,
 	return fwrite(&xid, 1, data_size, output_file_stream);
 }
 
+// GPU Recovery Action enum per spec v0.6:
+//   0 = Ignore
+//   1 = Driver Reload (Drain Applications)
+//   2 = GPU Function-Level Reset
+//   3 = GPU Hot Reset
+//   4 = GPU Warm Reset
+//   5 = GPU Cold Reset
+//   6 = Node Reset
+//   7..65535 = Reserved for future use
+static const char *gpu_recovery_action_names[] = {
+	[0] = "Ignore",	     [1] = "DriverReload", [2] = "GpuFlr",
+	[3] = "GpuHotReset", [4] = "GpuWarmReset", [5] = "GpuColdReset",
+	[6] = "NodeReset",
+};
+static const size_t gpu_recovery_action_names_count =
+	sizeof(gpu_recovery_action_names) /
+	sizeof(gpu_recovery_action_names[0]);
+
+// Reverse lookup for emit side: accept either enum string or raw integer.
+// Returns true if the JSON object was recognized; otherwise *out is unchanged.
+static bool gpu_recovery_action_from_json(json_object *obj, UINT16 *out)
+{
+	if (obj == NULL) {
+		return false;
+	}
+	if (json_object_is_type(obj, json_type_string)) {
+		const char *s = json_object_get_string(obj);
+		if (s == NULL) {
+			return false;
+		}
+		for (size_t i = 0; i < gpu_recovery_action_names_count; i++) {
+			if (gpu_recovery_action_names[i] != NULL &&
+			    strcmp(s, gpu_recovery_action_names[i]) == 0) {
+				*out = (UINT16)i;
+				return true;
+			}
+		}
+		return false;
+	}
+	// Any numeric json_type (int, double) gets coerced via int64.
+	*out = (UINT16)json_object_get_int64(obj);
+	return true;
+}
+
 // Parses GPU Recommended Actions (0x8002) context data to JSON IR.
 // Extracts flags, recovery action, and diagnostic flow code.
 // Output is placed inside the "gpuRecommendedActions" variant within data.
 /*
  * Example JSON IR (inside data.gpuRecommendedActions):
  * {
- *   "flags": "0x03",
- *   "recoveryAction": 2,
+ *   "flags": {
+ *     "raw": "0x03",
+ *     "recoveryPerformed": true,     // bit 0
+ *     "immediateActionRequired": true, // bit 1
+ *     "recoveryActionAmbiguous": false // bit 2
+ *   },
+ *   "recoveryAction": "GpuFlr",      // or integer for Reserved range
  *   "diagnosticFlow": 0
  * }
  */
@@ -1236,8 +1468,35 @@ static void parse_gpu_ctx_recommended_actions_to_ir(
 	EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS *actions =
 		(EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS *)ctx->Data;
 
-	add_int_hex_8(output_data_ir, "flags", actions->Flags);
-	add_int(output_data_ir, "recoveryAction", actions->RecoveryAction);
+	// Flags decomposed per spec v0.6: bit 0 = recovery already performed,
+	// bit 1 = immediate action required, bit 2 = recovery action ambiguous.
+	// "raw" preserves the full byte including future-reserved bits 3-7.
+	{
+		json_object *flags_ir = json_object_new_object();
+		add_int_hex_8(flags_ir, "raw", actions->Flags);
+		add_bool(flags_ir, "recoveryPerformed",
+			 (actions->Flags & 0x01) != 0);
+		add_bool(flags_ir, "immediateActionRequired",
+			 (actions->Flags & 0x02) != 0);
+		add_bool(flags_ir, "recoveryActionAmbiguous",
+			 (actions->Flags & 0x04) != 0);
+		json_object_object_add(output_data_ir, "flags", flags_ir);
+	}
+
+	// Recovery action as enum string when within the defined range,
+	// otherwise pass through as an integer to preserve future values.
+	if (actions->RecoveryAction < gpu_recovery_action_names_count &&
+	    gpu_recovery_action_names[actions->RecoveryAction] != NULL) {
+		json_object_object_add(
+			output_data_ir, "recoveryAction",
+			json_object_new_string(
+				gpu_recovery_action_names
+					[actions->RecoveryAction]));
+	} else {
+		add_int(output_data_ir, "recoveryAction",
+			actions->RecoveryAction);
+	}
+
 	add_int(output_data_ir, "diagnosticFlow", actions->DiagnosticFlow);
 }
 
@@ -1273,15 +1532,160 @@ static size_t parse_gpu_ctx_recommended_actions_to_bin(json_object *event_ir,
 
 	EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS actions = { 0 };
 
-	get_value_hex_8(event_context_data_ir, "flags", &actions.Flags);
-	actions.RecoveryAction = json_object_get_int64(json_object_object_get(
-		event_context_data_ir, "recoveryAction"));
+	// Flags: accept either an object with "raw"/named bit keys (new shape)
+	// or a legacy "0xNN" hex string (old shape). "raw" is authoritative when
+	// present; otherwise the bit booleans are OR'd together.
+	{
+		json_object *flags_obj =
+			json_object_object_get(event_context_data_ir, "flags");
+		if (flags_obj != NULL &&
+		    json_object_is_type(flags_obj, json_type_object)) {
+			UINT8 raw = 0;
+			get_value_hex_8(flags_obj, "raw", &raw);
+			if (raw == 0) {
+				if (json_object_get_boolean(
+					    json_object_object_get(
+						    flags_obj,
+						    "recoveryPerformed"))) {
+					raw |= 0x01;
+				}
+				if (json_object_get_boolean(
+					    json_object_object_get(
+						    flags_obj,
+						    "immediateActionRequired"))) {
+					raw |= 0x02;
+				}
+				if (json_object_get_boolean(
+					    json_object_object_get(
+						    flags_obj,
+						    "recoveryActionAmbiguous"))) {
+					raw |= 0x04;
+				}
+			}
+			actions.Flags = raw;
+		} else {
+			// Legacy: "flags": "0xNN" hex string.
+			get_value_hex_8(event_context_data_ir, "flags",
+					&actions.Flags);
+		}
+	}
+
+	// recoveryAction: accept enum string (new) or integer (legacy).
+	UINT16 recovery_action = 0;
+	gpu_recovery_action_from_json(
+		json_object_object_get(event_context_data_ir, "recoveryAction"),
+		&recovery_action);
+	actions.RecoveryAction = recovery_action;
+
 	actions.DiagnosticFlow = json_object_get_int64(json_object_object_get(
 		event_context_data_ir, "diagnosticFlow"));
 
 	return fwrite(&actions, 1,
 		      sizeof(EFI_NVIDIA_GPU_CTX_RECOMMENDED_ACTIONS),
 		      output_file_stream);
+}
+
+// Parses the GPU timeout category context (0x9001, version 1.0).
+// Unknown future 0x900x category contexts continue through the opaque path.
+static void
+parse_gpu_ctx_timeout_data_to_ir(EFI_NVIDIA_EVENT_HEADER *event_header,
+				 size_t total_event_size, size_t ctx_instance,
+				 json_object *output_data_ir)
+{
+	EFI_NVIDIA_EVENT_CTX_HEADER *ctx = get_event_context_n(
+		event_header, ctx_instance, total_event_size);
+	if (ctx == NULL) {
+		return;
+	}
+
+	size_t minimum_size = sizeof(EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA);
+	size_t maximum_size =
+		minimum_size + EFI_NVIDIA_GPU_CTX_TIMEOUT_WAIT_TARGET_MAX + 1;
+	UINT8 *event_end = (UINT8 *)event_header + total_event_size;
+	UINT8 *data_end = (UINT8 *)ctx->Data + ctx->DataSize;
+	if (ctx->CtxSize < sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) ||
+	    ctx->DataSize >
+		    ctx->CtxSize - sizeof(EFI_NVIDIA_EVENT_CTX_HEADER) ||
+	    data_end > event_end || ctx->DataSize < minimum_size ||
+	    ctx->DataSize > maximum_size) {
+		cper_print_log(
+			"Error: GPU timeout context %zu extends past event boundary or has invalid size\n",
+			ctx_instance);
+		return;
+	}
+
+	EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA *timeout =
+		(EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA *)ctx->Data;
+	add_int_hex_64(output_data_ir, "timeoutNs", timeout->TimeoutNs);
+	add_int_hex_64(output_data_ir, "elapsedNs", timeout->ElapsedNs);
+	add_string(output_data_ir, "waitTarget", "");
+	size_t wait_target_size = ctx->DataSize - minimum_size;
+	if (wait_target_size > 0) {
+		add_untrusted_string(output_data_ir, "waitTarget",
+				     timeout->WaitTarget, wait_target_size);
+	}
+}
+
+// Converts the GPU timeout category context from JSON IR to binary.
+// The context's dataSize controls the variable string area so decoded records
+// retain their original payload length on re-encode.
+static size_t parse_gpu_ctx_timeout_data_to_bin(json_object *event_ir,
+						size_t ctx_instance,
+						FILE *output_file_stream)
+{
+	json_object *event_context_data_ir =
+		get_event_context_n_data_ir(event_ir, ctx_instance);
+	json_object *ctx_ir = get_event_context_n_ir(event_ir, ctx_instance);
+	if (event_context_data_ir == NULL || ctx_ir == NULL) {
+		return 0;
+	}
+
+	json_object *inner =
+		json_object_object_get(event_context_data_ir, "gpuTimeoutData");
+	if (inner != NULL) {
+		event_context_data_ir = inner;
+	}
+
+	UINT8 payload[sizeof(EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA) +
+		      EFI_NVIDIA_GPU_CTX_TIMEOUT_WAIT_TARGET_MAX + 1] = { 0 };
+	EFI_NVIDIA_GPU_CTX_TIMEOUT_DATA *timeout = (void *)payload;
+	get_value_hex_64(event_context_data_ir, "timeoutNs",
+			 &timeout->TimeoutNs);
+	get_value_hex_64(event_context_data_ir, "elapsedNs",
+			 &timeout->ElapsedNs);
+
+	size_t minimum_size = sizeof(*timeout);
+	size_t data_size = minimum_size;
+	json_object *data_size_obj = json_object_object_get(ctx_ir, "dataSize");
+	if (data_size_obj != NULL) {
+		size_t requested =
+			(size_t)json_object_get_uint64(data_size_obj);
+		if (requested >= minimum_size && requested <= sizeof(payload)) {
+			data_size = requested;
+		}
+	}
+
+	const char *wait_target = json_object_get_string(
+		json_object_object_get(event_context_data_ir, "waitTarget"));
+	if (wait_target != NULL) {
+		if (data_size == minimum_size) {
+			size_t string_size = strlen(wait_target) + 1;
+			if (string_size >
+			    EFI_NVIDIA_GPU_CTX_TIMEOUT_WAIT_TARGET_MAX + 1) {
+				string_size =
+					EFI_NVIDIA_GPU_CTX_TIMEOUT_WAIT_TARGET_MAX +
+					1;
+			}
+			data_size += string_size;
+		}
+		size_t capacity = data_size - minimum_size;
+		if (capacity > 0) {
+			size_t copy_len = strnlen(wait_target, capacity - 1);
+			memcpy(timeout->WaitTarget, wait_target, copy_len);
+		}
+	}
+
+	return fwrite(payload, 1, data_size, output_file_stream);
 }
 
 // Parses event context data type 0: Opaque data.
@@ -1826,7 +2230,7 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
  *     "sourceDeviceType": "CPU",
  *     "type": "0x0064",
  *     "subtype": "0x00C8",
- *     "linkId": "0x0000000000000000"
+ *     "traceId": "0x0000000000000000"
  *   },
  *   "eventInfo": {
  *     "version": "0.1",
@@ -1850,7 +2254,7 @@ static size_t parse_common_ctx_type4_to_bin(json_object *event_ir,
  *     {
  *       "version": 0,
  *       "dataFormatType": "0x0001",
- *       "dataFormatVersion": 0,
+ *       "dataFormatVersion": "0.0",
  *       "dataSize": 32,
  *       "data": {
  *         "type1": {
@@ -1929,10 +2333,19 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 				       json_object_new_string("Unknown"));
 	}
 	add_int_hex_16(event_header_ir, "type", event_header->EventType);
+	if (sdt == GPU) {
+		const char *type_name =
+			gpu_event_type_name(event_header->EventType);
+		if (type_name != NULL) {
+			json_object_object_add(
+				event_header_ir, "typeName",
+				json_object_new_string(type_name));
+		}
+	}
 	add_int_hex_16(event_header_ir, "subtype", event_header->EventSubtype);
-	if (event_header->EventLinkId != 0) {
-		add_int_hex_64(event_header_ir, "linkId",
-			       event_header->EventLinkId);
+	if (event_header->EventTraceId != 0) {
+		add_int_hex_64(event_header_ir, "traceId",
+			       event_header->EventTraceId);
 	}
 
 	// Parse event info structure
@@ -1958,28 +2371,34 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 	json_object_object_add(event_info_ir, "version",
 			       json_object_new_string(info_version_str));
 
-	// Call device-specific handler to parse additional event info fields
-	// Device-specific fields are nested under a variant key (e.g., "cpu", "gpu")
+	// Call device-specific handler to parse additional event info fields.
+	// Device-specific fields are nested under a variant key (e.g., "cpu", "gpu").
+	// Selection is by (SourceDeviceType, major version) so future major
+	// revisions of the same device-type layout can coexist.
 	NVIDIA_EVENT_SRC_DEV src_dev =
 		(NVIDIA_EVENT_SRC_DEV)event_header->SourceDeviceType;
+	bool info_handler_found = false;
 	for (size_t i = 0;
 	     i < sizeof(nv_event_types) / sizeof(nv_event_types[0]); i++) {
-		if (src_dev == nv_event_types[i].srcDev) {
-			// Check version compatibility
-			if (!check_info_major_version(
-				    info_major, info_minor,
-				    nv_event_types[i].major_version,
-				    "parsing")) {
-				break;
-			}
-			const char *variant = event_info_variant_key(src_dev);
-			json_object *device_info_ir = json_object_new_object();
-			json_object_object_add(event_info_ir, variant,
-					       device_info_ir);
-			nv_event_types[i].callback(event_header,
-						   device_info_ir);
-			break;
+		if (src_dev != nv_event_types[i].srcDev) {
+			continue;
 		}
+		if (info_major != nv_event_types[i].major_version) {
+			continue;
+		}
+		const char *variant = event_info_variant_key(src_dev);
+		json_object *device_info_ir = json_object_new_object();
+		json_object_object_add(event_info_ir, variant, device_info_ir);
+		nv_event_types[i].callback(event_header, device_info_ir);
+		info_handler_found = true;
+		break;
+	}
+	if (!info_handler_found) {
+		cper_print_log(
+			"Warning: no NVIDIA Event Info handler for srcDev=%u, "
+			"version %u.%u. Device-specific info skipped.\n",
+			(unsigned)src_dev, (unsigned)info_major,
+			(unsigned)info_minor);
 	}
 	// Parse all event contexts into an array
 	json_object *event_contexts_ir = json_object_new_array();
@@ -2009,8 +2428,19 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
 		add_int(event_context_ir, "version", ctx->CtxVersion);
 		add_int_hex_16(event_context_ir, "dataFormatType",
 			       ctx->DataFormatType);
-		add_int(event_context_ir, "dataFormatVersion",
-			ctx->DataFormatVersion);
+		// DataFormatVersion encoded as "major.minor" per spec v0.6:
+		// "encode the version using the same major.minor semantics of
+		// the other 2-byte version fields in this specification."
+		{
+			char dfv_str[8];
+			snprintf(dfv_str, sizeof(dfv_str), "%u.%u",
+				 (unsigned)((ctx->DataFormatVersion >> 8) &
+					    0xFF),
+				 (unsigned)(ctx->DataFormatVersion & 0xFF));
+			json_object_object_add(event_context_ir,
+					       "dataFormatVersion",
+					       json_object_new_string(dfv_str));
+		}
 		add_int(event_context_ir, "dataSize", ctx->DataSize);
 		json_object *data_ir = json_object_new_object();
 		json_object_object_add(event_context_ir, "data", data_ir);
@@ -2089,8 +2519,8 @@ json_object *cper_section_nvidia_events_to_ir(const UINT8 *section, UINT32 size,
  * │ EFI_NVIDIA_EVENT_INFO_HEADER                                  (3 bytes) │
  * ├─────────────────────────────────────────────────────────────────────────┤
  * │ Device-Specific Event Info                              (variable size) │
- * │   e.g., EFI_NVIDIA_CPU_EVENT_INFO (32 bytes)                            │
- * │     or  EFI_NVIDIA_GPU_EVENT_INFO (16 bytes)                            │
+ * │   e.g., EFI_NVIDIA_CPU_EVENT_INFO (29 bytes)                            │
+ * │     or  EFI_NVIDIA_GPU_EVENT_INFO_V1/V2 (13 bytes)                     │
  * ├─────────────────────────────────────────────────────────────────────────┤
  * │ PADDING (if needed)                        (align to 16-byte boundary)  │
  * ├─────────────────────────────────────────────────────────────────────────┤
@@ -2142,7 +2572,15 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 	get_value_hex_16(event_header_ir, "type", &event_header.EventType);
 	get_value_hex_16(event_header_ir, "subtype",
 			 &event_header.EventSubtype);
-	get_value_hex_64(event_header_ir, "linkId", &event_header.EventLinkId);
+	// Accept the new "traceId" key per spec v0.6 (Event Trace ID, byte 8, 8 bytes).
+	// For backward compat, fall back to the legacy "linkId" key.
+	if (json_object_object_get(event_header_ir, "traceId") != NULL) {
+		get_value_hex_64(event_header_ir, "traceId",
+				 &event_header.EventTraceId);
+	} else {
+		get_value_hex_64(event_header_ir, "linkId",
+				 &event_header.EventTraceId);
+	}
 
 	// Signature is optional - only copy if present
 	json_object *signature_obj =
@@ -2173,7 +2611,15 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 	if (event_contexts_ir != NULL &&
 	    json_object_is_type(event_contexts_ir, json_type_array)) {
 		ctx_count = json_object_array_length(event_contexts_ir);
-		event_header.EventContextCount = ctx_count;
+		// EventContextCount is a single byte; cap to avoid silent wrap.
+		if (ctx_count > UINT8_MAX) {
+			cper_print_log(
+				"Warning: NVIDIA Events context array length %zu "
+				"exceeds EventContextCount max 255; truncating.\n",
+				ctx_count);
+			ctx_count = UINT8_MAX;
+		}
+		event_header.EventContextCount = (UINT8)ctx_count;
 	}
 
 	fwrite(&event_header, sizeof(EFI_NVIDIA_EVENT_HEADER), 1, out);
@@ -2192,25 +2638,27 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 	event_info_header.InfoVersion =
 		(UINT16)((info_major << 8) | (info_minor & 0xFF));
 
+	// Look up by (srcDev, major version).
+	NVIDIA_EVENT_SRC_DEV srcDev =
+		(NVIDIA_EVENT_SRC_DEV)event_header.SourceDeviceType;
 	NV_EVENT_INFO_CALLBACKS *nv_event_info_callback = NULL;
 	for (size_t i = 0;
 	     i < sizeof(nv_event_types) / sizeof(nv_event_types[0]); i++) {
 		NV_EVENT_INFO_CALLBACKS *callback = &nv_event_types[i];
-		NVIDIA_EVENT_SRC_DEV srcDev =
-			(NVIDIA_EVENT_SRC_DEV)event_header.SourceDeviceType;
 		if (srcDev != callback->srcDev) {
 			continue;
 		}
-		// Check version compatibility
-		if (!check_info_major_version(
-			    (UINT8)info_major, (UINT8)info_minor,
-			    callback->major_version, "generation")) {
-			break;
+		if ((UINT8)info_major != callback->major_version) {
+			continue;
 		}
 		nv_event_info_callback = callback;
 		break;
 	}
 	if (nv_event_info_callback == NULL) {
+		cper_print_log("NVIDIA Events: no info handler for srcDev=%u, "
+			       "version %u.%u. Skipping section write.\n",
+			       (unsigned)srcDev, (unsigned)info_major,
+			       (unsigned)info_minor);
 		return;
 	}
 
@@ -2253,8 +2701,29 @@ void ir_section_nvidia_events_to_cper(json_object *section, FILE *out)
 		ctx.CtxVersion = (uint16_t)json_object_get_int64(
 			json_object_object_get(value, "version"));
 		get_value_hex_16(value, "dataFormatType", &ctx.DataFormatType);
-		ctx.DataFormatVersion = (uint16_t)json_object_get_int64(
-			json_object_object_get(value, "dataFormatVersion"));
+		// DataFormatVersion: accept "major.minor" string (spec v0.6) or
+		// a plain integer (legacy libcper IR) for backward compat.
+		{
+			json_object *dfv_obj = json_object_object_get(
+				value, "dataFormatVersion");
+			ctx.DataFormatVersion = 0;
+			if (dfv_obj != NULL &&
+			    json_object_is_type(dfv_obj, json_type_string)) {
+				unsigned int dfv_maj = 0;
+				unsigned int dfv_min = 0;
+				const char *s = json_object_get_string(dfv_obj);
+				if (s != NULL && sscanf(s, "%u.%u", &dfv_maj,
+							&dfv_min) == 2) {
+					ctx.DataFormatVersion =
+						(UINT16)(((dfv_maj & 0xFF)
+							  << 8) |
+							 (dfv_min & 0xFF));
+				}
+			} else if (dfv_obj != NULL) {
+				ctx.DataFormatVersion =
+					(UINT16)json_object_get_int64(dfv_obj);
+			}
+		}
 		ctx.DataSize = json_object_get_int(
 			json_object_object_get(value, "dataSize"));
 		// CtxSize includes 16-byte alignment padding so the reader
