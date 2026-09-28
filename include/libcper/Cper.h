@@ -1316,6 +1316,7 @@ typedef struct {
 	UINT64 PteL1;
 } EFI_IOMMU_DMAR_ERROR_DATA;
 
+//UEFI-defined event notification type GUIDs.
 extern EFI_GUID gEfiEventNotificationTypeCmcGuid;
 extern EFI_GUID gEfiEventNotificationTypeCpeGuid;
 extern EFI_GUID gEfiEventNotificationTypeMceGuid;
@@ -1328,6 +1329,12 @@ extern EFI_GUID gEfiEventNotificationTypeSeaGuid;
 extern EFI_GUID gEfiEventNotificationTypeSeiGuid;
 extern EFI_GUID gEfiEventNotificationTypePeiGuid;
 extern EFI_GUID gEfiEventNotificationTypeCxlGuid;
+
+//NVIDIA-defined event notification type GUIDs.
+extern EFI_GUID gNvidiaEventNotificationTypeGpuInterruptGuid;
+extern EFI_GUID gNvidiaEventNotificationTypeGpuFirmwareFaultGuid;
+extern EFI_GUID gNvidiaEventNotificationTypeGpuTimeoutGuid;
+extern EFI_GUID gNvidiaEventNotificationTypeGpuSoftwareCheckGuid;
 extern EFI_GUID gEfiProcessorGenericErrorSectionGuid;
 extern EFI_GUID gEfiProcessorSpecificErrorSectionGuid;
 extern EFI_GUID gEfiIa32X64ProcessorErrorSectionGuid;

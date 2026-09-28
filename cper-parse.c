@@ -291,11 +291,31 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 		&gEfiEventNotificationTypeSeiGuid,
 		&gEfiEventNotificationTypePeiGuid,
 		&gEfiEventNotificationTypeCxlGuid,
+
+		&gNvidiaEventNotificationTypeGpuInterruptGuid,
+		&gNvidiaEventNotificationTypeGpuFirmwareFaultGuid,
+		&gNvidiaEventNotificationTypeGpuTimeoutGuid,
+		&gNvidiaEventNotificationTypeGpuSoftwareCheckGuid,
 	};
 
 	const char *readable_names[] = {
-		"CMC",	"CPE",	"MCE", "PCIe", "INIT", "NMI",
-		"Boot", "DMAr", "SEA", "SEI",  "PEI",  "CXL Component"
+		"CMC",
+		"CPE",
+		"MCE",
+		"PCIe",
+		"INIT",
+		"NMI",
+		"Boot",
+		"DMAr",
+		"SEA",
+		"SEI",
+		"PEI",
+		"CXL Component",
+
+		"Nvidia GPU Interrupt",
+		"Nvidia GPU Firmware Fault",
+		"Nvidia GPU Timeout",
+		"Nvidia GPU Software Check",
 	};
 
 	int index = select_guid_from_list(&header->NotificationType, guids,
