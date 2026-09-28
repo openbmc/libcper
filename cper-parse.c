@@ -279,6 +279,7 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 	const char *notification_type_readable = "Unknown";
 
 	EFI_GUID *guids[] = {
+		//UEFI-defined notification types.
 		&gEfiEventNotificationTypeCmcGuid,
 		&gEfiEventNotificationTypeCpeGuid,
 		&gEfiEventNotificationTypeMceGuid,
@@ -291,11 +292,34 @@ json_object *cper_header_to_ir(EFI_COMMON_ERROR_RECORD_HEADER *header)
 		&gEfiEventNotificationTypeSeiGuid,
 		&gEfiEventNotificationTypePeiGuid,
 		&gEfiEventNotificationTypeCxlGuid,
+
+		//NVIDIA-defined notification types.
+		&gNvidiaEventNotificationTypeGpuInterruptGuid,
+		&gNvidiaEventNotificationTypeGpuFirmwareFaultGuid,
+		&gNvidiaEventNotificationTypeGpuTimeoutGuid,
+		&gNvidiaEventNotificationTypeGpuSoftwareCheckGuid,
 	};
 
 	const char *readable_names[] = {
-		"CMC",	"CPE",	"MCE", "PCIe", "INIT", "NMI",
-		"Boot", "DMAr", "SEA", "SEI",  "PEI",  "CXL Component"
+		//UEFI-defined notification types.
+		"CMC",
+		"CPE",
+		"MCE",
+		"PCIe",
+		"INIT",
+		"NMI",
+		"Boot",
+		"DMAr",
+		"SEA",
+		"SEI",
+		"PEI",
+		"CXL Component",
+
+		//NVIDIA-defined notification types.
+		"GPU Interrupt",
+		"GPU Firmware Fault",
+		"GPU Timeout",
+		"GPU Software Check",
 	};
 
 	int index = select_guid_from_list(&header->NotificationType, guids,

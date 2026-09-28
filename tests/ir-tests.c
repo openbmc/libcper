@@ -705,6 +705,53 @@ void NVIDIAEventSectionTests_BinaryEqual(void)
 	cper_log_section_dual_binary_test("nvidiaevent");
 }
 
+void NvidiaGpuNotificationTypeNames_IRValid(void)
+{
+	const char *section_name = "generic";
+	char *buf = NULL;
+	size_t size = 0;
+	FILE *record = generate_record_memstream(&section_name, 1, &buf, &size,
+						 0, fixedValidbitsSet);
+	assert(record != NULL);
+	assert(buf != NULL);
+
+	struct {
+		const char *guid;
+		const char *name;
+	} tests[] = {
+		{ "0eeaf365-3740-5271-ae58-10f3b7c09c4a", "GPU Interrupt" },
+		{ "e0fd0b2d-ba62-59c1-9744-9dc8bf313650",
+		  "GPU Firmware Fault" },
+		{ "3a90eac6-481d-5cd7-b57d-0a92315bff8f", "GPU Timeout" },
+		{ "cb2668a9-0508-5e36-bbc9-4d6c7d2dc808",
+		  "GPU Software Check" },
+	};
+
+	EFI_COMMON_ERROR_RECORD_HEADER *header =
+		(EFI_COMMON_ERROR_RECORD_HEADER *)buf;
+	for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+		string_to_guid(&header->NotificationType, tests[i].guid);
+		json_object *ir = cper_buf_to_ir((UINT8 *)buf, size);
+		assert(ir != NULL);
+
+		json_object *header_ir = json_object_object_get(ir, "header");
+		assert(header_ir != NULL);
+		json_object *notification_type =
+			json_object_object_get(header_ir, "notificationType");
+		assert(notification_type != NULL);
+		json_object *type =
+			json_object_object_get(notification_type, "type");
+		assert(type != NULL);
+		assert(strcmp(json_object_get_string(type), tests[i].name) ==
+		       0);
+
+		json_object_put(ir);
+	}
+
+	fclose(record);
+	free(buf);
+}
+
 // Test Event Header version mismatch during IR to CPER conversion (should error and skip)
 void NVIDIAEVENTEventHeaderVersionMismatch_IRValid(void)
 {
@@ -927,6 +974,7 @@ int main(void)
 	NVIDIASectionTests_IRValid();
 	NVIDIASectionTests_BinaryEqual();
 	NVIDIAEventSectionTests_BinaryEqual();
+	NvidiaGpuNotificationTypeNames_IRValid();
 	NVIDIACMETSectionTests_IRValid();
 	NVIDIAEVENTALLTYPESSectionTests_IRValid();
 	NVIDIAEVENTGPUINITSectionTests_IRValid();
