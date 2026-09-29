@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf131488_ffc5c55c",
+        "filename": "Cper.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-09-29T19:00:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5e53af1_91a0d211",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 0
+      },
+      "revId": "19df48079b1840fa200c5a05c9fa6d54973439c5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "812a5850_3bb32934",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "797211c0_20e819d2",
+        "filename": "cper-parse.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-09-29T19:00:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "812a5850_3bb32934",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 296,
+        "endChar": 38
+      },
+      "revId": "19df48079b1840fa200c5a05c9fa6d54973439c5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6179e27_933bcde2",
@@ -60,6 +108,24 @@
       "writtenOn": "2026-09-29T17:30:56Z",
       "side": 1,
       "message": "These should probably all prefix with nvidia, ie \"Nvidia GPU Interrupt\" right?",
+      "revId": "19df48079b1840fa200c5a05c9fa6d54973439c5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7000514_99d6f555",
+        "filename": "cper-parse.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-09-29T19:00:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6179e27_933bcde2",
       "revId": "19df48079b1840fa200c5a05c9fa6d54973439c5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
