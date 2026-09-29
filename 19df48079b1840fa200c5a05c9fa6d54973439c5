@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "812a5850_3bb32934",
+        "filename": "cper-parse.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-29T17:30:56Z",
+      "side": 1,
+      "message": "Nit, remove.  We already have prefixes on the variable names that say they\u0027re EFI vs Nviida",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 296,
+        "endChar": 38
+      },
+      "revId": "19df48079b1840fa200c5a05c9fa6d54973439c5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6179e27_933bcde2",
+        "filename": "cper-parse.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-29T17:30:56Z",
+      "side": 1,
+      "message": "These should probably all prefix with nvidia, ie \"Nvidia GPU Interrupt\" right?",
+      "revId": "19df48079b1840fa200c5a05c9fa6d54973439c5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
