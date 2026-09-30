@@ -1,0 +1,256 @@
+/**
+ * Describes functions for converting MTIA (Meta Training and Inference
+ * Accelerator) OEM CPER sections from binary and JSON format into an
+ * intermediate format.
+ **/
+
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <json.h>
+#include <libcper/Cper.h>
+#include <libcper/cper-utils.h>
+#include <libcper/sections/cper-section-mtia.h>
+#include <libcper/log.h>
+
+//Converts a fixed-length byte array into a lowercase hex string JSON value.
+static json_object *mtia_bytes_to_ir(const UINT8 *buf, size_t len)
+{
+	char *hex = malloc(len * 2 + 1);
+	if (hex == NULL) {
+		return NULL;
+	}
+	for (size_t i = 0; i < len; i++) {
+		snprintf(hex + (i * 2), 3, "%02x", (unsigned int)buf[i]);
+	}
+	json_object *obj = json_object_new_string_len(hex, (int)(len * 2));
+	free(hex);
+	return obj;
+}
+
+//Parses a lowercase hex string JSON value back into a fixed-length byte array.
+static void mtia_ir_to_bytes(json_object *obj, UINT8 *buf, size_t len)
+{
+	memset(buf, 0, len);
+	if (obj == NULL) {
+		return;
+	}
+	const char *hex = json_object_get_string(obj);
+	if (hex == NULL) {
+		return;
+	}
+	size_t hex_len = strlen(hex);
+	for (size_t i = 0; i < len && (i * 2) + 1 < hex_len; i++) {
+		unsigned int byte = 0;
+		if (sscanf(hex + (i * 2), "%2x", &byte) == 1) {
+			buf[i] = (UINT8)byte;
+		}
+	}
+}
+
+//Parses a "0x"-prefixed hex string JSON value back into an integer.
+static UINT64 mtia_ir_to_int(json_object *obj)
+{
+	if (obj == NULL) {
+		return 0;
+	}
+	const char *str = json_object_get_string(obj);
+	if (str == NULL) {
+		return 0;
+	}
+	return (UINT64)strtoull(str, NULL, 16);
+}
+
+//Distinct from the CPER_SEVERITY_TYPES, so kept local to the MTIA section.
+static const char *const MTIA_SEVERITY_NAMES[] = { "Info", "Warning",
+						   "Recoverable", "Fatal" };
+
+static const char *mtia_severity_name(UINT8 severity)
+{
+	if (severity <
+	    (sizeof(MTIA_SEVERITY_NAMES) / sizeof(MTIA_SEVERITY_NAMES[0]))) {
+		return MTIA_SEVERITY_NAMES[severity];
+	}
+	return "Unknown";
+}
+
+//Converts a single MTIA CPER section into JSON IR.
+json_object *cper_section_mtia_to_ir(const UINT8 *section, UINT32 size,
+				     char **desc_string)
+{
+	*desc_string = malloc(SECTION_DESC_STRING_SIZE);
+
+	if (size < sizeof(EFI_MTIA_ERROR_DATA)) {
+		free(*desc_string);
+		*desc_string = NULL;
+		return NULL;
+	}
+
+	if (size > sizeof(EFI_MTIA_ERROR_DATA)) {
+		cper_print_log(
+			"Warning: MTIA section has %u trailing bytes (HIVE extension) that are not decoded\n",
+			(unsigned int)(size - sizeof(EFI_MTIA_ERROR_DATA)));
+	}
+
+	EFI_MTIA_ERROR_DATA *record = (EFI_MTIA_ERROR_DATA *)section;
+
+	int outstr_len =
+		snprintf(*desc_string, SECTION_DESC_STRING_SIZE,
+			 "An MTIA Error (severity %s, event %u) occurred",
+			 mtia_severity_name(record->Severity),
+			 (unsigned int)record->EventId);
+	if (outstr_len < 0) {
+		cper_print_log(
+			"Error: Could not write to MTIA description string\n");
+	} else if (outstr_len >= SECTION_DESC_STRING_SIZE) {
+		cper_print_log("Error: MTIA description string truncated\n");
+	}
+
+	json_object *section_ir = json_object_new_object();
+
+	//MTIA section header.
+	json_object *header_ir = json_object_new_object();
+	//Version is a packed BCD-style word: byte 0 = minor, byte 1 = major.
+	char version_string[16];
+	snprintf(version_string, sizeof(version_string), "v%u.%u",
+		 (unsigned int)((record->Version >> 8) & 0xFF),
+		 (unsigned int)(record->Version & 0xFF));
+	json_object_object_add(header_ir, "version",
+			       json_object_new_string(version_string));
+	add_int(header_ir, "recordSize", record->RecordSize);
+	if (record->RecordSize != sizeof(EFI_MTIA_ERROR_DATA)) {
+		cper_print_log(
+			"Warning: MTIA recordSize (%u) does not match expected size (%zu)\n",
+			(unsigned int)record->RecordSize,
+			sizeof(EFI_MTIA_ERROR_DATA));
+	}
+	add_int_hex_64(header_ir, "validationBits", record->ValidationBits);
+	json_object_object_add(header_ir, "deviceId",
+			       mtia_bytes_to_ir(record->DeviceId,
+						sizeof(record->DeviceId)));
+	json_object_object_add(header_ir, "deviceSerial",
+			       mtia_bytes_to_ir(record->DeviceSerial,
+						sizeof(record->DeviceSerial)));
+	add_int_hex_8(header_ir, "reserved1", record->Reserved1);
+	json_object_object_add(section_ir, "sectionHeader", header_ir);
+
+	//Event record common.
+	json_object *event_ir = json_object_new_object();
+	//Timestamp is an unsigned 64-bit event time in nanoseconds.
+	json_object_object_add(event_ir, "timestamp",
+			       json_object_new_uint64(record->Timestamp));
+	add_int(event_ir, "eventId", record->EventId);
+	json_object *severity_ir = json_object_new_object();
+	add_int(severity_ir, "value", record->Severity);
+	json_object_object_add(
+		severity_ir, "name",
+		json_object_new_string(mtia_severity_name(record->Severity)));
+	json_object_object_add(event_ir, "severity", severity_ir);
+	add_int(event_ir, "scope", record->Scope);
+	add_int(event_ir, "deviceId", record->ChipId);
+	add_int(event_ir, "platformId", record->PlatformId);
+	add_int(event_ir, "skuId", record->SkuId);
+	add_int(event_ir, "chipletId", record->ChipletId);
+	add_int(event_ir, "moduleId", record->ModuleId);
+	add_int_hex_8(event_ir, "flags", record->Flags);
+	add_int(event_ir, "detailFormatId", record->DetailFormatId);
+	add_int(event_ir, "detailLength", record->DetailLength);
+	if (record->DetailLength > sizeof(record->EventDetailRaw)) {
+		cper_print_log(
+			"Warning: MTIA detailLength (%u) exceeds eventDetailRaw size (%zu)\n",
+			(unsigned int)record->DetailLength,
+			sizeof(record->EventDetailRaw));
+	}
+	json_object_object_add(event_ir, "reserved2",
+			       mtia_bytes_to_ir(record->Reserved2,
+						sizeof(record->Reserved2)));
+	json_object_object_add(section_ir, "eventRecordCommon", event_ir);
+
+	//Event detail raw.
+	json_object_object_add(
+		section_ir, "eventDetailRaw",
+		mtia_bytes_to_ir(record->EventDetailRaw,
+				 sizeof(record->EventDetailRaw)));
+
+	return section_ir;
+}
+
+//Converts a single MTIA CPER-JSON section into CPER binary, outputting to the given stream.
+void ir_section_mtia_to_cper(json_object *section, FILE *out)
+{
+	EFI_MTIA_ERROR_DATA *section_cper =
+		(EFI_MTIA_ERROR_DATA *)calloc(1, sizeof(EFI_MTIA_ERROR_DATA));
+
+	//MTIA section header.
+	json_object *header_ir =
+		json_object_object_get(section, "sectionHeader");
+	//Version string "v<major>.<minor>" packs into byte 1 (major) and byte 0 (minor).
+	unsigned int version_major = 0;
+	unsigned int version_minor = 0;
+	const char *version_str = json_object_get_string(
+		json_object_object_get(header_ir, "version"));
+	if (version_str != NULL) {
+		if (sscanf(version_str, "v%u.%u", &version_major,
+			   &version_minor) != 2) {
+			cper_print_log(
+				"Warning: Could not parse MTIA version string '%s'\n",
+				version_str);
+		}
+	}
+	section_cper->Version = (UINT16)(((version_major & 0xFF) << 8) |
+					 (version_minor & 0xFF));
+	section_cper->RecordSize = (UINT16)json_object_get_uint64(
+		json_object_object_get(header_ir, "recordSize"));
+	section_cper->ValidationBits = mtia_ir_to_int(
+		json_object_object_get(header_ir, "validationBits"));
+	mtia_ir_to_bytes(json_object_object_get(header_ir, "deviceId"),
+			 section_cper->DeviceId,
+			 sizeof(section_cper->DeviceId));
+	mtia_ir_to_bytes(json_object_object_get(header_ir, "deviceSerial"),
+			 section_cper->DeviceSerial,
+			 sizeof(section_cper->DeviceSerial));
+	section_cper->Reserved1 = (UINT8)mtia_ir_to_int(
+		json_object_object_get(header_ir, "reserved1"));
+
+	//Event record common.
+	json_object *event_ir =
+		json_object_object_get(section, "eventRecordCommon");
+	section_cper->Timestamp = json_object_get_uint64(
+		json_object_object_get(event_ir, "timestamp"));
+	section_cper->EventId = (UINT16)json_object_get_uint64(
+		json_object_object_get(event_ir, "eventId"));
+	section_cper->Severity =
+		(UINT8)json_object_get_uint64(json_object_object_get(
+			json_object_object_get(event_ir, "severity"), "value"));
+	section_cper->Scope = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "scope"));
+	section_cper->ChipId = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "deviceId"));
+	section_cper->PlatformId = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "platformId"));
+	section_cper->SkuId = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "skuId"));
+	section_cper->ChipletId = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "chipletId"));
+	section_cper->ModuleId = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "moduleId"));
+	section_cper->Flags = (UINT8)mtia_ir_to_int(
+		json_object_object_get(event_ir, "flags"));
+	section_cper->DetailFormatId = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "detailFormatId"));
+	section_cper->DetailLength = (UINT8)json_object_get_uint64(
+		json_object_object_get(event_ir, "detailLength"));
+	mtia_ir_to_bytes(json_object_object_get(event_ir, "reserved2"),
+			 section_cper->Reserved2,
+			 sizeof(section_cper->Reserved2));
+
+	//Event detail raw.
+	mtia_ir_to_bytes(json_object_object_get(section, "eventDetailRaw"),
+			 section_cper->EventDetailRaw,
+			 sizeof(section_cper->EventDetailRaw));
+
+	fwrite(section_cper, sizeof(EFI_MTIA_ERROR_DATA), 1, out);
+	fflush(out);
+	free(section_cper);
+}
