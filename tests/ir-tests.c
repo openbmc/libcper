@@ -853,6 +853,16 @@ void MemoryValidationBitsSectionTests_IRValid()
 	cper_example_section_ir_test("memory-validation-bits");
 }
 
+//MTIA section tests.
+void MTIASectionTests_IRValid(void)
+{
+	cper_log_section_dual_ir_test("mtia");
+}
+void MTIASectionTests_BinaryEqual(void)
+{
+	cper_log_section_dual_binary_test("mtia");
+}
+
 //Unknown section tests.
 void UnknownSectionTests_IRValid(void)
 {
@@ -884,6 +894,7 @@ int main(void)
 		cper_create_examples("cxlprotocol");
 		cper_create_examples("cxlcomponent-media");
 		cper_create_examples("nvidia");
+		cper_create_examples("mtia");
 		cper_create_examples("unknown");
 	}
 	test_base64_encode_good();
@@ -934,6 +945,8 @@ int main(void)
 	NVIDIAEVENTEventHeaderVersionMismatch_IRValid();
 	NVIDIAEVENTEventHeaderVersionMismatch_BinaryEqual();
 	MemoryValidationBitsSectionTests_IRValid();
+	MTIASectionTests_IRValid();
+	MTIASectionTests_BinaryEqual();
 	UnknownSectionTests_IRValid();
 	UnknownSectionTests_BinaryEqual();
 	CompileTimeAssertions_TwoWayConversion();

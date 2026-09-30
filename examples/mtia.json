@@ -1,0 +1,92 @@
+{
+    "header": {
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 2,
+            "name": "Corrected"
+        },
+        "recordLength": 320,
+        "timestamp": "7715-06-19T11:00:12+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1804289383,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
+    },
+    "sectionDescriptors": [
+        {
+            "sectionOffset": 200,
+            "sectionLength": 120,
+            "revision": {
+                "major": 226,
+                "minor": 18
+            },
+            "flags": {
+                "primary": true,
+                "containmentWarning": true,
+                "reset": true,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": false,
+                "latentError": false,
+                "propagated": true,
+                "overflow": true
+            },
+            "sectionType": {
+                "data": "c8f67ddf-e784-471d-a05f-7c70a7a11ad6",
+                "type": "MTIA"
+            },
+            "fruID": "568dc099-156c-ddbf-82a1-a6533daca4a2",
+            "fruText": ":mO4=ZvMD^bvU;e'Rrs",
+            "severity": {
+                "code": 1,
+                "name": "Fatal"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "message": "An MTIA Error (severity Warning, event 1463) occurred",
+            "Mtia": {
+                "sectionHeader": {
+                    "version": "v1.0",
+                    "recordSize": 120,
+                    "validationBits": "0xA4B709E8ECEDE52F",
+                    "deviceId": "2565d5cf61d221c1161f8345",
+                    "deviceSerial": "8848e889d903bd190aca409a04adea",
+                    "reserved1": "0x00"
+                },
+                "eventRecordCommon": {
+                    "timestamp": 17897114831234804954,
+                    "eventId": 1463,
+                    "severity": {
+                        "value": 1,
+                        "name": "Warning"
+                    },
+                    "scope": 79,
+                    "deviceId": 154,
+                    "platformId": 133,
+                    "skuId": 132,
+                    "chipletId": 116,
+                    "moduleId": 239,
+                    "flags": "0x42",
+                    "detailFormatId": 211,
+                    "detailLength": 21,
+                    "reserved2": "000000000000000000000000"
+                },
+                "eventDetailRaw": "189b8756291f7962ad0944d4e18a5cec7b5cbb14b6ea1a7686332934c02b4bce77c3fdef7bc5f60b0413c43db7bc1f3d"
+            }
+        }
+    ]
+}
