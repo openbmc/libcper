@@ -1417,6 +1417,31 @@ typedef struct {
 
 extern EFI_GUID gEfiAmpereErrorSectionGuid;
 
+typedef struct {
+	UINT16 Version;
+	UINT16 RecordSize;
+	UINT64 ValidationBits;
+	UINT8 DeviceId[12];
+	UINT8 DeviceSerial[15];
+	UINT8 Reserved1;
+	UINT64 Timestamp;
+	UINT16 EventId;
+	UINT8 Severity;
+	UINT8 Scope;
+	UINT8 ChipId;
+	UINT8 PlatformId;
+	UINT8 SkuId;
+	UINT8 ChipletId;
+	UINT8 ModuleId;
+	UINT8 Flags;
+	UINT8 DetailFormatId;
+	UINT8 DetailLength;
+	UINT8 Reserved2[12];
+	UINT8 EventDetailRaw[48];
+} __attribute__((packed)) EFI_MTIA_ERROR_DATA;
+
+extern EFI_GUID gEfiMtiaErrorSectionGuid;
+
 ///
 /// Arm Error Record Section
 ///
