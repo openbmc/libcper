@@ -1,0 +1,444 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "981bdc2a_65f137ad",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Is there any public documentation that we can link in the commit message for what this stands for?  If not, that\u0027s fine, but it would be an improvement here.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "767d56e1_c4b7135d",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "this doesn\u0027t look correctly formatted.",
+      "range": {
+        "startLine": 61,
+        "startChar": 13,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7b572db_cc3bd572",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Remove.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e03049f_0561db14",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "?  None of these seem decoded.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 36
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75f023de_6a9be777",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Break this down into the individual flags please.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f522ee67_7bdd2825",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Remove these two.  Goal is to decode, no need to include a separate length.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 39
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad9744d8_cbf1bd34",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Remove.  We don\u0027t publish reserved fields because it would be a breaking change if they were ever used again.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44e89e59_ab3de674",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Combine these two please.  Understood these are their own formats.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce473460_de40ea7e",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Remove.  \"Raw\" is the binary.  This is supposed to be decoded.",
+      "range": {
+        "startLine": 88,
+        "startChar": 17,
+        "endLine": 88,
+        "endChar": 31
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05edb4d1_c5dc8df3",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Can we use add_dict here?",
+      "range": {
+        "startLine": 21,
+        "startChar": 19,
+        "endLine": 21,
+        "endChar": 37
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71d9dd57_71cbed85",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Please don\u0027t put generic helper functions in record-specific decoders.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 1
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffacf9e7_d1c10fa0",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "This should be an immediate return, right?\n\nI see several other errors that continue that should really just return.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63208067_199ce783",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Ignored return code",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6bf6d66f_ca85adb0",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Can you load these into some intermediate variables please?  As written this is tough to read, even if it\u0027s fairly simple.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 41
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a4b2ef9_a745ec77",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Why can\u0027t we use the helper functions there?",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "294bd4b3_89ef9604",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "This check should be done right after the cast.  If the size is wrong we shouldn\u0027t parse in at all.",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 94,
+        "endChar": 17
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17fe0f22_a841f92b",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "I\u0027m confused, these are valid bits, but you don\u0027t use them to remove invalid entries from the records.  I suspect you need to do that?",
+      "range": {
+        "startLine": 100,
+        "startChar": 53,
+        "endLine": 100,
+        "endChar": 67
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51924b5e_b3bd0d5a",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Remove",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a79d474b_a6d7fd69",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Then why isn\u0027t it parsed to that?  Pushing as an integer doesn\u0027t seem like a complete decode.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3f18309_a3f3c187",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "add_dict.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8752d59b_5c2f09b3",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "These seem like enums, not integers?",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 49
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d94f1ed_75ce8d58",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-09-30T19:51:54Z",
+      "side": 1,
+      "message": "Remove.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
