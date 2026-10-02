@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d6f9ae9_347da58e",
+        "filename": "Cper.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:49:56Z",
+      "side": 1,
+      "message": "It\u0027s fine you reformatted this, just don\u0027t do it in a patch titled \"Decode GPU notification types\"\n\nIt makes reverting/tracing where changes came from really hard.",
+      "revId": "573f36497303a1e12b4087e1e6fb809e3e3c74d4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
