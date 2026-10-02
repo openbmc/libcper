@@ -86,6 +86,9 @@
                     "ArmRas": {
                         "$ref": "./sections/cper-arm-ras.json"
                     },
+                    "Mtia": {
+                        "$ref": "./sections/cper-mtia.json"
+                    },
                     "Unknown": {
                         "$ref": "./sections/cper-unknown.json"
                     }

@@ -1,0 +1,157 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "MTIA (Meta Training and Inference Accelerator) OEM Error Section",
+    "required": ["sectionHeader", "eventRecordCommon", "eventDetailRaw"],
+    "additionalProperties": false,
+    "properties": {
+        "sectionHeader": {
+            "type": "object",
+            "description": "MTIA section header (40 bytes).",
+            "required": [
+                "version",
+                "recordSize",
+                "validationBits",
+                "deviceId",
+                "deviceSerial",
+                "reserved1"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "Section format version as \"v<major>.<minor>\" (byte 1 = major, byte 0 = minor).",
+                    "pattern": "^v[0-9]+\\.[0-9]+$"
+                },
+                "recordSize": {
+                    "type": "integer",
+                    "description": "Size of the MTIA error record in bytes.",
+                    "minimum": 0
+                },
+                "validationBits": {
+                    "type": "string",
+                    "pattern": "^0x[0-9A-Fa-f]+$"
+                },
+                "deviceId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{24}$"
+                },
+                "deviceSerial": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{30}$"
+                },
+                "reserved1": {
+                    "type": "string",
+                    "pattern": "^0x[0-9A-Fa-f]+$"
+                }
+            }
+        },
+        "eventRecordCommon": {
+            "type": "object",
+            "description": "Event record common fields (32 bytes).",
+            "required": [
+                "timestamp",
+                "eventId",
+                "severity",
+                "scope",
+                "deviceId",
+                "platformId",
+                "skuId",
+                "chipletId",
+                "moduleId",
+                "flags",
+                "detailFormatId",
+                "detailLength",
+                "reserved2"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "timestamp": {
+                    "type": "integer",
+                    "description": "Event time in nanoseconds.",
+                    "minimum": 0
+                },
+                "eventId": {
+                    "type": "integer",
+                    "description": "12-bit event identifier.",
+                    "minimum": 0
+                },
+                "severity": {
+                    "type": "object",
+                    "description": "Boot1 event severity bucket.",
+                    "required": ["raw"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "raw": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "value": {
+                            "type": "string",
+                            "enum": [
+                                "Info",
+                                "Warning",
+                                "Recoverable",
+                                "Fatal"
+                            ]
+                        }
+                    }
+                },
+                "scope": {
+                    "type": "integer",
+                    "description": "Event scope (local/module/system).",
+                    "minimum": 0
+                },
+                "deviceId": {
+                    "type": "integer",
+                    "description": "Chip identity.",
+                    "minimum": 0
+                },
+                "platformId": {
+                    "type": "integer",
+                    "description": "Platform identity.",
+                    "minimum": 0
+                },
+                "skuId": {
+                    "type": "integer",
+                    "description": "SKU identity.",
+                    "minimum": 0
+                },
+                "chipletId": {
+                    "type": "integer",
+                    "description": "Source chiplet identifier.",
+                    "minimum": 0
+                },
+                "moduleId": {
+                    "type": "integer",
+                    "description": "Module identity.",
+                    "minimum": 0
+                },
+                "flags": {
+                    "type": "string",
+                    "description": "System-defined flags.",
+                    "pattern": "^0x[0-9A-Fa-f]+$"
+                },
+                "detailFormatId": {
+                    "type": "integer",
+                    "description": "Discriminator for the eventDetailRaw schema.",
+                    "minimum": 0
+                },
+                "detailLength": {
+                    "type": "integer",
+                    "description": "Bytes valid in the payload section.",
+                    "minimum": 0
+                },
+                "reserved2": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{24}$"
+                }
+            }
+        },
+        "eventDetailRaw": {
+            "type": "string",
+            "description": "Raw event detail bytes (48 bytes), lowercase hex.",
+            "pattern": "^[0-9a-f]{96}$"
+        }
+    }
+}
