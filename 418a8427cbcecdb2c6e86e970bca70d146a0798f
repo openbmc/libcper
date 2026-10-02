@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67dd18ad_3e2240cf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:48:50Z",
+      "side": 1,
+      "message": "ACK",
+      "parentUuid": "a9e696ae_231129d0",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "767d56e1_c4b7135d",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -85,6 +103,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c31e0731_366f44aa",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:48:50Z",
+      "side": 1,
+      "message": "Please don\u0027t resolve threads that are still open.\n\nthe format here is lowerCamelCase;  This isn\u0027t.",
+      "parentUuid": "d99bd093_f4a6f28e",
+      "range": {
+        "startLine": 61,
+        "startChar": 13,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b7b572db_cc3bd572",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -114,6 +156,24 @@
       "side": 1,
       "message": "will follow up once I get their reply.",
       "parentUuid": "b7b572db_cc3bd572",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cec753a1_e83dd510",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:48:50Z",
+      "side": 1,
+      "message": "This is your patch.  Whomever is also looking at this is free to comment here as well, and you\u0027re free to have private conversations, but please don\u0027t use them as a reason that replies are taking time.",
+      "parentUuid": "9cb5953b_61119a7f",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -369,6 +429,24 @@
       "side": 1,
       "message": "Done for the size/recordSize checks (both now return NULL immediately). detailLength overflow still just warns — that one\u0027s tied to the eventDetailRaw decode work, waiting on the MTIA spec author for that.",
       "parentUuid": "ffacf9e7_d1c10fa0",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "956a91c3_ae30d18a",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:48:50Z",
+      "side": 1,
+      "message": "Please don\u0027t resolve threads that aren\u0027t complete.",
+      "parentUuid": "e4899a17_71111a95",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
