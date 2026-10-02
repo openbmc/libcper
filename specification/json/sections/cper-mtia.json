@@ -1,0 +1,165 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "description": "MTIA (Meta Training and Inference Accelerator) OEM Error Section",
+    "required": [
+        "version",
+        "recordSize",
+        "timestamp",
+        "eventId",
+        "severity",
+        "scope",
+        "chipId",
+        "platformId",
+        "skuId",
+        "chipletId",
+        "moduleId",
+        "detailFormatId",
+        "detailLength",
+        "eventDetailRaw"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "version": {
+            "type": "object",
+            "description": "Major and minor version number of the MTIA section definition.",
+            "required": ["major", "minor"],
+            "additionalProperties": false,
+            "properties": {
+                "major": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "minor": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "recordSize": {
+            "type": "integer",
+            "description": "Size of the MTIA error record in bytes.",
+            "minimum": 0
+        },
+        "pcieDeviceId": {
+            "type": "object",
+            "description": "PCIe device identifier of the MTIA component. Present only when validation bit 0 is set.",
+            "required": [
+                "vendorId",
+                "deviceId",
+                "functionNumber",
+                "deviceNumber",
+                "busNumber",
+                "segmentNumber",
+                "slotNumber"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "vendorId": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "deviceId": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "functionNumber": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "deviceNumber": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "busNumber": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "segmentNumber": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "slotNumber": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "deviceSerial": {
+            "type": "string",
+            "description": "ASIC serial number. Present only when validation bit 1 is set.",
+            "pattern": "^[0-9a-f]{30}$"
+        },
+        "timestamp": {
+            "type": "integer",
+            "description": "Raw boot-relative mtimer counter value.",
+            "minimum": 0
+        },
+        "eventId": {
+            "type": "integer",
+            "description": "12-bit event identifier.",
+            "minimum": 0
+        },
+        "severity": {
+            "type": "object",
+            "description": "Boot1 event severity bucket.",
+            "required": ["raw"],
+            "additionalProperties": false,
+            "properties": {
+                "raw": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "value": {
+                    "type": "string",
+                    "enum": ["Info", "Warning", "Recoverable", "Fatal"]
+                }
+            }
+        },
+        "scope": {
+            "type": "integer",
+            "description": "Event scope.",
+            "minimum": 0
+        },
+        "chipId": {
+            "type": "integer",
+            "description": "Chip identifier.",
+            "minimum": 0
+        },
+        "platformId": {
+            "type": "integer",
+            "description": "Platform identifier.",
+            "minimum": 0
+        },
+        "skuId": {
+            "type": "integer",
+            "description": "SKU identifier.",
+            "minimum": 0
+        },
+        "chipletId": {
+            "type": "integer",
+            "description": "Source chiplet identifier.",
+            "minimum": 0
+        },
+        "moduleId": {
+            "type": "integer",
+            "description": "Module identity.",
+            "minimum": 0
+        },
+        "detailFormatId": {
+            "type": "integer",
+            "description": "Identifies the format of the eventDetailRaw payload.",
+            "minimum": 0
+        },
+        "detailLength": {
+            "type": "integer",
+            "description": "Length of the data in the eventDetailRaw payload. 48 for the current formats; allows future formats to use variable-length payloads.",
+            "minimum": 0
+        },
+        "eventDetailRaw": {
+            "type": "string",
+            "description": "48-byte event detail payload, published as-is in lowercase hex. Its format is identified by detailFormatId.",
+            "pattern": "^[0-9a-f]{96}$"
+        }
+    }
+}

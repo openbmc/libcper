@@ -51,6 +51,7 @@ CPER_GENERATOR_DEFINITION generator_definitions[] = {
 	{ &gEfiNvidiaEventErrorSectionGuid, "nvidiaevent",
 	  generate_section_nvidia_events },
 	{ &gEfiAmpereErrorSectionGuid, "ampere", generate_section_ampere },
+	{ &gEfiMtiaErrorSectionGuid, "mtia", generate_section_mtia },
 };
 const size_t generator_definitions_len =
 	sizeof(generator_definitions) / sizeof(CPER_GENERATOR_DEFINITION);
