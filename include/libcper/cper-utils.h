@@ -112,6 +112,9 @@ void add_bytes_hex(json_object *obj, const char *field_name, const UINT8 *bytes,
 		   size_t byte_len);
 UINT8 *get_bytes_hex(json_object *obj, const char *field_name, size_t *out_len);
 
+void get_bytes_hex_checked(json_object *obj, const char *field_name, UINT8 *out,
+			   size_t out_len);
+
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value);
 
 void add_bool_enum(json_object *register_ir, const char *field_name,
