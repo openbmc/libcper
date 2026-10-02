@@ -1,0 +1,152 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43961ed3_167ce6c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "overall in support here.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f868b0d3_f2854453",
+        "filename": "bindings/cxx/include/libcper.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "Do we want an ir namespace?  I can\u0027t imagine we get enough public methods to where a namespace like this makes sense.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba1bb8ca_d617249f",
+        "filename": "bindings/cxx/src/ir.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "nit, do we want std::byte here?  I\u0027m fine as is if it makes your calling code messier, but it seems like the \"modern\" type to use.",
+      "range": {
+        "startLine": 65,
+        "startChar": 36,
+        "endLine": 65,
+        "endChar": 43
+      },
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f699f5b2_5dc14503",
+        "filename": "bindings/cxx/src/ir.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "nit, could this go on its own line to make reading this more clear?",
+      "range": {
+        "startLine": 68,
+        "startChar": 23,
+        "endLine": 68,
+        "endChar": 78
+      },
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "789fa653_4963bf0f",
+        "filename": "bindings/cxx/src/ir.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "nit, same as above.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f05c4a62_6925c9ca",
+        "filename": "tests/cper-example-sections.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "Could this just be a char pointer array and not need to rely on different language expansion?",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44fa88af_2b663f07",
+        "filename": "tests/cxx/examples.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "This would generally go in cper-utils.c, but I think we already have a similar function there?",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af5bbea3_a908d4b9",
+        "filename": "tests/cxx/examples.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 1,
+      "message": "Any reason we need to duplicate the c++ version of this function when we already have the C version?  Could we just use the C version and refactor as needed?",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

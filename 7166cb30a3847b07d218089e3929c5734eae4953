@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7e00f37_1edc26cb",
+        "filename": "tests/ir-tests.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 0,
+      "message": "Why remove these?",
+      "revId": "7166cb30a3847b07d218089e3929c5734eae4953",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6b4839a_65dbfe6d",
+        "filename": "tests/ir-tests.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:45:11Z",
+      "side": 0,
+      "message": "same here?",
+      "revId": "7166cb30a3847b07d218089e3929c5734eae4953",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
