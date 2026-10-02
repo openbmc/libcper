@@ -1,0 +1,266 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36621248_f06778cd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "Please note this is a breaking change.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 11
+      },
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fd78f3f_b9848e1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "Partial review.",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43bc438f_c954e538",
+        "filename": "examples/nvidia_event_gpu_init.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "why is a \"timeout\" in hex?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89e9df37_0c36f081",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "This isn\u0027t specific to nvidia.",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "328c6a66_5453392b",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "remove.  unless we\u0027re publishing the spec, v0.6 doesn\u0027t make a ton of sense.",
+      "range": {
+        "startLine": 246,
+        "startChar": 4,
+        "endLine": 246,
+        "endChar": 18
+      },
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fe463e7_66deba55",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t look like it really points to any code.  I don\u0027t see us enforcing a 16 byte size anywhere.",
+      "range": {
+        "startLine": 246,
+        "startChar": 19,
+        "endLine": 248,
+        "endChar": 48
+      },
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "642c825b_896f250c",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "are 1, 2, 3, and 4 really reserved?  If so, can we mark them as such.",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 22
+      },
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b38cefd9_fcf41e77",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "I thought there was a helper function for this?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4395b488_8d6c0810",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "magic number ?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0330ff57_81236646",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "looks like it doesn\u0027t enforce the 16 byte boundary above?\n\nshould we make a \"select random value in range\" method?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b179cec6_046eda2c",
+        "filename": "generator/sections/gen-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "Something looks weird here.  Aren\u0027t some of the formats only defined in 1.0 and greater?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "671bde84_63bcfb17",
+        "filename": "include/libcper/sections/cper-section-nvidia-events.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "I\u0027m confused. This isn\u0027t an API boundary.  If this is deprecated, just remove them?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "273548db_0c105038",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "Just declare this the normal way we declare arrays?",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ae5d842_0f6f5019",
+        "filename": "sections/cper-section-nvidia-events.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-02T19:59:41Z",
+      "side": 1,
+      "message": "Please use all the helpers (add_string in this case). Fix throughout your patch.",
+      "revId": "7529a1244d68e368e6cab8cadc679a0f28762e60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
