@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a9e696ae_231129d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Spec questions (this and the others below) are being raised with the MTIA spec author, will follow up once I get their reply.",
+      "parentUuid": "981bdc2a_65f137ad",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "767d56e1_c4b7135d",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -31,6 +49,30 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "this doesn\u0027t look correctly formatted.",
+      "range": {
+        "startLine": 61,
+        "startChar": 13,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d99bd093_f4a6f28e",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Sorry, could you point me to what looks off? \"Mtia\" follows the existing ShortName convention for acronyms (Pcie, CxlProtocol, CcixPer, Nvidia), and matches the key registered in cper-json-section-log.json.",
+      "parentUuid": "767d56e1_c4b7135d",
       "range": {
         "startLine": 61,
         "startChar": 13,
@@ -54,6 +96,24 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "Remove.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cb5953b_61119a7f",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "will follow up once I get their reply.",
+      "parentUuid": "b7b572db_cc3bd572",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -207,6 +267,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a72e5707_231f5808",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "05edb4d1_c5dc8df3",
+      "range": {
+        "startLine": 21,
+        "startChar": 19,
+        "endLine": 21,
+        "endChar": 37
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "71d9dd57_71cbed85",
@@ -220,6 +304,30 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "Please don\u0027t put generic helper functions in record-specific decoders.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 1
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05f066c9_3455a564",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done. Moved to cper-utils.c as get_bytes_hex_checked.",
+      "parentUuid": "71d9dd57_71cbed85",
       "range": {
         "startLine": 30,
         "startChar": 0,
@@ -247,6 +355,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4899a17_71111a95",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done for the size/recordSize checks (both now return NULL immediately). detailLength overflow still just warns — that one\u0027s tied to the eventDetailRaw decode work, waiting on the MTIA spec author for that.",
+      "parentUuid": "ffacf9e7_d1c10fa0",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63208067_199ce783",
@@ -260,6 +386,24 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "Ignored return code",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f71350e6_e95cf570",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "63208067_199ce783",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -287,6 +431,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0f93d98_96afd2d1",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "6bf6d66f_ca85adb0",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 41
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a4b2ef9_a745ec77",
@@ -304,6 +472,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76486516_26dfc672",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done. Moved to cper-utils.c as get_bytes_hex_checked.",
+      "parentUuid": "1a4b2ef9_a745ec77",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "294bd4b3_89ef9604",
@@ -317,6 +503,30 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "This check should be done right after the cast.  If the size is wrong we shouldn\u0027t parse in at all.",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 94,
+        "endChar": 17
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7a2f4cd_d115eb53",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done, extended the same treatment to recordSize.",
+      "parentUuid": "294bd4b3_89ef9604",
       "range": {
         "startLine": 94,
         "startChar": 16,
@@ -397,6 +607,24 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "add_dict.",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aef23c76_e8017032",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-02T07:30:18Z",
+      "side": 1,
+      "message": "Done. severity now uses add_dict.",
+      "parentUuid": "e3f18309_a3f3c187",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
