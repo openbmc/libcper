@@ -16,6 +16,24 @@
       "message": "It\u0027s fine you reformatted this, just don\u0027t do it in a patch titled \"Decode GPU notification types\"\n\nIt makes reverting/tracing where changes came from really hard.",
       "revId": "573f36497303a1e12b4087e1e6fb809e3e3c74d4",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e008010f_2a664b46",
+        "filename": "Cper.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002743
+      },
+      "writtenOn": "2026-10-06T22:56:33Z",
+      "side": 1,
+      "message": "Ok, per our offline disucssion, I broke this out into two commits.  The first one, 95286, changes formatting of existing GUIDs.  The second is this one, and has been updated to match formatting.",
+      "parentUuid": "0d6f9ae9_347da58e",
+      "revId": "573f36497303a1e12b4087e1e6fb809e3e3c74d4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
