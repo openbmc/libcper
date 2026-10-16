@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f04c7aa8_5656dae4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-16T08:54:48Z",
+      "side": 1,
+      "message": "Addressed the code comments: mtia key name, removed reserved fields, gated deviceId/deviceSerial on validation bits, and switched version to revision_to_ir.",
+      "revId": "ccc80bb6398e5433f2e970a4851f549a5a34ce36",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
