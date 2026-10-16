@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "339f6815_1b2884bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-16T16:19:52Z",
+      "side": 1,
+      "message": "That\u0027s fine, but a single sentence of commit message isn\u0027t really enough description for a new feature.  Please add what you can.",
+      "parentUuid": "cafa52b9_e5d26450",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "767d56e1_c4b7135d",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -157,6 +175,30 @@
       "side": 1,
       "message": "Done, renamed to mtia. Sorry for resolving this earlier while it was still open.",
       "parentUuid": "c31e0731_366f44aa",
+      "range": {
+        "startLine": 61,
+        "startChar": 13,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9703860e_cdce1c81",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-16T16:19:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "599d14a8_3060c985",
       "range": {
         "startLine": 61,
         "startChar": 13,
@@ -287,6 +329,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06a44d25_64aa14e5",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-16T16:19:52Z",
+      "side": 1,
+      "message": "Then lets just remove them from the decode if the value tables are internal.",
+      "parentUuid": "4b73317f_2f7053d6",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 36
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75f023de_6a9be777",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -316,6 +382,24 @@
       "side": 1,
       "message": "Same as above. The flag bit definitions are internal, so flags stays as a hex value rather than being expanded into named flags.",
       "parentUuid": "75f023de_6a9be777",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cecc2f23_6cf74801",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-16T16:19:52Z",
+      "side": 1,
+      "message": "Then remove them from the decode please.  We\u0027re not going to partially decode something because you have an internal spec that you can\u0027t publish.",
+      "parentUuid": "2b11d845_0323336c",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
