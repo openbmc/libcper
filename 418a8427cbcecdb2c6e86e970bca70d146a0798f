@@ -395,6 +395,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7feeaf9a_df51a7c9",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-22T21:00:45Z",
+      "side": 1,
+      "message": "SocketNum and chipId are not enumerations, they are literally what the chipid reports, and the index of the socket that produced the value.\n\nIf these are hardware enumerations, should they be a hex string?",
+      "parentUuid": "29e82524_5410f2f3",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 36
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75f023de_6a9be777",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -501,6 +525,30 @@
       "side": 1,
       "message": "Thanks for the review. I\u0027d like to keep these two. detailFormatId identifies the format of eventDetailRaw, and detailLength gives the length of the data in it. detailLength is 48 for all current formats, and is there so future formats can use variable-length payloads. This is similar to NVIDIA Event, which also publishes dataFormatType and dataSize alongside its payload:\nhttps://github.com/openbmc/libcper/blob/3a81ccbd9dc7ae9cce4b3082dd60928b9fe3163e/sections/cper-section-nvidia-events.c#L2010-L2014\nPlease let me know if you have other suggestions.",
       "parentUuid": "f522ee67_7bdd2825",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 39
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "344f5dfa_fdc6fee2",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-22T21:00:45Z",
+      "side": 1,
+      "message": "\u003e detailLength is 48 for all current formats, and is there so future formats can use variable-length payloads\n\nAnd when those formats come, nothing should be using the length or type as a branch, they will use the new format schema and properties to determine that.\n\nOn the Nvidia ones, you\u0027re right, I missed that in a review.  If you look into the review, you will find I made the exact same comment on the Nvidia review as i\u0027m making here.  I will get those removed.\n\n\nOverall, I would like libcper to move to a human and data facing decode, not an internal description of the format itself.  Including \"length\" moves backwards, and adds things to the decode that have no use.",
+      "parentUuid": "26725dd2_62630dd2",
       "range": {
         "startLine": 84,
         "startChar": 0,
@@ -630,6 +678,30 @@
       "side": 1,
       "message": "Thanks for the review. Related to #85: the payload formats vary by product and are decoded by the tools that consume these records, so eventDetailRaw is published as-is, with detailFormatId identifying its format. NVIDIA Event similarly publishes device-specific payloads as an opaque hex string:\nhttps://github.com/openbmc/libcper/blob/3a81ccbd9dc7ae9cce4b3082dd60928b9fe3163e/sections/cper-section-nvidia-events.c#L1325-L1329\nPlease let me know if you have other suggestions.",
       "parentUuid": "ce473460_de40ea7e",
+      "range": {
+        "startLine": 88,
+        "startChar": 17,
+        "endLine": 88,
+        "endChar": 31
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6925fc48_9d5d9f81",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-22T21:00:45Z",
+      "side": 1,
+      "message": "For the NV one, yep, another one I missed.  I will get that removed, it shouldn\u0027t have been merged like that.\n\nThe point is that you shouldn\u0027t need to run another parser.  If they vary by product, then add the various products to the decode, or fork libcper internally if those things are secret.",
+      "parentUuid": "3410a265_3469d229",
       "range": {
         "startLine": 88,
         "startChar": 17,
@@ -1040,6 +1112,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "07491ca5_06da6e34",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-22T21:00:45Z",
+      "side": 1,
+      "message": "👍",
+      "parentUuid": "54ca4a92_e204ae72",
+      "range": {
+        "startLine": 100,
+        "startChar": 53,
+        "endLine": 100,
+        "endChar": 67
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51924b5e_b3bd0d5a",
@@ -1124,6 +1220,24 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "a4547526_30da969f",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d6213f5_f6b0da59",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-10-22T21:00:45Z",
+      "side": 1,
+      "message": "can add some description to the schema to that effect?\n\nShould we name it something like \"bootTimer\" instead of timestamp?  timestamp implies wall clock time.",
+      "parentUuid": "0df6bd89_6ab5cdda",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
