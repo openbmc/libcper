@@ -90,6 +90,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f4807fa_6cbc90f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Done. Expanded the commit message, and added a layout diagram in cper-section-mtia.c.",
+      "parentUuid": "339f6815_1b2884bd",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "767d56e1_c4b7135d",
@@ -353,6 +371,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "29e82524_5410f2f3",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "scope, deviceId (now chipId), platformId, skuId, chipletId and moduleId identify where the event was generated. Their values have different meanings on different products, so they can\u0027t be described by a single enum, and the tools that consume these records need them to identify a failure. They are kept as plain numbers, similar to the source identifiers in other OEM sections, such as Ampere (typeId, subTypeId, instanceId) and NVIDIA Event (SocketNum, chipId):\nhttps://github.com/openbmc/libcper/blob/3a81ccbd9dc7ae9cce4b3082dd60928b9fe3163e/sections/cper-section-ampere.c#L38-L40\nhttps://github.com/openbmc/libcper/blob/3a81ccbd9dc7ae9cce4b3082dd60928b9fe3163e/sections/cper-section-nvidia-events.c#L509-L536\n\nPlease let me know if you have other suggestions.",
+      "parentUuid": "06a44d25_64aa14e5",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 36
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75f023de_6a9be777",
         "filename": "examples/mtia.json",
         "patchSetId": 6
@@ -404,6 +446,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec747732_7393db14",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Done, removed flags from the decode.",
+      "parentUuid": "cecc2f23_6cf74801",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f522ee67_7bdd2825",
@@ -417,6 +477,30 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "Remove these two.  Goal is to decode, no need to include a separate length.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 39
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26725dd2_62630dd2",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Thanks for the review. I\u0027d like to keep these two. detailFormatId identifies the format of eventDetailRaw, and detailLength gives the length of the data in it. detailLength is 48 for all current formats, and is there so future formats can use variable-length payloads. This is similar to NVIDIA Event, which also publishes dataFormatType and dataSize alongside its payload:\nhttps://github.com/openbmc/libcper/blob/3a81ccbd9dc7ae9cce4b3082dd60928b9fe3163e/sections/cper-section-nvidia-events.c#L2010-L2014\nPlease let me know if you have other suggestions.",
+      "parentUuid": "f522ee67_7bdd2825",
       "range": {
         "startLine": 84,
         "startChar": 0,
@@ -485,6 +569,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e434dd70_2bf92a89",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Done, merged sectionHeader and eventRecordCommon into a single object.",
+      "parentUuid": "44e89e59_ab3de674",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce473460_de40ea7e",
@@ -498,6 +606,30 @@
       "writtenOn": "2026-09-30T19:51:54Z",
       "side": 1,
       "message": "Remove.  \"Raw\" is the binary.  This is supposed to be decoded.",
+      "range": {
+        "startLine": 88,
+        "startChar": 17,
+        "endLine": 88,
+        "endChar": 31
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3410a265_3469d229",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Thanks for the review. Related to #85: the payload formats vary by product and are decoded by the tools that consume these records, so eventDetailRaw is published as-is, with detailFormatId identifying its format. NVIDIA Event similarly publishes device-specific payloads as an opaque hex string:\nhttps://github.com/openbmc/libcper/blob/3a81ccbd9dc7ae9cce4b3082dd60928b9fe3163e/sections/cper-section-nvidia-events.c#L1325-L1329\nPlease let me know if you have other suggestions.",
+      "parentUuid": "ce473460_de40ea7e",
       "range": {
         "startLine": 88,
         "startChar": 17,
@@ -651,6 +783,24 @@
       "side": 1,
       "message": "Please don\u0027t resolve threads that aren\u0027t complete.",
       "parentUuid": "e4899a17_71111a95",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "661cf035_a559d01d",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Done. A detailLength over 48 now returns NULL as well, together with the size and recordSize checks.",
+      "parentUuid": "956a91c3_ae30d18a",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -866,6 +1016,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54ca4a92_e204ae72",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72a079bc_060c21cb",
+      "range": {
+        "startLine": 100,
+        "startChar": 53,
+        "endLine": 100,
+        "endChar": 67
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51924b5e_b3bd0d5a",
@@ -932,6 +1106,24 @@
       "side": 1,
       "message": "This isn\u0027t a wall-clock or epoch time. It\u0027s a boot-relative mtimer counter value, so there is no conversion to apply. I updated the comment and schema description to say that.",
       "parentUuid": "a79d474b_a6d7fd69",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0df6bd89_6ab5cdda",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4547526_30da969f",
       "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -1008,6 +1200,30 @@
       "side": 1,
       "message": "These are intentionally plain integers since the value tables are internal.",
       "parentUuid": "8752d59b_5c2f09b3",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 49
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "addce3e7_e6427ddb",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-22T06:05:44Z",
+      "side": 1,
+      "message": "Same as #82 in examples/mtia.json. Their values are product specific, so they are kept as plain numbers.\nPlease let me know if you have other suggestions.",
+      "parentUuid": "5c8cfd29_86affd81",
       "range": {
         "startLine": 120,
         "startChar": 0,
