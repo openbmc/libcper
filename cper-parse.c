@@ -220,8 +220,13 @@ char *cper_to_str_ir(FILE *cper_file)
 char *cperbuf_to_str_ir(const unsigned char *cper, size_t size)
 {
 	FILE *cper_file = fmemopen((void *)cper, size, "r");
+	if (cper_file == NULL) {
+		return NULL;
+	}
 
-	return cper_file ? cper_to_str_ir(cper_file) : NULL;
+	char *str = cper_to_str_ir(cper_file);
+	fclose(cper_file);
+	return str;
 }
 
 //Converts a parsed CPER record header into intermediate JSON object format.
