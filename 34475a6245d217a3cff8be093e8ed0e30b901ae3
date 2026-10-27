@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3e5af1f_177bcdab",
+        "filename": ".gitignore",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Nit: this file still lacks a trailing newline.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "43961ed3_167ce6c7",
@@ -37,6 +54,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4a21902c_181df8b8",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Please update this text after the \u0027auto\u0027 handling of the bindings-cxx option has been fixed. \"It builds by default\" is only accurate if a C++ compiler and nlohmann-json are available.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f868b0d3_f2854453",
         "filename": "bindings/cxx/include/libcper.hpp",
         "patchSetId": 3
@@ -48,6 +82,24 @@
       "writtenOn": "2026-10-02T19:45:11Z",
       "side": 1,
       "message": "Do we want an ir namespace?  I can\u0027t imagine we get enough public methods to where a namespace like this makes sense.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85db648a_c04e81bd",
+        "filename": "bindings/cxx/include/libcper.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Note: phosphor-logging master already calls libcper::ir::parseCPER() and libcper::ir::parseCPERSection() (cper/decoder.cpp). Renaming this namespace (or changing the std::span element type to std::byte) would break phosphor-logging again, so any such API change should be coordinated with a phosphor-logging change or be done as a follow-up.",
+      "parentUuid": "f868b0d3_f2854453",
       "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -95,6 +147,57 @@
         "endLine": 15,
         "endChar": 68
       },
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08fae8a1_ed1c05de",
+        "filename": "bindings/cxx/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Additionally, the public header libcper.hpp doesn\u0027t use json-c, so json_c_dep is only needed to build the library (line 9) and does not have to be exported here. libcper_parse_dep already pulls in json-c anyway.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aed80fd9_c47d76d3",
+        "filename": "bindings/cxx/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "The library honours the \u0027install\u0027 option (install: install) but install_headers() does not. Please make this conditional on \u0027install\u0027 too.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e5372c1_a459b787",
+        "filename": "bindings/cxx/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "libcper.hpp includes \u003cnlohmann/json.hpp\u003e, so I think \u0027nlohmann_json\u0027 should be added to \u0027requires\u0027 such that pkg-config users get the nlohmann-json include flags.",
       "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -164,6 +267,91 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9340e927_a3d8ed10",
+        "filename": "bindings/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Nit: meson.build already checks opt_bindings_cxx.allowed() before calling subdir(\u0027bindings\u0027), so one of the two checks can be removed.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76045462_a5e9fc67",
+        "filename": "meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "add_languages() defaults to required: true, so with bindings-cxx\u003dauto (the default) configuring fails if no C++ compiler is available. Please pass \u0027required: opt_bindings_cxx\u0027 (see also my comment on meson.options). Adding \u0027native: false\u0027 also silences the \"add_languages is missing native:\" configure warning.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e64e74f2_1baf89f2",
+        "filename": "meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Nit: LIBCPER_JSON_SPEC does not seem to be used by any of the C++ code.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d7e3070_c72c1beb",
+        "filename": "meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "This dependency is required even if bindings-cxx is \u0027auto\u0027. Please pass \u0027required: opt_bindings_cxx\u0027 and disable the bindings if nlohmann-json has not been found (see also my comment on meson.options).",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b4409db_fe8edab4",
+        "filename": "meson.options",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "This option has no \u0027value:\u0027 and hence defaults to \u0027auto\u0027, so opt_bindings_cxx.allowed() is true by default. However, add_languages(\u0027cpp\u0027) (meson.build:33) and dependency(\u0027nlohmann_json\u0027) (meson.build:102) both default to required: true. As a result, a C-only consumer without a C++ compiler or without nlohmann-json now fails to configure, or falls back to the new nlohmann_json.wrap, which fails with --wrap-mode\u003dnodownload (e.g. a Yocto recipe without nlohmann-json in DEPENDS). How about something like this?\n\n```\nopt_bindings_cxx \u003d get_option(\u0027bindings-cxx\u0027)\nif opt_bindings_cxx.allowed()\n    have_cpp \u003d add_languages(\u0027cpp\u0027, native: false, required: opt_bindings_cxx)\n    nlohmann_json_dep \u003d dependency(\u0027nlohmann_json\u0027, include_type: \u0027system\u0027,\n                                   required: opt_bindings_cxx)\n    opt_bindings_cxx \u003d opt_bindings_cxx.require(\n        have_cpp and nlohmann_json_dep.found())\nendif\n```\n\nAlternatively, default this option to \u0027disabled\u0027. phosphor-logging already passes bindings-cxx\u003denabled.",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f05c4a62_6925c9ca",
         "filename": "tests/cper-example-sections.h",
         "patchSetId": 3
@@ -175,6 +363,23 @@
       "writtenOn": "2026-10-02T19:45:11Z",
       "side": 1,
       "message": "Could this just be a char pointer array and not need to rely on different language expansion?",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "822caf78_cc4d1a9a",
+        "filename": "tests/cxx/.clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "Nit: this file is identical to bindings/cxx/.clang-format. Could a single copy at a common parent directory be used instead?",
       "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -209,6 +414,24 @@
       "writtenOn": "2026-10-02T19:45:11Z",
       "side": 1,
       "message": "Any reason we need to duplicate the c++ version of this function when we already have the C version?  Could we just use the C version and refactor as needed?",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca10a9aa_9bad0fe0",
+        "filename": "tests/cxx/examples.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 1,
+      "message": "+1. loadBinary() duplicates the hex decoding helper in tests/hex_test.h, which could be called from C++ instead.",
+      "parentUuid": "af5bbea3_a908d4b9",
       "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }

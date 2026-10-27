@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7c279167_2752d1a7",
+        "filename": "tests/ir-tests.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T17:42:17Z",
+      "side": 0,
+      "message": "As far as I can tell no coverage is lost: these calls and the cper_example_section_ir_test() call in cper_log_section_dual_ir_test() have been replaced by the loop over CPER_EXAMPLE_SECTIONS at the end of main(), which covers all 23 files in examples/.",
+      "parentUuid": "c7e00f37_1edc26cb",
+      "revId": "7166cb30a3847b07d218089e3929c5734eae4953",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d6b4839a_65dbfe6d",
         "filename": "tests/ir-tests.c",
         "patchSetId": 3
