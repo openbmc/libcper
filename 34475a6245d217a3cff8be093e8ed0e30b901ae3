@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9778faa3_de20eb3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003197
+      },
+      "writtenOn": "2026-10-27T18:01:48Z",
+      "side": 1,
+      "message": "How about applying a temporary fix on the phosphor-logging master branch while the work on this change is in progress?",
+      "parentUuid": "01582198_029e8e2a",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a21902c_181df8b8",
         "filename": "README.md",
         "patchSetId": 3
