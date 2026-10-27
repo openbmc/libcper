@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ebfd3828_d9219d5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-10-27T18:23:08Z",
+      "side": 1,
+      "message": "Yes, best option is for us to default-disable in the meson option until I get this fixed.",
+      "parentUuid": "9778faa3_de20eb3a",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a21902c_181df8b8",
         "filename": "README.md",
         "patchSetId": 3
