@@ -1,0 +1,67 @@
+/**
+ * Functions for generating pseudo-random CPER MTIA (Meta Training and Inference
+ * Accelerator) OEM error sections.
+ *
+ **/
+
+#include <stdlib.h>
+#include <stddef.h>
+#include <string.h>
+#include <stdio.h>
+#include <libcper/BaseTypes.h>
+#include <libcper/common-utils.h>
+#include <libcper/generator/gen-utils.h>
+#include <libcper/generator/sections/gen-section.h>
+
+//Generates a single pseudo-random MTIA error section, saving the resulting
+//address to the given location. Returns the size of the newly created section.
+size_t generate_section_mtia(void **location,
+			     GEN_VALID_BITS_TEST_TYPE validBitsType)
+{
+	size_t size = sizeof(EFI_MTIA_ERROR_DATA);
+	UINT8 *section = generate_random_bytes(size);
+
+	EFI_MTIA_ERROR_DATA *mtia_error = (EFI_MTIA_ERROR_DATA *)section;
+
+	//Validation bits 2-63 are reserved.
+	mtia_error->ValidationBits &= 0x3;
+	if (validBitsType == ALL_VALID) {
+		mtia_error->ValidationBits = 0x3;
+	} else if (validBitsType == SOME_VALID) {
+		mtia_error->ValidationBits = 0x1;
+	}
+
+	//Fields gated by an unset validation bit are not published, so they
+	//must be zero to round-trip.
+	if (!(mtia_error->ValidationBits & 0x1)) {
+		memset(&mtia_error->PcieDeviceId, 0,
+		       sizeof(mtia_error->PcieDeviceId));
+	}
+	if (!(mtia_error->ValidationBits & 0x2)) {
+		memset(mtia_error->DeviceSerial, 0,
+		       sizeof(mtia_error->DeviceSerial));
+	}
+
+	//Unpublished fields (flags and reserved fields) must round-trip as zero.
+	mtia_error->Flags = 0;
+	mtia_error->PcieDeviceId.Slot.Resv1 = 0;
+	mtia_error->PcieDeviceId.Reserved = 0;
+	mtia_error->Reserved1 = 0;
+	memset(mtia_error->Reserved2, 0, sizeof(mtia_error->Reserved2));
+
+	//Byte 1 = major, byte 0 = minor: v1.0.
+	mtia_error->Version = 0x0100;
+	mtia_error->RecordSize = (UINT16)size;
+
+	//Severity is 0-3 (Info/Warning/Recoverable/Fatal).
+	mtia_error->Severity %= 4;
+
+	//EventId is a 12-bit identifier.
+	mtia_error->EventId &= 0x0FFF;
+
+	//DetailLength must not exceed the EventDetailRaw payload size.
+	mtia_error->DetailLength %= sizeof(mtia_error->EventDetailRaw) + 1;
+
+	*location = section;
+	return size;
+}

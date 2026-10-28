@@ -1,0 +1,94 @@
+{
+    "header": {
+        "revision": {
+            "major": 0,
+            "minor": 0
+        },
+        "sectionCount": 1,
+        "severity": {
+            "code": 2,
+            "name": "Corrected"
+        },
+        "recordLength": 320,
+        "timestamp": "4041-10-10T09:00:41+00:00",
+        "timestampIsPrecise": false,
+        "platformID": "00000000-0000-0000-0000-000000000000",
+        "creatorID": "00000000-0000-0000-0000-000000000000",
+        "notificationType": {
+            "guid": "00000000-0000-0000-0000-000000000000",
+            "type": "Unknown"
+        },
+        "recordID": 1887658390,
+        "flags": {
+            "value": 4,
+            "name": "HW_ERROR_FLAGS_SIMULATED"
+        },
+        "persistenceInfo": 0
+    },
+    "sectionDescriptors": [
+        {
+            "sectionOffset": 200,
+            "sectionLength": 120,
+            "revision": {
+                "major": 39,
+                "minor": 86
+            },
+            "flags": {
+                "primary": false,
+                "containmentWarning": true,
+                "reset": false,
+                "errorThresholdExceeded": false,
+                "resourceNotAccessible": true,
+                "latentError": true,
+                "propagated": false,
+                "overflow": true
+            },
+            "sectionType": {
+                "data": "c8f67ddf-e784-471d-a05f-7c70a7a11ad6",
+                "type": "MTIA"
+            },
+            "fruID": "3322de4c-f57a-cd58-2f12-5c557342e83f",
+            "fruText": "u|dg+.*4]1^VR58h.xC",
+            "severity": {
+                "code": 2,
+                "name": "Corrected"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "message": "An MTIA Error (severity Info, event 3255) occurred",
+            "mtia": {
+                "version": {
+                    "major": 1,
+                    "minor": 0
+                },
+                "recordSize": 120,
+                "pcieDeviceId": {
+                    "vendorId": 53797,
+                    "deviceId": 10805,
+                    "functionNumber": 201,
+                    "deviceNumber": 60,
+                    "busNumber": 83,
+                    "segmentNumber": 16906,
+                    "slotNumber": 5219
+                },
+                "bootTimer": 12526483156867956938,
+                "eventId": 3255,
+                "severity": {
+                    "raw": 0,
+                    "value": "Info"
+                },
+                "scope": "0x0A",
+                "chipId": "0x6C",
+                "platformId": "0xC4",
+                "skuId": "0xDF",
+                "chipletId": "0x34",
+                "moduleId": "0xF9",
+                "detailFormatId": 23,
+                "detailLength": 25,
+                "eventDetailRaw": "izhToUxu+fZQtiP9EilLGmxlkcEcS/YVgM87QLuIODn3aoLF8ZKHgRrYs7Wn+5JK"
+            }
+        }
+    ]
+}
