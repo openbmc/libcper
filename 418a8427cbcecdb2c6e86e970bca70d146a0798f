@@ -417,6 +417,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e625c442_57c95de6",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-28T11:33:12Z",
+      "side": 1,
+      "message": "Done, these are now hex strings.",
+      "parentUuid": "7feeaf9a_df51a7c9",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 36
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "75f023de_6a9be777",
@@ -726,6 +750,30 @@
       "side": 1,
       "message": "@ed@tanous.net\n\n\u003e If they vary by product, then add the various products to the decode, or fork libcper internally if those things are secret.\n\nI agree with the first part and disagree with the second part.\n\n- \"various products having different decode\" - this is a poor reason for not parsing.  We should have enough information in the CPER that we can identify which product it is and do the appropriate parsing.  Agreed.\n\n- \"fork libcper internally if those things are secret.\" - We should not be encouraging libcper forks for a number of reasons:\n\n  1. It tends to lead to companies putting too much in their fork and not contributing to libcper. (the fork becomes the path of least resistance)\n\n  2. It is unwieldy when you are dealing with multiple chip vendors.  I have to be able to integrate, hypothetically, an MTIA accelerator chip with an Nvidia CPU.  If both teams have their own libcper fork, we\u0027re just pushing duplicative work onto the system integrators to merge and maintain N different forks of libcper into something usable.\n\nI\u0027ve been actively pushing both internal chip teams and vendors other than NV to contribute to libcper.  The reality is that every team thinks they have \"secret stuff\" they don\u0027t want to make public.  I\u0027m not saying that is a fight worth giving up on, but it is a very uphill battle.\n\nMany vendors do not expect their clients to need to parse the \"secret stuff\" but they would like that information back for detailed failure analysis.  \n\nIt isn\u0027t hard for them to write tools in python or JS that walk to libcper JSON, find the \"secret field(s)\" and do further analysis.  This is a much more maintainable approach than maintaining a full libcper fork and doing it in there.  In fact, if we push for a libcper fork, the more likely behavior is that they just take the whole GUID and leave it unparsed, and parse that GUID with their own tools.\n\nI don\u0027t think it is unreasonable to allow fields which are opaque base64-encoded blobs and it is pragmatic in encouraging libcper adoption.  The question to me is how do we do that in a consistent documented way.",
       "parentUuid": "6925fc48_9d5d9f81",
+      "range": {
+        "startLine": 88,
+        "startChar": 17,
+        "endLine": 88,
+        "endChar": 31
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e35a01a_b421d79f",
+        "filename": "examples/mtia.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-28T11:33:12Z",
+      "side": 1,
+      "message": "Thanks Ed and Patrick for the suggestions. Following Patrick\u0027s suggestion, eventDetailRaw is now published as an opaque base64 field, the same encoding libcper uses for other raw data such as the PCIe capability structure.",
+      "parentUuid": "24efd22b_8909ea2f",
       "range": {
         "startLine": 88,
         "startChar": 17,
@@ -1266,6 +1314,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21018e1c_6763918c",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-28T11:33:12Z",
+      "side": 1,
+      "message": "Done, renamed to bootTimer and described it in the schema as time since boot in nanoseconds.",
+      "parentUuid": "3d6213f5_f6b0da59",
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3f18309_a3f3c187",
@@ -1362,6 +1428,30 @@
       "side": 1,
       "message": "Same as #82 in examples/mtia.json. Their values are product specific, so they are kept as plain numbers.\nPlease let me know if you have other suggestions.",
       "parentUuid": "5c8cfd29_86affd81",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 49
+      },
+      "revId": "418a8427cbcecdb2c6e86e970bca70d146a0798f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "187f6ee6_690a085a",
+        "filename": "sections/cper-section-mtia.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1002581
+      },
+      "writtenOn": "2026-10-28T11:33:12Z",
+      "side": 1,
+      "message": "Done, same as #82. These are now hex strings.",
+      "parentUuid": "addce3e7_e6427ddb",
       "range": {
         "startLine": 120,
         "startChar": 0,
