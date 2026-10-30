@@ -611,8 +611,8 @@ static void arm_ras_fill_node_user_data(EFI_ARM_RAS_NODE *node,
 			cper_print_log("ARM RAS user data invalid len=%d", len);
 			return;
 		}
-		if ((size_t)len > sizeof(node->UserData)) {
-			cper_print_log("ARM RAS user data too long: %d > %zu",
+		if ((size_t)len >= sizeof(node->UserData)) {
+			cper_print_log("ARM RAS user data too long: %d >= %zu",
 				       len, sizeof(node->UserData));
 			return;
 		}
