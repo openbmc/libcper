@@ -160,6 +160,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cfa8419e_481cdb6d",
+        "filename": "bindings/cxx/include/libcper.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-11-09T17:40:35Z",
+      "side": 1,
+      "message": "\u003e Note: phosphor-logging master already calls libcper::ir::parseCPER() and libcper::ir::parseCPERSection() (cper/decoder.cpp). Renaming this namespace (or changing the std::span element type to std::byte) would break phosphor-logging again, so any such API change should be coordinated with a phosphor-logging change or be done as a follow-up.\n\n\nI\u0027m not sure how we got code in phosphor-logging that called code that wasn\u0027t merged.  I don\u0027t really see that as a material reason to not change this.",
+      "parentUuid": "85db648a_c04e81bd",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9d3491b1_099f3a89",
         "filename": "bindings/cxx/meson.build",
         "patchSetId": 3
@@ -224,6 +242,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ec8e7ed6_d42b5d15",
+        "filename": "bindings/cxx/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-11-09T17:40:35Z",
+      "side": 1,
+      "message": "I don\u0027t understand the change you\u0027re asking for here.",
+      "parentUuid": "08fae8a1_ed1c05de",
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aed80fd9_c47d76d3",
         "filename": "bindings/cxx/meson.build",
         "patchSetId": 3
@@ -269,6 +305,30 @@
       "writtenOn": "2026-10-02T19:45:11Z",
       "side": 1,
       "message": "nit, do we want std::byte here?  I\u0027m fine as is if it makes your calling code messier, but it seems like the \"modern\" type to use.",
+      "range": {
+        "startLine": 65,
+        "startChar": 36,
+        "endLine": 65,
+        "endChar": 43
+      },
+      "revId": "34475a6245d217a3cff8be093e8ed0e30b901ae3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf7015da_84f57e5d",
+        "filename": "bindings/cxx/src/ir.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2026-11-09T17:40:35Z",
+      "side": 1,
+      "message": "nvm, this was a bad suggestion.",
+      "parentUuid": "ba1bb8ca_d617249f",
       "range": {
         "startLine": 65,
         "startChar": 36,
