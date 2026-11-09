@@ -1438,6 +1438,48 @@ typedef struct {
 extern EFI_GUID gEfiAmpereErrorSectionGuid;
 
 ///
+/// MTIA PCIe Device Identifier
+///
+typedef struct {
+	UINT16 VendorId;
+	UINT16 DeviceId;
+	UINT8 Function;
+	UINT8 Device;
+	UINT8 Bus;
+	UINT16 Segment;
+	EFI_GENERIC_ERROR_PCI_SLOT Slot;
+	UINT8 Reserved;
+} __attribute__((packed)) EFI_MTIA_PCIE_DEVICE_ID;
+
+///
+/// MTIA Error Record Section
+///
+typedef struct {
+	UINT16 Version;
+	UINT16 RecordSize;
+	UINT64 ValidationBits;
+	EFI_MTIA_PCIE_DEVICE_ID PcieDeviceId;
+	UINT8 DeviceSerial[15];
+	UINT8 Reserved1;
+	UINT64 Timestamp;
+	UINT16 EventId;
+	UINT8 Severity;
+	UINT8 Scope;
+	UINT8 ChipId;
+	UINT8 PlatformId;
+	UINT8 SkuId;
+	UINT8 ChipletId;
+	UINT8 ModuleId;
+	UINT8 Flags;
+	UINT8 DetailFormatId;
+	UINT8 DetailLength;
+	UINT8 Reserved2[12];
+	UINT8 EventDetailRaw[48];
+} __attribute__((packed)) EFI_MTIA_ERROR_DATA;
+
+extern EFI_GUID gEfiMtiaErrorSectionGuid;
+
+///
 /// Arm Error Record Section
 ///
 typedef struct {

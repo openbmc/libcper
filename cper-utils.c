@@ -803,6 +803,23 @@ UINT8 *get_bytes_hex(json_object *obj, const char *field_name, size_t *out_len)
 	return bytes;
 }
 
+void get_bytes_hex_checked(json_object *obj, const char *field_name, UINT8 *out,
+			   size_t out_len)
+{
+	size_t len = 0;
+	UINT8 *bytes = get_bytes_hex(obj, field_name, &len);
+	if (bytes == NULL) {
+		return;
+	}
+	if (len != out_len) {
+		cper_print_log("%s invalid len=%zu\n", field_name, len);
+		free(bytes);
+		return;
+	}
+	memcpy(out, bytes, out_len);
+	free(bytes);
+}
+
 void add_bool(json_object *register_ir, const char *field_name, UINT64 value)
 {
 	json_object_object_add(register_ir, field_name,
